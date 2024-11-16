@@ -3,6 +3,7 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
+    "./src/assets/column.css"
   ],
   theme: {
     screens: {
@@ -14,7 +15,11 @@ export default {
       //  => @media (min-width:1200px) {...}
 
     },
-    extend: {},
+    extend: {
+      spacing: {
+        '50px': '50px',
+      },
+    },
   },
   plugins: [],
 }
