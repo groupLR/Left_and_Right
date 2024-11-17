@@ -1,4 +1,5 @@
 <script setup>
+
 import { createRouter, createWebHistory } from 'vue-router'
 import Footer from './views/Footer.vue'
 import AboutView from './views/AboutView.vue';
@@ -6,10 +7,14 @@ import AboutView from './views/AboutView.vue';
 
 
 
+import { RouterLink, RouterView } from 'vue-router'
+import HomeView from './views/HomeView.vue';
+
+
 </script>
 
 <template>
-  <div>
+<div>
 
     <router-view></router-view>
 <AboutView />
@@ -28,3 +33,17 @@ import AboutView from './views/AboutView.vue';
   </header> -->
 
 </template>
+=======
+  <header>
+    <nav>
+      <!-- <RouterLink to="/">Home</RouterLink> -->
+      <!-- <RouterLink to="/about">About</RouterLink> -->
+    </nav>
+
+  </header>
+  <main>
+    <HomeView />
+  </main>
+  <!-- <RouterView /> -->
+</template>
+
