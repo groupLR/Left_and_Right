@@ -1,10 +1,35 @@
-<script setup>
+<script setup lang="ts">
 import ProductItem from '@/components/ProductItem.vue';
 import VueSelect from "vue3-select-component";
 import { ref } from "vue"
 
 // single-select
 const selected = ref("");
+// 123
+const value = ref('')
+
+const options = [
+  {
+    value: 'Option1',
+    label: 'Option1',
+  },
+  {
+    value: 'Option2',
+    label: 'Option2',
+  },
+  {
+    value: 'Option3',
+    label: 'Option3',
+  },
+  {
+    value: 'Option4',
+    label: 'Option4',
+  },
+  {
+    value: 'Option5',
+    label: 'Option5',
+  },
+]
 
 // 分頁 package
 const onClickHandler = (page) => {
@@ -32,33 +57,49 @@ const productList = ref([
 
 
 <template>
-  <div class=" px-1 mb-2">
-    <h1 class=" py-5 text-xl">戒指 / Rings</h1>
-    <div class="pageSelectItem flex items-center relative">
+  <section class=" px-4 py-3">
+    <div class=" px-1 mb-2">
+      <h1 class=" py-5 text-xl">戒指 / Rings</h1>
+      <!-- <div class="pageSelectItem flex items-center relative">
       <i class="fa-sharp fa-solid fa-bars fa-rotate-90 absolute left-2 top-1/2 transform -translate-y-1/2"></i>
       <VueSelect class="pageSelect pl-8" v-model="selected" :options="[
         { label: '每頁顯示 24 個', value: 'pageItem_24' },
         { label: '每頁顯示 48 個', value: 'pageItem_48' },
         { label: '每頁顯示 72 個', value: 'pageItem_72' },
-      ]" placeholder="每頁顯示 24 個" :isClearable="false" :isMulti="false" :isSearchable="false" :shouldAutofocusOption="false"/>
+      ]" placeholder="每頁顯示 24 個" :isClearable="false" :isMulti="false" :isSearchable="false"
+        :shouldAutofocusOption="false" />
     </div>
-    {{ selected }}
+    {{ selected }} -->
+      <div class="flex ">
+        <div class="pageSelectItem  flex items-center relative mr-3 flex-1">
+          <i class="fa-solid fa-bars fa-rotate-90 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+          <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="value" placeholder="Select an option" size="large" class="pl-10">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
+          </el-select>
+        </div>
+        <div class="pageSelectItem  flex items-center relative flex-1">
+          <i class="fa-solid fa-bars fa-rotate-90 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+          <el-select placement="bottom"  :fallback-placements="['bottom-start']" v-model="value" placeholder="Select an option" size="large" class="pl-10">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </div>
+      </div>
 
+    </div>
 
-  </div>
+    <!-- 產品列表 -->
+    <div class="flex flex-wrap">
+      <ProductItem v-for="(item, index) in productList" :key="item.id" :title="item.title" :price="item.price"
+        :orginalPrice="item.orginalPrice" :frontImg="item.frontImg" :backImg="item.backImg" />
+    </div>
 
-  <!-- 產品列表 -->
-  <div class="flex flex-wrap">
-    <ProductItem v-for="(item, index) in productList" :key="item.id" :title="item.title" :price="item.price"
-      :orginalPrice="item.orginalPrice" :frontImg="item.frontImg" :backImg="item.backImg" />
-  </div>
-
-  <!-- 分頁 -->
-  <div class="relative  mb-12">
-    <vue-awesome-paginate class="absolute right-0 text-gray-500 text-sm" :total-items="productList.length"
-      :items-per-page="2" :max-pages-shown="5" v-model="currentPage" @click="onClickHandler"
-      :hide-prev-next-when-ends="true" link-url="/products?page=[page]" />
-  </div>
+    <!-- 分頁 -->
+    <div class="relative  mb-12">
+      <vue-awesome-paginate class="absolute right-0 text-gray-500 text-sm" :total-items="productList.length"
+        :items-per-page="2" :max-pages-shown="5" v-model="currentPage" @click="onClickHandler"
+        :hide-prev-next-when-ends="true" link-url="/products?page=[page]" />
+    </div>
+  </section>
 </template>
 
 <!-- 分頁的 style  -->
@@ -95,15 +136,13 @@ const productList = ref([
   } */
 </style>
 
-<style scoped>
-
-
+<!-- <style scoped>
 .pageSelectItem {
   border-bottom: 1px solid black;
 }
 
 /* 修改 package 的 :root 樣式 */
-.pageSelect{
+.pageSelect {
   --vs-input-outline: #fff;
   --vs-border-radius: 0;
   --vs-menu-border: 1px solid #9a9a9a;
@@ -111,7 +150,7 @@ const productList = ref([
 
 /* 透過 :deep 修改 package 元件樣式 */
 /* 用偽元素遮蓋 border-bottom */
-:deep(.vue-select){
+:deep(.vue-select) {
   position: relative;
 }
 
@@ -126,13 +165,13 @@ const productList = ref([
 }
 
 /* 移除下拉選單的預設 border */
-:deep(.pageSelect .control){
+:deep(.pageSelect .control) {
   border: 0;
 }
 
 /* 移除選項面板的預設圓角 */
-:deep(.pageSelect .menu-option){
-  border-radius:0
+:deep(.pageSelect .menu-option) {
+  border-radius: 0
 }
 
 /* 修改選項的 hover 樣式 */
@@ -144,13 +183,30 @@ const productList = ref([
 /* 修改選項的 selected,focused 樣式 */
 :deep(.pageSelect .menu-option.selected),
 :deep(.pageSelect .menu-option.focused) {
-  background-color: #fafafa ;
+  background-color: #fafafa;
 }
 
 :deep(.pageSelect .menu-option.focused) {
-  color: #000 ;
+  color: #000;
+}
+</style> -->
+
+<style scoped>
+.pageSelectItem {
+  border-bottom: 1px solid black;
 }
 
+:deep(.el-select--large){
+  /* width: 300px; */
+}
 
+/* 去除邊框 */
+:deep(.el-select__wrapper),
+:deep(.el-select__wrapper.is-hovering) {
+  box-shadow: 0 0 0 0px #fff inset;
+}
 
+:deep(.el-select__caret) {
+  color: #000;
+}
 </style>
