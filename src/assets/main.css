@@ -1,27 +1,32 @@
 @import './base.css';
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+
+* {
+  box-sizing: border-box;  /* 確保padding和border不會讓元素超出最大寬度 */
 }
 
+#app {
+  max-width: 1440px;
+  margin: 0 auto;
+  /* padding: 0 20px 0; */
+  /* justify-items: center; */
+} 
+/* 
 a,
 .green {
   text-decoration: none;
   color: hsla(160, 100%, 37%, 1);
   transition: 0.4s;
   padding: 3px;
-}
+} */
 
-@media (hover: hover) {
-  a:hover {
+/* @media (hover: hover) {
+  /* a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
+  } 
+} */
 
-@media (min-width: 1024px) {
+/* @media (min-width: 1024px) {
   body {
     display: flex;
     place-items: center;
@@ -32,4 +37,4 @@ a,
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
   }
-}
+} */
