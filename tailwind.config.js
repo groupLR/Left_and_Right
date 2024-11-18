@@ -7,7 +7,6 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
-    "./src/assets/column.css"
   ],
   theme: {
 <<<<<<< HEAD
@@ -25,11 +24,7 @@ export default {
       //  => @media (min-width:1200px) {...}
 
     },
-    extend: {
-      spacing: {
-        '50px': '50px',
-      },
-    },
+    extend: {},
   },
   plugins: [],
 }
