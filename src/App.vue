@@ -36,14 +36,12 @@ import HomeView from './views/HomeView.vue';
 =======
   <header>
     <nav>
-      <!-- <RouterLink to="/">Home</RouterLink> -->
+      <RouterLink to="/">Home</RouterLink>
+       | 
       <!-- <RouterLink to="/about">About</RouterLink> -->
+      <RouterLink to="/products">products</RouterLink>
     </nav>
-
   </header>
-  <main>
-    <HomeView />
-  </main>
-  <!-- <RouterView /> -->
+  <RouterView />
 </template>
 
