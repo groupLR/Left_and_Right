@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "element-plus": "^2.8.8",
+    "@iconoir/vue": "^7.10.0",
     "pinia": "^2.2.6",
     "vue": "^3.5.12",
     "vue-awesome-paginate": "^1.2.0",
