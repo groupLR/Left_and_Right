@@ -13,6 +13,8 @@ import Footer from './views/Footer.vue'
       <RouterLink to="/products">products</RouterLink>
       |
       <RouterLink to="/store-info">store-info</RouterLink>
+      |
+      <RouterLink to="/personal-information">personal-information</RouterLink>
     </nav>
   </header>
   <RouterView />
