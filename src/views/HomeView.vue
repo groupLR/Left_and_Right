@@ -13,10 +13,12 @@ const currentPage = ref(1);
 
 const ProductStore = useProductStore()
 const { coBrandingProductList } = storeToRefs(ProductStore)
+import Carousel2 from '@/components/Carousel2.vue';
 </script>
 
 <template>
   <main>
+    <Carousel2 />
     <!-- 影片 -->
     <section class="px-4 w-full	my-0 mx-auto md:w-[750px] lg:w-[970px] xl:w-[1170px]">
       <div class="p-4 w-full">
