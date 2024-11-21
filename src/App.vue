@@ -14,7 +14,7 @@ import Footer from './views/Footer.vue'
       |
       <RouterLink to="/store-info">store-info</RouterLink>
       |
-      <RouterLink to="/personal-information">personal-information</RouterLink>
+      <RouterLink to="/users/edit"><i class="fa-solid fa-user"></i></RouterLink>
     </nav>
   </header>
   <RouterView />
