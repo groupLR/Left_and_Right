@@ -23,10 +23,46 @@ const router = createRouter({
     component: () => import('../views/StoreInfo.vue'),
   },
   {
+    path: '/vip',
+    name: 'vip',
+    component: () => import('../views/Vip.vue'),
+  },
+  {
+    path:'/cooperation',
+    name:'cooperation',
+    component:() =>import('../views/Cooperation.vue')
+  },
+  {
+    path:'/franchising',
+    name:'franchising',
+    component:() => import('../views/Franchising.vue')
+  },
+  {
+    path:'/how-to-buy',
+    name:'how-to-buy',
+    component:() => import('../views/Howtobuy.vue')
+  },
+  {
+    path:'/packaging',
+    name:'packaging',
+    component:() => import('../views/Packaging.vue')
+  },
+  {
+    path:"/after-sales",
+    name:"after-sales",
+    component:() => import("../views/Aftersales.vue")
+  },
+  {
+    path:"/overseas-delivery",
+    name:"overseas-delivery",
+    component:() => import("../views/Overseasdelivery.vue")
+  },
+  {
     path: '/products',
     name: 'products',
     component: ProductList,
   },
+  
 ],
 })
 

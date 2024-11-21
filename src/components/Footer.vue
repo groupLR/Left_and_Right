@@ -2,9 +2,9 @@
   <hr />
   <!-- Footer -->
   <footer class="footer mt-8">
-    <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-20">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-20 lg:m-8">
       <!-- COMPANY -->
-      <div class="flex flex-col min-w-[270px]">
+      <div class="flex flex-col ">
         <h3 class="font-extrabold text-[18px] mb-4">COMPANY</h3>
         <ul class="space-y-2">
           <li><router-link to="/about" class="block">關於品牌 About Us</router-link></li>
@@ -17,7 +17,7 @@
       </div>
 
       <!-- SERVICE -->
-      <div class="flex flex-col min-w-[270px]">
+      <div class="flex flex-col">
         <h3 class="font-extrabold text-[18px] mb-4">SERVICE</h3>
         <ul class="space-y-2">
           <li><router-link to="/how-to-buy" class="block">如何購買 How To Buy</router-link></li>
@@ -32,7 +32,7 @@
       </div>
 
       <!-- CONTACT US -->
-      <div class="flex flex-col min-w-[270px]">
+      <div class="flex flex-col">
         <h3 class="font-extrabold text-[18px] mb-4">CONTACT US</h3>
         <p class="text-sm">免付費電話 / 0800 000 004</p>
         <p class="text-sm mb-4">MON - FRI / 9:00 am - 18:00 pm</p>
@@ -47,7 +47,7 @@
       </div>
 
       <!-- FOLLOW US -->
-      <div class="flex flex-col min-w-[270px]">
+      <div class="flex flex-col ">
         <h3 class="font-extrabold text-[18px] mb-4">FOLLOW US</h3>
         <div class="flex space-x-4">
           <a href="https://www.facebook.com/bonnyread.tw/?hl=zh-tw" target="_blank">
@@ -69,6 +69,9 @@
 </template>
 
 <style scoped>
+.container{
+  padding: 20px;
+}
 .footer {
   width: 100%;
 
