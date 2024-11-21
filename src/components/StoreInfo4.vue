@@ -95,17 +95,14 @@
             <span class="block text-sm">{{ store.Notes2 }}</span>
           </div>
           
-          <p class="flex items-start mt-2 text-sm text-black-600">
+          <div class="flex items-start mt-2 text-sm text-black-600">
             <span class="font-semibold whitespace-nowrap">OPEN/</span>
           <div class="flex flex-col gap-2 ml-2">
              <div class="flex items-center">
               <span>{{ store.openDays1 }}</span> | <span>{{ store.openHours1 }}</span>
              </div>
-            <!-- <br v-if="store.openDays2 && store.openHours2" /> -->
             <div v-if="store.openDays2 && store.openHours2" class="flex items-center">
-            <!-- <span v-if="store.openDays2 && store.openHours2"> -->
               <span>{{ store.openDays2 }}</span> |<span>{{ store.openHours2 }}</span> 
-            <!-- </span> -->
             </div>
              <!-- 第三組日期與時間 -->
             <div v-if="store.openDays3 && store.openHours3" class="flex items-center">
@@ -118,8 +115,8 @@
               <span>{{ store.openHours4 }}</span>
             </div>
           </div>
-          </p>
-          <p class="mt-2 text-sm text-black-600">
+          </div>
+          <div class="mt-2 text-sm text-black-600">
             <span class="font-semibold">ADD</span> / {{ store.address }}
             <a
               :href="store.mapUrl"
@@ -132,10 +129,10 @@
             <div v-if="store.addressNotes" class="flex mt-1 text-black-500">
               <span class="address-notes">{{ store.addressNotes }}</span>
             </div>
-          </p>
-          <p class="mt-2 text-sm text-black-600">
+          </div>
+          <div class="mt-2 text-sm text-black-600">
             Credit card service / 提供刷卡服務
-          </p>
+          </div>
           <div class="mt-4" v-if="store.logo">
             <img
               :src="store.logo"
@@ -167,7 +164,7 @@ import { cities, cityStores, scrollToCity  } from "./StoreData.vue";
   .nav-bar {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap; /* 若超出寬度，換行 */
+    flex-wrap: wrap; 
     gap: 4px;
     padding: 10px 0;
   }
@@ -194,15 +191,13 @@ import { cities, cityStores, scrollToCity  } from "./StoreData.vue";
     width: 100%;
   }
  
-   /* 確保圖片放大並與文字左對齊 */
+   
    .store-logo {
-  width: 100%; /* 調整寬度 */
-  height: auto; /* 讓高度自動縮放 */
-  object-fit: contain; /* 確保圖片內容不會被裁剪 */
-  
+  width: 100%; 
+  height: auto;
+  object-fit: contain; 
   max-width: 280px;
   max-height: 200px;
-  
 }
 .city-section img {
   width: 100%;
@@ -234,11 +229,6 @@ import { cities, cityStores, scrollToCity  } from "./StoreData.vue";
   object-fit: cover;
 }
 @media (max-width: 768px) {
-  .city-section {
-    /* padding-left: 10px;
-    padding-right: 10px; */
-  }
-
   .store-card {
     padding: 12px;
   }
@@ -260,7 +250,7 @@ import { cities, cityStores, scrollToCity  } from "./StoreData.vue";
 
 @media (min-width: 769px) and (max-width: 1024px) {
   .nav-bar {
-    justify-content: center; /* 中型屏幕以上保持居中 */
+    justify-content: center; 
   }
 
   .store-card {
