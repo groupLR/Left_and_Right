@@ -3,6 +3,7 @@ import ProductItem from '@/components/ProductItem.vue';
 import { storeToRefs } from "pinia";
 import { useProductStore } from '@/stores/products'
 import { ref } from "vue";
+import Carousel2 from '@/components/Carousel2.vue';
 
 // 分頁 package
 const pageValue = ref('')
@@ -13,7 +14,6 @@ const currentPage = ref(1);
 
 const ProductStore = useProductStore()
 const { coBrandingProductList } = storeToRefs(ProductStore)
-import Carousel2 from '@/components/Carousel2.vue';
 </script>
 
 <template>
