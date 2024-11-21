@@ -1,9 +1,10 @@
 <script setup>
-
+import Carousel2 from '@/components/Carousel2.vue';
 </script>
 
 <template>
   <main>
+    <Carousel2 />
     <section id="promoteVideo" class="px-4 w-full	my-0 mx-auto md:w-[750px] lg:w-[970px] xl:w-[1170px]">
       <div class="p-4 w-full">
         <iframe class="w-full aspect-video "

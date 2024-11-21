@@ -4,7 +4,7 @@ import HomeView from './views/HomeView.vue';
 import Carousel2 from './components/Carousel2.vue';
 import StoreInfo4 from './components/StoreInfo4.vue';
 import Footer from './components/Footer.vue';
-
+import ProductList from './views/ProductList.vue';
 
 </script>
 
@@ -34,13 +34,13 @@ import Footer from './components/Footer.vue';
       | 
       <RouterLink to="/products">products</RouterLink>
       |
-      <RouterLink to="/store-info">store-info</RouterLink> -->
+      <RouterLink to="/store-info">store-info</RouterLink>
     </nav>
   </header>
-  <!-- <RouterView /> -->
+  <RouterView />
   <!-- <Carousel2/> -->
-  <StoreInfo4/>
-  <!-- <Footer /> -->
+  <!-- <StoreInfo4/> -->
+  <Footer />
 </template>
 
 <style scoped></style>
