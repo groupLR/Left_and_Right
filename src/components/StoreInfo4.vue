@@ -95,7 +95,7 @@
             <span class="block text-sm">{{ store.Notes2 }}</span>
           </div>
           
-          <p class="flex items-start mt-2 text-sm text-black-600">
+          <div class="flex items-start mt-2 text-sm text-black-600">
             <span class="font-semibold whitespace-nowrap">OPEN/</span>
           <div class="flex flex-col gap-2 ml-2">
              <div class="flex items-center">
@@ -118,8 +118,8 @@
               <span>{{ store.openHours4 }}</span>
             </div>
           </div>
-          </p>
-          <p class="mt-2 text-sm text-black-600">
+          </div>
+          <div class="mt-2 text-sm text-black-600">
             <span class="font-semibold">ADD</span> / {{ store.address }}
             <a
               :href="store.mapUrl"
@@ -132,10 +132,10 @@
             <div v-if="store.addressNotes" class="flex mt-1 text-black-500">
               <span class="address-notes">{{ store.addressNotes }}</span>
             </div>
-          </p>
-          <p class="mt-2 text-sm text-black-600">
+          </div>
+          <div class="mt-2 text-sm text-black-600">
             Credit card service / 提供刷卡服務
-          </p>
+          </div>
           <div class="mt-4" v-if="store.logo">
             <img
               :src="store.logo"
