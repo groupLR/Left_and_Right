@@ -1,9 +1,9 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HomeView from './views/HomeView.vue';
+import Footer from './components/Footer.vue';
 import Carousel2 from './components/Carousel2.vue';
 import StoreInfo4 from './components/StoreInfo4.vue';
-import Footer from './components/Footer.vue';
 import ProductList from './views/ProductList.vue';
 
 </script>
@@ -11,7 +11,6 @@ import ProductList from './views/ProductList.vue';
 <template>
   <header>
     <nav>
-      <RouterLink to="/about">About</RouterLink>
       <RouterLink to="/">Home</RouterLink>
       | <!-- COMPANY -->
       <RouterLink to="/about">關於品牌</RouterLink>

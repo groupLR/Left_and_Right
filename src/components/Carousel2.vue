@@ -117,7 +117,7 @@ onMounted(() => {
   
   background-color: black;
   border: 1px solid #ccc;
-  cursor: pointer; 
+  cursor: pointer; /* 确保鼠标悬停时显示手形 */
 }
 @media (max-width: 767px) {
   .swiper {
