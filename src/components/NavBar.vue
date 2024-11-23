@@ -1,6 +1,4 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
   <div class="navbar">
@@ -45,7 +43,7 @@
 
       <!-- 服務圖示 -->
       <ul class="navbarServices">
-        <!-- 搜尋框 -->
+        <!-- 手機版搜尋框 -->
         <li class="comment">
           <input
             type="text"
@@ -55,13 +53,33 @@
           />
           <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
         </li>
+
         <li><font-awesome-icon :icon="['fas', 'comment']" class="msg" /></li>
         <li><font-awesome-icon :icon="['fas', 'user']" /></li>
-        <li><label for="cartSidebarSwitch"><font-awesome-icon :icon="['fas', 'bag-shopping']" /></label></li>
+        <li>
+          <label for="cartSidebarSwitch"
+            ><font-awesome-icon :icon="['fas', 'bag-shopping']"
+          /></label>
+        </li>
 
         <!-- 三條橫線 (Hamburger menu) -->
-        <li><label for="sidebarSwitch"><font-awesome-icon :icon="['fas', 'bars']" class="bars" /></label></li>
+        <li>
+          <label for="sidebarSwitch"
+            ><font-awesome-icon :icon="['fas', 'bars']" class="bars"
+          /></label>
+        </li>
       </ul>
+    </div>
+    <div>
+      <button type="submit">
+        <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+      </button>
+      <input
+        type="text"
+        class="phoneSearch"
+        placeholder="ivy郁欣聯名"
+        maxlength="100"
+      />
     </div>
     <div class="bigLogo">
       <a href="#"><img src="/src/assets/ourLogo.jpeg" alt="logo" /></a>
@@ -88,41 +106,50 @@
   <article class="cartSidebar">
     <span>您的購物車是空的</span>
   </article>
-<!-- 側邊欄開合 -->
-  <input type="checkbox"
-  name="sidebarSwitch"
-  id="sidebarSwitch"
-  class="sidebarSwitch"/>
-<!-- 側邊欄細項開合 -->
-  <input type="checkbox"
-  name="chevronSwitch"
-  id="chevronSwitch"
-  class="chevronSwitch"/>
+  <!-- 側邊欄開合 -->
+  <input
+    type="checkbox"
+    name="sidebarSwitch"
+    id="sidebarSwitch"
+    class="sidebarSwitch"
+  />
+  <!-- 側邊欄細項開合 -->
 
   <article class="sidebar">
     <li><a href="#">Kurt Wu 插畫家聯名</a></li>
     <li><a href="#">KOL / Ivy郁欣聯名</a></li>
     <li><a href="#">飾品設計師大賽/by.Lab</a></li>
     <li>
-        <a href="#">1111 新品 / NEW ARRIVAL
-            <label for="openList"><font-awesome-icon :icon="['fas', 'chevron-up']" class="chevron-up" /></label>
-        </a>
-        <ul>
-            <li>Christmas Gift</li>
-            <li>FW Pearl</li>
-            <li>Winter Morning</li>
-            <li>Hyperspace</li>
-            <li>The Untitled</li>
-        </ul>
+      <a href="#"
+        >1111 新品 / NEW ARRIVAL
+        <label for="chevronSwitch"
+          ><font-awesome-icon :icon="['fas', 'chevron-up']" class="chevronIcon"
+        /></label>
+      </a>
+      <input
+        type="checkbox"
+        name="chevronSwitch"
+        id="chevronSwitch"
+        class="chevronSwitch"
+      />
+      <ul class="chevron">
+        <li>Christmas Gift</li>
+        <li>FW Pearl</li>
+        <li>Winter Morning</li>
+        <li>Hyperspace</li>
+        <li>The Untitled</li>
+      </ul>
     </li>
-    <li><a href="#">限時優惠/Sales</a>
-        <ul>
-            <li>登入會員4折起優惠</li>
-            <li>藝人聯名限時8折起</li>
-        </ul>
+    <li>
+      <a href="#">限時優惠/Sales</a>
+      <ul>
+        <li>登入會員4折起優惠</li>
+        <li>藝人聯名限時8折起</li>
+      </ul>
     </li>
-    <li><a href="#">熱銷商品/B.Sellers</a>
-    <ul>
+    <li>
+      <a href="#">熱銷商品/B.Sellers</a>
+      <ul>
         <li>Y3K時尚</li>
         <li>勃艮第紅</li>
         <li>聖誕系列</li>
@@ -134,9 +161,11 @@
         <li>Y2K復古風潮</li>
         <li>天然水晶、質感晶石</li>
         <li>珍珠、珍珠項鍊、珍珠耳環</li>
-    </ul></li>
-    <li><a href="#">耳環 / Earrings</a>
-        <ul>
+      </ul>
+    </li>
+    <li>
+      <a href="#">耳環 / Earrings</a>
+      <ul>
         <li>抗敏銀針</li>
         <li>耳環組</li>
         <li>圈圈耳環</li>
@@ -145,21 +174,23 @@
         <li>鎖珠耳環</li>
         <li>S999養耳棒</li>
         <li>純銀鎖珠耳環</li>
-    </ul>
-</li>
-    <li><a href="#">耳夾 / Earclip</a>
-        <ul>
-            <li>純銀耳夾耳扣</li>
-            <li>垂墜夾式耳環</li>
-            <li>耳扣耳骨夾</li>
-            <li>螺旋夾式</li>
-            <li>彈簧夾式</li>
-            <li>貼耳耳夾</li>
-            <li>圈圈耳夾</li>
-        </ul>
+      </ul>
     </li>
-    <li><a href="#">戒指 / Rings</a>
-    <ul>
+    <li>
+      <a href="#">耳夾 / Earclip</a>
+      <ul>
+        <li>純銀耳夾耳扣</li>
+        <li>垂墜夾式耳環</li>
+        <li>耳扣耳骨夾</li>
+        <li>螺旋夾式</li>
+        <li>彈簧夾式</li>
+        <li>貼耳耳夾</li>
+        <li>圈圈耳夾</li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">戒指 / Rings</a>
+      <ul>
         <li>情侶對戒系列</li>
         <li>尾戒</li>
         <li>鍊戒</li>
@@ -169,9 +200,11 @@
         <li>可微調式戒指</li>
         <li>戒圍 1.6~1.65 cm</li>
         <li>戒圍 1.7~1.75 cm</li>
-    </ul></li>
-    <li><a href="#">手鍊 / Bracelets</a>
-    <ul>
+      </ul>
+    </li>
+    <li>
+      <a href="#">手鍊 / Bracelets</a>
+      <ul>
         <li>手鍊</li>
         <li>手環</li>
         <li>腳鍊</li>
@@ -180,87 +213,107 @@
         <li>可調式手鍊</li>
         <li>手錶 / Watch</li>
         <li>情侶對鍊</li>
-    </ul></li>
-    <li><a href="#">項鍊 / Necklaces</a>
-    <ul>
+      </ul>
+    </li>
+    <li>
+      <a href="#">項鍊 / Necklaces</a>
+      <ul>
         <li>頸鏈</li>
         <li>鎖骨鏈</li>
         <li>長項鍊</li>
         <li>雙層項鍊</li>
         <li>可替換銀鍊</li>
         <li>義大利純銀項鍊</li>
-    </ul></li>
-    <li><a href="#">鋼飾 / Steel</a>
-    <ul>
+      </ul>
+    </li>
+    <li>
+      <a href="#">鋼飾 / Steel</a>
+      <ul>
         <li>醫療鋼</li>
-    </ul></li>
-    <li><a href="#">銀飾 / Sliver</a>
-    <ul>
+      </ul>
+    </li>
+    <li>
+      <a href="#">銀飾 / Sliver</a>
+      <ul>
         <li>純銀</li>
         <li>純銀耳環</li>
-    </ul></li>
-    <li><a href="#">髮飾 / Hair Accessory</a>
-    <ul>
+      </ul>
+    </li>
+    <li>
+      <a href="#">髮飾 / Hair Accessory</a>
+      <ul>
         <li>髮帶</li>
         <li>髮圈</li>
         <li>髮夾</li>
         <li>髮箍</li>
         <li>帽子</li>
-    </ul></li>
+      </ul>
+    </li>
     <li><a href="#">墨鏡 / Sunglasses</a></li>
-    <li><a href="#">韓國空運 /Korea</a>
-        <ul>
-            <li>耳環</li>
-            <li>耳夾</li>
-            <li>項鍊</li>
-            <li>戒指</li>
-            <li>法飾</li>
-            <li>手鍊 / 手環</li>
-        </ul>
+    <li>
+      <a href="#">韓國空運 /Korea</a>
+      <ul>
+        <li>耳環</li>
+        <li>耳夾</li>
+        <li>項鍊</li>
+        <li>戒指</li>
+        <li>法飾</li>
+        <li>手鍊 / 手環</li>
+      </ul>
     </li>
     <li><a href="#">大甲鎮瀾宮 / Dajia Mastu</a></li>
-    <li><a href="#">藝人聯名 / Co-branding</a>
-    <ul>
+    <li>
+      <a href="#">藝人聯名 / Co-branding</a>
+      <ul>
         <li>TIMU聯名</li>
         <li>KOL / Nina曹婕妤 聯名</li>
         <li>林書緯 聯名 / Joseph Lin</li>
-    </ul>
+      </ul>
     </li>
-    <li><a href="#">B&R設計師支線 海洋NEW</a>
-    <il>
+    <li>
+      <a href="#">B&R設計師支線 海洋NEW</a>
+      <il>
         <li>New 海洋系列 /Quest For Freedom</li>
         <li>礦石系列 / Mineral Select</li>
-    </il>
+      </il>
     </li>
-    <li><a href="#">官方IP授權 / IP Licensing</a>
-    <ul>
+    <li>
+      <a href="#">官方IP授權 / IP Licensing</a>
+      <ul>
         <li>Barbie芭比聯名</li>
         <li>Hello Kitty 50週年</li>
         <li>三麗鷗聯名</li>
         <li>Hello Kitty 系列</li>
         <li>Little Twin Stars 雙星仙子</li>
         <li>BT21 宇宙明星</li>
-    </ul></li>
+      </ul>
+    </li>
     <li><a href="#">中性飾品 / Men's Acc</a></li>
     <li><a href="#">大尺碼 棉花糖區 / Plus</a></li>
     <li><a href="#">兒童飾品 / Kids Acc</a></li>
     <li><a href="#">手機掛繩配件 / Phone Acc</a></li>
-    <li><a href="#">飾品盒＆配件 / Other</a>
-    <ul>
+    <li>
+      <a href="#">飾品盒＆配件 / Other</a>
+      <ul>
         <li>鞋扣 襪套 包包 周邊配件</li>
         <li>鑰匙圈</li>
         <li>手機配件</li>
         <li>飾品收納盒</li>
         <li>禮盒 / Gift Boxes</li>
-    </ul></li>
-    <li><a href="#">韓國香氛Cosmic Mansion</a>
-    <ul>
+      </ul>
+    </li>
+    <li>
+      <a href="#">韓國香氛Cosmic Mansion</a>
+      <ul>
         <li>香水</li>
         <li>蠟燭</li>
         <li>擴香</li>
         <li>空間/織物噴霧</li>
-    </ul></li>
-    <li><a href="#">系列 / Series</a> <ul>
+      </ul>
+    </li>
+    <li>
+      <a href="#">系列 / Series</a>
+      <ul>
         <li>施用 施華洛世奇水晶</li>
         <li>官網限定系列</li>
         <li>玫瑰金系列</li>
@@ -299,7 +352,8 @@
         <li>口罩周邊 / Mask Match</li>
         <li>2024 流行款</li>
         <li>聖誕系列</li>
-    </ul></li>
+      </ul>
+    </li>
     <li><a href="#">全部商品 / All</a></li>
     <li><a href="#">售完 / Sold Out</a></li>
     <li><a href="#">KOL / Mandy夏曼娣聯名</a></li>
@@ -334,7 +388,6 @@ select {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  
 }
 
 .logo {
@@ -381,29 +434,16 @@ select {
 }
 
 /* 搜尋框 */
-.comment {
-  position: relative; /* 讓搜尋框相對於這裡定位*/
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-
 .search {
-  position: relative;
-  width: 0;
-  border: 0;
-  margin: 0;
-  opacity: 1;
-  transition: all 1s;
-  z-index: 1;
-  outline: 0;
+  display: none;
+}
+.phoneSearch {
   border-bottom: 1px solid black;
+  outline: 0;
+  width: calc(100% - 60px);
+  padding: 0;
+  border: none;
 }
-.comment:hover .search {
-  width: 150px;
-  opacity: 1;
-}
-
 /* 服務按鈕 */
 .navbarServices {
   display: flex;
@@ -414,7 +454,7 @@ select {
   font-size: 22px;
 }
 
-.navbarServices li {
+.navbarServices ~ li {
   display: flex; /* 讓圖示與文字對齊 */
   align-items: center;
   cursor: pointer; /* 手型滑鼠效果 */
@@ -425,6 +465,7 @@ select {
 .items {
   display: none;
 }
+/* 購物車開合動畫 */
 .cartSidebar {
   background-color: #afa;
   width: 70vw;
@@ -436,18 +477,19 @@ select {
   top: 0;
   display: flex;
   justify-content: center;
-  align-items: center;  
+  align-items: center;
 }
-.cartSidebarSwitch{
-    position: absolute;
-    z-index: 1;
-    opacity: 0;
-    top: 0;
+.cartSidebarSwitch {
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  top: 0;
 }
-.cartSidebarSwitch:checked + .cartSidebar{
-    transform: translateX(0);
-    transition: all 0.5s;
+.cartSidebarSwitch:checked + .cartSidebar {
+  transform: translateX(0);
+  transition: all 0.5s;
 }
+/* 側邊欄開合動畫 */
 
 .sidebar {
   background-color: #afa;
@@ -463,16 +505,35 @@ select {
   padding: 20px;
 }
 
-.sidebarSwitch{
-    position: absolute;
-    z-index: 1;
-    opacity: 0;
-    top: 0;
+.sidebarSwitch {
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  top: 0;
 }
-.sidebarSwitch:checked ~ .sidebar{
-    transform: translateX(0);
-    transition: all 0.5s;
+.sidebarSwitch:checked ~ .sidebar {
+  transform: translateX(0);
+  transition: all 0.5s;
 }
+/* 側邊欄細項開合動畫 */
+.chevron {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden; /* 隱藏超出部分 */
+  padding: 0; /* 預設無內距 */
+}
+/* 切換開啟狀態 */
+.chevronSwitch:checked ~ .chevron {
+  max-height: 300px; /* 展開的最大高度 */
+  padding: 10px; /* 添加內距，讓內容有間隔 */
+}
+/* 隱藏的開關 */
+.chevronSwitch {
+  display: none;
+}
+
+
 
 
 /* 桌機畫面 (1200px 以上) */
@@ -505,6 +566,31 @@ select {
   }
   .msg {
     display: block;
+  }
+
+  /* 搜尋框 */
+  .comment {
+    position: relative; /* 讓搜尋框相對於這裡定位*/
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  .search {
+    display: block;
+    position: relative;
+    width: 0;
+    border: 0;
+    margin: 0;
+    opacity: 1;
+    transition: all 1s;
+    z-index: 1;
+    outline: 0;
+    border-bottom: 1px solid black;
+  }
+  .comment:hover .search {
+    width: 150px;
+    opacity: 1;
   }
 }
 
