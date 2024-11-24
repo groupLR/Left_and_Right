@@ -4,20 +4,13 @@ import { ref } from "vue"
 import { storeToRefs } from "pinia";
 import { useProductStore } from '@/stores/products'
 
-<<<<<<< HEAD
 const ProductStore = useProductStore()
 const { productList } = storeToRefs(ProductStore)
-=======
->>>>>>> 78ab0f1 (feat: select package adjustment)
 
 
 // select package => Element plus
 const sortValue = ref('')
-<<<<<<< HEAD
 
-=======
-const pageValue = ref('')
->>>>>>> 78ab0f1 (feat: select package adjustment)
 
 const sortOptions = [
   {
