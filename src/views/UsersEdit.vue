@@ -273,21 +273,21 @@
         }
     }
     .container{ 
-    max-width: 1438px;
+        max-width: 1438px;
     }
     .border {
-    border: 1px solid #EEEEEE;
+        border: 1px solid #EEEEEE;
     }
     input,select{
-    border: 1px solid #EEEEEE;
-    padding-inline: 8px;
+        border: 1px solid #EEEEEE;
+        padding-inline: 8px;
     }
     .user{
-    width: 100%;
-    display: flex;
-    gap:10px;
-    align-items: center;
-    font-weight: 800;
+        width: 100%;
+        display: flex;
+        gap:10px;
+        align-items: center;
+        font-weight: 800;
     }
     .name,
     .email,
@@ -300,91 +300,91 @@
     .password,
     .third-party-registration,
     .address {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    margin: 20px 0;
-    font-size: 16px;
-    line-height: 44px;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        margin: 20px 0;
+        font-size: 16px;
+        line-height: 44px;
     }
     .cellphone {
-    display: grid;
-    grid-template-columns: 33.3% 14.7% 52%;
+        display: grid;
+        grid-template-columns: 33.3% 14.7% 52%;
     }
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+        -webkit-appearance: none;
+        margin: 0;
     }
 
 
     .subscribe-area {
-    border: 1px solid #EEEEEE;
-    padding: 20px;
+        border: 1px solid #EEEEEE;
+        padding: 20px;
     }
 
 
     .publicity {
-    margin-top: 20px;
-    border-right: 1px solid #EEEEEE;
-    padding-right: 20px;
+        margin-top: 20px;
+        border-right: 1px solid #EEEEEE;
+        padding-right: 20px;
     }
 
 
     .subscribe-item {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    margin: 20px 0;
-    height: 34px;
-    line-height: 34px;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        margin: 20px 0;
+        height: 34px;
+        line-height: 34px;
     }
 
 
     .subscribe-item button {
-    border: 1px solid #EEEEEE;
-    border-radius: 10%;
-    font-size: 14px;
-    line-height: 30px;
-    height: 30px;
-    padding: 0 5px;
+        border: 1px solid #EEEEEE;
+        border-radius: 10%;
+        font-size: 14px;
+        line-height: 30px;
+        height: 30px;
+        padding: 0 5px;
     }
 
     .subscribe-item button:hover {
-    border: 1px solid black;
+        border: 1px solid black;
     }
 
     .payment {
-    margin: 20px 0;
-    border: 1px solid #EEEEEE;
-    padding: 20px;
+        margin: 20px 0;
+        border: 1px solid #EEEEEE;
+        padding: 20px;
     }
 
     .address-right-area input,
     select {
-    width: 100%;
-    height: 44px;
+        width: 100%;
+        height: 44px;
     }
     .address-right-area li:nth-child(2) div,
     .credit-card {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
     }
     .btn-area {
-    display: flex;
-    justify-content: end;
-    line-height: 36px;
-    gap: 20px;
-    text-align: center;
+        display: flex;
+        justify-content: end;
+        line-height: 36px;
+        gap: 20px;
+        text-align: center;
     }
     .btn-area button {
-    border-radius: 10px;
-    border: 1px solid #EEEEEE;
-    padding: 0 10px;
-    text-align: center;
+        border-radius: 10px;
+        border: 1px solid #EEEEEE;
+        padding: 0 10px;
+        text-align: center;
     }
     .btn-area button:nth-child(2) {
-    background-color: black;
-    color: white;
+        background-color: black;
+        color: white;
     }
 
     @media screen and (width <= 1024px) {
@@ -397,58 +397,57 @@
     .introducer,
     .password,
     .third-party-registration {
-    grid-template-columns: 100%;
+        grid-template-columns: 100%;
     }
     .gender select,
     .store select {
-    height: 44px;
+        height: 44px;
     }
     .cellphone {
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: repeat(2, 1fr);
     }
     .cellphone label{
-    grid-column-start:1 ;
-    grid-column-end:7 ;
+        grid-column-start:1 ;
+        grid-column-end:7 ;
     }
 
     .cellphone select {
-    grid-row-start: 2;
+        grid-row-start: 2;
     }
     .cellphone input {
-    grid-row-start: 2;
-    grid-column-start: 2;
-    grid-column-end: 7;
+        grid-row-start: 2;
+        grid-column-start: 2;
+        grid-column-end: 7;
     }
     .btn-area {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
     }
     .subscribe-area{
-    margin-top: 20px;
-    
+        margin-top: 20px;
     }
     .publicity {
-    border-right: 0;
-    border-bottom: 1px solid #EEEEEE;
-    padding-right: 0;
+        border-right: 0;
+        border-bottom: 1px solid #EEEEEE;
+        padding-right: 0;
     }
     .address {
-    grid-template-columns: 1fr;
-    padding-bottom: 0;
+        grid-template-columns: 1fr;
+        padding-bottom: 0;
     }
     .address-right-area{
-    padding: 20px;
-    padding-top: 0;
+        padding: 20px;
+        padding-top: 0;
     }
     .credit-card{
-    grid-template-columns: 1fr;
-    padding-top: 0;
-    line-height: 44px;
+        grid-template-columns: 1fr;
+        padding-top: 0;
+        line-height: 44px;
     }
     .credit-card-right-area{
-    padding: 20px;
-    padding-top: 0;
+        padding: 20px;
+        padding-top: 0;
     }
 }
 
