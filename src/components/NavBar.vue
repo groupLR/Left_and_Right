@@ -128,18 +128,17 @@
     <li><a href="#">KOL / Ivy郁欣聯名</a></li>
     <li><a href="#">飾品設計師大賽/by.Lab</a></li>
     <li>
-      <a href="#"
-        >1111 新品 / NEW ARRIVAL
-        <label for="chevronSwitch"
-          ><font-awesome-icon :icon="['fas', 'chevron-up']" class="chevronIcon"
-        /></label>
-      </a>
+      
+      <a href="#">1111 新品 / NEW ARRIVAL</a>
       <input
         type="checkbox"
         name="chevronSwitch"
         id="chevronSwitch"
         class="chevronSwitch"
       />
+        <label for="chevronSwitch">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
       <ul class="chevron">
         <li>Christmas Gift</li>
         <li>FW Pearl</li>
@@ -150,14 +149,34 @@
     </li>
     <li>
       <a href="#">限時優惠/Sales</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch2"
+        id="chevronSwitch2"
+        class="chevronSwitch2"
+      />
+        <label for="chevronSwitch2">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      <ul class="chevron2">
         <li>登入會員4折起優惠</li>
         <li>藝人聯名限時8折起</li>
       </ul>
     </li>
     <li>
       <a href="#">熱銷商品/B.Sellers</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch3"
+        id="chevronSwitch3"
+        class="chevronSwitch3"
+      />
+        <label for="chevronSwitch3">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      
+      <ul class="chevron3">
         <li>Y3K時尚</li>
         <li>勃艮第紅</li>
         <li>聖誕系列</li>
@@ -173,7 +192,17 @@
     </li>
     <li>
       <a href="#">耳環 / Earrings</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch4"
+        id="chevronSwitch4"
+        class="chevronSwitch4"
+      />
+        <label for="chevronSwitch4">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      <ul class="chevron4">
         <li>抗敏銀針</li>
         <li>耳環組</li>
         <li>圈圈耳環</li>
@@ -186,7 +215,17 @@
     </li>
     <li>
       <a href="#">耳夾 / Earclip</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch5"
+        id="chevronSwitch5"
+        class="chevronSwitch5"
+      />
+        <label for="chevronSwitch5">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+     
+      <ul class="chevron5">
         <li>純銀耳夾耳扣</li>
         <li>垂墜夾式耳環</li>
         <li>耳扣耳骨夾</li>
@@ -198,7 +237,17 @@
     </li>
     <li>
       <a href="#">戒指 / Rings</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch6"
+        id="chevronSwitch6"
+        class="chevronSwitch6"
+      />
+        <label for="chevronSwitch6">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      <ul class="chevron6">
         <li>情侶對戒系列</li>
         <li>尾戒</li>
         <li>鍊戒</li>
@@ -212,7 +261,17 @@
     </li>
     <li>
       <a href="#">手鍊 / Bracelets</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch7"
+        id="chevronSwitch7"
+        class="chevronSwitch7"
+      />
+        <label for="chevronSwitch7">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      <ul class="chevron7">
         <li>手鍊</li>
         <li>手環</li>
         <li>腳鍊</li>
@@ -225,7 +284,17 @@
     </li>
     <li>
       <a href="#">項鍊 / Necklaces</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch8"
+        id="chevronSwitch8"
+        class="chevronSwitch8"
+      />
+        <label for="chevronSwitch8">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      <ul class="chevron8">
         <li>頸鏈</li>
         <li>鎖骨鏈</li>
         <li>長項鍊</li>
@@ -236,20 +305,49 @@
     </li>
     <li>
       <a href="#">鋼飾 / Steel</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch9"
+        id="chevronSwitch9"
+        class="chevronSwitch9"
+      />
+        <label for="chevronSwitch9">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      <ul class="chevron9">
         <li>醫療鋼</li>
       </ul>
     </li>
     <li>
       <a href="#">銀飾 / Sliver</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch10"
+        id="chevronSwitch10"
+        class="chevronSwitch10"
+      />
+        <label for="chevronSwitch10">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      <ul class="chevron10">
         <li>純銀</li>
         <li>純銀耳環</li>
       </ul>
     </li>
     <li>
       <a href="#">髮飾 / Hair Accessory</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch11"
+        id="chevronSwitch11"
+        class="chevronSwitch11"
+      />
+        <label for="chevronSwitch11">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      <ul class="chevron11">
         <li>髮帶</li>
         <li>髮圈</li>
         <li>髮夾</li>
@@ -257,10 +355,21 @@
         <li>帽子</li>
       </ul>
     </li>
-    <li><a href="#">墨鏡 / Sunglasses</a></li>
+    <li><a href="#">墨鏡 / Sunglasses</a>
+    </li>
     <li>
       <a href="#">韓國空運 /Korea</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch12"
+        id="chevronSwitch12"
+        class="chevronSwitch12"
+      />
+        <label for="chevronSwitch12">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      <ul class="chevron12">
         <li>耳環</li>
         <li>耳夾</li>
         <li>項鍊</li>
@@ -272,7 +381,17 @@
     <li><a href="#">大甲鎮瀾宮 / Dajia Mastu</a></li>
     <li>
       <a href="#">藝人聯名 / Co-branding</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch13"
+        id="chevronSwitch13"
+        class="chevronSwitch13"
+      />
+        <label for="chevronSwitch13">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      <ul class="chevron13">
         <li>TIMU聯名</li>
         <li>KOL / Nina曹婕妤 聯名</li>
         <li>林書緯 聯名 / Joseph Lin</li>
@@ -280,14 +399,34 @@
     </li>
     <li>
       <a href="#">B&R設計師支線 海洋NEW</a>
-      <il>
+      <input
+        type="checkbox"
+        name="chevronSwitch14"
+        id="chevronSwitch14"
+        class="chevronSwitch14"
+      />
+        <label for="chevronSwitch14">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      <ul class="chevron14">
         <li>New 海洋系列 /Quest For Freedom</li>
         <li>礦石系列 / Mineral Select</li>
-      </il>
+      </ul>
     </li>
     <li>
       <a href="#">官方IP授權 / IP Licensing</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch15"
+        id="chevronSwitch15"
+        class="chevronSwitch15"
+      />
+        <label for="chevronSwitch15">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      <ul class="chevron15">
         <li>Barbie芭比聯名</li>
         <li>Hello Kitty 50週年</li>
         <li>三麗鷗聯名</li>
@@ -296,13 +435,43 @@
         <li>BT21 宇宙明星</li>
       </ul>
     </li>
-    <li><a href="#">中性飾品 / Men's Acc</a></li>
+    <li>
+      <a href="#">中性飾品 / Men's Acc</a>
+      <input
+        type="checkbox"
+        name="chevronSwitch16"
+        id="chevronSwitch16"
+        class="chevronSwitch16"
+      />
+        <label for="chevronSwitch16">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+    <ul class="chevron16">
+      <li>耳環</li>
+      <li>耳扣</li>
+      <li>項鍊</li>
+      <li>戒指</li>
+      <li>手鍊 / 手環</li>
+      <li>鑰匙圈</li>
+    </ul>
+  </li>
     <li><a href="#">大尺碼 棉花糖區 / Plus</a></li>
     <li><a href="#">兒童飾品 / Kids Acc</a></li>
     <li><a href="#">手機掛繩配件 / Phone Acc</a></li>
     <li>
       <a href="#">飾品盒＆配件 / Other</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch17"
+        id="chevronSwitch17"
+        class="chevronSwitch17"
+      />
+        <label for="chevronSwitch17">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      <ul class="chevron17">
         <li>鞋扣 襪套 包包 周邊配件</li>
         <li>鑰匙圈</li>
         <li>手機配件</li>
@@ -312,7 +481,17 @@
     </li>
     <li>
       <a href="#">韓國香氛Cosmic Mansion</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch18"
+        id="chevronSwitch18"
+        class="chevronSwitch18"
+      />
+        <label for="chevronSwitch18">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      <ul class="chevron18">
         <li>香水</li>
         <li>蠟燭</li>
         <li>擴香</li>
@@ -321,7 +500,17 @@
     </li>
     <li>
       <a href="#">系列 / Series</a>
-      <ul>
+      <input
+        type="checkbox"
+        name="chevronSwitch19"
+        id="chevronSwitch19"
+        class="chevronSwitch19"
+      />
+        <label for="chevronSwitch19">
+          <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevronIcon"/>
+        </label>
+      
+      <ul class="chevron19">
         <li>施用 施華洛世奇水晶</li>
         <li>官網限定系列</li>
         <li>玫瑰金系列</li>
@@ -536,19 +725,326 @@ select {
   background-color: #afa;
   transition: max-height 0.3s ease, padding 0.3s ease;
   max-height: 0;
-  overflow: hidden; /* 隱藏超出部分 */
-  padding: 0; /* 預設無內距 */
+  overflow: hidden;
+  padding: 0;
 }
-/* 切換開啟狀態 */
 .chevronSwitch:checked ~ .chevron {
-  max-height: 300px; /* 展開的最大高度 */
-  padding: 10px; /* 添加內距，讓內容有間隔 */
+  max-height: 300px; 
+  padding: 10px;
+
 }
-/* 隱藏的開關 */
 .chevronSwitch {
   display: none;
 }
-
+.chevronSwitch:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron2 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch2:checked ~ .chevron2 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch2 {
+  display: none;
+}
+.chevronSwitch2:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron3 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch3:checked ~ .chevron3 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch3 {
+  display: none;
+}
+.chevronSwitch3:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron4 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch4:checked ~ .chevron4 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch4 {
+  display: none;
+}
+.chevronSwitch4:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron5 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch5:checked ~ .chevron5 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch5 {
+  display: none;
+}
+.chevronSwitch5:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron6 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch6:checked ~ .chevron6 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch6 {
+  display: none;
+}
+.chevronSwitch6:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron7 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch7:checked ~ .chevron7 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch7 {
+  display: none;
+}
+.chevronSwitch7:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron8 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch8:checked ~ .chevron8 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch8 {
+  display: none;
+}
+.chevronSwitch8:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron9 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch9:checked ~ .chevron9 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch9 {
+  display: none;
+}
+.chevronSwitch9:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron10 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch10:checked ~ .chevron10 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch10 {
+  display: none;
+}
+.chevronSwitch10:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron11 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch11:checked ~ .chevron11 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch11 {
+  display: none;
+}
+.chevronSwitch11:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron12 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch12:checked ~ .chevron12 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch12 {
+  display: none;
+}
+.chevronSwitch12:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron13 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch13:checked ~ .chevron13 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch13 {
+  display: none;
+}
+.chevronSwitch13:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron14 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch14:checked ~ .chevron14 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch14 {
+  display: none;
+}
+.chevronSwitch14:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron15 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch15:checked ~ .chevron15 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch15 {
+  display: none;
+}
+.chevronSwitch15:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron16 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch16:checked ~ .chevron16 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch16 {
+  display: none;
+}
+.chevronSwitch16:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron17 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch17:checked ~ .chevron17 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch17 {
+  display: none;
+}
+.chevronSwitch17:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron18 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch18:checked ~ .chevron18 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch18 {
+  display: none;
+}
+.chevronSwitch18:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
+.chevron19 {
+  background-color: #afa;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.chevronSwitch19:checked ~ .chevron19 {
+  max-height: 300px;
+  padding: 10px;
+}
+.chevronSwitch19 {
+  display: none;
+}
+.chevronSwitch19:checked ~ label .chevronIcon{
+  transform: scaleY(-1);
+}
 /* 桌機畫面 (1200px 以上) */
 @media screen and (min-width: 1200px) {
   .money,
