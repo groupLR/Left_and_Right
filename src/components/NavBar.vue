@@ -51,7 +51,9 @@
             placeholder="ivy郁欣聯名"
             maxlength="100"
           />
-          <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+          <label for="phoneSearchSwitch">
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+          </label>
         </li>
 
         <li><font-awesome-icon :icon="['fas', 'comment']" class="msg" /></li>
@@ -70,7 +72,13 @@
         </li>
       </ul>
     </div>
-    <div>
+    <div class="phoneSearch1">
+      <input
+        type="checkbox"
+        name="phoneSearchSwitch"
+        id="phoneSearchSwitch"
+        class="phoneSearchSwitch"
+      />
       <button type="submit">
         <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
       </button>
@@ -419,7 +427,6 @@ select {
   margin-right: 10px;
   display: none; /* 預設隱藏 */
 }
-
 .globe-icon {
   font-size: 18px; /* 調整地球圖示大小 */
   color: #333;
@@ -443,12 +450,22 @@ select {
   width: calc(100% - 60px);
   padding: 0;
   border: none;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 0;
+  overflow: hidden; /* 隱藏超出部分 */
+}
+.phoneSearchSwitch:checked ~ .phoneSearch {
+  max-height: 300px; /* 展開的最大高度 */
+  padding: 10px; /* 添加內距，讓內容有間隔 */
+}
+.phoneSearchSwitch {
+  display: none;
 }
 /* 服務按鈕 */
 .navbarServices {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   list-style: none; /* 移除點點 */
   padding: 0;
   font-size: 22px;
@@ -490,7 +507,6 @@ select {
   transition: all 0.5s;
 }
 /* 側邊欄開合動畫 */
-
 .sidebar {
   background-color: #afa;
   width: 70vw;
@@ -532,9 +548,6 @@ select {
 .chevronSwitch {
   display: none;
 }
-
-
-
 
 /* 桌機畫面 (1200px 以上) */
 @media screen and (min-width: 1200px) {
