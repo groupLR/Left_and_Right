@@ -16,7 +16,7 @@
                     <!-- 遮罩區塊 -->
                     <div class="overlay fixed inset-0 z-50 flex items-center justify-center">
                         <!-- 白色區塊 -->
-                        <div class="rule-content bg-white rounded-lg p-6 max-w-md w-[90%] relative z-10 flex justify-between lg:max-w-lg">
+                        <div class="ruleContent bg-white rounded-lg p-6 max-w-md w-[90%] relative z-10 flex justify-between lg:max-w-lg">
                             <div>
                                 <div class="mb-2.5">
                                     <h3 class="font-extrabold">Bonny & Read 飾品會員等級規則</h3>
@@ -52,7 +52,7 @@
                 <!-- 遮罩區塊 -->
                 <div class="overlay fixed inset-0 z-50 flex items-center justify-center">
                     <!-- 白色區塊 -->
-                    <div class="rule-content bg-white rounded-lg p-8 max-w-lg w-[90%] relative z-10 flex justify-between lg:max-w-2xl">
+                    <div class="ruleContent bg-white rounded-lg p-8 max-w-lg w-[90%] relative z-10 flex justify-between lg:max-w-2xl">
                         <div>
                             <div class="mb-3">
                                 <h3 class="font-extrabold">活動規則說明</h3>
@@ -142,40 +142,40 @@
                         <p>密碼</p>
                         <a href="https://www.bonnyread.com.tw/users/edit" class="blue">設定新的密碼</a>
                     </div>
-                    <div class="third-party-registration">
+                    <div class="thirdPartyRegistration">
                         <p>第三方註冊</p>
                     </div>
                 </div>
                 <div class="flex flex-col">
-                    <div class="subscribe-area">
+                    <div class="subscribeArea">
                         <h2 class="mb-2 text-lg font-extrabold"><i class="fa-solid fa-bell pr-2.5"></i>訂閱</h2>
                         <div class="grid grid-cols-1 lg:grid-cols-2">
                             <div class="publicity">
                                 <h3>優惠宣傳</h3>
-                                <div class="subscribe-item">
+                                <div class="subscribeItem">
                                     <p>電郵</p>
                                     <button>訂閱</button>
                                 </div>
-                                <div class="subscribe-item">
+                                <div class="subscribeItem">
                                     <p>SMS</p>
                                     <button>訂閱</button>
                                 </div>
-                                <div class="subscribe-item">
+                                <div class="subscribeItem">
                                     <p>Line</p>
                                     <button>訂閱</button>
                                 </div>
-                                <div class="subscribe-item">
+                                <div class="subscribeItem">
                                     <p>Facebook</p>
                                     <button>訂閱</button>
                                 </div>
                             </div>
                             <div class="mt-5 pl-0 lg:pl-5">
                                 <h3>訂閱通知</h3>
-                                <div class="subscribe-item">
+                                <div class="subscribeItem">
                                     <p>Line</p>
                                     <button>訂閱</button>
                                 </div>
-                                <div class="subscribe-item">
+                                <div class="subscribeItem">
                                     <p>Facebook</p>
                                     <button>訂閱</button>
                                 </div>
@@ -191,7 +191,7 @@
                         </div>
                         <div class="address">
                             <p>儲存的地址(選填)</p>
-                            <div class="address-right-area">
+                            <div class="addressRightArea">
                                 <p class="text-blue-600">新增送貨地址</p>
                                 <ul>
                                     <li>
@@ -233,14 +233,14 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="credit-card">
+                        <div class="creditCard">
                             <p>信用卡</p>
-                            <div class="credit-card-right-area">
+                            <div class="creditCardRightArea">
                                 <p class="text-blue-600">新增信用卡</p>
                             </div>
                         </div>
                     </div>
-                    <div class="btn-area">
+                    <div class="btnArea">
                         <button>取消</button>
                         <button>儲存變更</button>
                     </div>
@@ -257,7 +257,7 @@
     .checkbox:not(:checked) ~ .overlay { 
         display: none; 
     }
-    .rule-content {
+    .ruleContent {
         animation:SlideIn 0.3s ease-out;
     }
 
@@ -298,7 +298,7 @@
     .store,
     .introducer,
     .password,
-    .third-party-registration,
+    .thirdPartyRegistration,
     .address {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -317,7 +317,7 @@
     }
 
 
-    .subscribe-area {
+    .subscribeArea {
     border: 1px solid #EEEEEE;
     padding: 20px;
     }
@@ -330,7 +330,7 @@
     }
 
 
-    .subscribe-item {
+    .subscribeItem {
     display: flex;
     width: 100%;
     justify-content: space-between;
@@ -340,7 +340,7 @@
     }
 
 
-    .subscribe-item button {
+    .subscribeItem button {
     border: 1px solid #EEEEEE;
     border-radius: 10%;
     font-size: 14px;
@@ -349,7 +349,7 @@
     padding: 0 5px;
     }
 
-    .subscribe-item button:hover {
+    .subscribeItem button:hover {
     border: 1px solid black;
     }
 
@@ -359,30 +359,30 @@
     padding: 20px;
     }
 
-    .address-right-area input,
+    .addressRightArea input,
     select {
     width: 100%;
     height: 44px;
     }
-    .address-right-area li:nth-child(2) div,
-    .credit-card {
+    .addressRightArea li:nth-child(2) div,
+    .creditCard {
     display: grid;
     grid-template-columns: 1fr 2fr;
     }
-    .btn-area {
+    .btnArea {
     display: flex;
     justify-content: end;
     line-height: 36px;
     gap: 20px;
     text-align: center;
     }
-    .btn-area button {
+    .btnArea button {
     border-radius: 10px;
     border: 1px solid #EEEEEE;
     padding: 0 10px;
     text-align: center;
     }
-    .btn-area button:nth-child(2) {
+    .btnArea button:nth-child(2) {
     background-color: black;
     color: white;
     }
@@ -396,7 +396,7 @@
     .store,
     .introducer,
     .password,
-    .third-party-registration {
+    .thirdPartyRegistration {
     grid-template-columns: 100%;
     }
     .gender select,
@@ -420,11 +420,11 @@
     grid-column-start: 2;
     grid-column-end: 7;
     }
-    .btn-area {
+    .btnArea {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     }
-    .subscribe-area{
+    .subscribeArea{
     margin-top: 20px;
     
     }
@@ -437,16 +437,16 @@
     grid-template-columns: 1fr;
     padding-bottom: 0;
     }
-    .address-right-area{
+    .addressRightArea{
     padding: 20px;
     padding-top: 0;
     }
-    .credit-card{
+    .creditCard{
     grid-template-columns: 1fr;
     padding-top: 0;
     line-height: 44px;
     }
-    .credit-card-right-area{
+    .creditCardRightArea{
     padding: 20px;
     padding-top: 0;
     }
