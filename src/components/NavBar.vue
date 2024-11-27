@@ -621,10 +621,11 @@
 
     <li class="listItems relative chevronIcon">
       <label for="sidebarLanguageSwitch">
-      <span>繁體中文</span>
-      <font-awesome-icon
-        class="globe-icon absolute right-1 top-5 "
-        :icon="['fas', 'globe']"/>
+        <span>繁體中文</span>
+        <font-awesome-icon
+          class="globe-icon absolute right-1 top-5"
+          :icon="['fas', 'globe']"
+        />
       </label>
       <input
         type="checkbox"
@@ -634,14 +635,15 @@
       />
       <article class="sidebarLanguage px-5 pt-4 pb-3">
         <ul>
-          <label for="sidebarLanguageSwitch"  class="text-xl">
+          <label for="sidebarLanguageSwitch" class="text-xl">
             <font-awesome-icon
-          :icon="['fas', 'chevron-left']"
-          class="chevronIcon"/>
-          <span class=" ml-2 py-3">語言</span>
+              :icon="['fas', 'chevron-left']"
+              class="chevronIcon"
+            />
+            <span class="ml-2 py-3">語言</span>
           </label>
-          <li class=" py-3 justify-center">English</li>
-          <li class=" py-3 justify-center">繁體中文</li>
+          <li class="py-3 justify-center">English</li>
+          <li class="py-3 justify-center">繁體中文</li>
         </ul>
       </article>
     </li>
@@ -650,9 +652,9 @@
       <a href="#">TWD</a>
       <font-awesome-icon
         :icon="['fas', 'dollar-sign']"
-        class="absolute right-1 top-5"/>
+        class="absolute right-1 top-5"
+      />
     </li>
-
   </article>
 </template>
 
@@ -679,11 +681,9 @@ select {
   align-items: center;
   justify-content: space-between;
 }
-
 .logo {
   padding: 8px;
 }
-
 .logo img {
   object-fit: contain;
   width: 88px;
@@ -692,15 +692,11 @@ select {
 .msg {
   display: none;
 }
-
-/* 貨幣選單 */
 .money {
   margin-left: auto;
   margin-right: 10px;
   display: none; /* 預設隱藏 */
 }
-
-/* 地球圖示與語言選擇 */
 .language-container {
   display: flex;
   align-items: center;
@@ -713,15 +709,11 @@ select {
   color: #333;
   cursor: pointer; /* 手形指標樣式 */
 }
-
-/* 語言選擇 */
 .language {
   border: none;
   outline: none;
   background: transparent;
 }
-
-/* 搜尋框 */
 .search {
   display: none;
 }
@@ -743,7 +735,6 @@ select {
 .phoneSearchSwitch {
   display: none;
 }
-/* 服務按鈕 */
 .navbarServices {
   display: flex;
   align-items: center;
@@ -752,7 +743,6 @@ select {
   padding: 0;
   font-size: var(--font-size);
 }
-
 .navbarServices ~ li {
   display: flex; /* 讓圖示與文字對齊 */
   align-items: center;
@@ -760,11 +750,9 @@ select {
   gap: 5px; /* 圖示與文字間距 */
   margin: 0 20px 0 0;
 }
-/* 項目導航列 */
 .items {
   display: none;
 }
-/* 購物車開合動畫 */
 .cartSidebar {
   background-color: white;
   width: 70vw;
@@ -789,7 +777,7 @@ select {
   transition: all 0.5s;
 }
 .sidebarLanguage {
-  background-color:white;
+  background-color: white;
   width: 275px;
   height: 100vh;
   position: fixed;
@@ -797,9 +785,7 @@ select {
   transition: all 0.5s;
   z-index: 1000;
   top: 0;
-  overflow-y: auto;
   list-style: none;
-  /* padding: 20px; */
 }
 .sidebarLanguageSwitch {
   position: absolute;
@@ -811,7 +797,6 @@ select {
   transition: all 0.5s;
   height: 100vh;
 }
-/* 側邊欄開合動畫 */
 .sidebar {
   background-color: white;
   width: 275px;
@@ -823,9 +808,7 @@ select {
   top: 0;
   overflow-y: auto;
   list-style: none;
-  /* padding: 20px; */
 }
-
 .sidebarSwitch {
   position: absolute;
   z-index: 1;
@@ -836,7 +819,6 @@ select {
   transform: translateX(0);
   transition: all 0.5s;
 }
-/* 側邊欄細項開合動畫 */
 .chevron {
   background-color: white;
   transition: max-height 0.3s ease, padding 0.3s ease;
@@ -965,7 +947,6 @@ select {
 }
 .chevronSwitch8:checked ~ .chevron8 {
   height: auto;
-
   padding: 10px;
 }
 .chevronSwitch8 {
@@ -983,7 +964,6 @@ select {
 }
 .chevronSwitch9:checked ~ .chevron9 {
   height: auto;
-
   padding: 10px;
 }
 .chevronSwitch9 {
@@ -1001,7 +981,6 @@ select {
 }
 .chevronSwitch10:checked ~ .chevron10 {
   height: auto;
-
   padding: 10px;
 }
 .chevronSwitch10 {
@@ -1019,7 +998,6 @@ select {
 }
 .chevronSwitch11:checked ~ .chevron11 {
   height: auto;
-
   padding: 10px;
 }
 .chevronSwitch11 {
@@ -1037,7 +1015,6 @@ select {
 }
 .chevronSwitch12:checked ~ .chevron12 {
   height: auto;
-
   padding: 10px;
 }
 .chevronSwitch12 {
@@ -1055,7 +1032,6 @@ select {
 }
 .chevronSwitch13:checked ~ .chevron13 {
   height: auto;
-
   padding: 10px;
 }
 .chevronSwitch13 {
@@ -1073,7 +1049,6 @@ select {
 }
 .chevronSwitch14:checked ~ .chevron14 {
   height: auto;
-
   padding: 10px;
 }
 .chevronSwitch14 {
@@ -1091,7 +1066,6 @@ select {
 }
 .chevronSwitch15:checked ~ .chevron15 {
   height: auto;
-
   padding: 10px;
 }
 .chevronSwitch15 {
@@ -1109,7 +1083,6 @@ select {
 }
 .chevronSwitch16:checked ~ .chevron16 {
   height: auto;
-
   padding: 10px;
 }
 .chevronSwitch16 {
@@ -1127,7 +1100,6 @@ select {
 }
 .chevronSwitch17:checked ~ .chevron17 {
   height: auto;
-
   padding: 10px;
 }
 .chevronSwitch17 {
@@ -1145,7 +1117,6 @@ select {
 }
 .chevronSwitch18:checked ~ .chevron18 {
   height: auto;
-
   padding: 10px;
 }
 .chevronSwitch18 {
@@ -1163,7 +1134,6 @@ select {
 }
 .chevronSwitch19:checked ~ .chevron19 {
   height: auto;
-
   padding: 10px;
 }
 .chevronSwitch19 {
@@ -1183,11 +1153,9 @@ select {
   .language-container {
     display: flex;
   }
-
-  .bars{
+  .bars {
     display: none;
   }
-
   .items {
     padding: 20px;
     display: flex;
@@ -1198,15 +1166,12 @@ select {
   .msg {
     display: block;
   }
-
-  /* 搜尋框 */
   .comment {
     position: relative; /* 讓搜尋框相對於這裡定位*/
     overflow: hidden;
     display: flex;
     align-items: center;
   }
-
   .search {
     display: block;
     position: relative;
@@ -1223,19 +1188,14 @@ select {
     width: 150px;
     opacity: 1;
   }
-  .phoneSearch1{
+  .phoneSearch1 {
     display: none;
   }
 }
-
-/* --- 通用 Hover 樣式 --- */
-/* 對 .items 中的連結應用深色字體 */
 .items a:hover {
   color: #666;
   transition: color 0.3s ease;
 }
-
-/* 對其他元素應用淺色字體 */
 .navbarMenu a:hover,
 .navbarServices li:hover,
 .language-container:hover,
