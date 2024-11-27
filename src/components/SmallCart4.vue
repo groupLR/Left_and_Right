@@ -63,11 +63,12 @@
       </div>
     </div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- <Cart/> -->
   </template>
   
   <script setup>
   import { ref } from "vue";
-  
+  import Cart from "@/views/Cart.vue";
   // 接收父組件傳遞的 `isCartOpen` prop
   const props = defineProps({
     isCartOpen: Boolean,

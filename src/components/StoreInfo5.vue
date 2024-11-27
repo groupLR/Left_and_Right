@@ -1,7 +1,6 @@
 <template>
-    <!-- 置頂圖 -->
-    <div class="topPic">
-      <picture>
+<div class="topPic">
+  <picture>
     <!-- 手機圖片 -->
     <source
       srcset="https://shoplineimg.com/53eb2bccb32b41ef6e000007/60e52aa7b5986e0035d327bf/1512x.webp?source_format=jpg"
@@ -19,8 +18,8 @@
       class="w-full h-auto max-h-[600px] object-cover"
     />
   </picture>
-    
-  </div>
+</div>
+
     <br /><br /><br />
     
     <!-- nav-bar -->
@@ -151,7 +150,7 @@ import { ref } from "vue";
 import { cities, cityStores, scrollToCity  } from "./StoreData.vue";
 
 // const cities = cityStores.map((group) => group.city);
-  </script>
+</script>
 <style scoped>
 .storeCard {  
   background-color: #fff;
@@ -289,3 +288,4 @@ import { cities, cityStores, scrollToCity  } from "./StoreData.vue";
   object-fit: cover;
 }
 }
+</style>
