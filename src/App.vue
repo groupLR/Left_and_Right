@@ -6,6 +6,8 @@ import Carousel2 from "./components/Carousel2.vue";
 import StoreInfo4 from "./components/StoreInfo4.vue";
 import Footer from "./components/Footer.vue";
 import ProductList from "./views/ProductList.vue";
+import GoogleLoginButton from './components/googleLogin.vue'
+
 </script>
 
 <template>
@@ -41,6 +43,7 @@ import ProductList from "./views/ProductList.vue";
       <RouterLink to="/store-info">store-info</RouterLink>
     </nav>
   </header>
+  <GoogleLoginButton />
   <RouterView />
   <!-- <Carousel2/> -->
   <!-- <StoreInfo4/> -->
