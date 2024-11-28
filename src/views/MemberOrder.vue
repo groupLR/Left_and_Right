@@ -1,0 +1,103 @@
+<template>
+	<MemberNavbar />
+	<div class="member-order">
+		<div class="order-container">
+			<div class="order-details">
+				<table class="order-table">
+					<thead>
+						<tr>
+							<td>訂單號碼</td>
+							<td>訂單日期</td>
+							<td>合計</td>
+							<td>訂單狀態</td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>20231024171032226</td>
+							<td>2023-10-25</td>
+							<td>NT$310</td>
+							<td>已完成<br />2023-10-27</td>
+							<td><button class="btn">查閱</button></td>
+						</tr>
+					</tbody>
+				</table>
+				<p class="note">僅顯示 2 年內訂單</p>
+			</div>
+		</div>
+	</div>
+</template>
+<script setup>
+import MemberNavbar from "./MemberNavbar.vue"
+</script>
+<style scoped>
+* {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	color: #333333;
+}
+.member-order {
+	margin: 0 auto;
+	max-width: 1358px;
+	border: 1px solid #ddd;
+	border-top: 1px solid #fff;
+}
+.order-container {
+	font-family: Arial, sans-serif;
+	margin: 20px auto;
+	max-width: 1278px;
+}
+
+.order-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 10px;
+}
+
+.order-table th,
+.order-table td {
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	border-left: none;
+	border-right: none;
+}
+.order-table th:first-child,
+.order-table td:first-child {
+	border-left: 1px solid #ddd;
+}
+
+.order-table th:last-child,
+.order-table td:last-child {
+	border-right: 1px solid #ddd;
+}
+.order-table thead th {
+	background-color: #f5f5f5;
+	font-weight: bold;
+}
+
+.btn {
+	background-color: #000;
+	color: #fff;
+	padding: 5px 10px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	width: 100%;
+}
+
+.note {
+	color: #888;
+	font-size: 14px;
+	margin-top: 10px;
+	text-align: center;
+}
+
+@media (width<=768px) {
+	.btn2 {
+		width: 80%;
+	}
+}
+</style>
