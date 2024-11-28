@@ -1,9 +1,9 @@
 <template>
 	<MemberNavbar />
-	<div class="member-order">
-		<div class="order-container">
-			<div class="order-details">
-				<table class="order-table">
+	<div class="memberOrder">
+		<div class="orderContainer">
+			<div class="orderDetails">
+				<table class="orderTable">
 					<thead>
 						<tr>
 							<td>訂單號碼</td>
@@ -37,26 +37,26 @@ import MemberNavbar from "./MemberNavbar.vue"
 	font-size: 14px;
 	color: #333333;
 }
-.member-order {
+.memberOrder {
 	margin: 0 auto;
 	max-width: 1358px;
 	border: 1px solid #ddd;
 	border-top: 1px solid #fff;
 }
-.order-container {
+.orderContainer {
 	font-family: Arial, sans-serif;
 	margin: 20px auto;
 	max-width: 1278px;
 }
 
-.order-table {
+.orderTable {
 	width: 100%;
 	border-collapse: collapse;
 	margin-bottom: 10px;
 }
 
-.order-table th,
-.order-table td {
+.orderTable th,
+.orderTable td {
 	padding: 10px;
 	border: 1px solid #ddd;
 	border-top: 1px solid #ddd;
@@ -64,16 +64,16 @@ import MemberNavbar from "./MemberNavbar.vue"
 	border-left: none;
 	border-right: none;
 }
-.order-table th:first-child,
-.order-table td:first-child {
+.orderTable th:first-child,
+.orderTable td:first-child {
 	border-left: 1px solid #ddd;
 }
 
-.order-table th:last-child,
-.order-table td:last-child {
+.orderTable th:last-child,
+.orderTable td:last-child {
 	border-right: 1px solid #ddd;
 }
-.order-table thead th {
+.orderTable thead th {
 	background-color: #f5f5f5;
 	font-weight: bold;
 }

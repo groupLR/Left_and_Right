@@ -1,9 +1,9 @@
 <template>
 	<body>
-		<section class="member-message">
-			<div class="message-box text-center text-xl">
-				<div class="chat-box">
-					<nav class="message-nav p-[10px]">Bonny & Read 飾品</nav>
+		<section class="memberMessage">
+			<div class="messageBox text-center text-xl">
+				<div class="chatBox">
+					<nav class="messageNav p-[10px]">Bonny & Read 飾品</nav>
 					<div class="chatContent">
 						<ul>
 							<li
@@ -26,7 +26,10 @@
 					></textarea>
 					<div class="message-btn">
 						<button class="btn">
-							<i class="fa fa-plus-circle"></i>加入圖片
+							<font-awesome-icon
+								:icon="['fas', 'circle-plus']"
+								style="color: #fff; margin-right: 4px"
+							/>加入圖片
 						</button>
 						<button @click="sendMessage" class="btn">傳送</button>
 					</div>
@@ -107,7 +110,7 @@ const sendMessage = () => {
 	color: #333333;
 }
 
-.member-message {
+.memberMessage {
 	margin: 0 auto;
 	width: 1358px;
 	max-width: 100%;
@@ -115,11 +118,11 @@ const sendMessage = () => {
 	border-top: 1px solid #fff;
 }
 
-.message-nav {
+.messageNav {
 	background-color: #f9f9f9;
 }
 
-.chat-box {
+.chatBox {
 	border: 1px #e2e8f0 solid;
 	width: 650px;
 	margin: auto;
@@ -165,7 +168,7 @@ const sendMessage = () => {
 }
 
 @media (width<=768px) {
-	.message-box {
+	.messageBox {
 		width: 100%;
 	}
 }

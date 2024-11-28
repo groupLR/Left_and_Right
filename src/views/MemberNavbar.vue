@@ -1,27 +1,27 @@
 <template>
-	<div class="navbar-main">
+	<div class="navbarMain">
 		<!-- nav bar -->
 		<nav>
-			<ul class="member-navbar">
-				<li class="member-options" @click="navigateTo('/users/edit')">
+			<ul class="memberNavbar">
+				<li class="memberOptions" @click="navigateTo('/users/edit')">
 					<div>個人資訊</div>
 				</li>
-				<li class="member-options" @click="navigateTo('/MemberPoint')">
+				<li class="memberOptions" @click="navigateTo('/MemberPoint')">
 					<div>會員點數</div>
 				</li>
-				<li class="member-options" @click="navigateTo('/MemberShoppingGold')">
+				<li class="memberOptions" @click="navigateTo('/MemberShoppingGold')">
 					<div>商店購物金</div>
 				</li>
-				<li class="member-options" @click="navigateTo('/MemberCoupons')">
+				<li class="memberOptions" @click="navigateTo('/MemberCoupons')">
 					<div>優惠券</div>
 				</li>
-				<li class="member-options" @click="navigateTo('/MemberMessage')">
+				<li class="memberOptions" @click="navigateTo('/MemberMessage')">
 					<div>訊息</div>
 				</li>
-				<li class="member-options" @click="navigateTo('/MemberOrder')">
+				<li class="memberOptions" @click="navigateTo('/MemberOrder')">
 					<div>訂單</div>
 				</li>
-				<li class="member-options" @click="navigateTo('/MemberWishList')">
+				<li class="memberOptions" @click="navigateTo('/MemberWishList')">
 					<div>追蹤清單</div>
 				</li>
 			</ul>
@@ -46,18 +46,18 @@ export default {
 	font-size: 14px;
 	color: #333333;
 }
-.navbar-main {
+.navbarMain {
 	border: 1px solid #ddd;
 	max-width: 1358px;
 	margin: auto;
 }
 /* nav bar */
-.member-navbar {
+.memberNavbar {
 	display: flex;
 	background-color: rgba(204, 204, 204, 0.2);
 	padding: 0;
 }
-.member-options {
+.memberOptions {
 	width: 100%;
 	max-width: 100%;
 	list-style-type: none;
@@ -67,13 +67,13 @@ export default {
 	color: #33333399;
 	border-left: solid 1px #ddd;
 }
-.member-options:first-of-type {
+.memberOptions:first-of-type {
 	border-left: none;
 }
 
 @media (max-width: 768px) {
 	/* nav bar */
-	.member-navbar {
+	.memberNavbar {
 		display: flex;
 		background-color: #fff;
 		padding: 0;
@@ -81,7 +81,7 @@ export default {
 		max-width: 80%;
 		overflow-x: auto; /* 開啟水平捲動 */
 	}
-	.member-options {
+	.memberOptions {
 		min-width: 70px;
 		list-style-type: none;
 		height: 50px;
@@ -95,7 +95,7 @@ export default {
 		background-color: #fff;
 		margin-top: 20px;
 	}
-	.member-options:first-of-type {
+	.memberOptions:first-of-type {
 		border-left: none;
 	}
 	/* nav bar */

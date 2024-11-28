@@ -1,29 +1,29 @@
 <template>
 	<MemberNavbar />
-	<section class="member-points-main">
-		<div class="member-content">
+	<section class="memberPointsMain">
+		<div class="memberContent">
 			<!-- 點數記錄開始 -->
-			<div class="points-record">
+			<div class="pointsRecord">
 				<img
 					src="https://static.shoplineapp.com/web/v1/img/member_center_circle_dollar.svg"
 				/>
 				點數記錄
 			</div>
-			<div class="current-points-board">
-				<div class="current-gold">
+			<div class="currentPointsBoard">
+				<div class="currentGold">
 					<p class="my-[4px]">現有購物金</p>
 					<p class="my-[4px]"><span class="text-3xl">0</span>點</p>
 				</div>
 			</div>
 			<!-- 點數記錄結束 -->
-			<div class="member-record-list">
+			<div class="memberRecordList">
 				<img
 					src="https://static.shoplineapp.com/web/v1/img/member_center_list_empty.png"
 					alt=""
 				/>
 				<p>沒有任何紀錄</p>
 				<p>結帳累積購物金獲得更多優惠</p>
-				<button class="go-shopping">馬上逛逛</button>
+				<button class="goShopping">馬上逛逛</button>
 			</div>
 		</div>
 	</section>
@@ -39,27 +39,27 @@ import MemberNavbar from "./MemberNavbar.vue"
 	color: #333333;
 }
 
-.member-points-main {
+.memberPointsMain {
 	margin: auto;
 	max-width: 1358px;
 	border: 1px solid #ddd;
 	border-top: 1px solid #fff;
 }
 
-.member-content {
+.memberContent {
 	margin-top: 20px;
 	padding: 0 40px;
 	padding-bottom: 20px;
 }
-.points-record {
+.pointsRecord {
 	padding-bottom: 28px;
 	line-height: 25px;
 	display: flex;
 }
-.points-record img {
+.pointsRecord img {
 	margin-right: 16px;
 }
-.current-points-board {
+.currentPointsBoard {
 	padding: 16px 16px 16px 168px;
 	display: flex;
 	background-color: #f8f8f8;
@@ -81,7 +81,7 @@ import MemberNavbar from "./MemberNavbar.vue"
 	margin: auto 0;
 	padding-left: 40px;
 }
-.member-record-list img {
+.memberRecordList img {
 	display: block;
 	margin: 0 auto;
 	height: 129px;
@@ -89,7 +89,7 @@ import MemberNavbar from "./MemberNavbar.vue"
 	margin-top: 6px;
 	margin-bottom: 10px;
 }
-.member-record-list p {
+.memberRecordList p {
 	line-height: 20px;
 	margin: 0;
 	text-align: center;
@@ -97,7 +97,7 @@ import MemberNavbar from "./MemberNavbar.vue"
 	color: #777777;
 	padding: 0.15rem;
 }
-.go-shopping {
+.goShopping {
 	display: block;
 	margin: 20px auto;
 	width: 220px;
@@ -114,14 +114,14 @@ import MemberNavbar from "./MemberNavbar.vue"
 	font-weight: bold;
 }
 
-.go-shopping:hover {
+.goShopping:hover {
 	background-color: #333;
 }
 @media (width<=768px) {
-	.go-shopping {
+	.goShopping {
 		width: 100%;
 	}
-	.current-points-board {
+	.currentPointsBoard {
 		padding: 16px;
 		display: block;
 		background-position: right;
@@ -132,11 +132,11 @@ import MemberNavbar from "./MemberNavbar.vue"
 	.current-points > p:first-of-type {
 		display: none;
 	}
-	.current-gold > p:first-of-type {
+	.currentGold > p:first-of-type {
 		display: none;
 	}
 
-	.member-points-main {
+	.memberPointsMain {
 		border-top: none;
 	}
 }

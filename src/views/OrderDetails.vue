@@ -3,7 +3,8 @@
 		<div class="panel-header">
 			<h3>合計:NT$750</h3>
 			<div class="Cart">
-				<span>購物車(1件)</span><i class="fa-solid fa-chevron-up"></i>
+				<span>購物車(1件)</span
+				><font-awesome-icon :icon="['fas', 'chevron-up']" />
 			</div>
 		</div>
 		<div class="order-detail">
@@ -136,7 +137,7 @@ h4 {
 }
 .orders-main {
 	box-sizing: border-box;
-	width: 1400px;
+	max-width: 1400px;
 	padding: 25px 40px 25px 40px;
 	margin: auto;
 }
@@ -395,6 +396,22 @@ hr {
 	}
 	.Cart span {
 		display: none;
+	}
+	.orders-title {
+		display: none;
+	}
+	.item-card {
+		display: flex;
+	}
+	.items-coupon {
+		display: none;
+	}
+	.items-name,
+	.items-price,
+	.items-quantity,
+	.items-total {
+		width: 50%;
+		box-sizing: border-box;
 	}
 }
 </style>
