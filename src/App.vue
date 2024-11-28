@@ -15,7 +15,9 @@ import ProductList from "./views/ProductList.vue";
       <RouterLink to="/about">About</RouterLink>
       <RouterLink to="/">Home</RouterLink>
       |
-      <!-- COMPANY -->
+      <RouterLink to="/reviews">Reviews</RouterLink>
+
+      | <!-- COMPANY -->
       <RouterLink to="/about">關於品牌</RouterLink>
       |
       <RouterLink to="/store-info">門市資訊</RouterLink>

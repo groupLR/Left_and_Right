@@ -15,9 +15,19 @@ const router = createRouter({
     component: HomeView,
   },
   {
+    path:'/franchising',
+    name:'franchising',
+    component:() => import('../views/Franchising.vue')
+  },
+  {
     path: '/about',
     name: 'about',
     component: () => import('../views/AboutView.vue'),
+  },
+  {
+    path: '/reviews',
+    name: 'reviews',
+    component: () => import('../components/Reviews.vue'),
   },
   {
     path: '/vip',
