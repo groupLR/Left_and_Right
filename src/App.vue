@@ -39,6 +39,8 @@ import ProductList from "./views/ProductList.vue";
       <RouterLink to="/products">products</RouterLink>
       |
       <RouterLink to="/store-info">store-info</RouterLink>
+      |
+      <RouterLink to="/users/sign-in">register</RouterLink>
     </nav>
   </header>
   <RouterView />
