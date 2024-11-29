@@ -10,7 +10,7 @@ import ProductList from "./views/ProductList.vue";
 
 <template>
   <header>
-    <NavBar />
+    <NavBar/>
     <nav>
       <RouterLink to="/about">About</RouterLink>
       <RouterLink to="/">Home</RouterLink>
