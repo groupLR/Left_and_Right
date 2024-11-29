@@ -2,7 +2,7 @@
   <hr />
   <!-- Footer -->
   <footer class="footer mt-8">
-    <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-20 lg:m-8">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 p-5 gap-8 mb-20 lg:m-8">
       <!-- COMPANY -->
       <div class="flex flex-col ">
         <h3 class="font-extrabold text-[18px] mb-4">COMPANY</h3>
@@ -61,7 +61,7 @@
     </div>
 
     <!-- Footer Bottom Section -->
-    <div class="footer-Bgc bg-gray-200 py-4 text-center">
+    <div class="footerBgc bg-gray-200 py-4 text-center">
       <p class="text-sm font-semibold">2024 © BONNY & READ CO. LTD. ALL RIGHTS RESERVED.</p>
       <p class="text-sm">營業人名稱：邦尼利得國際實業股份有限公司 / 統一編號：24687347</p>
     </div>
@@ -70,18 +70,19 @@
 
 <style scoped>
 .container{
-  padding: 20px;
+ margin: 0 auto;
+padding-bottom: 10px;
 }
 .footer {
   width: 100%;
 
   background-color: white;
 }
-.footer-Bgc {
+.footerBgc {
   font-size: 12px;
 }
 li,
-.p-text {
+.pText {
   font-size: 13px;
 }
 </style>
