@@ -1,13 +1,11 @@
 <template>
-  <!-- 確保 Google 按鈕的容器一直存在 -->
   <div v-if="!isLoggedIn">
     <div id="googleButton"></div>
   </div>
-  
+  <!-- ↓ 這邊之後會拿掉 -->
   <div v-else class="flex items-center gap-4">
     <div class="flex items-center gap-2">
-      <img :src="userData.picture" alt="profile" class="w-8 h-8 rounded-full"/>
-      <span>{{ userData.name }}</span>
+      <span>{{ userData.username }}</span>
     </div>
     <button @click="handleLogout" class="w-12 h-6 bg-orange-200 rounded">登出</button>
   </div>
@@ -17,13 +15,31 @@
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
 
+
 // CLIENT_ID
 const CLIENT_ID = "201131820318-om98jaudikrjuraavdmt8o0jlitaf7b1.apps.googleusercontent.com"
 // 後端 API 網址
 const API_URL = 'http://localhost:3300'
-// data 跟 computed
+// localSrotage 的 key
+const STORAGE_KEY = 'isLoggedIn'
+// data
 const userData = ref(null)  
 const isLoggedIn = ref(false)  // 登入狀態
+
+
+// 處理 google 註冊新用戶
+const handleRegister = async (googleData) => {
+  try {
+    const response = await axios.post(`${API_URL}/auth/register`, googleData)
+    userData.value = response.data.user
+    isLoggedIn.value = true // 註冊後直接登入
+    localStorage.setItem(STORAGE_KEY, 'true') // 登入狀態放在 localStorage
+
+  } catch (error) {
+    console.error('註冊失敗 QAQ :', error)
+  }
+}
+
 
 // Google 登入 callback fn
 const onLogin = (res) => {
@@ -36,10 +52,27 @@ const onLogin = (res) => {
 
   axios.post(`${API_URL}/auth/verify-token`, res, axiosOptions)
     .then((res) => {
-      console.log("登入成功", res.data)
-      console.log("res", res);
-      userData.value = res.data;
-      isLoggedIn.value = true
+      if (res.data.exists) {
+        console.log('用戶資料：', res.data.user) // 看看收到什麼資料
+        // 用戶存在（可能是一般註冊或 Google 註冊），直接登入
+        userData.value = res.data.user
+        isLoggedIn.value = true
+        localStorage.setItem(STORAGE_KEY, 'true')
+        console.log('登入成功')
+      } else {
+        // 用戶不存在，詢問是否要註冊，這邊可以考慮搞個彈窗或是 sweetalert
+        Swal.fire({
+          title: '註冊確認',
+          text: '此 email 尚未註冊，是否要註冊新帳號？',
+          showCancelButton: true,
+          confirmButtonText: '註冊',
+          cancelButtonText: '取消'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            handleRegister(res.data.googleData)
+          }
+        })
+      }
     })
     .catch((error) => {
       console.error("登入失敗", error)
@@ -50,6 +83,7 @@ const onLogin = (res) => {
 const handleLogout = () => {
   userData.value = null
   isLoggedIn.value = false
+  localStorage.removeItem(STORAGE_KEY) // 移除 localStorage
   console.log("登出成功");
   
   // 等待 DOM 更新後再重新渲染按鈕
@@ -92,7 +126,14 @@ const initializeGoogle = () => {
 }
 
 onMounted(() => {
-  // 如果 Google API 已載入就直接初始化，不然就等待載入完成
+  // 檢查登入狀態
+  const isUserLoggedIn = localStorage.getItem(STORAGE_KEY)
+  if (isUserLoggedIn === 'true') {
+    // 這邊可以呼叫 API 重新獲取用戶資料
+    // 或是導向登入頁面重新登入
+    isLoggedIn.value = true
+  }
+
   if (window.google) {
     initializeGoogle()
   } else {
