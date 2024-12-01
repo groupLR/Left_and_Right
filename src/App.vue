@@ -11,13 +11,13 @@ import GoogleLoginButton from './components/googleLogin.vue'
 </script>
 
 <template>
-  <header>
-    <NavBar />
-    <nav>
-      <RouterLink to="/about">About</RouterLink>
-      <RouterLink to="/">Home</RouterLink>
-      |
-      <RouterLink to="/reviews">Reviews</RouterLink>
+	<header>
+		<NavBar />
+		<nav>
+			<RouterLink to="/about">About</RouterLink>
+			<RouterLink to="/">Home</RouterLink>
+			|
+			<RouterLink to="/reviews">Reviews</RouterLink>
 
       | <!-- COMPANY -->
       <RouterLink to="/about">關於品牌</RouterLink>
