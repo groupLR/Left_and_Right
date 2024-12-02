@@ -1,12 +1,16 @@
 <script setup >
 import ProductItem from "@/components/ProductItem.vue";
-import { ref } from "vue"
+import { ref,computed } from "vue"
 import { storeToRefs } from "pinia";
 import { useProductStore } from '@/stores/products'
+import SmallCart4 from "@/components/SmallCart4.vue";
 
-const ProductStore = useProductStore()
-const { productList } = storeToRefs(ProductStore)
-
+const productStore = useProductStore()
+const cartVisible = ref(false); // 控制 SmallCart 的顯示
+const { productList, cartItems, coBrandingProductList } = storeToRefs(productStore)
+const toggleCart = () => {
+  cartVisible.value = !cartVisible.value;
+};
 
 // select package => Element plus
 const sortValue = ref('')
@@ -49,30 +53,56 @@ const pageOptions = [
     value: 'pageItem72',
   },
 ]
+// 购物车商品
+//const cartItems = ref([]);  购物车商品的数组
+// 模擬的商品列表（來自 Pinia Store）
+// const coBrandingProductList = productStore.coBrandingProductList;
+// 處理加入購物車的事件
+const handleAddToCart = (product) => {
+  // console.log('Adding item to cart, itemId:', itemId);  // 打印商品 id，確保它正確
+  productStore.addToCart(product); // 呼叫 Pinia store 的方法
+  productStore.toggleCartVisibility(true); // 確保購物車被顯示
+};
+// 从购物车删除商品
+const removeFromCart = (itemId) => {
+  productStore.removeFromCart(itemId);  // 使用 Pinia store 的方法从购物车中删除商品
+};
 
+
+// 更新购物车商品数量
+const updateQuantity = (itemId, quantity) => {
+  productStore.updateQuantity(itemId, quantity);  // 使用 Pinia store 的方法更新商品数量
+};
+
+// 计算购物车内商品的总数量
+const cartItemCount = computed(() => {
+  return cartItems.value.reduce((total, item) => total + item.quantity, 0);
+});
 // 分頁 package
 const pageValue = ref('')
 const onClickHandler = (page) => {
   console.log(page);
 };
 const currentPage = ref(1);
-
+// console.log('Item ID in Parent Component:', item.id);
+// console.log("coBrandingProductList:", coBrandingProductList.value);
+// console.log("productList:", productList.value);
 </script>
 
 
 <template>
-  <section class=" px-4 py-3">
-    <div class="headerContainer px-1 mb-2 md:flex items-center">
-      <h1 class=" py-5 text-xl">戒指 / Rings</h1>
-      <div class="selectContainer flex">
-        <div class="pageSelectItem  flex items-center relative mr-3 flex-1">
-          <i class="fa-solid fa-arrow-up-short-wide absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+  <section class="px-4 py-3 ">
+    <div class="items-center px-1 mb-2 headerContainer md:flex">
+      <h1 class="py-5 text-xl ">戒指 / Rings</h1>
+      <div class="flex selectContainer">
+        <div class="relative flex items-center flex-1 mr-3 pageSelectItem">
+          <i class="absolute text-gray-500 transform -translate-y-1/2 fa-solid fa-arrow-up-short-wide left-3 top-1/2"></i>
           <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="sortValue" placeholder="商品排序" size="large" class="pl-10">
             <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </div>
-        <div class="pageSelectItem  flex items-center relative flex-1">
-          <i class="fa-solid fa-bars fa-rotate-90 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+        <div class="relative flex items-center flex-1 pageSelectItem">
+          <i class="absolute text-gray-500 transform -translate-y-1/2 fa-solid fa-bars fa-rotate-90 left-3 top-1/2"></i>
           <el-select placement="bottom"  :fallback-placements="['bottom-start']" v-model="pageValue" placeholder="每頁顯示 24 個" size="large" class="pl-10">
             <el-option class="selectOption" v-for="item in pageOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
@@ -83,13 +113,48 @@ const currentPage = ref(1);
 
     <!-- 產品列表 -->
     <div class="flex flex-wrap">
-      <ProductItem v-for="(item, index) in productList" :key="item.id" :title="item.title" :price="item.price"
-        :orginalPrice="item.orginalPrice" :frontImg="item.frontImg" :backImg="item.backImg" />
-    </div>
+  <!-- 顯示 coBrandingProductList 商品 -->
+  <ProductItem
+    v-for="item in coBrandingProductList"
+    :key="item.id"
+    :id="item.id"
+    :title="item.title"
+    :price="item.price"
+    :originalPrice="item.originalPrice"
+    :frontImg="item.frontImg"
+    :backImg="item.backImg"
+    @addToCart="handleAddToCart"
+    @removeFromCart="removeFromCart"
+    @updateQuantity="updateQuantity"
+    class="md:col-6 lg:col-3"
+  />
+</div>
+
+<div class="flex flex-wrap">
+  <!-- 顯示 productList 商品 -->
+  <ProductItem
+    v-for="item in productList"
+    :key="item.id"
+    :id="item.id"
+    :title="item.title"
+    :price="item.price"
+    :originalPrice="item.originalPrice"
+    :frontImg="item.frontImg"
+    :backImg="item.backImg"
+    @addToCart="handleAddToCart"
+    @removeFromCart="removeFromCart"
+    @updateQuantity="updateQuantity"
+    class="md:col-6 lg:col-3"
+  />
+</div>
+
+<!-- 顯示小購物車，只顯示一次 -->
+<SmallCart4 :visible="cartVisible" :cartItems="productStore.cartItems" />
+
 
     <!-- 分頁 -->
-    <div class="flex justify-center md:relative  md:mb-12">
-      <vue-awesome-paginate class=" md:absolute md:right-0 text-gray-500 text-sm" :total-items="productList.length"
+    <div class="flex justify-center md:relative md:mb-12">
+      <vue-awesome-paginate class="text-sm text-gray-500 md:absolute md:right-0" :total-items="productList.length"
         :items-per-page="2" :max-pages-shown="5" v-model="currentPage" @click="onClickHandler"
         :hide-prev-next-when-ends="true" link-url="/products?page=[page]" />
     </div>
