@@ -1,527 +1,708 @@
 <script setup>
+import { ref } from "vue";
+const isVisible = ref(false);
+const articleOpen = ref(false);
+const cartOpen = ref(false);
+const changeLanguageOpen = ref(false);
+const moneyOpen = ref(false);
+const overlayOpen = ref(false);
 
+const inputShow = () => {
+  isVisible.value = !isVisible.value;
+};
+const openArticle = () => {
+  articleOpen.value = !articleOpen.value;
+};
+const openCart = () => {
+  cartOpen.value = !cartOpen.value;
+};
+const openChangeLanguage = () => {
+  changeLanguageOpen.value = !changeLanguageOpen.value;
+};
+const openMoney = () => {
+  moneyOpen.value = !moneyOpen.value;
+};
+const openOverlay = () => {
+  overlayOpen.value = !overlayOpen.value;
+};
+// 1
+const listOpen = ref(true);
+const openList = () => {
+  listOpen.value = !listOpen.value;
+};
+// 2
+const listOpen2 = ref(true);
+const openList2 = () => {
+  listOpen2.value = !listOpen2.value;
+};
+// 3
+const listOpen3 = ref(true);
+const openList3 = () => {
+  listOpen3.value = !listOpen3.value;
+};
+// 4
+const listOpen4 = ref(true);
+const openList4 = () => {
+  listOpen4.value = !listOpen4.value;
+};
+// 5
+const listOpen5 = ref(true);
+const openList5 = () => {
+  listOpen5.value = !listOpen5.value;
+};
+// 6
+const listOpen6 = ref(true);
+const openList6 = () => {
+  listOpen6.value = !listOpen6.value;
+};
+// 7
+const listOpen7 = ref(true);
+const openList7 = () => {
+  listOpen7.value = !listOpen7.value;
+};
+// 8
+const listOpen8 = ref(true);
+const openList8 = () => {
+  listOpen8.value = !listOpen8.value;
+};
+// 9
+const listOpen9 = ref(true);
+const openList9 = () => {
+  listOpen9.value = !listOpen9.value;
+};
+// 10
+const listOpen10 = ref(true);
+const openList10 = () => {
+  listOpen10.value = !listOpen10.value;
+};
+// 11
+const listOpen11 = ref(true);
+const openList11 = () => {
+  listOpen11.value = !listOpen11.value;
+};
+// 12
+const listOpen12 = ref(true);
+const openList12 = () => {
+  listOpen12.value = !listOpen12.value;
+};
+// 13
+const listOpen13 = ref(true);
+const openList13 = () => {
+  listOpen13.value = !listOpen13.value;
+};
+// 14
+const listOpen14 = ref(true);
+const openList14 = () => {
+  listOpen14.value = !listOpen14.value;
+};
+// 15
+const listOpen15 = ref(true);
+const openList15 = () => {
+  listOpen15.value = !listOpen15.value;
+};
+// 16
+const listOpen16 = ref(true);
+const openList16 = () => {
+  listOpen16.value = !listOpen16.value;
+};
+// 17
+const listOpen17 = ref(true);
+const openList17 = () => {
+  listOpen17.value = !listOpen17.value;
+};
+// 18
+const listOpen18 = ref(true);
+const openList18 = () => {
+  listOpen18.value = !listOpen18.value;
+};
+// 19
+const listOpen19 = ref(true);
+const openList19 = () => {
+  listOpen19.value = !listOpen19.value;
+};
 </script>
-
 <template>
-  <div class="navbar">
-    <!-- 導覽列 -->
-    <div class="navbarMenu">
-      <!-- Logo -->
-      <div class="logo">
-        <a href="#"><img src="/src/assets/ourLogo.jpeg" alt="logo" /></a>
-      </div>
-
-      <!-- 貨幣選單 -->
-      <select class="money">
-        <option>$ HKD</option>
-        <option>P MOP</option>
-        <option>¥ CNY</option>
-        <option selected>$ TWD</option>
-        <option>$ USD</option>
-        <option>$ SGD</option>
-        <option>€ EUR</option>
-        <option>$ AUD</option>
-        <option>£ GBP</option>
-        <option>₱ PHP</option>
-        <option>RM MYR</option>
-        <option>฿ THB</option>
-        <option>د.إ AED</option>
-        <option>¥ JPY</option>
-        <option>$ BND</option>
-        <option>₩ KRW</option>
-        <option>Rp IDR</option>
-        <option>₫ VND</option>
-        <option>$ CAD</option>
-      </select>
-
-      <!-- 地球圖示和語言選擇 -->
-      <div class="language-container">
-        <font-awesome-icon class="globe-icon" :icon="['fas', 'globe']" />
-        <select class="language">
-          <option>English</option>
-          <option selected>繁體中文</option>
-        </select>
-      </div>
-
-      <!-- 服務圖示 -->
-      <ul class="navbarServices">
-        <!-- 搜尋框 -->
-        <li class="comment">
-          <input
-            type="text"
-            class="search"
-            placeholder="ivy郁欣聯名"
-            maxlength="100"
-          />
-          <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
-        </li>
-        <li><font-awesome-icon :icon="['fas', 'comment']" class="msg" /></li>
-        <li><router-link to="/users/edit"><font-awesome-icon :icon="['fas', 'user']" /></router-link></li>
-        <li><label for="cartSidebarSwitch"><font-awesome-icon :icon="['fas', 'bag-shopping']" /></label></li>
-
-        <!-- 三條橫線 (Hamburger menu) -->
-        <li><label for="sidebarSwitch"><font-awesome-icon :icon="['fas', 'bars']" class="bars" /></label></li>
-      </ul>
-    </div>
-    <div class="bigLogo">
-      <a href="#"><img src="/src/assets/ourLogo.jpeg" alt="logo" /></a>
-    </div>
-    <!-- 項目導航列 -->
-    <div class="items">
-      <a href="#">1111 新品 / NEW ARRIVAL</a>
-      <a href="#">耳環 / Earrings</a>
-      <a href="#">耳夾 / Earclip</a>
-      <a href="#">戒指 / Rings</a>
-      <a href="#">手鍊 / Bracelets</a>
-      <a href="#">項鍊 / Necklaces</a>
-      <a href="#">聯名系列</a>
-      <a href="#">門市資訊</a>
-    </div>
+  <input type="checkbox" id="bars" class="hidden peer" />
+  <div
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 pointer-events-none peer-checked:pointer-events-auto peer-checked:opacity-100 opacity-0">
+    <label for="bars" class="absolute inset-0 cursor-pointer"></label>
   </div>
-  <!-- 購物車開合 -->
-  <input
-    type="checkbox"
-    name="cartSidebarSwitch"
-    id="cartSidebarSwitch"
-    class="cartSidebarSwitch"
-  />
-  <article class="cartSidebar">
-    <span>您的購物車是空的</span>
-  </article>
-<!-- 側邊欄開合 -->
-  <input type="checkbox"
-  name="sidebarSwitch"
-  id="sidebarSwitch"
-  class="sidebarSwitch"/>
-<!-- 側邊欄細項開合 -->
-  <input type="checkbox"
-  name="chevronSwitch"
-  id="chevronSwitch"
-  class="chevronSwitch"/>
+  <div class="flex items-center justify-between">
+    <a href="#" class="py-2 px-4">
+      <img
+        src="/src/assets/ourLogo.jpeg"
+        alt="logo"
+        class="object-fill w-20 h-11"
+    /></a>
+    <ul class="flex flex-1 items-center justify-end ">
+      <li class="mx-3 ">
+        <select class="xl:block hidden outline-none cursor-pointer text-black hover:text-gray-500">
+          <option>$ HKD</option>
+          <option>P MOP</option>
+          <option>¥ CNY</option>
+          <option selected>$ TWD</option>
+          <option>$ USD</option>
+          <option>$ SGD</option>
+          <option>€ EUR</option>
+          <option>$ AUD</option>
+          <option>£ GBP</option>
+          <option>₱ PHP</option>
+          <option>RM MYR</option>
+          <option>฿ THB</option>
+          <option>د.إ AED</option>
+          <option>¥ JPY</option>
+          <option>$ BND</option>
+          <option>₩ KRW</option>
+          <option>Rp IDR</option>
+          <option>₫ VND</option>
+          <option>$ CAD</option>
+        </select>
+      </li>
+      <li class="mx-3">
+        <div class="hidden xl:block cursor-pointer text-black hover:text-gray-500">
+          <font-awesome-icon class="globe-icon" :icon="['fas', 'globe']" />
+          <select class="outline-none cursor-pointer text-black hover:text-gray-500">
+            <option>English</option>
+            <option selected>繁體中文</option>
+          </select>
+        </div>
+      </li>
+      <li class="mx-3 xl:hidden" @click="inputShow">
+        <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+      </li>
+      <li class="hidden xl:block mx-3 group relative text-black hover:text-gray-500">
+        <input
+          type="search"
+          maxlength="100"
+          placeholder="ivy郁欣聯名"
+          class="w-0 group-hover:w-56 focus:w-56 focus-visible:outline-none border-b border-black transition-all duration-500 ease-in-out overflow-hidden outline-none"
+        />
+        <button type="submit">
+          <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+        </button>
+      </li>
+      <li class="mx-3 hidden xl:block cursor-pointer text-black hover:text-gray-500">
+        <font-awesome-icon :icon="['fas', 'comment']" />
+      </li>
+      <li class="mx-3 cursor-pointer text-black hover:text-gray-500">
+        <font-awesome-icon :icon="['fas', 'user']" />
+      </li>
+      <li class="mx-3 cursor-pointer text-black hover:text-gray-500">
+        <font-awesome-icon :icon="['fas', 'bag-shopping']" @click="openCart" />
+      </li>
+      <li class="w-16 h-16 relative list-none">
+        <div>
+          <label for="bars"
+            ><font-awesome-icon
+              :icon="['fas', 'bars']"
+              class="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer left-1/2 xl:hidden"
+          /></label>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div v-show="isVisible" class="py-4 pr-3 pl-4 w-full z-100 xl:hidden">
+    <button type="submit" class="py-px px-1.5">
+      <i class="fa fa-search ::before"></i>
+    </button>
+    <input
+      type="search"
+      maxlength="100"
+      placeholder="ivy郁欣聯名"
+      class="focus-visible:outline-none border-b border-black w-4/5"
+    />
+  </div>
+  <article
+    class="w-3/4 h-screen fixed -translate-x-full transition-all duration-500 bg-white z-10 top-0 overflow-auto peer-checked:translate-x-0"
+  >
+    <li class="listItems"><a href="#">Kurt Wu 插畫家聯名</a></li>
+    <li class="listItems"><a href="#">KOL / Ivy郁欣聯名</a></li>
+    <li class="listItems"><a href="#">飾品設計師大賽/by.Lab</a></li>
 
-  <article class="sidebar">
-    <li><a href="#">Kurt Wu 插畫家聯名</a></li>
-    <li><a href="#">KOL / Ivy郁欣聯名</a></li>
-    <li><a href="#">飾品設計師大賽/by.Lab</a></li>
-    <li>
-        <a href="#">1111 新品 / NEW ARRIVAL
-            <label for="openList"><font-awesome-icon :icon="['fas', 'chevron-up']" class="chevron-up" /></label>
-        </a>
-        <ul>
-            <li>Christmas Gift</li>
-            <li>FW Pearl</li>
-            <li>Winter Morning</li>
-            <li>Hyperspace</li>
-            <li>The Untitled</li>
-        </ul>
+    <li class="listItems relative">
+      <a href="#">1111 新品 / NEW ARRIVAL</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen }"
+        @click="openList"
+      />
+      <ul class="overflow-hidden" :class="listOpen ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">Christmas Gift</li>
+        <li class="py-3.5 pr-11 pl-4">FW Pearl</li>
+        <li class="py-3.5 pr-11 pl-4">Winter Morning</li>
+        <li class="py-3.5 pr-11 pl-4">Hyperspace</li>
+        <li class="py-3.5 pr-11 pl-4">The Untitled</li>
+      </ul>
     </li>
-    <li><a href="#">限時優惠/Sales</a>
-        <ul>
-            <li>登入會員4折起優惠</li>
-            <li>藝人聯名限時8折起</li>
-        </ul>
+    <li class="listItems relative">
+      <a href="#">限時優惠/Sales</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen2 }"
+        @click="openList2"
+      />
+      <ul class="overflow-hidden" :class="listOpen2 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">登入會員4折起優惠</li>
+        <li class="py-3.5 pr-11 pl-4">藝人聯名限時8折起</li>
+      </ul>
     </li>
-    <li><a href="#">熱銷商品/B.Sellers</a>
-    <ul>
-        <li>Y3K時尚</li>
-        <li>勃艮第紅</li>
-        <li>聖誕系列</li>
-        <li>蝴蝶結 芭蕾風</li>
-        <li>開運飾品</li>
-        <li>花草空間</li>
-        <li>NT$250↓</li>
-        <li>鍍K金系列</li>
-        <li>Y2K復古風潮</li>
-        <li>天然水晶、質感晶石</li>
-        <li>珍珠、珍珠項鍊、珍珠耳環</li>
-    </ul></li>
-    <li><a href="#">耳環 / Earrings</a>
-        <ul>
-        <li>抗敏銀針</li>
-        <li>耳環組</li>
-        <li>圈圈耳環</li>
-        <li>垂墜耳環</li>
-        <li>貼耳耳環</li>
-        <li>鎖珠耳環</li>
-        <li>S999養耳棒</li>
-        <li>純銀鎖珠耳環</li>
-    </ul>
-</li>
-    <li><a href="#">耳夾 / Earclip</a>
-        <ul>
-            <li>純銀耳夾耳扣</li>
-            <li>垂墜夾式耳環</li>
-            <li>耳扣耳骨夾</li>
-            <li>螺旋夾式</li>
-            <li>彈簧夾式</li>
-            <li>貼耳耳夾</li>
-            <li>圈圈耳夾</li>
-        </ul>
+    <li class="listItems">
+      <a href="#">熱銷商品/B.Sellers</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen3 }"
+        @click="openList3"
+      />
+      <ul class="overflow-hidden" :class="listOpen3 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">Y3K時尚</li>
+        <li class="py-3.5 pr-11 pl-4">勃艮第紅</li>
+        <li class="py-3.5 pr-11 pl-4">聖誕系列</li>
+        <li class="py-3.5 pr-11 pl-4">蝴蝶結 芭蕾風</li>
+        <li class="py-3.5 pr-11 pl-4">開運飾品</li>
+        <li class="py-3.5 pr-11 pl-4">花草空間</li>
+        <li class="py-3.5 pr-11 pl-4">NT$250↓</li>
+        <li class="py-3.5 pr-11 pl-4">鍍K金系列</li>
+        <li class="py-3.5 pr-11 pl-4">Y2K復古風潮</li>
+        <li class="py-3.5 pr-11 pl-4">天然水晶、質感晶石</li>
+        <li class="py-3.5 pr-11 pl-4">珍珠、珍珠項鍊、珍珠耳環</li>
+      </ul>
     </li>
-    <li><a href="#">戒指 / Rings</a>
-    <ul>
-        <li>情侶對戒系列</li>
-        <li>尾戒</li>
-        <li>鍊戒</li>
-        <li>腳戒</li>
-        <li>戒指組</li>
-        <li>純銀戒指</li>
-        <li>可微調式戒指</li>
-        <li>戒圍 1.6~1.65 cm</li>
-        <li>戒圍 1.7~1.75 cm</li>
-    </ul></li>
-    <li><a href="#">手鍊 / Bracelets</a>
-    <ul>
-        <li>手鍊</li>
-        <li>手環</li>
-        <li>腳鍊</li>
-        <li>編織手鍊</li>
-        <li>雙層手鍊</li>
-        <li>可調式手鍊</li>
-        <li>手錶 / Watch</li>
-        <li>情侶對鍊</li>
-    </ul></li>
-    <li><a href="#">項鍊 / Necklaces</a>
-    <ul>
-        <li>頸鏈</li>
-        <li>鎖骨鏈</li>
-        <li>長項鍊</li>
-        <li>雙層項鍊</li>
-        <li>可替換銀鍊</li>
-        <li>義大利純銀項鍊</li>
-    </ul></li>
-    <li><a href="#">鋼飾 / Steel</a>
-    <ul>
-        <li>醫療鋼</li>
-    </ul></li>
-    <li><a href="#">銀飾 / Sliver</a>
-    <ul>
-        <li>純銀</li>
-        <li>純銀耳環</li>
-    </ul></li>
-    <li><a href="#">髮飾 / Hair Accessory</a>
-    <ul>
-        <li>髮帶</li>
-        <li>髮圈</li>
-        <li>髮夾</li>
-        <li>髮箍</li>
-        <li>帽子</li>
-    </ul></li>
-    <li><a href="#">墨鏡 / Sunglasses</a></li>
-    <li><a href="#">韓國空運 /Korea</a>
-        <ul>
-            <li>耳環</li>
-            <li>耳夾</li>
-            <li>項鍊</li>
-            <li>戒指</li>
-            <li>法飾</li>
-            <li>手鍊 / 手環</li>
-        </ul>
+    <li class="listItems">
+      <a href="#">耳環 / Earrings</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen4 }"
+        @click="openList4"
+      />
+      <ul class="overflow-hidden" :class="listOpen4 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">抗敏銀針</li>
+        <li class="py-3.5 pr-11 pl-4">耳環組</li>
+        <li class="py-3.5 pr-11 pl-4">圈圈耳環</li>
+        <li class="py-3.5 pr-11 pl-4">垂墜耳環</li>
+        <li class="py-3.5 pr-11 pl-4">貼耳耳環</li>
+        <li class="py-3.5 pr-11 pl-4">鎖珠耳環</li>
+        <li class="py-3.5 pr-11 pl-4">S999養耳棒</li>
+        <li class="py-3.5 pr-11 pl-4">純銀鎖珠耳環</li>
+      </ul>
     </li>
-    <li><a href="#">大甲鎮瀾宮 / Dajia Mastu</a></li>
-    <li><a href="#">藝人聯名 / Co-branding</a>
-    <ul>
-        <li>TIMU聯名</li>
-        <li>KOL / Nina曹婕妤 聯名</li>
-        <li>林書緯 聯名 / Joseph Lin</li>
-    </ul>
+    <li class="listItems">
+      <a href="#">耳夾 / Earclip</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen5 }"
+        @click="openList5"
+      />
+      <ul class="overflow-hidden" :class="listOpen5 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">純銀耳夾耳扣</li>
+        <li class="py-3.5 pr-11 pl-4">垂墜夾式耳環</li>
+        <li class="py-3.5 pr-11 pl-4">耳扣耳骨夾</li>
+        <li class="py-3.5 pr-11 pl-4">螺旋夾式</li>
+        <li class="py-3.5 pr-11 pl-4">彈簧夾式</li>
+        <li class="py-3.5 pr-11 pl-4">貼耳耳夾</li>
+        <li class="py-3.5 pr-11 pl-4">圈圈耳夾</li>
+      </ul>
     </li>
-    <li><a href="#">B&R設計師支線 海洋NEW</a>
-    <il>
-        <li>New 海洋系列 /Quest For Freedom</li>
-        <li>礦石系列 / Mineral Select</li>
-    </il>
+    <li class="listItems">
+      <a href="#">戒指 / Rings</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen6 }"
+        @click="openList6"
+      />
+      <ul class="overflow-hidden" :class="listOpen6 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">情侶對戒系列</li>
+        <li class="py-3.5 pr-11 pl-4">尾戒</li>
+        <li class="py-3.5 pr-11 pl-4">鍊戒</li>
+        <li class="py-3.5 pr-11 pl-4">腳戒</li>
+        <li class="py-3.5 pr-11 pl-4">戒指組</li>
+        <li class="py-3.5 pr-11 pl-4">純銀戒指</li>
+        <li class="py-3.5 pr-11 pl-4">可微調式戒指</li>
+        <li class="py-3.5 pr-11 pl-4">戒圍 1.6~1.65 cm</li>
+        <li class="py-3.5 pr-11 pl-4">戒圍 1.7~1.75 cm</li>
+      </ul>
     </li>
-    <li><a href="#">官方IP授權 / IP Licensing</a>
-    <ul>
-        <li>Barbie芭比聯名</li>
-        <li>Hello Kitty 50週年</li>
-        <li>三麗鷗聯名</li>
-        <li>Hello Kitty 系列</li>
-        <li>Little Twin Stars 雙星仙子</li>
-        <li>BT21 宇宙明星</li>
-    </ul></li>
-    <li><a href="#">中性飾品 / Men's Acc</a></li>
-    <li><a href="#">大尺碼 棉花糖區 / Plus</a></li>
-    <li><a href="#">兒童飾品 / Kids Acc</a></li>
-    <li><a href="#">手機掛繩配件 / Phone Acc</a></li>
-    <li><a href="#">飾品盒＆配件 / Other</a>
-    <ul>
-        <li>鞋扣 襪套 包包 周邊配件</li>
-        <li>鑰匙圈</li>
-        <li>手機配件</li>
-        <li>飾品收納盒</li>
-        <li>禮盒 / Gift Boxes</li>
-    </ul></li>
-    <li><a href="#">韓國香氛Cosmic Mansion</a>
-    <ul>
-        <li>香水</li>
-        <li>蠟燭</li>
-        <li>擴香</li>
-        <li>空間/織物噴霧</li>
-    </ul></li>
-    <li><a href="#">系列 / Series</a> <ul>
-        <li>施用 施華洛世奇水晶</li>
-        <li>官網限定系列</li>
-        <li>玫瑰金系列</li>
-        <li>愛心系列</li>
-        <li>串珠飾品</li>
-        <li>小熊軟糖</li>
-        <li>歐美飾品</li>
-        <li>派對穿搭</li>
-        <li>奶油黃</li>
-        <li>星星月亮</li>
-        <li>暖心絨毛</li>
-        <li>海洋系列</li>
-        <li>疊搭組合</li>
-        <li>歐美鎖鏈</li>
-        <li>戀愛系列</li>
-        <li>質感輕奢</li>
-        <li>微笑飾品</li>
-        <li>小鑽點綴</li>
-        <li>美拉德系列</li>
-        <li>T字扣</li>
-        <li>透明系</li>
-        <li>經典藍</li>
-        <li>橄欖綠</li>
-        <li>奶油白</li>
-        <li>黑色系</li>
-        <li>粉色系</li>
-        <li>紫色</li>
-        <li>雛菊</li>
-        <li>櫻花</li>
-        <li>面試穿搭</li>
-        <li>戶外穿搭</li>
-        <li>可愛動物</li>
-        <li>婚禮穿搭</li>
-        <li>新年穿搭</li>
-        <li>英文字母</li>
-        <li>口罩周邊 / Mask Match</li>
-        <li>2024 流行款</li>
-        <li>聖誕系列</li>
-    </ul></li>
-    <li><a href="#">全部商品 / All</a></li>
-    <li><a href="#">售完 / Sold Out</a></li>
-    <li><a href="#">KOL / Mandy夏曼娣聯名</a></li>
-    <li><a href="#">帳戶</a></li>
-    <li><a href="#">會員登入</a></li>
-    <li><a href="#">新用戶註冊</a></li>
-    <li><a href="#">其他</a></li>
-    <li><a href="#">BLOG</a></li>
-    <li><a href="#">尋找門市</a></li>
-    <li><a href="#">聯絡我們</a></li>
-    <li><a href="#">繁體中文</a></li>
-    <li><a href="#">TWD</a></li>
+    <li class="listItems">
+      <a href="#">手鍊 / Bracelets</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen7 }"
+        @click="openList7"
+      />
+      <ul class="overflow-hidden" :class="listOpen7 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">手鍊</li>
+        <li class="py-3.5 pr-11 pl-4">手環</li>
+        <li class="py-3.5 pr-11 pl-4">腳鍊</li>
+        <li class="py-3.5 pr-11 pl-4">編織手鍊</li>
+        <li class="py-3.5 pr-11 pl-4">雙層手鍊</li>
+        <li class="py-3.5 pr-11 pl-4">可調式手鍊</li>
+        <li class="py-3.5 pr-11 pl-4">手錶 / Watch</li>
+        <li class="py-3.5 pr-11 pl-4">情侶對鍊</li>
+      </ul>
+    </li>
+    <li class="listItems">
+      <a href="#">項鍊 / Necklaces</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen8 }"
+        @click="openList8"
+      />
+      <ul class="overflow-hidden" :class="listOpen8 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">頸鏈</li>
+        <li class="py-3.5 pr-11 pl-4">鎖骨鏈</li>
+        <li class="py-3.5 pr-11 pl-4">長項鍊</li>
+        <li class="py-3.5 pr-11 pl-4">雙層項鍊</li>
+        <li class="py-3.5 pr-11 pl-4">可替換銀鍊</li>
+        <li class="py-3.5 pr-11 pl-4">義大利純銀項鍊</li>
+      </ul>
+    </li>
+    <li class="listItems">
+      <a href="#">鋼飾 / Steel</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen9 }"
+        @click="openList9"
+      />
+      <ul class="overflow-hidden" :class="listOpen9 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">醫療鋼</li>
+      </ul>
+    </li>
+    <li class="listItems">
+      <a href="#">銀飾 / Sliver</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen10 }"
+        @click="openList10"
+      />
+      <ul class="overflow-hidden" :class="listOpen10 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">純銀</li>
+        <li class="py-3.5 pr-11 pl-4">純銀耳環</li>
+      </ul>
+    </li>
+    <li class="listItems">
+      <a href="#">髮飾 / Hair Accessory</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen11 }"
+        @click="openList11"
+      />
+      <ul class="overflow-hidden" :class="listOpen11 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">髮帶</li>
+        <li class="py-3.5 pr-11 pl-4">髮圈</li>
+        <li class="py-3.5 pr-11 pl-4">髮夾</li>
+        <li class="py-3.5 pr-11 pl-4">髮箍</li>
+        <li class="py-3.5 pr-11 pl-4">帽子</li>
+      </ul>
+    </li>
+    <li class="listItems"><a href="#">墨鏡 / Sunglasses</a></li>
+    <li class="listItems">
+      <a href="#">韓國空運 /Korea</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen12 }"
+        @click="openList12"
+      />
+      <ul class="overflow-hidden" :class="listOpen12 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">耳環</li>
+        <li class="py-3.5 pr-11 pl-4">耳夾</li>
+        <li class="py-3.5 pr-11 pl-4">項鍊</li>
+        <li class="py-3.5 pr-11 pl-4">戒指</li>
+        <li class="py-3.5 pr-11 pl-4">法飾</li>
+        <li class="py-3.5 pr-11 pl-4">手鍊 / 手環</li>
+      </ul>
+    </li>
+    <li class="listItems"><a href="#">大甲鎮瀾宮 / Dajia Mastu</a></li>
+    <li class="listItems">
+      <a href="#">藝人聯名 / Co-branding</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen13 }"
+        @click="openList13"
+      />
+      <ul class="overflow-hidden" :class="listOpen13 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">TIMU聯名</li>
+        <li class="py-3.5 pr-11 pl-4">KOL / Nina曹婕妤 聯名</li>
+        <li class="py-3.5 pr-11 pl-4">林書緯 聯名 / Joseph Lin</li>
+      </ul>
+    </li>
+    <li class="listItems">
+      <a href="#">B&R設計師支線 海洋NEW</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen14 }"
+        @click="openList14"
+      />
+      <ul class="overflow-hidden" :class="listOpen14 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">New 海洋系列 /Quest For Freedom</li>
+        <li class="py-3.5 pr-11 pl-4">礦石系列 / Mineral Select</li>
+      </ul>
+    </li>
+    <li class="listItems">
+      <a href="#">官方IP授權 / IP Licensing</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen15 }"
+        @click="openList15"
+      />
+      <ul class="overflow-hidden" :class="listOpen15 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">Barbie芭比聯名</li>
+        <li class="py-3.5 pr-11 pl-4">Hello Kitty 50週年</li>
+        <li class="py-3.5 pr-11 pl-4">三麗鷗聯名</li>
+        <li class="py-3.5 pr-11 pl-4">Hello Kitty 系列</li>
+        <li class="py-3.5 pr-11 pl-4">Little Twin Stars 雙星仙子</li>
+        <li class="py-3.5 pr-11 pl-4">BT21 宇宙明星</li>
+      </ul>
+    </li>
+    <li class="listItems">
+      <a href="#">中性飾品 / Men's Acc</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen16 }"
+        @click="openList16"
+      />
+      <ul class="overflow-hidden" :class="listOpen16 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">耳環</li>
+        <li class="py-3.5 pr-11 pl-4">耳扣</li>
+        <li class="py-3.5 pr-11 pl-4">項鍊</li>
+        <li class="py-3.5 pr-11 pl-4">戒指</li>
+        <li class="py-3.5 pr-11 pl-4">手鍊 / 手環</li>
+        <li class="py-3.5 pr-11 pl-4">鑰匙圈</li>
+      </ul>
+    </li>
+    <li class="listItems"><a href="#">大尺碼 棉花糖區 / Plus</a></li>
+    <li class="listItems"><a href="#">兒童飾品 / Kids Acc</a></li>
+    <li class="listItems"><a href="#">手機掛繩配件 / Phone Acc</a></li>
+    <li class="listItems">
+      <a href="#">飾品盒＆配件 / Other</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen17 }"
+        @click="openList17"
+      />
+      <ul class="overflow-hidden" :class="listOpen17 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">鞋扣 襪套 包包 周邊配件</li>
+        <li class="py-3.5 pr-11 pl-4">鑰匙圈</li>
+        <li class="py-3.5 pr-11 pl-4">手機配件</li>
+        <li class="py-3.5 pr-11 pl-4">飾品收納盒</li>
+        <li class="py-3.5 pr-11 pl-4">禮盒 / Gift Boxes</li>
+      </ul>
+    </li>
+    <li class="listItems">
+      <a href="#">韓國香氛Cosmic Mansion</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen18 }"
+        @click="openList18"
+      />
+      <ul class="overflow-hidden" :class="listOpen18 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">香水</li>
+        <li class="py-3.5 pr-11 pl-4">蠟燭</li>
+        <li class="py-3.5 pr-11 pl-4">擴香</li>
+        <li class="py-3.5 pr-11 pl-4">空間/織物噴霧</li>
+      </ul>
+    </li>
+    <li class="listItems">
+      <a href="#">系列 / Series</a>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-down']"
+        class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen19 }"
+        @click="openList19"
+      />
+      <ul class="overflow-hidden" :class="listOpen19 ? 'h-0' : 'h-auto'">
+        <li class="py-3.5 pr-11 pl-4">施用 施華洛世奇水晶</li>
+        <li class="py-3.5 pr-11 pl-4">官網限定系列</li>
+        <li class="py-3.5 pr-11 pl-4">玫瑰金系列</li>
+        <li class="py-3.5 pr-11 pl-4">愛心系列</li>
+        <li class="py-3.5 pr-11 pl-4">串珠飾品</li>
+        <li class="py-3.5 pr-11 pl-4">小熊軟糖</li>
+        <li class="py-3.5 pr-11 pl-4">歐美飾品</li>
+        <li class="py-3.5 pr-11 pl-4">派對穿搭</li>
+        <li class="py-3.5 pr-11 pl-4">奶油黃</li>
+        <li class="py-3.5 pr-11 pl-4">星星月亮</li>
+        <li class="py-3.5 pr-11 pl-4">暖心絨毛</li>
+        <li class="py-3.5 pr-11 pl-4">海洋系列</li>
+        <li class="py-3.5 pr-11 pl-4">疊搭組合</li>
+        <li class="py-3.5 pr-11 pl-4">歐美鎖鏈</li>
+        <li class="py-3.5 pr-11 pl-4">戀愛系列</li>
+        <li class="py-3.5 pr-11 pl-4">質感輕奢</li>
+        <li class="py-3.5 pr-11 pl-4">微笑飾品</li>
+        <li class="py-3.5 pr-11 pl-4">小鑽點綴</li>
+        <li class="py-3.5 pr-11 pl-4">美拉德系列</li>
+        <li class="py-3.5 pr-11 pl-4">T字扣</li>
+        <li class="py-3.5 pr-11 pl-4">透明系</li>
+        <li class="py-3.5 pr-11 pl-4">經典藍</li>
+        <li class="py-3.5 pr-11 pl-4">橄欖綠</li>
+        <li class="py-3.5 pr-11 pl-4">奶油白</li>
+        <li class="py-3.5 pr-11 pl-4">黑色系</li>
+        <li class="py-3.5 pr-11 pl-4">粉色系</li>
+        <li class="py-3.5 pr-11 pl-4">紫色</li>
+        <li class="py-3.5 pr-11 pl-4">雛菊</li>
+        <li class="py-3.5 pr-11 pl-4">櫻花</li>
+        <li class="py-3.5 pr-11 pl-4">面試穿搭</li>
+        <li class="py-3.5 pr-11 pl-4">戶外穿搭</li>
+        <li class="py-3.5 pr-11 pl-4">可愛動物</li>
+        <li class="py-3.5 pr-11 pl-4">婚禮穿搭</li>
+        <li class="py-3.5 pr-11 pl-4">新年穿搭</li>
+        <li class="py-3.5 pr-11 pl-4">英文字母</li>
+        <li class="py-3.5 pr-11 pl-4">口罩周邊 / Mask Match</li>
+        <li class="py-3.5 pr-11 pl-4">2024 流行款</li>
+        <li class="py-3.5 pr-11 pl-4">聖誕系列</li>
+      </ul>
+    </li>
+    <li class="listItems"><a href="#">全部商品 / All</a></li>
+    <li class="listItems"><a href="#">售完 / Sold Out</a></li>
+    <li class="listItems"><a href="#">KOL / Mandy夏曼娣聯名</a></li>
+    <hr />
+    <h2 class="listItems text-xl text-gray-300">帳戶</h2>
+    <li class="listItems"><a href="#">會員登入</a></li>
+    <li class="listItems"><a href="#">新用戶註冊</a></li>
+    <hr />
+    <h2 class="listItems text-xl text-gray-300">其他</h2>
+    <li class="listItems"><a href="#">BLOG</a></li>
+    <li class="listItems"><a href="#">尋找門市</a></li>
+    <li class="listItems">
+      <a href="#">聯絡我們</a>
+      <font-awesome-icon
+        :icon="['fas', 'comment']"
+        class="absolute right-1 top-5"
+      />
+    </li>
+
+    <li class="listItems relative" @click="openChangeLanguage">
+      <span>繁體中文</span>
+      <font-awesome-icon
+        class="absolute right-1 top-5"
+        :icon="['fas', 'globe']"
+      />
+    </li>
+    <li class="listItems" @click="openMoney">
+      <span>TWD</span>
+      <font-awesome-icon
+        :icon="['fas', 'dollar-sign']"
+        class="absolute right-1 top-5"
+      />
+    </li>
   </article>
+  <article
+    class="w-3/4 h-screen fixed -translate-x-full transition-all duration-500 bg-white z-10 top-0 overflow-auto px-5 pt-4 pb-3"
+    :class="changeLanguageOpen ? 'translate-x-0' : '-translate-x-full'"
+  >
+    <ul>
+      <li @click="openChangeLanguage">
+        <font-awesome-icon :icon="['fas', 'chevron-left']" />
+        <span class="ml-2 py-3">語言</span>
+      </li>
+      <li class="py-3 justify-center">English</li>
+      <li class="py-3 justify-center">繁體中文</li>
+    </ul>
+  </article>
+
+  <article
+    class="w-3/4 h-screen fixed -translate-x-full transition-all duration-500 bg-white z-10 top-0 overflow-auto px-5 pt-4 pb-3"
+    :class="moneyOpen ? 'translate-x-0' : '-translate-x-full'"
+  >
+    <ul>
+      <font-awesome-icon :icon="['fas', 'chevron-left']" />
+      <span class="ml-2 py-3" @click="openMoney">貨幣</span>
+      <li class="py-3 justify-center">$ HKD</li>
+      <li class="py-3 justify-center">P MOP</li>
+      <li class="py-3 justify-center">¥ CNY</li>
+      <li class="py-3 justify-center" selected>$ TWD</li>
+      <li class="py-3 justify-center">$ USD</li>
+      <li class="py-3 justify-center">$ SGD</li>
+      <li class="py-3 justify-center">€ EUR</li>
+      <li class="py-3 justify-center">$ AUD</li>
+      <li class="py-3 justify-center">£ GBP</li>
+      <li class="py-3 justify-center">₱ PHP</li>
+      <li class="py-3 justify-center">RM MYR</li>
+      <li class="py-3 justify-center">฿ THB</li>
+      <li class="py-3 justify-center">د.إ AED</li>
+      <li class="py-3 justify-center">¥ JPY</li>
+      <li class="py-3 justify-center">$ BND</li>
+      <li class="py-3 justify-center">₩ KRW</li>
+      <li class="py-3 justify-center">Rp IDR</li>
+      <li class="py-3 justify-center">₫ VND</li>
+      <li class="py-3 justify-center">$ CAD</li>
+    </ul>
+  </article>
+
+  <article
+    class="w-3/4 h-screen fixed -translate-x-full transition-all duration-500 bg-white z-10 top-0 overflow-auto"
+    :class="cartOpen ? 'translate-x-0' : '-translate-x-full'"
+  >
+    <div class="bg-white pb-10 px-3.5 pt-3.5 overflow-auto">
+      <div class="p-3">
+        <img src="/src/assets/ourLogo.jpeg" alt="" />
+      </div>
+      <div>
+        <p class="p-3">
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo itaque
+          necessitatibus nostrum. Vero, aliquam deleniti provident distinctio
+          tempora tenetur consectetur, possimus veritatis odit repellat porro,
+          rerum recusandae voluptatem natus dolorem!
+        </p>
+        <p class="p-3">商品名稱</p>
+      </div>
+      <div class="p-3">
+        <p class="relative">
+          數量＆價錢<font-awesome-icon
+            :icon="['fas', 'trash']"
+            class="absolute right-1 top-1/2 -translate-y-1/2"
+          />
+        </p>
+      </div>
+      <button class="">訂單結帳</button>
+    </div>
+  </article>
+  <div class="items hidden">
+    <a href="#">耳環 / Earrings</a>
+    <a href="#">1111 新品 / NEW ARRIVAL</a>
+    <a href="#">耳夾 / Earclip</a>
+    <a href="#">戒指 / Rings</a>
+    <a href="#">手鍊 / Bracelets</a>
+    <a href="#">項鍊 / Necklaces</a>
+    <a href="#">聯名系列</a>
+    <a href="#">門市資訊</a>
+  </div>
 </template>
 
 <style scoped>
-.navbar {
-  padding: 10px 20px 0;
-  width: 1400px;
-  max-width: 100%;
-  min-height: 103px;
-  margin: 0 auto;
-  font-size: 22px;
+.a{
+  gap: 20px;
 }
-select {
-  cursor: pointer; /* 手形指標樣式 */
-  border: none;
-  outline: none;
-  background: transparent;
-}
-.navbarMenu {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  
-}
-
-.logo {
-  padding: 8px;
-}
-
-.logo img {
-  object-fit: contain;
-  width: 88px;
-  height: 44px;
-}
-.bigLogo,
-.msg {
-  display: none;
-}
-
-/* 貨幣選單 */
-.money {
-  margin-left: auto;
-  margin-right: 10px;
-  display: none; /* 預設隱藏 */
-}
-
-/* 地球圖示與語言選擇 */
-.language-container {
-  display: flex;
-  align-items: center;
-  gap: 8px; /* 地球與選單間的間距 */
-  margin-right: 10px;
-  display: none; /* 預設隱藏 */
-}
-
-.globe-icon {
-  font-size: 18px; /* 調整地球圖示大小 */
-  color: #333;
-  cursor: pointer; /* 手形指標樣式 */
-}
-
-/* 語言選擇 */
-.language {
-  border: none;
-  outline: none;
-  background: transparent;
-}
-
-/* 搜尋框 */
-.comment {
-  position: relative; /* 讓搜尋框相對於這裡定位*/
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-
-.search {
+.listItems {
+  padding: 15px 42px 15px 15px;
   position: relative;
-  width: 0;
-  border: 0;
-  margin: 0;
-  opacity: 1;
-  transition: all 1s;
-  z-index: 1;
-  outline: 0;
-  border-bottom: 1px solid black;
-}
-.comment:hover .search {
-  width: 150px;
-  opacity: 1;
-}
-
-/* 服務按鈕 */
-.navbarServices {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  list-style: none; /* 移除點點 */
-  padding: 0;
-  font-size: 22px;
-}
-
-.navbarServices li {
-  display: flex; /* 讓圖示與文字對齊 */
-  align-items: center;
-  cursor: pointer; /* 手型滑鼠效果 */
-  gap: 5px; /* 圖示與文字間距 */
-  margin: 0 20px 0 0;
-}
-/* 項目導航列 */
-.items {
-  display: none;
-}
-.cartSidebar {
-  background-color: #afa;
-  width: 70vw;
-  height: 100vh;
-  position: fixed;
-  transform: translateX(-100%);
-  transition: all 0.5s;
-  z-index: 1000;
-  top: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;  
-}
-.cartSidebarSwitch{
-    position: absolute;
-    z-index: 1;
-    opacity: 0;
-    top: 0;
-}
-.cartSidebarSwitch:checked + .cartSidebar{
-    transform: translateX(0);
-    transition: all 0.5s;
-}
-
-.sidebar {
-  background-color: #afa;
-  width: 70vw;
-  height: 100vh;
-  position: fixed;
-  transform: translateX(-100%);
-  transition: all 0.5s;
-  z-index: 1000;
-  top: 0;
-  overflow-y: auto;
   list-style: none;
-  padding: 20px;
 }
-
-.sidebarSwitch{
-    position: absolute;
-    z-index: 1;
-    opacity: 0;
-    top: 0;
+.rotate-180 {
+  transform: scaleY(-1);
 }
-.sidebarSwitch:checked ~ .sidebar{
-    transform: translateX(0);
-    transition: all 0.5s;
-}
-
-
-/* 桌機畫面 (1200px 以上) */
-@media screen and (min-width: 1200px) {
-  .money,
-  .language-container {
-    display: flex;
-  }
-
-  .bars,
-  .logo {
-    display: none;
-  }
-
-  .items {
+@media screen and (min-width : 1200px) {
+  .items{
     padding: 20px;
     display: flex;
     gap: 20px;
-    justify-content: center; /* 水平置中 */
-    flex: 1; /* 確保占滿整個容器 */
-  }
-  .bigLogo {
-    display: flex;
-    flex: 1;
     justify-content: center;
+    flex: 1;
   }
-  .bigLogo img {
-    width: 150px;
-    height: 100px;
-  }
-  .msg {
-    display: block;
-  }
-}
-
-/* --- 通用 Hover 樣式 --- */
-/* 對 .items 中的連結應用深色字體 */
-.items a:hover {
-  color: #666;
-  transition: color 0.3s ease;
-}
-
-/* 對其他元素應用淺色字體 */
-.navbarMenu a:hover,
-.navbarServices li:hover,
-.language-container:hover,
-.money:hover,
-.language:hover {
-  color: #666; /* 淺灰色，可根據需求調整 */
-  transition: color 0.3s ease;
 }
 </style>
