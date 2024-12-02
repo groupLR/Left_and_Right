@@ -21,9 +21,9 @@ const CLIENT_ID = "201131820318-om98jaudikrjuraavdmt8o0jlitaf7b1.apps.googleuser
 // 後端 API 網址
 const API_URL = 'http://localhost:3300'
 // localSrotage 的 key
-const STORAGE_KEY = 'isLoggedIn'
+const STORAGE_KEY = 'UID'
 // data
-const userData = ref(null)  
+const userData = ref(null)
 const isLoggedIn = ref(false)  // 登入狀態
 
 
@@ -33,7 +33,7 @@ const handleRegister = async (googleData) => {
     const response = await axios.post(`${API_URL}/auth/register`, googleData)
     userData.value = response.data.user
     isLoggedIn.value = true // 註冊後直接登入
-    localStorage.setItem(STORAGE_KEY, 'true') // 登入狀態放在 localStorage
+    localStorage.setItem(STORAGE_KEY, userData.value.userId) // UID 放在 localStorage
 
   } catch (error) {
     console.error('註冊失敗 QAQ :', error)
@@ -45,8 +45,8 @@ const handleRegister = async (googleData) => {
 const onLogin = (res) => {
   // 確保後端允許跨域請求
   const axiosOptions = {
-    headers: { 
-      "Access-Control-Allow-Origin": window.location.origin 
+    headers: {
+      "Access-Control-Allow-Origin": window.location.origin
     }
   }
 
@@ -57,7 +57,7 @@ const onLogin = (res) => {
         // 用戶存在（可能是一般註冊或 Google 註冊），直接登入
         userData.value = res.data.user
         isLoggedIn.value = true
-        localStorage.setItem(STORAGE_KEY, 'true')
+        localStorage.setItem(STORAGE_KEY, userData.value.userId) // 改存 UID
         console.log('登入成功')
       } else {
         // 用戶不存在，詢問是否要註冊，這邊可以考慮搞個彈窗或是 sweetalert
