@@ -6,16 +6,18 @@ import Carousel2 from "./components/Carousel2.vue";
 import StoreInfo4 from "./components/StoreInfo4.vue";
 import Footer from "./components/Footer.vue";
 import ProductList from "./views/ProductList.vue";
+import GoogleLoginButton from './components/googleLogin.vue'
+
 </script>
 
 <template>
-  <header>
-    <NavBar />
-    <nav>
-      <RouterLink to="/about">About</RouterLink>
-      <RouterLink to="/">Home</RouterLink>
-      |
-      <RouterLink to="/reviews">Reviews</RouterLink>
+	<header>
+		<NavBar />
+		<nav>
+			<RouterLink to="/about">About</RouterLink>
+			<RouterLink to="/">Home</RouterLink>
+			|
+			<RouterLink to="/reviews">Reviews</RouterLink>
 
       | <!-- COMPANY -->
       <RouterLink to="/about">關於品牌</RouterLink>
@@ -43,6 +45,7 @@ import ProductList from "./views/ProductList.vue";
       <RouterLink to="/users/sign-in">register</RouterLink>
     </nav>
   </header>
+  <GoogleLoginButton />
   <RouterView />
   <!-- <Carousel2/> -->
   <!-- <StoreInfo4/> -->

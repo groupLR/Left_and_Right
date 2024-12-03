@@ -1,6 +1,6 @@
 <template>
   <div>
- <div class="header-img  mx-auto  p-4 md:w-full lg:p-14mb-8">
+ <div class="headerImg  mx-auto  p-4 md:w-full lg:p-14mb-8">
   <img src="https://shoplineimg.com/53eb2bccb32b41ef6e000007/5e9428bff09f31001ed9a11e/2160x.webp?source_format=jpg" alt="">
   <img src="https://shoplineimg.com/53eb2bccb32b41ef6e000007/5e9679bee186ea0036553a68/2160x.webp?source_format=jpg" alt="">
   <img src="https://shoplineimg.com/53eb2bccb32b41ef6e000007/5e942956f09f313b85d99e46/2160x.webp?source_format=jpg" alt="">
@@ -25,11 +25,11 @@
 </template>
 
 <style scoped>
-/* .header-img {
+/* .headerImg {
   width: 940px;
 
 } */
-.content-Text{
+.contentText{
   font-size: 14px;
 }
 </style>
