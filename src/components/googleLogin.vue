@@ -35,7 +35,6 @@ const handleRegister = async (googleData) => {
     
     isLoggedIn.value = true // 註冊後直接登入
     localStorage.setItem(STORAGE_KEY, userData.value.userId) // UID 放在 localStorage
-    console.log(userData.value);
 
   } catch (error) {
     console.error('註冊失敗 QAQ :', error)
@@ -55,12 +54,10 @@ const onLogin = (res) => {
   axios.post(`${API_URL}/auth/verify-token`, res, axiosOptions)
     .then((res) => {
       if (res.data.exists) {
-        console.log('用戶資料：', res.data.user) // 看看收到什麼資料
         // 用戶存在（可能是一般註冊或 Google 註冊），直接登入
         userData.value = res.data.user
         isLoggedIn.value = true
         localStorage.setItem(STORAGE_KEY, userData.value.userId) // 改存 UID
-        console.log('登入成功')
       } else {
         // 用戶不存在，詢問是否要註冊，目前先用 sweetalert        
         Swal.fire({
@@ -90,7 +87,6 @@ const handleLogout = () => {
   userData.value = null
   isLoggedIn.value = false
   localStorage.removeItem(STORAGE_KEY) // 移除 localStorage
-  console.log("登出成功");
 
   // 等待 DOM 更新後再重新渲染按鈕
   setTimeout(() => {
