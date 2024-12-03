@@ -32,8 +32,10 @@ const handleRegister = async (googleData) => {
   try {
     const response = await axios.post(`${API_URL}/auth/register`, googleData)
     userData.value = response.data.user
+    
     isLoggedIn.value = true // 註冊後直接登入
     localStorage.setItem(STORAGE_KEY, userData.value.userId) // UID 放在 localStorage
+    console.log(userData.value);
 
   } catch (error) {
     console.error('註冊失敗 QAQ :', error)
@@ -60,13 +62,17 @@ const onLogin = (res) => {
         localStorage.setItem(STORAGE_KEY, userData.value.userId) // 改存 UID
         console.log('登入成功')
       } else {
-        // 用戶不存在，詢問是否要註冊，這邊可以考慮搞個彈窗或是 sweetalert
+        // 用戶不存在，詢問是否要註冊，目前先用 sweetalert        
         Swal.fire({
           title: '註冊確認',
-          text: '此 email 尚未註冊，是否要註冊新帳號？',
+          text: `此 email 尚未註冊，是否要註冊新帳號？ \n ${res.data.googleData.email}`,
           showCancelButton: true,
           confirmButtonText: '註冊',
-          cancelButtonText: '取消'
+          cancelButtonText: '取消',
+          confirmButtonColor: '#000000', // 註冊按鈕設為黑色背景
+          customClass: {
+            confirmButton: 'swal2-confirm-custom' // 自定義class
+          }
         }).then((result) => {
           if (result.isConfirmed) {
             handleRegister(res.data.googleData)
@@ -85,7 +91,7 @@ const handleLogout = () => {
   isLoggedIn.value = false
   localStorage.removeItem(STORAGE_KEY) // 移除 localStorage
   console.log("登出成功");
-  
+
   // 等待 DOM 更新後再重新渲染按鈕
   setTimeout(() => {
     initializeGoogle()
@@ -114,7 +120,7 @@ const initializeGoogle = () => {
   // 渲染 Google 登入按鈕~~~ 可以選樣式啦
   window.google.accounts.id.renderButton(
     document.getElementById("googleButton"),
-    { 
+    {
       theme: "outline",  // outline 或 filled_blue
       size: "large",     // large 或 medium
       shape: "pill", // rectangular 或 pill
@@ -141,3 +147,9 @@ onMounted(() => {
   }
 })
 </script>
+
+<style scoped>
+.swal2-confirm-custom {
+  color: #ffffff !important;
+}
+</style>
