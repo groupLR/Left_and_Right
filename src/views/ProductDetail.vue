@@ -5,7 +5,7 @@ export default {
       images: [
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 1',colorText:"Silver / 銀色",colorSquare:'#EBEBEB' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 2',colorText:"Rose Gold / 玫瑰金",colorSquare:'#FFBEA8' },
-        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 3' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 3',colorText:"Rose Gold / 玫瑰金",colorSquare:'#FFC500'  },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 4' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 5' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 6' },
@@ -16,7 +16,6 @@ export default {
       selectedIndex: 0,
       scrollPosition: 0,
       isSubscribe:false,
-      selectedColor:""
     };
   },
   computed: {
@@ -25,7 +24,7 @@ export default {
     },
     heartColor(){
       return{
-        color:this.isSubscribe ? 'black' : "red"
+        color:this.isSubscribe ? 'red' : 'black'
       }
     },
     // 過濾顏色
@@ -38,18 +37,18 @@ export default {
     selectImage(index) {
       this.selectedIndex = index;
     },
-    scrollUp() {
-      this.scrollPosition = Math.max(this.scrollPosition - 100, 0);
-    },
-    scrollDown() {
-      this.scrollPosition = Math.min(this.scrollPosition + 100, this.images.length * 100 - 400);
-    },
+    // scrollUp() {
+    //   this.scrollPosition = Math.max(this.scrollPosition - 100, 0);
+    // },
+    // scrollDown() {
+    //   this.scrollPosition = Math.min(this.scrollPosition + 100, this.images.length * 100 - 400);
+    // },
     //數量
     increase(){
       this.counter++
     },
     decrease(){
-      if(counter>1){
+      if(this.counter > 1){
         this.counter--
       }
     },
@@ -60,7 +59,7 @@ export default {
     //選擇顏色
     chooseColor(color){
       //文字顏色要變
-      this.selectedColor = color
+      this.selectedIndex = color;
       console.log('Selected color:', color)
       //圖片也要變
     }
@@ -73,11 +72,11 @@ export default {
         <!-- 輪播圖 -->
         <div class="carousel">
           <div class="thumbnails">
-            <div class="nav-button up" @click="scrollUp">&uarr;</div>
+            <!-- <div class="nav-button up" @click="scrollUp">&uarr;</div> -->
             <div class="thumbnail-item" v-for="(image, index) in images" :key="index" @click="selectImage(index)">
               <img :src="image.image" :alt="image.title" />
             </div>
-            <div class="nav-button down" @click="scrollDown" >&darr;</div>
+            <!-- <div class="nav-button down" @click="scrollDown" >&darr;</div> -->
           </div>
           <div class="main-image">
             <img :src="selectedImage.image" :alt="selectedImage.title" />
@@ -99,8 +98,7 @@ export default {
             <p class="rates">460個評價</p>
           </div>
           <div class="colorChoose">
-            <p class="text-[14px] font-extralight">顏色 : </p>
-            <!-- {{ selectedColor.colorText }} -->
+            <p class="text-[14px] font-extralight">顏色 :{{ selectedImage.colorText }} </p>
             <div class="flex">
               <div class="m-[10px] border border-gray-500 bg-[#F5F5F5] w-[48px] h-[48px] flex" v-for="color in filterColor" :key="color.title" @click="chooseColor(color)" >
                 <div class="w-[40px] h-[40px] justify-center m-auto" :style="{ backgroundColor:color.colorSquare }"></div>
@@ -111,7 +109,7 @@ export default {
             <p class="text-[14px] font-extralight">數量</p>
             <div class="max-w-full w-full flex h-[40px] my-2.5">
               <button class="rounded-lg border border-gray-300 bg-gray-50 w-[45px] h-[40px] text-[20px]" @click="decrease">-</button>
-              <input type="number" min="1" value="1" class="border border-x-0 border-gray-300 w-full" v-model="counter">
+              <input type="number" min="1" value="1" class="border border-x-0 border-gray-300 w-full text-center" v-model="counter">
               <button class="rounded-lg border border-gray-300 bg-gray-50 w-[45px] h-[40px] text-[20px]" @click="increase">+</button>
             </div>
           </div>
@@ -158,30 +156,33 @@ export default {
             <div id="navbarProductDescription">商品描述</div>
             <div id="navbarRate" >顧客評價</div>
           </div>
-          <div class="descriptionTitle">
-            <h3>商品描述</h3>
+          <div >
+            <div class="descriptionTitle">
+              <h3>商品描述</h3>
+            </div>
+            <div class="productDescription">
+              <p>● 提供30日退換貨服務，請詳閱「售後服務」</p>
+              <p>● 商品材質：S925純銀</p>
+              <p>● 耳針材質：S925低敏銀針</p>
+              <p>● 耳環SIZE直徑約：1.3 cm</p>
+              <p>● 一對販售</p>
+            </div>
+            <div class="descriptionTitle">
+              <h3>了解更多</h3>
+            </div>
+            <div class="descriptionImg">
+              <img src="https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg" alt="" srcset="">
+              <img src="https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg" alt="" srcset="">
+              <!-- <img src="des-3.webp" alt="" srcset="">
+              <img src="des-4.webp" alt="" srcset="">
+              <img src="des-5.webp" alt="" srcset="">
+              <img src="des-6.webp" alt="" srcset="">
+              <img src="des-7.webp" alt="" srcset="">
+              <img src="des-8.webp" alt="" srcset="">
+              <img src="des-9.webp" alt="" srcset=""> -->
+            </div>
           </div>
-          <div class="productDescription">
-            <p>● 提供30日退換貨服務，請詳閱「售後服務」</p>
-            <p>● 商品材質：S925純銀</p>
-            <p>● 耳針材質：S925低敏銀針</p>
-            <p>● 耳環SIZE直徑約：1.3 cm</p>
-            <p>● 一對販售</p>
-          </div>
-          <div class="descriptionTitle">
-            <h3>了解更多</h3>
-          </div>
-          <div class="descriptionImg">
-            <img src="https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg" alt="" srcset="">
-            <img src="https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg" alt="" srcset="">
-            <!-- <img src="des-3.webp" alt="" srcset="">
-            <img src="des-4.webp" alt="" srcset="">
-            <img src="des-5.webp" alt="" srcset="">
-            <img src="des-6.webp" alt="" srcset="">
-            <img src="des-7.webp" alt="" srcset="">
-            <img src="des-8.webp" alt="" srcset="">
-            <img src="des-9.webp" alt="" srcset=""> -->
-          </div>
+          
         </div>
       </div>
     </div>
@@ -191,14 +192,16 @@ export default {
 .carousel {
   display: flex;
   justify-content: center;
-  margin:20px 10px;
+  padding-right: 20px;
+  width: 100%;
 }
 
 .thumbnails {
-  width: 100px;
+  min-width: 120px;
   height: 400px;
   overflow-y: auto;
   margin-right: 20px;
+  padding-left: 20px;
 }
 
 .thumbnail-item {
@@ -207,13 +210,16 @@ export default {
 }
 
 .thumbnail-item img {
-  width: 80px;
-  height: 80px;
+  min-width: 72px;
+  height: 72px;
 }
 
 .main-image img {
   max-width: 600px;
   max-height: 400px;
+  min-width: 340px;
+  width: 100%;
+  object-fit: contain;
 }
 
 .nav-button {
