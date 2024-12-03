@@ -3,7 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import ProductList from "@/views/ProductList.vue";
 import StoreInfo4 from "@/components/StoreInfo4.vue";
 import UsersEdit from "@/views/UsersEdit.vue";
-import ProductDetail from "@/views/ProductDetail.vue";
+import ProductDetail from "@/views/ProductDetailExample.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -82,9 +82,15 @@ const router = createRouter({
     },
     {
       path: "/products/detail",
-      name: "products-detail",
-      component: ProductDetail,
+      name: "products-detail(改)",
+      component: () => import("../views/ProductDetail.vue")
     },
+    {
+      path: "/products/detail-example",
+      name: "products-detail(原)",
+      component: () => import("../views/ProductDetailExample.vue")
+    }
+
   ],
 });
 
