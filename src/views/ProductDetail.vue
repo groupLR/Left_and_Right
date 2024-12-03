@@ -3,20 +3,20 @@ export default {
   data() {
     return {
       images: [
-        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 1' },
-        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 2' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 1',colorText:"Silver / 銀色",colorSquare:'#EBEBEB' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 2',colorText:"Rose Gold / 玫瑰金",colorSquare:'#FFBEA8' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 3' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 4' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 5' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 6' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 7' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 8' },
-        // 添加更多图片数据
       ],
       counter:1,
       selectedIndex: 0,
       scrollPosition: 0,
-      isActive:false
+      isSubscribe:false,
+      selectedColor:""
     };
   },
   computed: {
@@ -25,11 +25,16 @@ export default {
     },
     heartColor(){
       return{
-        color:this.isActive ? 'black' : "red"
+        color:this.isSubscribe ? 'black' : "red"
       }
+    },
+    // 過濾顏色
+    filterColor(){
+      return this.images.filter(color => color.colorSquare)
     }
   },
   methods: {
+    //輪播圖區塊
     selectImage(index) {
       this.selectedIndex = index;
     },
@@ -39,6 +44,7 @@ export default {
     scrollDown() {
       this.scrollPosition = Math.min(this.scrollPosition + 100, this.images.length * 100 - 400);
     },
+    //數量
     increase(){
       this.counter++
     },
@@ -47,8 +53,16 @@ export default {
         this.counter--
       }
     },
+    //愛心轉換
     toggleHeart() {
-      this.isActive = !this.isActive;
+      this.isSubscribe = !this.isSubscribe;
+    },
+    //選擇顏色
+    chooseColor(color){
+      //文字顏色要變
+      this.selectedColor = color
+      console.log('Selected color:', color)
+      //圖片也要變
     }
   },
 };
@@ -85,13 +99,11 @@ export default {
             <p class="rates">460個評價</p>
           </div>
           <div class="colorChoose">
-            <p class="text-[14px] font-extralight">顏色 : Silver / 銀色</p>
+            <p class="text-[14px] font-extralight">顏色 : </p>
+            <!-- {{ selectedColor.colorText }} -->
             <div class="flex">
-              <div class="m-[10px] border border-gray-500 bg-[#F5F5F5] w-[48px] h-[48px] flex">
-                <div class="w-[40px] h-[40px] bg-blue-500 justify-center m-auto"></div>
-              </div>
-              <div class="m-[10px] border border-gray-500 bg-[#F5F5F5] w-[48px] h-[48px] flex">
-                <div class="w-[40px] h-[40px] bg-blue-500 justify-center m-auto"></div>
+              <div class="m-[10px] border border-gray-500 bg-[#F5F5F5] w-[48px] h-[48px] flex" v-for="color in filterColor" :key="color.title" @click="chooseColor(color)" >
+                <div class="w-[40px] h-[40px] justify-center m-auto" :style="{ backgroundColor:color.colorSquare }"></div>
               </div>
             </div>
           </div>
@@ -108,7 +120,7 @@ export default {
             <button class="bg-black text-gray-50 border border-black rounded-lg text-lg p-1"><i class="fa-solid fa-bag-shopping text-[14px] mr-1"></i>立即購買</button>
           </div>
           <div class="mx-auto flex justify-center text-sm hover:cursor-pointer" >
-            <p :class="{'active': isActive}" @click="toggleHeart" :style="heartColor" >
+            <p :class="{'active': isSubscribe}" @click="toggleHeart" :style="heartColor" >
               <i class="fa-regular fa-heart mr-1" ></i>加入追蹤清單
             </p>
           </div>
