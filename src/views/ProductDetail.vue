@@ -5,19 +5,29 @@ export default {
       images: [
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 1' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 2' },
-        { image: 'image3.jpg', title: 'Image 3' },
-        { image: 'image4.jpg', title: 'Image 4' },
-        { image: 'image5.jpg', title: 'Image 5' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 3' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 4' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 5' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 6' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 7' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 8' },
         // 添加更多图片数据
       ],
+      counter:1,
       selectedIndex: 0,
       scrollPosition: 0,
+      isActive:false
     };
   },
   computed: {
     selectedImage() {
       return this.images[this.selectedIndex];
     },
+    heartColor(){
+      return{
+        color:this.isActive ? 'black' : "red"
+      }
+    }
   },
   methods: {
     selectImage(index) {
@@ -29,6 +39,17 @@ export default {
     scrollDown() {
       this.scrollPosition = Math.min(this.scrollPosition + 100, this.images.length * 100 - 400);
     },
+    increase(){
+      this.counter++
+    },
+    decrease(){
+      if(counter>1){
+        this.counter--
+      }
+    },
+    toggleHeart() {
+      this.isActive = !this.isActive;
+    }
   },
 };
 </script>
@@ -38,11 +59,10 @@ export default {
         <!-- 輪播圖 -->
         <div class="carousel">
           <div class="thumbnails">
+            <div class="nav-button up" @click="scrollUp">&uarr;</div>
             <div class="thumbnail-item" v-for="(image, index) in images" :key="index" @click="selectImage(index)">
               <img :src="image.image" :alt="image.title" />
-
             </div>
-            <div class="nav-button up" @click="scrollUp">&uarr;</div>
             <div class="nav-button down" @click="scrollDown" >&darr;</div>
           </div>
           <div class="main-image">
@@ -59,7 +79,7 @@ export default {
             <p>全館任選四件82折，優惠後特價 NT$369</p>
           </div>
           <div class="my-[5px] mb-5 flex text-center">
-            <p class="text-[14px] text-[#FFC500] pt-[1px]"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></p>
+            <p class="text-[14px] text-[#FFC500] pt-[1px]"><font-awesome-icon :icon="['fas', 'star']" class="mr-1" /><font-awesome-icon :icon="['fas', 'star']" class="mr-1"/><font-awesome-icon :icon="['fas', 'star']"class="mr-1" /><font-awesome-icon :icon="['fas', 'star']"class="mr-1" /><font-awesome-icon :icon="['fas', 'star']" class="mr-1"/></p>
             <p class="ml-5 text-gray-500">5 分</p>
             <p class="mx-2 text-[14px] pt-[0.8px]">|</p>
             <p class="rates">460個評價</p>
@@ -78,18 +98,18 @@ export default {
           <div class="my-5">
             <p class="text-[14px] font-extralight">數量</p>
             <div class="max-w-full w-full flex h-[40px] my-2.5">
-              <button class="rounded-lg border border-gray-300 bg-gray-50 w-[45px] h-[40px] text-[20px]">-</button>
-              <input type="number" min="1" value="1" class="border border-x-0 border-gray-300 w-full">
-              <button class="rounded-lg border border-gray-300 bg-gray-50 w-[45px] h-[40px] text-[20px]">+</button>
+              <button class="rounded-lg border border-gray-300 bg-gray-50 w-[45px] h-[40px] text-[20px]" @click="decrease">-</button>
+              <input type="number" min="1" value="1" class="border border-x-0 border-gray-300 w-full" v-model="counter">
+              <button class="rounded-lg border border-gray-300 bg-gray-50 w-[45px] h-[40px] text-[20px]" @click="increase">+</button>
             </div>
           </div>
           <div class="grid grid-cols-2 gap-5 my-5">
             <button class="bg-black text-gray-50 border border-black rounded-lg text-lg p-1">加入購物車</button>
-            <button class="bg-black text-gray-50 border border-black rounded-lg text-lg p-1">立即購買</button>
+            <button class="bg-black text-gray-50 border border-black rounded-lg text-lg p-1"><i class="fa-solid fa-bag-shopping text-[14px] mr-1"></i>立即購買</button>
           </div>
-          <div class="mx-auto flex justify-center text-sm">
-            <p>
-              <i class="fa-regular fa-heart mr-1"></i>加入追蹤清單
+          <div class="mx-auto flex justify-center text-sm hover:cursor-pointer" >
+            <p :class="{'active': isActive}" @click="toggleHeart" :style="heartColor" >
+              <i class="fa-regular fa-heart mr-1" ></i>加入追蹤清單
             </p>
           </div>
           <div class="promotionalContainer">
@@ -215,11 +235,12 @@ input::-webkit-inner-spin-button{
   text-align: center;
   
 }
-.navbar div:focus{
-  
+.navbar:focus{
+  color:black
 }
 .promotionalContainer{
   position: relative;
+  margin: 20px 0;
 }
 .promotionalContent{
   margin: 7px 0;

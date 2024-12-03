@@ -121,7 +121,7 @@
     </div>
     <div class="heart">
       <button>
-        <p><i class="fa-regular fa-heart"></i> 加入追蹤清單</p>
+        <p><i class="fa-regular fa-heart" :class="{'active': isActive}" @click="toggleHeart"></i> 加入追蹤清單</p>
       </button>
     </div>
     <div class="DiscountInf">
