@@ -12,7 +12,7 @@ export default {
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 7' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/66dac8ba15b4f70010f254e6/800x.webp?source_format=jpg', title: 'Image 8' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d72304fe8c7d50017d7e721/800x.webp?source_format=jpg', title: 'Image 9' },
-        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d72305871b4a0001750aabb/800x.webp?source_format=jpg', title: 'Image 9' }
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d72305871b4a0001750aabb/800x.webp?source_format=jpg', title: 'Image 10' }
       ],
       counter:1,
       selectedIndex: 0,
