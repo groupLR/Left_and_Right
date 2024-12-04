@@ -6,11 +6,13 @@ export default {
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 1',colorText:"Silver / 銀色",colorSquare:'#EBEBEB' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 2',colorText:"Rose Gold / 玫瑰金",colorSquare:'#FFBEA8' },
         { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 3',colorText:"Gold / 金色",colorSquare:'#FFC500'  },
-        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 4' },
-        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 5' },
-        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 6' },
-        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 7' },
-        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 8' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5ec22beeefc5470036f68c19/800x.webp?source_format=jpg', title: 'Image 4' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d70b15d496aa5001a58c2e5/800x.webp?source_format=jpg', title: 'Image 5' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d70b15da8ed6d0020d3a5c0/800x.webp?source_format=jpg', title: 'Image 6' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 7' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/66dac8ba15b4f70010f254e6/800x.webp?source_format=jpg', title: 'Image 8' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d72304fe8c7d50017d7e721/800x.webp?source_format=jpg', title: 'Image 9' },
+        { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d72305871b4a0001750aabb/800x.webp?source_format=jpg', title: 'Image 9' }
       ],
       counter:1,
       selectedIndex: 0,
@@ -181,15 +183,7 @@ export default {
               <h3>了解更多</h3>
             </div>
             <div class="descriptionImg">
-              <img src="https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg" alt="" srcset="">
-              <img src="https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg" alt="" srcset="">
-              <!-- <img src="des-3.webp" alt="" srcset="">
-              <img src="des-4.webp" alt="" srcset="">
-              <img src="des-5.webp" alt="" srcset="">
-              <img src="des-6.webp" alt="" srcset="">
-              <img src="des-7.webp" alt="" srcset="">
-              <img src="des-8.webp" alt="" srcset="">
-              <img src="des-9.webp" alt="" srcset=""> -->
+              <img v-for="image in images" :key="index" :src="image.image" :alt="image.title" srcset="">
             </div>
           </div>
           
@@ -342,7 +336,7 @@ input::-webkit-inner-spin-button{
 .descriptionImg img{
   object-fit: contain;
   width: 100%;
-  margin:10px 0;
+  margin:40px 0;
 }
 
 @media screen and (1024px <= width) {
