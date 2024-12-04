@@ -30,7 +30,7 @@ export default {
     // 過濾顏色
     filterColor(){
       return this.images.filter(color => color.colorSquare)
-    }
+    },
   },
   methods: {
     //輪播圖區塊
@@ -57,11 +57,9 @@ export default {
       this.isSubscribe = !this.isSubscribe;
     },
     //選擇顏色
-    chooseColor(color){
+    selectColor(index){
       //文字顏色要變
-      this.selectedIndex = color;
-      console.log('Selected color:', color)
-      //圖片也要變
+      this.selectedIndex = index
     }
   },
 };
@@ -73,12 +71,12 @@ export default {
         <div class="carousel">
           <div class="thumbnails">
             <!-- <div class="nav-button up" @click="scrollUp">&uarr;</div> -->
-            <div class="thumbnail-item" v-for="(image, index) in images" :key="index" @click="selectImage(index)">
+            <div class="thumbnailItem" v-for="(image, index) in images" :key="index" @click="selectImage(index)">
               <img :src="image.image" :alt="image.title" />
             </div>
             <!-- <div class="nav-button down" @click="scrollDown" >&darr;</div> -->
           </div>
-          <div class="main-image">
+          <div class="mainImage">
             <img :src="selectedImage.image" :alt="selectedImage.title" />
           </div>
         </div>
@@ -100,8 +98,20 @@ export default {
           <div class="colorChoose">
             <p class="text-[14px] font-extralight">顏色 :{{ selectedImage.colorText }} </p>
             <div class="flex">
-              <div class="m-[10px] border border-gray-500 bg-[#F5F5F5] w-[48px] h-[48px] flex" v-for="color in filterColor" :key="color.title" @click="chooseColor(color)" >
-                <div class="w-[40px] h-[40px] justify-center m-auto" :style="{ backgroundColor:color.colorSquare }"></div>
+              <div v-for="(color,index) in filterColor" :key="color.title" >
+                <input 
+                  type="radio" 
+                  name="colorChoose" 
+                  class="colorCheckbox" 
+                  :id="`color-${index}`"
+                  :checked="index === 0"
+                >
+                <div class="colorBox" @click="selectColor(index)">
+                  <label 
+                    :for="`color-${index}`" class="colorInsideBox" 
+                    :style="{ backgroundColor:color.colorSquare }"
+                  ></label>
+                </div>
               </div>
             </div>
           </div>
@@ -188,6 +198,33 @@ export default {
     </div>
 </template>
 <style scoped>
+
+.colorBox{
+  margin: 20px;
+  margin-left: 0;
+  border: 1px solid #EAEAEA; 
+  background-color: #FCFCFC;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+.colorInsideBox{
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  cursor: pointer;
+}
+.colorCheckbox{
+  display: none;
+}
+
+.colorCheckbox:checked + .colorBox   {
+  border: 2px solid black;
+}
 /* 輪播圖區塊 */
 .carousel {
   display: flex;
@@ -204,17 +241,17 @@ export default {
   padding-left: 20px;
 }
 
-.thumbnail-item {
+.thumbnailItem {
   cursor: pointer;
   margin-bottom: 10px;
 }
 
-.thumbnail-item img {
+.thumbnailItem img {
   min-width: 72px;
   height: 72px;
 }
 
-.main-image img {
+.mainImage img {
   max-width: 600px;
   max-height: 400px;
   min-width: 340px;
