@@ -7,59 +7,12 @@ import SmallCart4 from "@/components/SmallCart4.vue";
 
 const productStore = useProductStore()
 const cartVisible = ref(false); // 控制 SmallCart 的顯示
-const { productList, cartItems, coBrandingProductList } = storeToRefs(productStore)
+const { productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, itemsPerPage, paginatedProducts, paginationOnClickHandler  } = storeToRefs(productStore)
 const toggleCart = () => {
   cartVisible.value = !cartVisible.value;
 };
-
-// select package => Element plus
-const sortValue = ref('')
-
-
-const sortOptions = [
-  {
-    label: '上架時間：由新到舊',
-    value: 'latest',
-  },
-  {
-    label: '上架時間：由舊到新',
-    value: 'oldest',
-  },
-  {
-    label: '價格：由高至低',
-    value: 'expensive',
-  },
-  {
-    label: '價格：由低至高',
-    value: 'cheap',
-  },
-  {
-    label: '銷量：由高至低',
-    value: 'popular',
-  },
-]
-
-const pageOptions = [
-  {
-    label: '每頁顯示 24 個',
-    value: 'pageItem24',
-  },
-  {
-    label: '每頁顯示 48 個',
-    value: 'pageItem48',
-  },
-  {
-    label: '每頁顯示 72 個',
-    value: 'pageItem72',
-  },
-]
-// 购物车商品
-//const cartItems = ref([]);  购物车商品的数组
-// 模擬的商品列表（來自 Pinia Store）
-// const coBrandingProductList = productStore.coBrandingProductList;
 // 處理加入購物車的事件
 const handleAddToCart = (product) => {
-  // console.log('Adding item to cart, itemId:', itemId);  // 打印商品 id，確保它正確
   productStore.addToCart(product); // 呼叫 Pinia store 的方法
   productStore.toggleCartVisibility(true); // 確保購物車被顯示
 };
@@ -78,15 +31,7 @@ const updateQuantity = (itemId, quantity) => {
 const cartItemCount = computed(() => {
   return cartItems.value.reduce((total, item) => total + item.quantity, 0);
 });
-// 分頁 package
-const pageValue = ref('')
-const onClickHandler = (page) => {
-  console.log(page);
-};
-const currentPage = ref(1);
-// console.log('Item ID in Parent Component:', item.id);
-// console.log("coBrandingProductList:", coBrandingProductList.value);
-// console.log("productList:", productList.value);
+
 </script>
 
 
@@ -101,6 +46,7 @@ const currentPage = ref(1);
             <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </div>
+        <!-- 每頁資料筆數 -->
         <div class="relative flex items-center flex-1 pageSelectItem">
           <i class="absolute text-gray-500 transform -translate-y-1/2 fa-solid fa-bars fa-rotate-90 left-3 top-1/2"></i>
           <el-select placement="bottom"  :fallback-placements="['bottom-start']" v-model="pageValue" placeholder="每頁顯示 24 個" size="large" class="pl-10">
@@ -113,8 +59,13 @@ const currentPage = ref(1);
 
     <!-- 產品列表 -->
     <div class="flex flex-wrap">
-  <!-- 顯示 coBrandingProductList 商品 -->
-  <ProductItem
+      <ProductItem v-for="(item, index) in paginatedProducts" :key="item.id" :id="item.id" :title="item.title" :price="item.price"
+      :originalPrice="item.originalPrice" :frontImg="item.frontImg" :backImg="item.backImg" @addToCart="handleAddToCart"
+    @removeFromCart="removeFromCart"
+    @updateQuantity="updateQuantity"
+    class="md:col-6 lg:col-3"/>
+      <!-- 顯示 coBrandingProductList 商品 -->
+  <!-- <ProductItem
     v-for="item in coBrandingProductList"
     :key="item.id"
     :id="item.id"
@@ -127,12 +78,12 @@ const currentPage = ref(1);
     @removeFromCart="removeFromCart"
     @updateQuantity="updateQuantity"
     class="md:col-6 lg:col-3"
-  />
+  /> -->
 </div>
 
 <div class="flex flex-wrap">
   <!-- 顯示 productList 商品 -->
-  <ProductItem
+  <!-- <ProductItem
     v-for="item in productList"
     :key="item.id"
     :id="item.id"
@@ -145,7 +96,7 @@ const currentPage = ref(1);
     @removeFromCart="removeFromCart"
     @updateQuantity="updateQuantity"
     class="md:col-6 lg:col-3"
-  />
+  /> -->
 </div>
 
 <!-- 顯示小購物車，只顯示一次 -->
@@ -155,7 +106,7 @@ const currentPage = ref(1);
     <!-- 分頁 -->
     <div class="flex justify-center md:relative md:mb-12">
       <vue-awesome-paginate class="text-sm text-gray-500 md:absolute md:right-0" :total-items="productList.length"
-        :items-per-page="2" :max-pages-shown="5" v-model="currentPage" @click="onClickHandler"
+        :items-per-page="itemsPerPage" :max-pages-shown="5" v-model="currentPage" @click="paginationOnClickHandler"
         :hide-prev-next-when-ends="true" link-url="/products?page=[page]" />
     </div>
   </section>
