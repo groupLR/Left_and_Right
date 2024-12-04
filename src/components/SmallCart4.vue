@@ -94,40 +94,8 @@ watch(
     }
   }
 );
-  //購物車商品列表
-  // const cartItems = ref([
-  //   {
-  //     img: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/671205b47fcc46000cc5dda1/200x200f.webp?source_format=jpg",
-  //     name: "哥特蝴蝶夾式耳環 / Goth Butterfly Ear Clip",
-  //     quantity: 1,
-  //     id: 1,
-  //     price: 33.26,
-  //     currency: "TWD",
-  //     link: "https://www.bonnyread.com.tw/products/gothbutterflyearclip",
-  //   },
-  //   {
-  //     img: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/6710cd82fe19ec0011fb7f3a/400x400f.webp?source_format=jpg",
-  //     name: "[預購] [銀針] 宇宙星鑽耳環 / Cosmic Diamond Earring",
-  //     quantity: 1,
-  //     id: 2,
-  //     price: 20.02,
-  //     currency: "TWD",
-  //     link: "https://www.bonnyread.com.tw/products/cosmicdiamondearring",
-  //   },
-  //   {
-  //     img: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/6710c5108e7459000d47f2a2/200x200f.webp?source_format=jpg",
-  //     name: "[預購] [純銀] 紛亂世界戒指 / Chaotic World Ring",
-  //     quantity: 1,
-  //     id: 3,
-  //     price: 15.13,
-  //     currency: "TWD",
-  //     link: "https://www.bonnyread.com.tw/products/chaoticworldring",
-  //   },
-  // ]);
-const emit = defineEmits(['close']);
 
-// 透過 store 獲取購物車商品數據
-// const cartItems = computed(() => productStore.cartItems);
+const emit = defineEmits(['close']);
 
 // 點擊遮罩層關閉購物車
 const onOverlayClick = () => {
@@ -143,23 +111,7 @@ const removeFromCart = (itemId) => {
 const totalPrice = computed(() => {
   return cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
 });
-  // 發送關閉購物車事件
-//   const emit = defineEmits(["updateCartStatus"]);
-//   // 修改開關購物車的邏輯
-// const openCart = () => {
-//   emit('updateCartStatus', true); // 通知父組件開啟購物車
-//   document.body.style.overflow = 'hidden'; // 禁止背景滾動
-// };
-//   // 控制購物車開關
-//   const closeCart = () => {
-//     emit("updateCartStatus", false);
-//     document.body.style.overflow = ""; // 恢復背景滾動
-//   };
-  
-//   // 移除指定商品
-//   const removeItem = (index) => {
-//     cartItems.value.splice(index, 1);
-//   };
+
 // 使用 Store 中的數據和方法
 const isCartVisible = computed(() => productStore.isCartVisible);
 const toggleCartVisibility = productStore.toggleCartVisibility;

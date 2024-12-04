@@ -8,12 +8,12 @@
     ></div>
     
     <!-- 手提包按鈕 -->
-    <div
-      class="cart-icon"
-      @click="openCart"
-    >
-      👜
+      <div>
+    <!-- 小購物車面板 -->
+    <div v-if="isCartVisible" class="shopping-cart">
+      <!-- 小購物車內容 -->
     </div>
+  </div>
 
     <!-- 購物車面板 -->
     <div
@@ -45,7 +45,7 @@
           class="cart-item"
         >
         <a :href="item.link" target="_blank"><img :src="item.img" alt="商品圖片"></a>
-        <span>{{ item.name }}</span>
+        <span class="product-name">{{ item.name }}</span>
         <br>
         <div class="price">
           <span>{{ item.quantity}} x </span>
@@ -57,12 +57,12 @@
          </button>
       </div>
 
-      <div
-        class="cart-footer"
-        v-if="cartItems.length > 0"
-      >
-        <button class="checkout-btn">訂單結帳</button>
+      <div class="cart-footer" v-if="cartItems.length > 0">
+        <router-link to="/Cart" class="checkout-btn">
+          訂單結帳
+        </router-link>
       </div>
+
     </div>
   </div>
 </div>
@@ -71,26 +71,29 @@
 
 <script setup>
 import { ref } from "vue";
-// import { useCartStore } from '@/stores/cart'  =>獲取使用者購買資料的代碼
+// 接收父組件傳遞的 `isCartOpen` prop
+const props = defineProps({
+  isCartOpen: Boolean
+});
 
-// const cartStore = useCartStore()
-// const cartItems = computed(() => cartStore.cartItems)
-// 控制購物車顯示與隱藏
-const isCartOpen = ref(false);
+
 
 // 購物車商品列表
 const cartItems = ref([ { img:"https://shoplineimg.com/53eb2bccb32b41ef6e000007/671205b47fcc46000cc5dda1/200x200f.webp?source_format=jpg",name: "哥特蝴蝶夾式耳環 / Goth Butterfly Ear Clip",quantity: 1, price: 33.26,currency: "TWD",link: "https://www.bonnyread.com.tw/products/gothbutterflyearclip" },
     { img: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/6710cd82fe19ec0011fb7f3a/400x400f.webp?source_format=jpg", name: "[預購] [銀針] 宇宙星鑽耳環 / Cosmic Diamond Earring", quantity: 1, price: 20.02, currency: "TWD", link: "https://www.bonnyread.com.tw/products/cosmicdiamondearring" },
     { img: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/6710c5108e7459000d47f2a2/200x200f.webp?source_format=jpg", name: "[預購] [純銀] 紛亂世界戒指 / Chaotic World Ring", quantity: 1, price: 15.13, currency: "TWD", link: "https://www.bonnyread.com.tw/products/chaoticworldring" },]);
 
+// 發送關閉購物車事件
+const emit = defineEmits(['updateCartStatus']);
 // 修改開關購物車的邏輯
 const openCart = () => {
-  isCartOpen.value = true;
+  emit('updateCartStatus', true); // 通知父組件開啟購物車
   document.body.style.overflow = 'hidden'; // 禁止背景滾動
 };
 
+// 控制購物車開關
 const closeCart = () => {
-  isCartOpen.value = false;
+  emit('updateCartStatus', false); // 通知父組件關閉購物車
   document.body.style.overflow = ''; // 恢復背景滾動
 };
 
@@ -98,10 +101,20 @@ const closeCart = () => {
 const removeItem = (index) => {
   cartItems.value.splice(index, 1);
 };
+
+//pinia版移除商品
+// 從 Store 中移除商品
+//const removeItem = (index) => {
+//  cartStore.removeItem(index);
+//};
 </script>
 
-<style scoped>
+<style>
 /* 添加遮罩層樣式 */
+/* .product-name{
+  margin-left: 17px;
+} */
+
 .overlay {
   position: fixed;
   top: 0;
@@ -133,7 +146,7 @@ body {
 /* 購物車面板 */
 .cart-panel {
   position: fixed;
-  top: 0;
+  top: 240px;
   right: -100%;
   width: 300px;
   max-height: 80vh; /* 修改：設定最大高度為視窗高度的 80% */
@@ -156,7 +169,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
+  /* padding: 15px; */
   border-bottom: 1px solid transparent;
   flex-shrink: 0; /* 修改：防止頭部被壓縮 */
 }
@@ -178,7 +191,7 @@ body {
 .cart-content {
   flex: 1;
   overflow-y: auto;
-  /* padding: 15px; */
+  padding: 20px 20px 0px 20px;
   position: relative;
   max-height: calc(80vh - 100px); /* 修改：減去頭部和底部的高度 */
   scrollbar-width: thin;
@@ -206,7 +219,7 @@ body {
   padding: 15px;
   flex-shrink: 0; /* 修改：防止底部被壓縮 */
   position: sticky;
-  bottom: 15px; /* 與 padding: 15px; 相對應 */
+  /* bottom: 15px; 與 padding: 15px; 相對應 */
   background-color: #ffffff;
   z-index: 1;
   bottom: 0; /* 設定為 0，完全貼合底部 */
@@ -217,13 +230,22 @@ body {
   height: auto;
   max-width: 268px;
   max-height: 38px;
-  padding: 10px;
+  padding: 6 12px;
   border: none;
-  cursor: pointer;
-  font-size: 14px;
+  /* cursor: pointer; */
+  border-radius: 8px;
+  font-size: 14pt;
   background-color: black;
   color: white;
+  display: inline-block; /* 明確定義 */
+  text-align: center;
+  border: 1px solid #888;
 }
+.checkout-btn:hover {
+  background-color: white;
+  color: black;
+}
+
 
 /* 購物車商品 */
 .cart-item {
@@ -243,12 +265,12 @@ body {
   font-size: calc(14px* var(--font-size-paragraph, 1));
   color: var(--page-text, #333);
   bottom: 10px; /* 調整到底部 */
-  left: 10px;
+  /* left: 10px; */
   /* bottom: 10px; */
   font-size: 14px;
   /* margin-top: 20px; */
   margin-top: 0; /* 移除原有的 margin-top */
-  margin-left:10px;
+  /* margin-left:10px; */
 }
 /* 空購物車提示 */
 .empty-cart {
@@ -302,6 +324,15 @@ body {
   z-index: 1;
   bottom: 0; /* 設定為 0，完全貼合底部 */
 }
+.cart-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 20px 0px 20px;
+  position: relative;
+  /* max-height: calc(80vh - 100px); 修改：減去頭部和底部的高度 */
+  scrollbar-width: thin;
+  
+}
 .cart-content.empty {
   max-width: 298px;
   max-height: 160px;
@@ -315,8 +346,6 @@ body {
   text-align: center;
   margin-top: 35px;
 }
-
-
 }
 
 /* 平板版 (螢幕寬度介於768px到1024px) */
@@ -327,6 +356,7 @@ body {
     min-height: 100vh;  /* 高度延伸到螢幕底部，扣掉結帳按鈕高度 */ 
     max-height: 100vh; /* 限制高度不超過視窗高度 */
     position: fixed;
+    top: 0;
   }
   .cart-panel.active {
     left: 0;
@@ -343,6 +373,15 @@ body {
 .empty-cart {
   text-align: center;
   margin-top: 35px;
+}
+.cart-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 20px 0px 20px;
+  position: relative;
+  /* max-height: calc(80vh - 100px); 修改：減去頭部和底部的高度 */
+  scrollbar-width: thin;
+  
 }
 }
 </style>

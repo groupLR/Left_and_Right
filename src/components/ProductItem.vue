@@ -54,9 +54,6 @@ const handleAddToCart = (event) => {
   event.preventDefault(); // 阻止 <a> 默认行为（页面滚动）
   emit('addToCart', product); // 通知父組件商品已添加
 };
-
-// console.log('ProductItem received id:', props.id);
-// console.log(`[ProductItem] Received ID: ${id}`); // 確認接收到的 id
 </script>
 
 
@@ -68,7 +65,7 @@ const handleAddToCart = (event) => {
         <a :href="`/product/${props.id}`" class="w-full bg-center bg-cover " :style="{ backgroundImage: `url(${props.backImg})` }">
           <img class="object-cover w-full align-bottom frontImg "
             :src="props.frontImg"
-            alt="商品圖">
+            alt="戒指">
         </a>
         
         <div class="px-2.5 pt-2.5 pb-7 mb-6 text-center lg:relative lg:mb-0">
