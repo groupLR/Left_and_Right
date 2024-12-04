@@ -120,11 +120,7 @@ const router = createRouter({
       name: "products-detail(改)",
       component: () => import("../views/ProductDetail.vue")
     },
-    {
-      path: "/products/detail-example",
-      name: "products-detail(原)",
-      component: () => import("../views/ProductDetailExample.vue")
-    }
+  
 	],
 })
 

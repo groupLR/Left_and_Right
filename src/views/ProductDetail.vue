@@ -83,7 +83,7 @@ export default {
           </div>
         </div>
         <!-- 商品概訊 -->
-        <div class="m-4"> 
+        <div class="m-4 mt-0"> 
           <h1 class="text-[28px]">[純銀] 圓的流動耳環 / 2色 / Round Flow Earring</h1>
           <h2 class="my-5 text-[20px] font-extrabold">NT$450</h2>
           <div class="font-extralight text-[16px]">
