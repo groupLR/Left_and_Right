@@ -44,6 +44,8 @@ import GoogleLoginButton from './components/googleLogin.vue'
       <RouterLink to="/store-info">store-info</RouterLink>
       |
       <RouterLink to="/products/detail">products-detail</RouterLink>
+      |
+      <RouterLink to="/test">test</RouterLink>
     </nav>
   </header>
   <GoogleLoginButton />

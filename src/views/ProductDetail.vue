@@ -69,6 +69,7 @@ export default {
 <template>
     <div class="bg-lightBlue-300 my-8 max-w-full">
       <div class="profile">
+        
         <!-- 輪播圖 -->
         <div class="carousel">
           <div class="thumbnails">
