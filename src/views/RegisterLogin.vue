@@ -1,30 +1,21 @@
-<script lang="ts">
+<script setup lang="ts">
 import { defineComponent, ref } from 'vue'
+import axios from 'axios'
 
-export default defineComponent({
-  setup() {
-    // 狀態變數
-    const isLogin = ref(true)
-    const isRegister = ref(false)
+// 狀態變數
+const isLogin = ref(true)
+const isRegister = ref(false)
 
-    // 方法
-    const switchToLogin = () => {
-        isLogin.value = true
-        isRegister.value = false
-        
-    }
-    const switchToRegister = () =>{
-      isRegister.value = true
-      isLogin.value = false
-    }
-    return {
-      isLogin,
-      isRegister,
-      switchToLogin,
-      switchToRegister
-    }
-  }
-})
+// 方法
+const switchToLogin = () => {
+  isLogin.value = true
+  isRegister.value = false
+    
+}
+const switchToRegister = () =>{
+  isRegister.value = true
+  isLogin.value = false
+}
 </script>
 
 <template>
