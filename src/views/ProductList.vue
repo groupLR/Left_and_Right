@@ -1,20 +1,31 @@
 <script setup>
 import ProductItem from "@/components/ProductItem.vue";
-import { ref } from "vue"
+import { ref, onMounted, watch } from "vue"
+import { useRoute } from 'vue-router'
 import { storeToRefs } from "pinia";
 import { useProductStore } from '@/stores/products'
 
+const route = useRoute()
 const ProductStore = useProductStore()
-const { productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, itemsPerPage, paginatedProducts, paginationOnClickHandler  } = storeToRefs(ProductStore)
+const { categoryTitle, productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, itemsPerPage, paginatedProducts, paginationOnClickHandler } = storeToRefs(ProductStore)
 
+// 監聽路由參數變化
+watch(() => route.params.category, async (newCategory) => {
+  // 如果沒有 category 參數，使用空字串呼叫 API
+  await ProductStore.fetchProductList(newCategory || '')
+}, { immediate: true })
 
+onMounted(async () => {
+  const category = route.params.category || ''
+  await ProductStore.fetchProductList(category)
+})
 </script>
 
 
 <template>
   <section class=" px-4 py-3">
     <div class="headerContainer px-1 mb-2 md:flex items-center">
-      <h1 class=" py-5 text-xl">戒指 / Rings</h1>
+      <h1 class=" py-5 text-xl">{{ categoryTitle }}</h1>
       <!-- 排序 -->
       <div class="selectContainer flex">
         <div class="pageSelectItem  flex items-center relative mr-3 flex-1">
@@ -30,7 +41,7 @@ const { productList, pageValue, sortValue, sortOptions, pageOptions, currentPage
         <div class="pageSelectItem  flex items-center relative flex-1">
           <i class="fa-solid fa-bars fa-rotate-90 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
           <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="pageValue"
-            placeholder="每頁顯示 24 個" size="large" class="pl-10">
+            placeholder="每頁顯示 6 個" size="large" class="pl-10">
             <el-option class="selectOption" v-for="item in pageOptions" :key="item.value" :label="item.label"
               :value="item.value" />
           </el-select>

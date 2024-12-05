@@ -184,7 +184,7 @@ export default {
               <h3>了解更多</h3>
             </div>
             <div class="descriptionImg">
-              <img v-for="image in images" :key="index" :src="image.image" :alt="image.title" srcset="">
+              <img v-for="image in images" :key="image.index" :src="image.image" :alt="image.title" srcset="">
             </div>
           </div>
           

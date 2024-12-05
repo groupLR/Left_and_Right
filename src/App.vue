@@ -38,7 +38,7 @@ import GoogleLoginButton from './components/googleLogin.vue'
       |
       <RouterLink to="/overseas-delivery">海外運送</RouterLink>
       |
-      <RouterLink to="/products">products</RouterLink>
+      <RouterLink to="/categories">products</RouterLink>
       |
       <RouterLink to="/store-info">store-info</RouterLink>
       |
@@ -51,7 +51,6 @@ import GoogleLoginButton from './components/googleLogin.vue'
   <RouterView />
   <!-- <Carousel2/> -->
   <!-- <StoreInfo4/> -->
-  <ToTopButton />
   <Footer />
 </template>
 
