@@ -1,6 +1,6 @@
 <template>
     <!-- 置頂圖 -->
-    <div class="top-pic">
+    <div class="topPic">
       <picture>
     <!-- 手機圖片 -->
     <source
@@ -24,9 +24,9 @@
     <br /><br /><br />
     
     <!-- nav-bar -->
-    <div class="nav-bar">
+    <div class="navBar">
     <div
-      class="nav-item hover:cursor-pointer hover:bg-gray-100 hover:text-blue-500"
+      class="navItem hover:cursor-pointer hover:bg-gray-100 hover:text-blue-500"
       v-for="city in cities"
       :key="city"
       @click="scrollToCity(city)"
@@ -42,7 +42,7 @@
       v-for="group in cityStores"
       :key="group.city"
       :id="group.city" 
-      class="mb-8 city-section"
+      class="mb-8 citySection"
     >
       <!-- 城市名稱圖片 -->
       <div class="flex justify-center mb-4">

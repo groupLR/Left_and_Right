@@ -32,7 +32,6 @@ const handleRegister = async (googleData) => {
   try {
     const response = await axios.post(`${API_URL}/auth/register`, googleData)
     userData.value = response.data.user
-    
     isLoggedIn.value = true // 註冊後直接登入
     localStorage.setItem(STORAGE_KEY, userData.value.userId) // UID 放在 localStorage
 
@@ -54,6 +53,7 @@ const onLogin = (res) => {
   axios.post(`${API_URL}/auth/verify-token`, res, axiosOptions)
     .then((res) => {
       if (res.data.exists) {
+
         // 用戶存在（可能是一般註冊或 Google 註冊），直接登入
         userData.value = res.data.user
         isLoggedIn.value = true
@@ -124,7 +124,6 @@ const initializeGoogle = () => {
       logo_alignment: "left"
     }
   )
-
 }
 
 onMounted(() => {
@@ -149,3 +148,4 @@ onMounted(() => {
   color: #ffffff !important;
 }
 </style>
+

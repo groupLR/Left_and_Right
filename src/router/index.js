@@ -1,9 +1,10 @@
-import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import ProductList from "@/views/ProductList.vue";
-import StoreInfo4 from "@/components/StoreInfo4.vue";
-import UsersEdit from "@/views/UsersEdit.vue";
 
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
+import ProductList from '@/views/ProductList.vue'
+import StoreInfo5 from '@/components/StoreInfo5.vue'
+import Cart from '../views/Cart.vue'
+import UsersEdit from "@/views/UsersEdit.vue"
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,9 +67,10 @@ const router = createRouter({
 			component: () => import("../views/Overseasdelivery.vue"),
 		},
 		{
-			path: "/products",
+			path: "/categories/:category?", // 加上可選的動態參數 -> 分類!
 			name: "products",
 			component: ProductList,
+			props: true  // 將路由參數作為 props 傳遞給元件
 		},
 		{
 			path: "/store-info",
@@ -125,8 +127,14 @@ const router = createRouter({
       name: "products-detail(改)",
       component: () => import("../views/ProductDetail.vue")
     },
+    {
+    path:'/Cart',
+    name:'Cart',
+    component: Cart
+    },  
 		
 	],
+
 })
 
 export default router

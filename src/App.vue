@@ -1,25 +1,25 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-import NavBar from "./components/NavBar.vue";
+import NavBar2 from "./components/NavBar2.vue";
 import HomeView from "./views/HomeView.vue";
 import Carousel2 from "./components/Carousel2.vue";
-import StoreInfo4 from "./components/StoreInfo4.vue";
+import StoreInfo5 from "./components/StoreInfo5.vue";
+import Footer from "./components/Footer.vue";
 import ProductList from "./views/ProductList.vue";
 import Footer from "./components/Footer.vue";
 import GoogleLoginButton from './components/googleLogin.vue'
 </script>
 
 <template>
-	<header>
-		<NavBar />
-		<nav>
-			<RouterLink to="/about">About</RouterLink>
-			<RouterLink to="/">Home</RouterLink>
-			|
-			<RouterLink to="/reviews">Reviews</RouterLink>
-
+  <header>
+    <NavBar2 />
+    <nav>
+      <RouterLink to="/about">About</RouterLink>
+      <RouterLink to="/">Home</RouterLink>
       |
+      <RouterLink to="/reviews">Reviews</RouterLink>
       <!-- COMPANY -->
+
       <RouterLink to="/about">關於品牌</RouterLink>
       |
       <RouterLink to="/store-info">門市資訊</RouterLink>
@@ -38,7 +38,7 @@ import GoogleLoginButton from './components/googleLogin.vue'
       |
       <RouterLink to="/overseas-delivery">海外運送</RouterLink>
       |
-      <RouterLink to="/products">products</RouterLink>
+      <RouterLink to="/categories">products</RouterLink>
       |
       <RouterLink to="/store-info">store-info</RouterLink>
       |
@@ -49,8 +49,14 @@ import GoogleLoginButton from './components/googleLogin.vue'
   </header>
   <GoogleLoginButton />
   <RouterView />
+<<<<<<< HEAD
   <!-- <Carousel2/> -->
   <!-- <StoreInfo4/> -->
+=======
+  <Carousel2/>
+  <!--<ProductList/>-->
+  <StoreInfo5/>
+>>>>>>> 202976ddd84b66b4131bf21fb8ef6c7120269bda
   <Footer />
 </template>
 
