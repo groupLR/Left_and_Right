@@ -6,6 +6,7 @@ import Carousel2 from "./components/Carousel2.vue";
 import StoreInfo5 from "./components/StoreInfo5.vue";
 import Footer from "./components/Footer.vue";
 import ProductList from "./views/ProductList.vue";
+import Footer from "./components/Footer.vue";
 import GoogleLoginButton from './components/googleLogin.vue'
 </script>
 
@@ -37,11 +38,13 @@ import GoogleLoginButton from './components/googleLogin.vue'
       |
       <RouterLink to="/overseas-delivery">海外運送</RouterLink>
       |
-      <RouterLink to="/products">products</RouterLink>
+      <RouterLink to="/categories">products</RouterLink>
       |
       <RouterLink to="/store-info">store-info</RouterLink>
       |
       <RouterLink to="/users/sign-in">register</RouterLink>
+      |
+      <RouterLink to="/products/detail">products-detail</RouterLink>
     </nav>
   </header>
   <GoogleLoginButton />

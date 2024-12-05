@@ -1,16 +1,30 @@
 <script setup>
 import ProductItem from "@/components/ProductItem.vue";
-import { ref,computed } from "vue"
+import { ref,computed,onMounted, watch } from "vue"
 import { storeToRefs } from "pinia";
+import { useRoute } from 'vue-router'
 import { useProductStore } from '@/stores/products'
 import SmallCart4 from "@/components/SmallCart4.vue";
 
+const route = useRoute()
 const productStore = useProductStore()
 const cartVisible = ref(false); // 控制 SmallCart 的顯示
-const { productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, itemsPerPage, paginatedProducts, paginationOnClickHandler  } = storeToRefs(productStore)
+const { categoryTitle,productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, itemsPerPage, paginatedProducts, paginationOnClickHandler  } = storeToRefs(productStore)
 const toggleCart = () => {
   cartVisible.value = !cartVisible.value;
 };
+
+// 監聽路由參數變化
+watch(() => route.params.category, async (newCategory) => {
+  // 如果沒有 category 參數，使用空字串呼叫 API
+  await ProductStore.fetchProductList(newCategory || '')
+}, { immediate: true })
+
+onMounted(async () => {
+  const category = route.params.category || ''
+  await ProductStore.fetchProductList(category)
+})
+
 // 處理加入購物車的事件
 const handleAddToCart = (product) => {
   productStore.addToCart(product); // 呼叫 Pinia store 的方法
@@ -33,13 +47,14 @@ const cartItemCount = computed(() => {
 });
 
 
+
 </script>
 
 
 <template>
-  <section class="px-4 py-3 ">
-    <div class="items-center px-1 mb-2 headerContainer md:flex">
-      <h1 class="py-5 text-xl ">戒指 / Rings</h1>
+  <section class=" px-4 py-3">
+    <div class="headerContainer px-1 mb-2 md:flex items-center">
+      <h1 class=" py-5 text-xl">{{ categoryTitle }}</h1>
       <!-- 排序 -->
       <div class="flex selectContainer">
         <div class="relative flex items-center flex-1 mr-3 pageSelectItem">
@@ -49,10 +64,12 @@ const cartItemCount = computed(() => {
           </el-select>
         </div>
         <!-- 每頁資料筆數 -->
-        <div class="relative flex items-center flex-1 pageSelectItem">
-          <i class="absolute text-gray-500 transform -translate-y-1/2 fa-solid fa-bars fa-rotate-90 left-3 top-1/2"></i>
-          <el-select placement="bottom"  :fallback-placements="['bottom-start']" v-model="pageValue" placeholder="每頁顯示 24 個" size="large" class="pl-10">
-            <el-option class="selectOption" v-for="item in pageOptions" :key="item.value" :label="item.label" :value="item.value" />
+        <div class="pageSelectItem  flex items-center relative flex-1">
+          <i class="fa-solid fa-bars fa-rotate-90 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+          <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="pageValue"
+            placeholder="每頁顯示 6 個" size="large" class="pl-10">
+            <el-option class="selectOption" v-for="item in pageOptions" :key="item.value" :label="item.label"
+              :value="item.value" />
           </el-select>
         </div>
       </div>
