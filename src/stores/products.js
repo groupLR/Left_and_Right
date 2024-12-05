@@ -11,9 +11,9 @@ export const useProductStore = defineStore('products', () => {
   // 預設商品列表
   const productList = ref([])
   // 商品列表標題處理
-  const fetchProductList = async (category = 'rings') => {
+  const fetchProductList = async (categoryId = 1) => {
     try {
-      const response = await axios.get(`${API_URL}/categories${category ? `/${category}` : ''}`)
+      const response = await axios.get(`${API_URL}/categories${categoryId ? `/${categoryId}` : ''}`)
       productList.value = response.data.products  || []
       categoryTitle.value = response.data.categoryName
 
