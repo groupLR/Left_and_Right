@@ -65,7 +65,7 @@ const router = createRouter({
 			component: () => import("../views/Overseasdelivery.vue"),
 		},
 		{
-			path: "/products/:category?", // 加上可選的動態參數 -> 分類!
+			path: "/categories/:category?", // 加上可選的動態參數 -> 分類!
 			name: "products",
 			component: ProductList,
 			props: true  // 將路由參數作為 props 傳遞給元件
