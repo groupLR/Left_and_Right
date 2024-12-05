@@ -11,7 +11,10 @@ import ProductList from './views/ProductList.vue';
 <template>
   <header>
     <nav>
+      <RouterLink to="/about">About</RouterLink>
       <RouterLink to="/">Home</RouterLink>
+      |
+      <RouterLink to="/reviews">Reviews</RouterLink>
       | <!-- COMPANY -->
       <RouterLink to="/about">關於品牌</RouterLink>
       | 
@@ -34,6 +37,8 @@ import ProductList from './views/ProductList.vue';
       <RouterLink to="/products">products</RouterLink>
       |
       <RouterLink to="/store-info">store-info</RouterLink>
+      |
+      <RouterLink to="/users/sign-in">register</RouterLink>
     </nav>
   </header>
   <RouterView />
