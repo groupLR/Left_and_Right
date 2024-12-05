@@ -47,9 +47,9 @@ import GoogleLoginButton from './components/googleLogin.vue'
   <GoogleLoginButton />
   <RouterView />
   <Carousel2/>
+  <!--<ProductList/>-->
   <StoreInfo5/>
   <Footer />
-  <ProductList/>
 </template>
 
 <style scoped></style>
