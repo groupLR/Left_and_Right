@@ -73,9 +73,8 @@ const handleAddToCart = (event) => {
             <p class="mb-1 text-base text-gray-500 line-through decoration-slate-400 ">NT${{ props.originalPrice }}</p>
           <!-- 加入購物車按鈕 -->
             <button  v-if="hovered" @click.prevent="handleAddToCart" class="absolute h-8 rounded cartButton bottom-4 left-4 right-4 bg-neutral-100 border-l-neutral-300 lg:bg-white lg:h-10 lg:left-8 lg:right-8 lg:-top-50px lg:hidden">
-
             <i class="fa-solid fa-cart-shopping lg:hidden"></i>
-            <button  v-if="hovered" @click.prevent="handleAddToCart" class="hidden lg:block lg:text-sm lg:py-3">加入購物車</button>
+            <p class="hidden lg:block lg:text-sm lg:py-3">加入購物車</p>
           </button>
         </div>
   </div>
