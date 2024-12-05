@@ -3,7 +3,6 @@ import HomeView from "../views/HomeView.vue";
 import ProductList from "@/views/ProductList.vue";
 import StoreInfo4 from "@/components/StoreInfo4.vue";
 import UsersEdit from "@/views/UsersEdit.vue";
-import ProductDetail from "@/views/ProductDetailExample.vue";
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
