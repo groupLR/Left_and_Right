@@ -1,8 +1,9 @@
-import { createRouter, createWebHistory } from "vue-router"
-import HomeView from "../views/HomeView.vue"
-import ProductList from "@/views/ProductList.vue"
-import StoreInfo4 from "@/components/StoreInfo4.vue"
-import UsersEdit from "@/views/UsersEdit.vue"
+import { createRouter, createWebHistory } from "vue-router";
+import HomeView from "../views/HomeView.vue";
+import ProductList from "@/views/ProductList.vue";
+import StoreInfo4 from "@/components/StoreInfo4.vue";
+import UsersEdit from "@/views/UsersEdit.vue";
+import ProductDetail from "@/views/ProductDetailExample.vue";
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -119,6 +120,12 @@ const router = createRouter({
 			name: "OrderDetails",
 			component: () => import("../views/OrderDetails.vue"),
 		},
+		{
+      path: "/products/detail",
+      name: "products-detail(改)",
+      component: () => import("../views/ProductDetail.vue")
+    },
+		
 	],
 })
 

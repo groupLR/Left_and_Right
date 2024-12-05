@@ -7,7 +7,6 @@ import StoreInfo4 from "./components/StoreInfo4.vue";
 import Footer from "./components/Footer.vue";
 import ProductList from "./views/ProductList.vue";
 import GoogleLoginButton from './components/googleLogin.vue'
-
 </script>
 
 <template>
@@ -19,7 +18,8 @@ import GoogleLoginButton from './components/googleLogin.vue'
 			|
 			<RouterLink to="/reviews">Reviews</RouterLink>
 
-      | <!-- COMPANY -->
+      |
+      <!-- COMPANY -->
       <RouterLink to="/about">關於品牌</RouterLink>
       |
       <RouterLink to="/store-info">門市資訊</RouterLink>
@@ -43,12 +43,15 @@ import GoogleLoginButton from './components/googleLogin.vue'
       <RouterLink to="/store-info">store-info</RouterLink>
       |
       <RouterLink to="/users/sign-in">register</RouterLink>
+      |
+      <RouterLink to="/products/detail">products-detail</RouterLink>
     </nav>
   </header>
   <GoogleLoginButton />
   <RouterView />
   <!-- <Carousel2/> -->
   <!-- <StoreInfo4/> -->
+  <ToTopButton />
   <Footer />
 </template>
 
