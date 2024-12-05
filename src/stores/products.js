@@ -13,7 +13,7 @@ export const useProductStore = defineStore('products', () => {
   // 商品列表標題處理
   const fetchProductList = async (category = 'rings') => {
     try {
-      const response = await axios.get(`${API_URL}/products${category ? `/${category}` : ''}`)
+      const response = await axios.get(`${API_URL}/categories${category ? `/${category}` : ''}`)
       productList.value = response.data.products  || []
       categoryTitle.value = response.data.categoryName
 
