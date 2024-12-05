@@ -51,7 +51,6 @@ import GoogleLoginButton from './components/googleLogin.vue'
   <RouterView />
   <!-- <Carousel2/> -->
   <!-- <StoreInfo4/> -->
-  <ToTopButton />
   <Footer />
 </template>
 
