@@ -4,8 +4,9 @@ import ProductList from '@/views/ProductList.vue'
 import StoreInfo5 from '@/components/StoreInfo5.vue'
 import Cart from '../views/Cart.vue'
 import UsersEdit from "@/views/UsersEdit.vue"
+
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+	history: createWebHistory(import.meta.env.BASE_URL),
 
   // 
   routes: [
@@ -122,5 +123,3 @@ const router = createRouter({
 })
 
 export default router
-
-

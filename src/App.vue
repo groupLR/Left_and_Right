@@ -16,7 +16,9 @@ import GoogleLoginButton from './components/googleLogin.vue'
       <RouterLink to="/about">About</RouterLink>
       <RouterLink to="/">Home</RouterLink>
       |
+      <RouterLink to="/reviews">Reviews</RouterLink>
       <!-- COMPANY -->
+
       <RouterLink to="/about">關於品牌</RouterLink>
       |
       <RouterLink to="/store-info">門市資訊</RouterLink>
@@ -38,6 +40,8 @@ import GoogleLoginButton from './components/googleLogin.vue'
       <RouterLink to="/products">products</RouterLink>
       |
       <RouterLink to="/store-info">store-info</RouterLink>
+      |
+      <RouterLink to="/users/sign-in">register</RouterLink>
     </nav>
   </header>
   <GoogleLoginButton />

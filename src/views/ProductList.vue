@@ -1,4 +1,4 @@
-<script setup >
+<script setup>
 import ProductItem from "@/components/ProductItem.vue";
 import { ref,computed } from "vue"
 import { storeToRefs } from "pinia";
@@ -32,6 +32,7 @@ const cartItemCount = computed(() => {
   return cartItems.value.reduce((total, item) => total + item.quantity, 0);
 });
 
+
 </script>
 
 
@@ -39,6 +40,7 @@ const cartItemCount = computed(() => {
   <section class="px-4 py-3 ">
     <div class="items-center px-1 mb-2 headerContainer md:flex">
       <h1 class="py-5 text-xl ">戒指 / Rings</h1>
+      <!-- 排序 -->
       <div class="flex selectContainer">
         <div class="relative flex items-center flex-1 mr-3 pageSelectItem">
           <i class="absolute text-gray-500 transform -translate-y-1/2 fa-solid fa-arrow-up-short-wide left-3 top-1/2"></i>
@@ -121,36 +123,20 @@ const cartItemCount = computed(() => {
 
 .paginate-buttons {
   padding: 6px 12px;
-  /* height: 40px; */
-  /* width: 40px; */
-  /* border-radius: 20px; */
   cursor: pointer;
-  /* background-color: rgb(242, 242, 242); */
-  /* border: 1px solid rgb(217, 217, 217); */
   color: black;
 }
 
-/* .paginate-buttons:hover {
-    background-color: #d8d8d8;
-  } */
-
 .active-page {
   font-weight: 700;
-  /* background-color: #3498db; */
   border-bottom: 2px solid black;
-  /* color: white; */
 }
-
-/* .active-page:hover {
-    background-color: #2988c8;
-  } */
 </style>
 
 
 <!-- select 的 style -->
 <style scoped>
-
-.headerContainer{
+.headerContainer {
   justify-content: space-between;
 }
 
@@ -181,7 +167,6 @@ const cartItemCount = computed(() => {
 
 :deep(.el-select__wrapper.is-hovering:not(.is-focused)){
   box-shadow: 0 0 0 0px #fff inset;
-
 }
 
 /* option 的 hover 樣式 */
@@ -192,10 +177,12 @@ const cartItemCount = computed(() => {
 }
 
 
+
 .el-select-dropdown__item.is-hovering{
   background-color: #000;
   color: #fff;
 }
+
 
 
 @media screen and (768px <= width) {

@@ -83,6 +83,7 @@ const updateQuantity = (itemId, newQuantity) => {
 const cartItemCount = computed(() => {
   return cartItems.value.reduce((total, item) => total + item.quantity, 0);
 });
+
   // 下拉
   const pageValue = ref('')
   const sortValue = ref('')
@@ -174,3 +175,4 @@ const cartItemCount = computed(() => {
     toggleCartVisibility,
   }
 })
+
