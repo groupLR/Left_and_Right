@@ -70,7 +70,7 @@
   import { useProductStore } from '@/stores/products';  // 引入 Pinia store
   import { storeToRefs } from 'pinia';
   const productStore = useProductStore(); // 使用 Pinia store
-const { cartItems } = storeToRefs(productStore);
+  const { cartItems } = storeToRefs(productStore);
 
 
   // 透過 store 獲取購物車商品數據
