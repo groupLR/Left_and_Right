@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { onMounted, ref,reactive } from 'vue'
 import axios from 'axios'
 import { z } from 'zod'
@@ -129,7 +129,7 @@ const doRegister = async (registerData) => {
                 <select v-model="registerForm.gender">
                     <option value="" disabled selected>性別</option>
                     <option value="m">男</option>
-                    <option value="g">女</option>
+                    <option value="f">女</option>
                     <option value="o">不透漏</option>
                 </select>
                 <div class="grid grid-cols-3 gap-2.5">
@@ -200,7 +200,7 @@ const doRegister = async (registerData) => {
             
         </div>
         <!-- 登入 -->
-        <div class="p-5 mx-auto" v-if="isLogin">
+        <div class="p-5" v-if="isLogin">
             <div class="grid grid-cols-1 justify-between gap-5 px-10 pb-5 lg:grid-cols-2">
                 <button class="text-base px-10 border">使用LINE登入</button>
                 <button class="text-base px-10 border">使用Facebook登入</button>
