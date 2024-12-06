@@ -1,39 +1,35 @@
 <template>
-  <div>
+  <div class="small-cart-wrapper">
     <!-- 遮罩層 -->
     <div
-      v-if="isCartOpen"
+      v-if="isCartVisible"
       class="overlay"
-      @click="closeCart"
+      @click="handleOverlayClick"  
     ></div>
+
+  
+      <!-- 小購物車面板 -->
+      <div v-if="isCartOpen" class="shoppingCart">
+        <!-- 小購物車內容 -->
+      </div>
     
-    <!-- 手提包按鈕 -->
-      <div>
-    <!-- 小購物車面板 -->
-    <div v-if="isCartVisible" class="shopping-cart">
-      <!-- 小購物車內容 -->
-    </div>
-  </div>
 
     <!-- 購物車面板 -->
     <div
-      class="cart-panel"
-      :class="{ active: isCartOpen }"
+      class="cartPanel"
+      :class="{ active: isCartVisible }"
       @click.stop
     >
-      <div class="cart-header">
-        <!-- <h2>購物車</h2> -->
-        
-      </div>
+      <div class="cartHeader"></div>
 
       <div
-        class="cart-content"
+        class="cartContent"
         :class="{ empty: cartItems.length === 0 }"
       >
         <!-- 如果購物車為空 -->
         <p
           v-if="cartItems.length === 0"
-          class="empty-cart"
+          class="emptyCart"
         >
           你的購物車是空的
         </p>
@@ -42,87 +38,105 @@
         <div
           v-for="(item, index) in cartItems"
           :key="index"
-          class="cart-item"
+          class="cartItem"
         >
-        <a :href="item.link" target="_blank"><img :src="item.img" alt="商品圖片"></a>
-        <span class="product-name">{{ item.name }}</span>
-        <br>
-        <div class="price">
-          <span>{{ item.quantity}} x </span>
-          <span>$ {{ item.price.toFixed(2) }}</span>
-          <span>{{ item.currency }}</span>
-         </div>
-         <button @click="removeItem(index)" class="remove-btn">
-          <i class="fas fa-trash"></i> 
-         </button>
-      </div>
+          <a :href="item.link" target="_blank"><img :src="item.frontImg" alt="商品圖片"></a>
+          <span class="productName">{{ item.title }}</span>
+          <br>
+          <div class="price">
+            <span>{{ item.quantity }} x </span>
+            <span>$ {{ item.price.toFixed(2) }}</span>
+            <span>{{ item.currency }}</span>
+          </div>
+          <button @click="removeFromCart(item.id)" class="removeBtn">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
 
-      <div class="cart-footer" v-if="cartItems.length > 0">
-        <router-link to="/Cart" class="checkout-btn">
-          訂單結帳
-        </router-link>
+        <div class="cartFooter" v-if="cartItems.length > 0">
+          <router-link to="/Cart" class="checkoutBtn">
+            訂單結帳
+          </router-link>
+        </div>
       </div>
-
     </div>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
   </div>
-</div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 </template>
 
 <script setup>
-import { ref } from "vue";
-// 接收父組件傳遞的 `isCartOpen` prop
+import { ref, computed,watch} from "vue";
+import { useProductStore } from '@/stores/products';  // 引入 Pinia store
+import { storeToRefs } from 'pinia';
+const productStore = useProductStore(); // 使用 Pinia store
+const { cartItems } = storeToRefs(productStore);
+
+
+// 透過 store 獲取購物車商品數據
 const props = defineProps({
-  isCartOpen: Boolean
+isCartOpen: {
+  type: Boolean,
+  default: false
+},
+visible: {
+  type: Boolean,
+  default: false, // 可以設定默認值，或者根據需要調整
+},
+});
+watch(
+() => props.visible,
+(newValue) => {
+  if (newValue) {
+    console.log('购物车显示');
+  } else {
+    console.log('购物车隐藏');
+  }
+}
+);
+
+const emit = defineEmits(['close']);
+
+// 點擊遮罩層關閉購物車
+const onOverlayClick = () => {
+emit('close');
+};
+
+// 刪除購物車商品
+const removeFromCart = (itemId) => {
+productStore.removeFromCart(itemId);
+};
+
+// 計算總價
+const totalPrice = computed(() => {
+return cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
 });
 
+// 使用 Store 中的數據和方法
+const isCartVisible = computed(() => productStore.isCartVisible);
+const toggleCartVisibility = productStore.toggleCartVisibility;
 
-
-// 購物車商品列表
-const cartItems = ref([ { img:"https://shoplineimg.com/53eb2bccb32b41ef6e000007/671205b47fcc46000cc5dda1/200x200f.webp?source_format=jpg",name: "哥特蝴蝶夾式耳環 / Goth Butterfly Ear Clip",quantity: 1, price: 33.26,currency: "TWD",link: "https://www.bonnyread.com.tw/products/gothbutterflyearclip" },
-    { img: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/6710cd82fe19ec0011fb7f3a/400x400f.webp?source_format=jpg", name: "[預購] [銀針] 宇宙星鑽耳環 / Cosmic Diamond Earring", quantity: 1, price: 20.02, currency: "TWD", link: "https://www.bonnyread.com.tw/products/cosmicdiamondearring" },
-    { img: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/6710c5108e7459000d47f2a2/200x200f.webp?source_format=jpg", name: "[預購] [純銀] 紛亂世界戒指 / Chaotic World Ring", quantity: 1, price: 15.13, currency: "TWD", link: "https://www.bonnyread.com.tw/products/chaoticworldring" },]);
-
-// 發送關閉購物車事件
-const emit = defineEmits(['updateCartStatus']);
-// 修改開關購物車的邏輯
-const openCart = () => {
-  emit('updateCartStatus', true); // 通知父組件開啟購物車
-  document.body.style.overflow = 'hidden'; // 禁止背景滾動
+// 当点击遮罩层时，关闭购物车
+const handleOverlayClick = () => {
+toggleCartVisibility(false); // 关闭购物车
 };
 
-// 控制購物車開關
-const closeCart = () => {
-  emit('updateCartStatus', false); // 通知父組件關閉購物車
-  document.body.style.overflow = ''; // 恢復背景滾動
-};
 
-// 移除指定商品
-const removeItem = (index) => {
-  cartItems.value.splice(index, 1);
-};
-
-//pinia版移除商品
-// 從 Store 中移除商品
-//const removeItem = (index) => {
-//  cartStore.removeItem(index);
-//};
 </script>
 
 <style>
-/* 添加遮罩層樣式 */
-/* .product-name{
-  margin-left: 17px;
-} */
+.small-cart-wrapper {
+display: contents;
+}
 
+/* 添加遮罩層樣式 */
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  /* background-color: rgba(0, 0, 0, 0.5); */
-  z-index: 998;
+  z-index: 999;
 }
 
 /* 基本樣式 */
@@ -132,7 +146,7 @@ body {
 }
 
 /* 手提包按鈕 */
-.cart-icon {
+.cartIcon {
   position: fixed;
   top: 10px;
   right: 10px;
@@ -144,13 +158,12 @@ body {
 }
 
 /* 購物車面板 */
-.cart-panel {
+.cartPanel {
   position: fixed;
-  top: 240px;
+  top: 90px;
   right: -100%;
   width: 300px;
-  max-height: 80vh; /* 修改：設定最大高度為視窗高度的 80% */
-  /* max-height: calc(-186px + 100vh); */
+  max-height: 80vh;
   background-color: #ffffff;
   transition: right 0.3s ease-in-out;
   display: flex;
@@ -158,29 +171,27 @@ body {
   z-index: 999;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
   min-height: 160px;
+  overflow-y: auto; /* 確保滾動可用 */
 }
 
-.cart-panel.active {
+.cartPanel.active {
   right: 80px;
 }
 
 /* 購物車頭部 */
-.cart-header {
+.cartHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* padding: 15px; */
-  border-bottom: 1px solid transparent;
-  flex-shrink: 0; /* 修改：防止頭部被壓縮 */
 }
 
-.cart-header h2 {
+.cartHeader h2 {
   margin: 0;
   font-size: 18px;
 }
 
 /* 關閉按鈕 */
-.close-btn {
+.closeBtn {
   background: none;
   border: none;
   font-size: 18px;
@@ -188,200 +199,264 @@ body {
 }
 
 /* 購物車內容 */
-.cart-content {
+.cartContent {
   flex: 1;
   overflow-y: auto;
   padding: 20px 20px 0px 20px;
   position: relative;
-  max-height: calc(80vh - 100px); /* 修改：減去頭部和底部的高度 */
+  max-height: calc(80vh - 15px);
   scrollbar-width: thin;
-  
 }
 .cart-content::-webkit-scrollbar-thumb {
-  display: none;
+display: none;
 }
 
 .cart-content::-webkit-scrollbar-button {
-  display: none;
+display: none;
 }
-.cart-content.empty {
+.cartContent.empty {
   max-width: 298px;
   max-height: 160px;
   width: 100%;
   height: auto;
-  /* display: flex; */
   align-items: center;
   justify-content: center;
 }
 
 /* 購物車底部 */
-.cart-footer {
+.cartFooter {
   padding: 15px;
-  flex-shrink: 0; /* 修改：防止底部被壓縮 */
+  flex-shrink: 0;
   position: sticky;
-  /* bottom: 15px; 與 padding: 15px; 相對應 */
   background-color: #ffffff;
-  z-index: 1;
-  bottom: 0; /* 設定為 0，完全貼合底部 */
+  bottom: 0;
 }
 
-.checkout-btn {
+.checkoutBtn {
   width: 100%;
   height: auto;
   max-width: 268px;
   max-height: 38px;
   padding: 6 12px;
   border: none;
-  /* cursor: pointer; */
   border-radius: 8px;
   font-size: 14pt;
   background-color: black;
   color: white;
-  display: inline-block; /* 明確定義 */
   text-align: center;
   border: 1px solid #888;
+  display: block;
 }
-.checkout-btn:hover {
+
+.checkoutBtn:hover {
   background-color: white;
   color: black;
 }
 
-
 /* 購物車商品 */
-.cart-item {
-  /* display: flex; */
+.cartItem {
   justify-content: space-between;
   align-items: center;
-  /* margin-bottom: 10px; */
-  font-size: calc(13px* var(--font-size-paragraph, 1));
+  font-size: calc(13px * var(--font-size-paragraph, 1));
   color: hsla(var(--page-text-h, 0deg), var(--page-text-s, 0%), 60%, 1);
   position: relative;
-  padding-bottom: 50px; /* 為價格預留空間 */
+  padding-bottom: 50px;
   margin-bottom: 15px;
   border-bottom: 1px solid #eee;
 }
-.price{
+
+.price {
   position: absolute;
-  font-size: calc(14px* var(--font-size-paragraph, 1));
+  font-size: calc(14px * var(--font-size-paragraph, 1));
   color: var(--page-text, #333);
-  bottom: 10px; /* 調整到底部 */
-  /* left: 10px; */
-  /* bottom: 10px; */
-  font-size: 14px;
-  /* margin-top: 20px; */
-  margin-top: 0; /* 移除原有的 margin-top */
-  /* margin-left:10px; */
+  bottom: 10px;
+  margin-top: 0;
 }
-/* 空購物車提示 */
-.empty-cart {
+
+.emptyCart {
   text-align: center;
-  margin-top: 35px;
+  margin-top: 45px;
 }
-.remove-btn{
-  content: '\f014';
+
+.removeBtn {
   font-family: FontAwesome;
   position: absolute;
-  /* right: 2px; */
-  text-indent: 0;
-  margin-top: 20px;
-  /* margin-right:20px; */
-  bottom: 10px; /* 與價格對齊 */
+  bottom: 10px;
   right: 10px;
-  margin-top: 0; /* 移除原有的 margin-top */
 }
+
 /* 手機版 (螢幕寬度小於768px) */
 @media (max-width: 767px) {
-  .cart-panel {
-    width: 66.66%; /* 2/3寬度 */
-    left: -66.66%;
-    position: fixed;
-    top: 0;
-    min-height: 100vh;  /* 高度延伸到螢幕底部，扣掉結帳按鈕高度 */ 
-    max-height: 100vh; /* 限制高度不超過視窗高度 */
-    transition: left 0.3s ease-in-out;
-    z-index: 999;
-    overflow-y: auto; /* 如果內容過多，允許滾動 */
-  }
-  .cart-panel.active {
-    left: 0;
-  }
-  .checkout-btn{
-    max-height: 68px;
-    max-width: 280px;
-    width: 100%;
-    height: auto;
-    background-color: black;
-    color: white;
-    outline: none; /* 去除按鈕外框 */
-    box-shadow: none; /* 去除陰影 */
-  }
-  .cart-footer {
-  /* padding: 15px; */
+.cartPanel {
+  width: 66.66%; /* 2/3寬度 */
+  height: auto;
+  left: -66.66%;
+  position: fixed;
+  top: 0;
+  min-height: 100vh; /* 高度延伸到螢幕底部，扣掉結帳按鈕高度 */ 
+  max-height: 100vh; /*限制高度不超過視窗高度 */
+  transition: left 0.3s ease-in-out;
+  z-index: 999;
+  overflow-y: auto; /* 如果內容過多，允許滾動 */
+}
+.cartPanel.active {
+  left: 0;
+}
+.checkoutBtn {
+  max-height: 68px;
+  max-width: 280px;
+  width: 100%;
+  height: auto;
+  background-color: black;
+  color: white;
+  outline: none; /* 去除按鈕外框 */
+  box-shadow: none; /* 去除陰影 */
+  display: block;
+}
+.cartFooter {
   flex-shrink: 0; /* 修改：防止底部被壓縮 */
   position: sticky;
-  bottom: 15px; /*與 padding: 15px; 相對應  */
+  /* bottom: 15px; 與 padding: 15px; 相對應 */
   background-color: #ffffff;
   z-index: 1;
-  bottom: 0; /* 設定為 0，完全貼合底部 */
+  bottom: 0;
 }
-.cart-content {
+.cartContent {
   flex: 1;
   overflow-y: auto;
   padding: 20px 20px 0px 20px;
   position: relative;
-  /* max-height: calc(80vh - 100px); 修改：減去頭部和底部的高度 */
   scrollbar-width: thin;
-  
+  max-height: 100vh;
 }
-.cart-content.empty {
+.cartContent.empty {
   max-width: 298px;
-  max-height: 160px;
+  max-height: 100vh;
   width: 100%;
   height: auto;
-  /* display: flex; */
   align-items: center;
   justify-content: center;
+  z-index: 999;
 }
-.empty-cart {
+.emptyCart {
   text-align: center;
-  margin-top: 35px;
+  margin-top: 285px;
 }
 }
 
 /* 平板版 (螢幕寬度介於768px到1024px) */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .cart-panel {
-    width: 33.33%; /* 1/3寬度 */
-    left: -33.33%;
-    min-height: 100vh;  /* 高度延伸到螢幕底部，扣掉結帳按鈕高度 */ 
-    max-height: 100vh; /* 限制高度不超過視窗高度 */
-    position: fixed;
-    top: 0;
-  }
-  .cart-panel.active {
-    left: 0;
-  }
-  /* .cart-content.empty {
+@media (min-width: 768px) and (max-width: 1023px) {
+.cartPanel {
+  width: 33.33%; /* 1/3寬度 */
+  left: -33.33%;
+  min-height: 100vh; /* 高度延伸到螢幕底部，扣掉結帳按鈕高度 */ 
+  /* max-height: 100vh; 限制高度不超過視窗高度 */
+  position: fixed;
+  top: 0;
+  z-index: 999;
+}
+.cartPanel.active {
+  left: 0;
+}
+.cartContent.empty {
   max-width: 298px;
-  max-height: 160px;
+  max-height: 100vh;
   width: 100%;
-  height: auto;
-  /* display: flex; */
+  /* height: auto; */
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+.emptyCart {
+  text-align: center;
+  margin-top: 595px;
   /* align-items: center;
   justify-content: center;
-} */ 
-.empty-cart {
-  text-align: center;
-  margin-top: 35px;
+  display: flex; */
 }
-.cart-content {
+.cartContent {
   flex: 1;
   overflow-y: auto;
   padding: 20px 20px 0px 20px;
   position: relative;
-  /* max-height: calc(80vh - 100px); 修改：減去頭部和底部的高度 */
   scrollbar-width: thin;
-  
+  max-height: 100vh;
+}
+.checkoutBtn {
+  max-height: 68px;
+  max-width: 280px;
+  width: 100%;
+  height: auto;
+  background-color: black;
+  color: white;
+  outline: none; /* 去除按鈕外框 */
+  box-shadow: none; /* 去除陰影 */
+  display: block;
+}
+.cartFooter {
+  flex-shrink: 0; /* 修改：防止底部被壓縮 */
+  position: sticky;
+  /* bottom: 15px; 與 padding: 15px; 相對應 */
+  background-color: #ffffff;
+  z-index: 1;
+  bottom: 0;
+}
+}
+@media (min-width: 1024px) and (max-width:1279px) {
+.cartPanel {
+  /* width: 33.33%; 1/3寬度 */
+  left: -33.33%;
+  min-height: 100vh; /* 高度延伸到螢幕底部，扣掉結帳按鈕高度 */ 
+  /* max-height: 100vh; 限制高度不超過視窗高度 */
+  position: fixed;
+  top: 0;
+  z-index: 999;
+}
+.cartPanel.active {
+  left: 0;
+}
+.cartContent.empty {
+  max-width: 298px;
+  max-height: 100vh;
+  width: 100%;
+  /* height: auto; */
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+.emptyCart {
+  text-align: center;
+  margin-top: 297px;
+  /* align-items: center;
+  justify-content: center;
+  display: flex; */
+}
+.cartContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 20px 0px 20px;
+  position: relative;
+  scrollbar-width: thin;
+  max-height: 100vh;
+}
+.checkoutBtn {
+  max-height: 68px;
+  max-width: 280px;
+  width: 100%;
+  height: auto;
+  background-color: black;
+  color: white;
+  outline: none; /* 去除按鈕外框 */
+  box-shadow: none; /* 去除陰影 */
+  display: block;
+}
+.cartFooter {
+  flex-shrink: 0; /* 修改：防止底部被壓縮 */
+  position: sticky;
+  /* bottom: 15px; 與 padding: 15px; 相對應 */
+  background-color: #ffffff;
+  z-index: 1;
+  bottom: 0;
 }
 }
 </style>

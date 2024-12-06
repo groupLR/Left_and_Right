@@ -1,5 +1,11 @@
 <script setup>
-import { ref } from "vue";
+import SmallCart from './SmallCart.vue';
+import { ref, computed} from 'vue';
+import { useProductStore } from '@/stores/products';  // 引入 Pinia store
+
+const productStore = useProductStore(); // 使用 Pinia store
+const cartItemCount = computed(() => productStore.cartItemCount);  // 从 store 获取购物车商品总数量
+const isCartOpen = ref(false);
 const isVisible = ref(false);
 const articleOpen = ref(false);
 const cartOpen = ref(false);
@@ -120,23 +126,45 @@ const listOpen19 = ref(true);
 const openList19 = () => {
   listOpen19.value = !listOpen19.value;
 };
+const toggleCart = () => {
+  isCartOpen.value = !isCartOpen.value;
+  if (isCartOpen.value) {
+    document.body.style.overflow = 'hidden'; // 禁止背景滾動
+  } else {
+    document.body.style.overflow = 'auto'; // 恢復背景滾動
+  }
+};
+const handleCartIconClick = () => {
+  productStore.toggleCartVisibility(); // 切换购物车的显示状态
+};
+
+const closeCart = () => {
+  isCartOpen.value = false;
+  document.body.style.overflow = 'auto';
+};
 </script>
+
 <template>
+  <div v-if="isCartOpen"
+      class="overlay"
+      @click="closeCart"></div>
   <input type="checkbox" id="bars" class="hidden peer" />
   <div
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 pointer-events-none peer-checked:pointer-events-auto peer-checked:opacity-100 opacity-0">
+    class="fixed inset-0 flex items-center justify-center transition-opacity duration-300 bg-black bg-opacity-50 opacity-0 pointer-events-none peer-checked:pointer-events-auto peer-checked:opacity-100">
     <label for="bars" class="absolute inset-0 cursor-pointer"></label>
   </div>
+  
   <div class="flex items-center justify-between">
-    <a href="#" class="py-2 px-4">
+    <a href="#" class="px-4 py-2">
       <img
         src="/src/assets/ourLogo.jpeg"
         alt="logo"
         class="object-fill w-20 h-11"
     /></a>
-    <ul class="flex flex-1 items-center justify-end ">
+    <ul class="flex items-center justify-end flex-1 ">
+
       <li class="mx-3 ">
-        <select class="xl:block hidden outline-none cursor-pointer text-black hover:text-gray-500">
+        <select class="hidden text-black outline-none cursor-pointer xl:block hover:text-gray-500">
           <option>$ HKD</option>
           <option>P MOP</option>
           <option>¥ CNY</option>
@@ -159,9 +187,9 @@ const openList19 = () => {
         </select>
       </li>
       <li class="mx-3">
-        <div class="hidden xl:block cursor-pointer text-black hover:text-gray-500">
+        <div class="hidden text-black cursor-pointer xl:block hover:text-gray-500">
           <font-awesome-icon class="globe-icon" :icon="['fas', 'globe']" />
-          <select class="outline-none cursor-pointer text-black hover:text-gray-500">
+          <select class="text-black outline-none cursor-pointer hover:text-gray-500">
             <option>English</option>
             <option selected>繁體中文</option>
           </select>
@@ -170,38 +198,42 @@ const openList19 = () => {
       <li class="mx-3 xl:hidden" @click="inputShow">
         <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
       </li>
-      <li class="hidden xl:block mx-3 group relative text-black hover:text-gray-500">
+      <li class="relative hidden mx-3 text-black xl:block group hover:text-gray-500">
         <input
           type="search"
           maxlength="100"
           placeholder="ivy郁欣聯名"
-          class="w-0 group-hover:w-56 focus:w-56 focus-visible:outline-none border-b border-black transition-all duration-500 ease-in-out overflow-hidden outline-none"
+          class="w-0 overflow-hidden transition-all duration-500 ease-in-out border-b border-black outline-none group-hover:w-56 focus:w-56 focus-visible:outline-none"
         />
         <button type="submit">
           <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
         </button>
       </li>
-      <li class="mx-3 hidden xl:block cursor-pointer text-black hover:text-gray-500">
+      <li class="hidden mx-3 text-black cursor-pointer xl:block hover:text-gray-500">
         <font-awesome-icon :icon="['fas', 'comment']" />
       </li>
-      <li class="mx-3 cursor-pointer text-black hover:text-gray-500">
+      <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
         <font-awesome-icon :icon="['fas', 'user']" />
       </li>
-      <li class="mx-3 cursor-pointer text-black hover:text-gray-500">
-        <font-awesome-icon :icon="['fas', 'bag-shopping']" @click="openCart" />
-      </li>
-      <li class="w-16 h-16 relative list-none">
+      <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
+          <label for="cartSidebarSwitch" @click="handleCartIconClick"
+            ><font-awesome-icon :icon="['fas', 'bag-shopping']"
+          /><span v-if="cartItemCount > 0" class="cart-Count">{{ cartItemCount }}</span></label>
+        </li>
+        <!-- 引入小購物車並綁定購物車顯示狀態 -->
+    <!-- <SmallCart :isCartOpen="isCartOpen" @close="closeCart" /> -->
+    <li class="relative w-16 h-16 list-none">
         <div>
           <label for="bars"
             ><font-awesome-icon
               :icon="['fas', 'bars']"
-              class="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer left-1/2 xl:hidden"
+              class="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer top-1/2 left-1/2 xl:hidden"
           /></label>
         </div>
       </li>
     </ul>
   </div>
-  <div v-show="isVisible" class="py-4 pr-3 pl-4 w-full z-100 xl:hidden">
+  <div v-show="isVisible" class="w-full py-4 pl-4 pr-3 z-100 xl:hidden">
     <button type="submit" class="py-px px-1.5">
       <i class="fa fa-search ::before"></i>
     </button>
@@ -209,17 +241,17 @@ const openList19 = () => {
       type="search"
       maxlength="100"
       placeholder="ivy郁欣聯名"
-      class="focus-visible:outline-none border-b border-black w-4/5"
+      class="w-4/5 border-b border-black focus-visible:outline-none"
     />
   </div>
   <article
-    class="w-3/4 h-screen fixed -translate-x-full transition-all duration-500 bg-white z-10 top-0 overflow-auto peer-checked:translate-x-0"
+    class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white peer-checked:translate-x-0"
   >
     <li class="listItems"><a href="#">Kurt Wu 插畫家聯名</a></li>
     <li class="listItems"><a href="#">KOL / Ivy郁欣聯名</a></li>
     <li class="listItems"><a href="#">飾品設計師大賽/by.Lab</a></li>
 
-    <li class="listItems relative">
+    <li class="relative listItems">
       <a href="#">1111 新品 / NEW ARRIVAL</a>
       <font-awesome-icon
         :icon="['fas', 'chevron-down']"
@@ -235,7 +267,7 @@ const openList19 = () => {
         <li class="py-3.5 pr-11 pl-4">The Untitled</li>
       </ul>
     </li>
-    <li class="listItems relative">
+    <li class="relative listItems">
       <a href="#">限時優惠/Sales</a>
       <font-awesome-icon
         :icon="['fas', 'chevron-down']"
@@ -571,11 +603,11 @@ const openList19 = () => {
     <li class="listItems"><a href="#">售完 / Sold Out</a></li>
     <li class="listItems"><a href="#">KOL / Mandy夏曼娣聯名</a></li>
     <hr />
-    <h2 class="listItems text-xl text-gray-300">帳戶</h2>
+    <h2 class="text-xl text-gray-300 listItems">帳戶</h2>
     <li class="listItems"><a href="#">會員登入</a></li>
     <li class="listItems"><a href="#">新用戶註冊</a></li>
     <hr />
-    <h2 class="listItems text-xl text-gray-300">其他</h2>
+    <h2 class="text-xl text-gray-300 listItems">其他</h2>
     <li class="listItems"><a href="#">BLOG</a></li>
     <li class="listItems"><a href="#">尋找門市</a></li>
     <li class="listItems">
@@ -586,7 +618,7 @@ const openList19 = () => {
       />
     </li>
 
-    <li class="listItems relative" @click="openChangeLanguage">
+    <li class="relative listItems" @click="openChangeLanguage">
       <span>繁體中文</span>
       <font-awesome-icon
         class="absolute right-1 top-5"
@@ -602,50 +634,50 @@ const openList19 = () => {
     </li>
   </article>
   <article
-    class="w-3/4 h-screen fixed -translate-x-full transition-all duration-500 bg-white z-10 top-0 overflow-auto px-5 pt-4 pb-3"
+    class="fixed top-0 z-10 w-3/4 h-screen px-5 pt-4 pb-3 overflow-auto transition-all duration-500 -translate-x-full bg-white"
     :class="changeLanguageOpen ? 'translate-x-0' : '-translate-x-full'"
   >
     <ul>
       <li @click="openChangeLanguage">
         <font-awesome-icon :icon="['fas', 'chevron-left']" />
-        <span class="ml-2 py-3">語言</span>
+        <span class="py-3 ml-2">語言</span>
       </li>
-      <li class="py-3 justify-center">English</li>
-      <li class="py-3 justify-center">繁體中文</li>
+      <li class="justify-center py-3">English</li>
+      <li class="justify-center py-3">繁體中文</li>
     </ul>
   </article>
 
   <article
-    class="w-3/4 h-screen fixed -translate-x-full transition-all duration-500 bg-white z-10 top-0 overflow-auto px-5 pt-4 pb-3"
+    class="fixed top-0 z-10 w-3/4 h-screen px-5 pt-4 pb-3 overflow-auto transition-all duration-500 -translate-x-full bg-white"
     :class="moneyOpen ? 'translate-x-0' : '-translate-x-full'"
   >
     <ul>
       <font-awesome-icon :icon="['fas', 'chevron-left']" />
-      <span class="ml-2 py-3" @click="openMoney">貨幣</span>
-      <li class="py-3 justify-center">$ HKD</li>
-      <li class="py-3 justify-center">P MOP</li>
-      <li class="py-3 justify-center">¥ CNY</li>
-      <li class="py-3 justify-center" selected>$ TWD</li>
-      <li class="py-3 justify-center">$ USD</li>
-      <li class="py-3 justify-center">$ SGD</li>
-      <li class="py-3 justify-center">€ EUR</li>
-      <li class="py-3 justify-center">$ AUD</li>
-      <li class="py-3 justify-center">£ GBP</li>
-      <li class="py-3 justify-center">₱ PHP</li>
-      <li class="py-3 justify-center">RM MYR</li>
-      <li class="py-3 justify-center">฿ THB</li>
-      <li class="py-3 justify-center">د.إ AED</li>
-      <li class="py-3 justify-center">¥ JPY</li>
-      <li class="py-3 justify-center">$ BND</li>
-      <li class="py-3 justify-center">₩ KRW</li>
-      <li class="py-3 justify-center">Rp IDR</li>
-      <li class="py-3 justify-center">₫ VND</li>
-      <li class="py-3 justify-center">$ CAD</li>
+      <span class="py-3 ml-2" @click="openMoney">貨幣</span>
+      <li class="justify-center py-3">$ HKD</li>
+      <li class="justify-center py-3">P MOP</li>
+      <li class="justify-center py-3">¥ CNY</li>
+      <li class="justify-center py-3" selected>$ TWD</li>
+      <li class="justify-center py-3">$ USD</li>
+      <li class="justify-center py-3">$ SGD</li>
+      <li class="justify-center py-3">€ EUR</li>
+      <li class="justify-center py-3">$ AUD</li>
+      <li class="justify-center py-3">£ GBP</li>
+      <li class="justify-center py-3">₱ PHP</li>
+      <li class="justify-center py-3">RM MYR</li>
+      <li class="justify-center py-3">฿ THB</li>
+      <li class="justify-center py-3">د.إ AED</li>
+      <li class="justify-center py-3">¥ JPY</li>
+      <li class="justify-center py-3">$ BND</li>
+      <li class="justify-center py-3">₩ KRW</li>
+      <li class="justify-center py-3">Rp IDR</li>
+      <li class="justify-center py-3">₫ VND</li>
+      <li class="justify-center py-3">$ CAD</li>
     </ul>
   </article>
 
   <article
-    class="w-3/4 h-screen fixed -translate-x-full transition-all duration-500 bg-white z-10 top-0 overflow-auto"
+    class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white"
     :class="cartOpen ? 'translate-x-0' : '-translate-x-full'"
   >
     <div class="bg-white pb-10 px-3.5 pt-3.5 overflow-auto">
@@ -665,14 +697,14 @@ const openList19 = () => {
         <p class="relative">
           數量＆價錢<font-awesome-icon
             :icon="['fas', 'trash']"
-            class="absolute right-1 top-1/2 -translate-y-1/2"
+            class="absolute -translate-y-1/2 right-1 top-1/2"
           />
         </p>
       </div>
       <button class="">訂單結帳</button>
     </div>
   </article>
-  <div class="items hidden">
+  <div class="hidden items">
     <a href="#">耳環 / Earrings</a>
     <a href="#">1111 新品 / NEW ARRIVAL</a>
     <a href="#">耳夾 / Earclip</a>
@@ -685,6 +717,26 @@ const openList19 = () => {
 </template>
 
 <style scoped>
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  z-index: 997;
+}
+.cart-Count {
+  position: absolute;
+  top: 15px;
+  /* right: 381px; */
+  background-color: #a58647;
+  color: var(--primary-text, #fff);
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 2px 7px;
+}
 .a{
   gap: 20px;
 }
@@ -695,6 +747,13 @@ const openList19 = () => {
 }
 .rotate-180 {
   transform: scaleY(-1);
+}
+.cartSidebarSwitch {
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  top: 0;
+  display: inline-block;
 }
 @media screen and (min-width : 1200px) {
   .items{
