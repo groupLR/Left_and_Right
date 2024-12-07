@@ -20,10 +20,11 @@ const STORAGE_KEY = 'UID'
 const errors = ref([])
 //轉換註冊選項
 const selectedOption = ref('email')
-//同意政策才能按下按鈕
-const agree = ref(false)
+//同意政策才能按下註冊按鈕
+const registerAgree = ref(false)
 
-//表單資料
+
+//註冊表單資料
 const registerForm = reactive({
     userId:'',
     username:'',
@@ -45,7 +46,11 @@ const registerRule = z.object ({
         errorMap:() => ({message:'請選擇有效性別'})
     }),
 })
-
+//登入表單資料
+const loginForm = reactive({
+    email:'',
+    password_hash:''
+})
 
 // 轉換頁面方法
 const switchToLogin = () => {
@@ -61,7 +66,7 @@ const switchToRegister = () =>{
 //註冊
 const handleRegister = async () => {
     errors.value = []
-    if(agree.value){
+    if(registerAgree.value){
         try {
             //zod驗證
             const verifyData = registerRule.parse({
@@ -75,12 +80,14 @@ const handleRegister = async () => {
             const response = await axios.post(`${API_URL}/users/register`, verifyData)
             userData.value = response.data
             
-
-
             isLoggedIn.value = true // 註冊後直接登入
-            localStorage.setItem(STORAGE_KEY, userData.value.userId) // UID 放在 localStorage
+
+
+            localStorage.setItem(STORAGE_KEY, userData.value.userId) 
+            // localStorage.setItem('TWT', response.data.token)
             console.log('註冊成功')
 
+            //導向首頁
             router.push({
                 name:'home'
             })
@@ -119,7 +126,39 @@ const handleRegister = async () => {
 // }
 //登入
 const handleLogin = async() =>　{
+    try{
+        const response = await axios.post(`${API_URL}/users/login`, loginForm)
 
+        //儲存userId
+        localStorage.setItem(STORAGE_KEY,response.data.userId)
+        // localStorage.setItem('TWT', response.data.token)
+        //恭喜登入
+        isLoggedIn.value = true
+
+        //導向首頁
+        router.push({
+                name:'home'
+        })
+    }catch(error){
+        if(error.response){
+            switch(error.response.status) {
+                case 401:
+                    alert('帳號或密碼錯誤');
+                    break;
+                case 500:
+                    alert('伺服器錯誤，請稍後再試');
+                    console.error('Server Error Details:', error.response.data);
+                    break;
+                    
+                default:
+                    alert('登錄失敗');
+            }
+        }else if(error.request){
+            alert('網路連接失敗');
+        }else{
+            alert('發生未知錯誤')
+        }
+    }
 }
 
 
@@ -140,24 +179,24 @@ const handleLogin = async() =>　{
                 <button class="text-base px-10 border">使用Facebook註冊</button>
             </div>
             <form class="informationInput" method="post" id="registerField" @submit.prevent="handleRegister">
-                <input type="text" placeholder="用戶名" id="username" class="input" v-model="registerForm.username" autocomplete="username'">
+                <input type="text" placeholder="用戶名" id="username" class="input" v-model="registerForm.username" autocomplete="username'" required>
                 <select v-model="selectedOption">
                     <option value="email">使用Email註冊</option>
                     <option value="phone">使用手機號碼註冊</option>
                 </select>
-                <div v-if="selectedOption === 'email'">
+                <div v-if="selectedOption === 'email'" required>
                     <input type="text" placeholder="電子信箱" v-model="registerForm.email" id="email" autocomplete="email" >
                 </div>
-                <div class="mb-5 w-full grid grid-cols-[1fr_3fr]" v-if="selectedOption === 'phone'">
+                <div class="mb-5 w-full grid grid-cols-[1fr_3fr]" v-if="selectedOption === 'phone'" required>
                     <!-- <input type="tel" name="" id="phone" v-model="registerForm.phone" autocomplete="tel"></input> -->
                     <select></select>
                     <input type="number" name="" id="" autocomplete="tel" placeholder="0912 345 678"/>
                 </div>
-                <div class="password">
+                <div class="password" required>
                     <input type="text" placeholder="密碼" v-model="registerForm.password_hash" id="password" autocomplete="current-password">
                 </div>
                 <div>
-                    <select v-model="registerForm.gender" id="gender">
+                    <select v-model="registerForm.gender" id="gender" required>
                         <option value="" disabled selected>性別</option>
                         <option value="m">男</option>
                         <option value="f">女</option>
@@ -224,11 +263,11 @@ const handleLogin = async() =>　{
                     <input type="checkbox" name="" id="" checked >我願意接收 Bonny & Read 飾品 的最新消息、優惠及服務推廣相關資訊
                 </div>
                 <div class="mt-2.5 no-underline borderTop">
-                    <input type="checkbox" class="agreeCheck" id="policy" v-model="agree">
+                    <input type="checkbox" class="agreeCheck" id="policy" v-model="registerAgree">
                     <label>
                         我同意網站<a href="https://www.bonnyread.com.tw/about/terms" class="text-blue-500">服務條款</a>及<a href="https://www.bonnyread.com.tw/about/privacy-policy" class="text-blue-500">隱私權政策</a>
                     </label>
-                    <button type="submit" class="join" :disabled="!agree" >立即加入</button>
+                    <button type="submit" class="join" :disabled="!registerAgree" >立即加入</button>
                 </div>
             </form>
             
@@ -239,20 +278,19 @@ const handleLogin = async() =>　{
                 <button class="text-base px-10 border">使用LINE登入</button>
                 <button class="text-base px-10 border">使用Facebook登入</button>
             </div>
-            <div class="informationInput">
+            <form class="informationInput" @submit.prevent="handleLogin">
                 <div class="emailRegister ">
-                    <input type="text" placeholder="電子信箱">
+                    <input type="text" placeholder="電子信箱" v-model="loginForm.email" required autocomplete="email">
                 </div>
                 
                 <div class="password">
-                    <input type="text" placeholder="密碼" >
+                    <input type="text" placeholder="密碼" v-model="loginForm.password_hash" required autocomplete="password">
                 </div>
                 <div class="mt-5 grid grid-cols-1 justify-between gap-5 text-sm">
-                    <button class="w-full p-2 bg-[#3493FB] border-0 rounded-md text-white font-extrabold hover:bg-[#6ab0fb] hover:cursor-pointer">開始購物</button>
+                    <button class="w-full p-2 bg-[#3493FB] border-0 rounded-md text-white font-extrabold hover:bg-[#6ab0fb] hover:cursor-pointer" type="submit">開始購物</button>
                     <a class="mx-auto cursor-pointer text-[#6D7175] no-underline" href="https://www.bonnyread.com.tw/users/password/new">忘記密碼?</a>
                 </div>
-                
-            </div>
+            </form>
         </div>
     </div>
 </template>
