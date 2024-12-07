@@ -1,8 +1,7 @@
-
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ProductList from '@/views/ProductList.vue'
-import StoreInfo5 from '@/components/StoreInfo5.vue'
+import StoreInfo from '../components/StoreInfo.vue'
 import Cart from '../views/Cart.vue'
 import UsersEdit from "@/views/UsersEdit.vue"
 
@@ -75,7 +74,7 @@ const router = createRouter({
 		{
 			path: "/store-info",
 			name: "store-info",
-			component: StoreInfo5,
+			component: StoreInfo,
 		},
 		{
 			path: "/users/edit",

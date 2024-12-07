@@ -37,7 +37,6 @@ const checkDevice = () => {
 const swiperInstance = ref(null);
 
 onMounted(() => {
-
   checkDevice();
   window.addEventListener("resize", checkDevice); // 動態監聽螢幕大小變化
 
@@ -84,7 +83,8 @@ onMounted(() => {
     <div class="swiper">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="(image, index) in images" :key="index">
-          <a :href="image.link" target="_blank"> <img :src="image.src" :alt="image.alt" />
+          <a :href="image.link" target="_blank">
+            <img :src="image.src" :alt="image.alt" />
           </a>
         </div>
       </div>
