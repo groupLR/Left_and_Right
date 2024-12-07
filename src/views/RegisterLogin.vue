@@ -16,9 +16,14 @@ const API_URL = 'http://localhost:3000'
 const STORAGE_KEY = 'UID'
 // 錯誤訊息狀態
 const errors = ref([])
+//轉換註冊選項
+const selectedOption = ref('email')
+//同意政策才能按下按鈕
+const agree = ref(false)
 
 //表單資料
 const registerForm = reactive({
+    userId:'',
     username:'',
     email:'',
     phone:'',
@@ -32,12 +37,13 @@ const registerForm = reactive({
 const registerRule = z.object ({
     username:z.string().max(50,'使用者名稱不能超過50個字元'),
     email:z.string().email('請輸入正確的email'),
-    phone:z.string().length(10,'請輸入正確的手機號碼'),
+    // phone:z.string().length(10,'請輸入正確的手機號碼'),
     password_hash:z.string().min(8,'密碼至少需要8個字元'),
-    gender:z.enum(['f','m','o'],{
+    gender:z.enum(['m','f','o'],{
         errorMap:() => ({message:'請選擇有效性別'})
     }),
 })
+
 
 // 轉換頁面方法
 const switchToLogin = () => {
@@ -49,50 +55,52 @@ const switchToRegister = () =>{
   isRegister.value = true
   isLogin.value = false
 }
-const doRegister = async (userData) => {
+const handleRegister = async () => {
     errors.value = []
-    
-    try {
-        //zod驗證
-        const verifyData = registerRule.parse({
-            username:registerForm.username,
-            email:registerForm.email,
-            phone:registerForm.phone,
-            password_hash:registerForm.password_hash,
-            gender:registerForm.gender
-        })
-
-        
-        const response = await axios.post(`${API_URL}/users/register`, verifyData)
-        userData.value = response.data.user
-        
-        isLoggedIn.value = true // 註冊後直接登入
-        localStorage.setItem(STORAGE_KEY, userData.value.userId) // UID 放在 localStorage
-        console.log('註冊成功')
-    } catch (error) {
-        // console.error('註冊失敗 TAT :', error)
-            // Zod 驗證錯誤處理
-        if (error instanceof z.ZodError) {
-        errors.value = error.errors.map(err => ({
-            field: err.path.join('.'),
-            message: err.message
-        }))
-        } 
-        // Axios API 錯誤處理  
-        else if (error.response) {
-        const apiErrors = error.response.data.details || 
-            [{ message: error.response.data.message || '註冊失敗' }]
-        errors.value = apiErrors
-        } 
-        // 網路或其他錯誤
-        else {
-        errors.value = [{ 
-            field: 'general', 
-            message: '網路連線錯誤，請稍後再試' 
-        }]
-        console.log('註冊失敗')
-    }
-  }
+    if(agree.value){
+        try {
+            //zod驗證
+            const verifyData = registerRule.parse({
+                userId:registerForm.userId,
+                username:registerForm.username,
+                email:registerForm.email,
+                phone:registerForm.phone,
+                password_hash:registerForm.password_hash,
+                gender:registerForm.gender
+            })
+            const response = await axios.post(`${API_URL}/users/register`, verifyData)
+            userData.value = response.data
+            
+            isLoggedIn.value = true // 註冊後直接登入
+            localStorage.setItem(STORAGE_KEY, userData.value.userId) // UID 放在 localStorage
+            console.log('註冊成功')
+        } catch (error) {
+            console.error('註冊失敗:',error)
+            console.log(userData.value);
+            
+            // console.error('註冊失敗 TAT :', error)
+                // Zod 驗證錯誤處理
+            if (error instanceof z.ZodError) {
+                errors.value = error.errors.map(err => ({
+                    field: err.path.join('.'),
+                    message: err.message
+                }))
+            } 
+            // Axios API 錯誤處理  
+            else if (error.response) {
+                const apiErrors = error.response.data.details || 
+                    [{ message: error.response.data.message || '註冊失敗' }]
+                errors.value = apiErrors
+            } 
+            // 網路或其他錯誤
+            else {
+                errors.value = [{ 
+                    field: 'general', 
+                    message: '網路連線錯誤，請稍後再試' 
+                }]
+            }
+        }
+    } 
 }
 
 
@@ -112,26 +120,27 @@ const doRegister = async (userData) => {
                 <button class="text-base px-10 border">使用LINE註冊</button>
                 <button class="text-base px-10 border">使用Facebook註冊</button>
             </div>
-            <form class="informationInput" method="post" @submit.prevent="doRegister ">
-                <input type="text" placeholder="用戶名" class="input" v-model="registerForm.username">
-                <select>
-                    <option value="">使用Email註冊</option>
-                    <option value="">使用手機號碼註冊</option>
+            <form class="informationInput" method="post" id="registerField" @submit.prevent="handleRegister">
+                <input type="text" placeholder="用戶名" id="username" class="input" v-model="registerForm.username" autocomplete="username'">
+                <select v-model="selectedOption">
+                    <option value="email">使用Email註冊</option>
+                    <option value="phone">使用手機號碼註冊</option>
                 </select>
-                <div>
-                    <input type="text" placeholder="電子信箱" v-model="registerForm.email">
+                <div v-if="selectedOption === 'email'">
+                    <input type="text" placeholder="電子信箱" v-model="registerForm.email" id="email" autocomplete="email" >
                 </div>
-                <div class="mb-5 w-full flex">
-                    <input type="tel" name="" id="phone" v-model="registerForm.phone"></input>
-                    <!-- <input type="number" placeholder="0912 345 678"> -->
+                <div class="mb-5 w-full grid grid-cols-[1fr_3fr]" v-if="selectedOption === 'phone'">
+                    <!-- <input type="tel" name="" id="phone" v-model="registerForm.phone" autocomplete="tel"></input> -->
+                    <select></select>
+                    <input type="number" name="" id="" autocomplete="tel" placeholder="0912 345 678"/>
                 </div>
                 <div class="password">
-                    <input type="text" placeholder="密碼" v-model="registerForm.password_hash">
+                    <input type="text" placeholder="密碼" v-model="registerForm.password_hash" id="password" autocomplete="current-password">
                 </div>
-                <select v-model="registerForm.gender">
+                <select v-model="registerForm.gender" id="gender">
                     <option value="" disabled selected>性別</option>
                     <option value="m">男</option>
-                    <option value="g">女</option>
+                    <option value="f">女</option>
                     <option value="o">不透漏</option>
                 </select>
                 <div class="grid grid-cols-3 gap-2.5">
@@ -192,11 +201,11 @@ const doRegister = async (userData) => {
                     <input type="checkbox" name="" id="" checked >我願意接收 Bonny & Read 飾品 的最新消息、優惠及服務推廣相關資訊
                 </div>
                 <div class="mt-2.5 no-underline borderTop">
-                    <input type="checkbox" class="agreeCheck">
+                    <input type="checkbox" class="agreeCheck" id="policy" v-model="agree">
                     <label>
                         我同意網站<a href="https://www.bonnyread.com.tw/about/terms" class="text-blue-500">服務條款</a>及<a href="https://www.bonnyread.com.tw/about/privacy-policy" class="text-blue-500">隱私權政策</a>
                     </label>
-                    <button type="submit" class="join" @click="doRegister">立即加入</button>
+                    <button type="submit" class="join" :disabled="!agree" >立即加入</button>
                 </div>
             </form>
             
