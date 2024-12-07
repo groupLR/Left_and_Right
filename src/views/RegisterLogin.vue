@@ -2,7 +2,9 @@
 import { onMounted, ref,reactive } from 'vue'
 import axios from 'axios'
 import { z } from 'zod'
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
 
 //控制註冊登入頁面切換
 const isLogin = ref(true)
@@ -55,6 +57,8 @@ const switchToRegister = () =>{
   isRegister.value = true
   isLogin.value = false
 }
+
+//註冊
 const handleRegister = async () => {
     errors.value = []
     if(agree.value){
@@ -71,15 +75,22 @@ const handleRegister = async () => {
             const response = await axios.post(`${API_URL}/users/register`, verifyData)
             userData.value = response.data
             
+
+
             isLoggedIn.value = true // 註冊後直接登入
             localStorage.setItem(STORAGE_KEY, userData.value.userId) // UID 放在 localStorage
             console.log('註冊成功')
+
+            router.push({
+                name:'home'
+            })
         } catch (error) {
             console.error('註冊失敗:',error)
-            console.log(userData.value);
+            if (error.response && error.response.status === 409) {
+                alert('此電子郵件已被註冊，請使用其他郵箱')
+            }
             
-            // console.error('註冊失敗 TAT :', error)
-                // Zod 驗證錯誤處理
+            // Zod 驗證錯誤處理
             if (error instanceof z.ZodError) {
                 errors.value = error.errors.map(err => ({
                     field: err.path.join('.'),
@@ -101,6 +112,14 @@ const handleRegister = async () => {
             }
         }
     } 
+}
+// const getErrorMessage = (field) => {
+//   const error = errors.value.find(err => err.field === field)
+//   return error ? error.message : ''
+// }
+//登入
+const handleLogin = async() =>　{
+
 }
 
 
@@ -137,12 +156,16 @@ const handleRegister = async () => {
                 <div class="password">
                     <input type="text" placeholder="密碼" v-model="registerForm.password_hash" id="password" autocomplete="current-password">
                 </div>
-                <select v-model="registerForm.gender" id="gender">
-                    <option value="" disabled selected>性別</option>
-                    <option value="m">男</option>
-                    <option value="f">女</option>
-                    <option value="o">不透漏</option>
-                </select>
+                <div>
+                    <select v-model="registerForm.gender" id="gender">
+                        <option value="" disabled selected>性別</option>
+                        <option value="m">男</option>
+                        <option value="f">女</option>
+                        <option value="o">不透漏</option>
+                    </select>
+                <!-- <span class="error-text">{{ getErrorMessage('gender') }}</span> -->
+                </div>
+                
                 <div class="grid grid-cols-3 gap-2.5">
                     <select name="" id="birthdayYear" v-model="registerForm.birthdayYear">
                         <option value=""selected disabled>年</option>
