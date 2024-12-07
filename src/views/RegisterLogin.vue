@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref,reactive } from 'vue'
 import axios from 'axios'
 import { z } from 'zod'
@@ -49,8 +49,9 @@ const switchToRegister = () =>{
   isRegister.value = true
   isLogin.value = false
 }
-const doRegister = async (registerData) => {
+const doRegister = async (userData) => {
     errors.value = []
+    
     try {
         //zod驗證
         const verifyData = registerRule.parse({
@@ -67,7 +68,7 @@ const doRegister = async (registerData) => {
         
         isLoggedIn.value = true // 註冊後直接登入
         localStorage.setItem(STORAGE_KEY, userData.value.userId) // UID 放在 localStorage
-
+        console.log('註冊成功')
     } catch (error) {
         // console.error('註冊失敗 TAT :', error)
             // Zod 驗證錯誤處理
@@ -89,6 +90,7 @@ const doRegister = async (registerData) => {
             field: 'general', 
             message: '網路連線錯誤，請稍後再試' 
         }]
+        console.log('註冊失敗')
     }
   }
 }
@@ -97,10 +99,10 @@ const doRegister = async (registerData) => {
 </script>
 
 <template>
-    <div class="max-w-[600px] w-full justify-center m-[75px_auto] flex flex-col border">
+    <div class=" border m-5 md:w-full md:max-w-[600px] md:mx-auto md:justify-center  md:flex md:flex-col">
         <img src="../assets/register-pic.jpeg" alt="">
         
-        <div class="w-full grid grid-cols-1 text-center leading-[62px] lg:grid-cols-2">
+        <div class="w-full grid grid-cols-2 text-center leading-[62px]">
             <div class="border hover:cursor-pointer" @click="switchToRegister">註冊會員</div>
             <div class="border hover:cursor-pointer" @click="switchToLogin">會員登入</div>
         </div>
@@ -129,7 +131,7 @@ const doRegister = async (registerData) => {
                 <select v-model="registerForm.gender">
                     <option value="" disabled selected>性別</option>
                     <option value="m">男</option>
-                    <option value="f">女</option>
+                    <option value="g">女</option>
                     <option value="o">不透漏</option>
                 </select>
                 <div class="grid grid-cols-3 gap-2.5">
@@ -194,7 +196,7 @@ const doRegister = async (registerData) => {
                     <label>
                         我同意網站<a href="https://www.bonnyread.com.tw/about/terms" class="text-blue-500">服務條款</a>及<a href="https://www.bonnyread.com.tw/about/privacy-policy" class="text-blue-500">隱私權政策</a>
                     </label>
-                    <button type="submit" class="join">立即加入</button>
+                    <button type="submit" class="join" @click="doRegister">立即加入</button>
                 </div>
             </form>
             

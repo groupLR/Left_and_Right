@@ -213,7 +213,7 @@ const closeCart = () => {
         <font-awesome-icon :icon="['fas', 'comment']" />
       </li>
       <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
-        <font-awesome-icon :icon="['fas', 'user']" />
+        <router-link to="/users/edit"><font-awesome-icon :icon="['fas', 'user']" /></router-link>
       </li>
       <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
           <label for="cartSidebarSwitch" @click="handleCartIconClick"
