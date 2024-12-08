@@ -1,49 +1,55 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import GoogleLoginButton from '@/components/googleLogin.vue'
+
 
 export default defineComponent({
-  setup() {
-    // 狀態變數
-    const isLogin = ref(true)
-    const isRegister = ref(false)
+    components: {
+        GoogleLoginButton
+    },
+    setup() {
+        // 狀態變數
+        const isLogin = ref(true)
+        const isRegister = ref(false)
 
-    // 方法
-    const switchToLogin = () => {
-        isLogin.value = true
-        isRegister.value = false
-        
+        // 方法
+        const switchToLogin = () => {
+            isLogin.value = true
+            isRegister.value = false
+
+        }
+        const switchToRegister = () => {
+            isRegister.value = true
+            isLogin.value = false
+        }
+        return {
+            isLogin,
+            isRegister,
+            switchToLogin,
+            switchToRegister
+        }
     }
-    const switchToRegister = () =>{
-      isRegister.value = true
-      isLogin.value = false
-    }
-    return {
-      isLogin,
-      isRegister,
-      switchToLogin,
-      switchToRegister
-    }
-  }
 })
 </script>
 
 <template>
     <div class="max-w-[600px] w-full justify-center m-[75px_auto] flex flex-col border">
         <img src="../assets/register-pic.jpeg" alt="">
-        
-        <div class="w-full grid grid-cols-1 text-center leading-[62px] lg:grid-cols-2">
-            <div class="border hover:cursor-pointer" @click="switchToRegister">註冊會員</div>
-            <div class="border hover:cursor-pointer" @click="switchToLogin">會員登入</div>
+
+        <div class="w-full grid text-center leading-[62px] grid-cols-2">
+            <div class="border hover:cursor-pointer" :class="{ 'bg-white': isRegister, 'bg-gray-100': !isRegister }" @click="switchToRegister">註冊會員</div>
+            <div class="border hover:cursor-pointer" :class="{ 'bg-white': isLogin, 'bg-gray-100': !isLogin }" @click="switchToLogin">會員登入</div>
         </div>
         <!-- 註冊 -->
-        <div class="p-5 mx-auto" v-if="isRegister">
-            <div class="grid grid-cols-1 justify-between gap-5 px-10 pb-5 lg:grid-cols-2">
-                <button class="text-base px-10 border">使用LINE註冊</button>
-                <button class="text-base px-10 border">使用Facebook註冊</button>
-            </div>
+        <div class=" px-5 pt-5 ">
+            <GoogleLoginButton class="w-full" />
+        </div>
+        <div class="p-5 mx-auto w-full" v-if="isRegister">
+            <hr>
+            <p class="pt-4 text-center text-[#6D7175] text-sm">或使用電子信箱註冊</p>
             <form class="informationInput" method="post">
                 <input type="text" placeholder="用戶名" class="input">
-                <select type="text">
+                <select>
                     <option value="">使用Email註冊</option>
                     <option value="">使用手機號碼註冊</option>
                 </select>
@@ -57,7 +63,7 @@ export default defineComponent({
                 <div class="password">
                     <input type="text" placeholder="密碼" >
                 </div>
-                <select type="text">
+                <select>
                     <option value="" disabled selected>性別</option>
                     <option value="">男</option>
                     <option value="">女</option>
@@ -130,11 +136,9 @@ export default defineComponent({
             </div>
         </div>
         <!-- 登入 -->
-        <div class="p-5 mx-auto" v-if="isLogin">
-            <div class="grid grid-cols-1 justify-between gap-5 px-10 pb-5 lg:grid-cols-2">
-                <button class="text-base px-10 border">使用LINE登入</button>
-                <button class="text-base px-10 border">使用Facebook登入</button>
-            </div>
+        <div class="p-5 mx-auto w-full" v-if="isLogin">
+            <hr>
+            <p class="pt-4 text-center text-[#6D7175] text-sm">或使用電子信箱登入</p>
             <div class="informationInput">
                 <div class="emailRegister ">
                     <input type="text" placeholder="電子信箱">
@@ -159,8 +163,16 @@ input::-webkit-inner-spin-button {
 -webkit-appearance: none;
 margin: 0;
 }
-.border{
-    border: 1px solid #EEEEEE;
+
+.border {
+    border-top: 1px solid #EEEEEE;
+    border-left: 1px solid #EEEEEE;
+    border-right: 1px solid #EEEEEE;
+}
+
+/* 非活躍狀態才加下邊框 */
+.inactive-tab {
+    border-bottom: 1px solid #EEEEEE;
 }
 .informationInput{
     padding: 20px;
