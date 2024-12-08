@@ -208,7 +208,7 @@ margin: 0;
     width: 100%;
     margin-top: 20px;
     padding: 10px;
-    background-color: #323335;
+    background-color: #bfbfc2;
     border: 0;
     border-radius: 5px;
     color: white;
