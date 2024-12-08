@@ -30,8 +30,8 @@ router.beforeEach((to, from, next) => {
     }
   } 
     // 已登入用戶試圖訪問登入/註冊頁
-    else if (isAuthenticated && (to.path === '/users/sign-in' || to.path === '/users/register')) {
-      next('/')  // 導向首頁
+    else if (isAuthenticated && (to.path === '/users/sign-in')) {
+      next('/users/edit')  // 導向會員頁
     }
     // 其他情況
     else {
