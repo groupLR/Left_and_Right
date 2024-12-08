@@ -130,7 +130,7 @@ export default defineComponent({
             <div class="mt-5 mx-5 no-underline">
                 <input type="checkbox" class="agreeCheck">
                 <label>
-                    我同意網站<a href="https://www.bonnyread.com.tw/about/terms">服務條款</a>及<a href="https://www.bonnyread.com.tw/about/privacy-policy">隱私權政策</a>
+                    我同意網站<a href="https://www.bonnyread.com.tw/about/terms" class=" text-blue-600">服務條款</a>及<a href="https://www.bonnyread.com.tw/about/privacy-policy" class=" text-blue-600">隱私權政策</a>
                 </label>
                 <button class="join">立即加入</button>
             </div>
@@ -148,7 +148,7 @@ export default defineComponent({
                     <input type="text" placeholder="密碼" >
                 </div>
                 <div class="mt-5 grid grid-cols-1 justify-between gap-5 text-sm">
-                    <button class="w-full p-2 bg-[#3493FB] border-0 rounded-md text-white font-extrabold hover:bg-[#6ab0fb] hover:cursor-pointer">開始購物</button>
+                    <button class="w-full p-2 bg-[#000000] border-0 rounded-md text-white font-extrabold hover:bg-[#323335] hover:cursor-pointer">開始購物</button>
                     <a class="mx-auto cursor-pointer text-[#6D7175] no-underline" href="https://www.bonnyread.com.tw/users/password/new">忘記密碼?</a>
                 </div>
                 
@@ -208,7 +208,7 @@ margin: 0;
     width: 100%;
     margin-top: 20px;
     padding: 10px;
-    background-color: #7BB9FC;
+    background-color: #323335;
     border: 0;
     border-radius: 5px;
     color: white;
@@ -217,11 +217,11 @@ margin: 0;
     cursor: auto;
 }
 .join:hover{
-    background-color: #6ab0fb;
+    background-color: #323335;
 }
 
 .agreeCheck:checked ~ .join{
-    background-color: #3493FB;
+    background-color: #000000;
     cursor: pointer;
 }
 </style>
