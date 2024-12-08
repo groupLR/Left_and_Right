@@ -16,6 +16,10 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
+import { useRouter, useRoute } from 'vue-router'
+const router = useRouter()  
+const route = useRoute()
+const redirectUrl = ref('')  // 用 ref 來存儲重定向 URL
 
 
 // CLIENT_ID
@@ -37,6 +41,10 @@ function loginProcess(response) {
 
   // 設置 axios 預設標頭
   axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+
+// 處理重定向
+const redirectPath = route.query.redirect || '/'
+  router.push(redirectPath)
 }
 
 // 處理 google 註冊新用戶
@@ -116,6 +124,9 @@ const handleLogout = () => {
   localStorage.removeItem(STORAGE_JWT_KEY) // 移除 localStorage
   delete axios.defaults.headers.common['Authorization']; // 移除預設標頭
 
+    // 重定向到登入頁
+    router.push('/users/sign-in')
+
   // 等待 DOM 更新後再重新渲染按鈕
   setTimeout(() => {
     initializeGoogle()
@@ -165,6 +176,9 @@ const initializeGoogle = () => {
 }
 
 onMounted(() => {
+  redirectUrl.value = route.query.redirect || '/'
+
+
   // 檢查登入狀態
   const isUserLoggedIn = localStorage.getItem(STORAGE_KEY)
   if (isUserLoggedIn) {
