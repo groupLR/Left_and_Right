@@ -12,7 +12,7 @@ const toggleCart = () => {
   cartVisible.value = !cartVisible.value;
 };
 const ProductStore = useProductStore()
-const { categoryTitle, productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, itemsPerPage, paginatedProducts, paginationOnClickHandler } = storeToRefs(ProductStore)
+const { categoryTitle, productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, itemsPerPage, totalProductCount } = storeToRefs(ProductStore)
 
 // 監聽路由參數變化
 watch(() => route.params.category, async (newCategory) => {
@@ -79,16 +79,16 @@ const cartItemCount = computed(() => {
 
     <!-- 產品列表 -->
     <div class="flex flex-wrap">
-      <ProductItem v-for="(item, index) in paginatedProducts" :key="item.id" :title="item.title" :price="item.price"
+      <ProductItem v-for="(item, index) in productList" :key="item.id" :title="item.title" :price="item.price"
         :orginalPrice="item.orginalPrice" :frontImg="item.frontImg" :backImg="item.backImg"  class="md:col-6 lg:col-3"
         @addToCart="handleAddToCart" @removeFromCart="removeFromCart" @updateQuantity="updateQuantity" />
     </div>
 
     <!-- 分頁 -->
     <div class="flex justify-center md:relative  md:mb-12">
-      <vue-awesome-paginate class=" md:absolute md:right-0 text-gray-500 text-sm" :total-items="productList.length"
-        :items-per-page="itemsPerPage" :max-pages-shown="5" v-model="currentPage" @click="paginationOnClickHandler"
-        :hide-prev-next-when-ends="true" link-url="/products?page=[page]" />
+      <vue-awesome-paginate class=" md:absolute md:right-0 text-gray-500 text-sm" :total-items="totalProductCount"
+        :items-per-page="itemsPerPage" :max-pages-shown="5" v-model="currentPage" @click="ProductStore.paginationOnClickHandler(route.params.category, currentPage)"
+        :hide-prev-next-when-ends="true"  />
     </div>
   </section>
 </template>

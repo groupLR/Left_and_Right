@@ -11,17 +11,19 @@ export const useProductStore = defineStore('products', () => {
   // 預設商品列表
   const productList = ref([])
   // 商品列表標題處理
-  const fetchProductList = async (categoryId = 1, sortBy, currentPage, itemsPerPage) => {
+  const fetchProductList = async (categoryId = 1, sortBy, itemsPerPage = 12, pageNum = 1) => {
     try {
       const response = await axios.get(`${API_URL}/categories${categoryId ? `/${categoryId}` : ''}`,{
         params: {
           sortBy,
           itemsPerPage,
+          pageNum,
         }
       })
       productList.value = response.data.products  || []
       categoryTitle.value = response.data.categoryName
-
+      totalProductCount.value = response.data.totalProduct
+      
     } catch (error) {
       console.error('Error fetching products:', error)
     }
@@ -29,10 +31,17 @@ export const useProductStore = defineStore('products', () => {
 
   const coBrandingProductList = ref([])
 
-  const fetchCoBrandingProductList = async () =>{
+  const fetchCoBrandingProductList = async ( itemsPerPage, pageNum = 1) =>{
     try {
-      const response = await axios.get(`${API_URL}/categories/3`)
+      const response = await axios.get(`${API_URL}/categories/3`, {
+        params: {
+          itemsPerPage,
+          pageNum,
+        }
+      })
       coBrandingProductList.value = response.data.products
+      totalProductCount.value = response.data.totalProduct
+      coBrandingTitle.value = response.data.categoryName
     } catch (error) {
       console.error('Error fetching co-branding products');
       
@@ -96,7 +105,7 @@ const cartItemCount = computed(() => {
 
   const handleSortChange = (currentCategoryId, value) => {
     sortValue.value = value
-    fetchProductList(currentCategoryId, value, itemsPerPage.value)
+    fetchProductList(currentCategoryId, value, itemsPerPage.value, currentPage.value)
   }
 
   const sortOptions = ref([
@@ -137,37 +146,26 @@ const cartItemCount = computed(() => {
     },
   ]);
 
-  // 處理每頁幾筆資料的邏輯
-
   // 分頁
   const currentPage = ref(1); // 當前頁碼
   const itemsPerPage = ref(12); // 每頁顯示的項目數
   const coBrandingCurrentPage = ref(1)
   const coBrandingItemsPerPage = ref(4)
+  const totalProductCount = ref()
+  const coBrandingTitle = ref("KOL / Ivy 郁欣聯名")
 
+  // 單頁筆數切換
   const handleItemNumChange = (currentCategoryId, value) => {
     itemsPerPage.value = Number(value.substring(8))
-    fetchProductList(currentCategoryId, sortValue.value, value)
+    fetchProductList(currentCategoryId, sortValue.value, itemsPerPage.value, currentPage.value)
   }
 
-  // 分頁後的數據
-  const paginatedProducts = computed(() => {
-    const start = (currentPage.value - 1) * itemsPerPage.value;
-    const end = start + itemsPerPage.value;
-    return productList.value.slice(start, end);
-  });
-
-  // 分頁後的 co-branding 數據
-  const paginatedCoBrandingProducts = computed(() => {
-    const start = (coBrandingCurrentPage.value - 1) * coBrandingItemsPerPage.value;
-    const end = start + coBrandingItemsPerPage.value;
-    return coBrandingProductList.value.slice(start, end);
-  });
-
   // 分頁點擊處理函數
-  const paginationOnClickHandler = (page) => {
+  const paginationOnClickHandler = (currentCategoryId, page) => {
     currentPage.value = page; // 更新當前頁碼
-    console.log("Current Page:", page);
+    coBrandingCurrentPage.value = page
+    fetchProductList(currentCategoryId, sortValue.value, itemsPerPage.value, page)
+    fetchCoBrandingProductList(4, page) // 單頁筆數、現在頁面
   };
 
   return {
@@ -183,11 +181,11 @@ const cartItemCount = computed(() => {
     pageOptions,
     currentPage,
     itemsPerPage,
-    paginatedProducts,
+    totalProductCount,
     handleItemNumChange,
     coBrandingCurrentPage,
     coBrandingItemsPerPage,
-    paginatedCoBrandingProducts,
+    coBrandingTitle,
     paginationOnClickHandler,
     cartItems,
     addToCart,
