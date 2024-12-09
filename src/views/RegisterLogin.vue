@@ -10,12 +10,12 @@ const router = useRouter()
 const isLogin = ref(true)
 const isRegister = ref(false)
 //確定一開始資料為空
-const userData = ref(null)
+const userToken = ref(null)
 const isLoggedIn = ref(false)  // 登入狀態
 // 後端 API 網址
 const API_URL = 'http://localhost:3000'
 // localStorage 的 key
-const STORAGE_KEY = 'UID'
+const STORAGE_KEY = 'TwT'
 // 錯誤訊息狀態
 const errors = ref([])
 //轉換註冊選項
@@ -79,11 +79,11 @@ const handleRegister = async () => {
             })
             const response = await axios.post(`${API_URL}/users/register`, verifyData)
 
-            userData.value = response.data.user
+            userToken.value = response.data.token
             
-            //儲存userId在localstorage
-            localStorage.setItem(STORAGE_KEY, userData.value.userId) 
-            // localStorage.setItem('TWT', response.data.token)
+            //儲存token在localstorage
+            localStorage.setItem(STORAGE_KEY, userToken.value) 
+            
             console.log('註冊成功')
             
             isLoggedIn.value = true // 註冊後直接登入
@@ -94,15 +94,15 @@ const handleRegister = async () => {
             })
             
 
-            //確認userId是否儲存成功
-            const storedUserId = localStorage.getItem(STORAGE_KEY)
+            //確認Token是否儲存成功
+            const storedToken = localStorage.getItem(STORAGE_KEY)
             // console.log('Stored User ID:', storedUserId)
-            // console.log('userId:', userData.value.userId)
+            // console.log('userId:', userToken.value.userId)
             // 可以加入额外验证
-            if (storedUserId === userData.value.userId) {
-                console.log('User ID 成功儲存')
+            if (storedToken === userToken.value) {
+                console.log('User Token 成功儲存')
             }else{
-                console.log('User ID 儲存失敗')
+                console.log('User Token 儲存失敗')
             }
         } catch (error) {
             // console.error('註冊失敗:',error)
@@ -142,10 +142,10 @@ const handleLogin = async() =>　{
     try{
         const response = await axios.post(`${API_URL}/users/login`, loginForm)
         
-        userData.value = response.data.user
+        userToken.value = response.data.token
         
-        //儲存userId在localstorage
-        localStorage.setItem(STORAGE_KEY,userData.value.userId)
+        //儲存Token在localstorage
+        localStorage.setItem(STORAGE_KEY,userToken.value)
         // localStorage.setItem('TWT', response.data.token)
 
         //恭喜登入
@@ -157,14 +157,14 @@ const handleLogin = async() =>　{
             name:'home'
         })
 
-        //確認userId是否儲存成功
-        const storedUserId = localStorage.getItem(STORAGE_KEY)
+        //確認userToken是否儲存成功
+        const storedToken = localStorage.getItem(STORAGE_KEY)
         // console.log('Stored User ID:', storedUserId)
         // 可以加入额外验证
-        if (storedUserId === userData.value.userId) {
-            console.log('User ID 成功儲存')
+        if (storedToken === userToken.value) {
+            console.log('User Token 成功儲存')
         }else{
-            console.log('User ID 儲存失敗')
+            console.log('User Token 儲存失敗')
         }
     }catch(error){
         if(error.response){
