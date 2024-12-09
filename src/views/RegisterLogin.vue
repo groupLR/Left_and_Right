@@ -11,11 +11,13 @@ const isLogin = ref(true)
 const isRegister = ref(false)
 //確定一開始資料為空
 const userToken = ref(null)
+const userId = ref(null)
 const isLoggedIn = ref(false)  // 登入狀態
 // 後端 API 網址
 const API_URL = 'http://localhost:3000'
 // localStorage 的 key
-const STORAGE_KEY = 'TwT'
+const STORAGE_KEY = 'UID'
+const STORAGE_JWT_KEY = 'TwT'
 // 錯誤訊息狀態
 const errors = ref([])
 //轉換註冊選項
@@ -79,10 +81,12 @@ const handleRegister = async () => {
             })
             const response = await axios.post(`${API_URL}/users/register`, verifyData)
 
+            userId.value = response.data.newUser.userId
             userToken.value = response.data.token
             
             //儲存token在localstorage
-            localStorage.setItem(STORAGE_KEY, userToken.value) 
+            localStorage.setItem(STORAGE_KEY, userId.value) 
+            localStorage.setItem(STORAGE_JWT_KEY, userToken.value) 
             
             console.log('註冊成功')
             
@@ -95,7 +99,7 @@ const handleRegister = async () => {
             
 
             //確認Token是否儲存成功
-            const storedToken = localStorage.getItem(STORAGE_KEY)
+            const storedToken = localStorage.getItem(STORAGE_JWT_KEY)
             // console.log('Stored User ID:', storedUserId)
             // console.log('userId:', userToken.value.userId)
             // 可以加入额外验证
@@ -143,9 +147,11 @@ const handleLogin = async() =>　{
         const response = await axios.post(`${API_URL}/users/login`, loginForm)
         
         userToken.value = response.data.token
+        userId.value = response.data.user.userId
         
         //儲存Token在localstorage
-        localStorage.setItem(STORAGE_KEY,userToken.value)
+        localStorage.setItem(STORAGE_KEY,userId.value)
+        localStorage.setItem(STORAGE_JWT_KEY,userToken.value)
         // localStorage.setItem('TWT', response.data.token)
 
         //恭喜登入

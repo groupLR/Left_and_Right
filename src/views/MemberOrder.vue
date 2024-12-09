@@ -1,5 +1,5 @@
 <template>
-	<SignOut/>
+	<LogOut/>
 	<MemberNavbar />
 	<div class="memberOrder">
 		<div class="orderContainer">
@@ -32,7 +32,7 @@
 
 <script setup>
 import MemberNavbar from "../components/MemberNavbar.vue"
-import SignOut from "@/components/SignOut.vue";
+import LogOut from "@/components/Logout.vue";
 </script>
 
 <style scoped>
