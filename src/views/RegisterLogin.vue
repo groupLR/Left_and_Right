@@ -32,7 +32,7 @@ const registerForm = reactive({
     username:'',
     email:'',
     phone:'',
-    password_hash:'',
+    password:'',
     gender:'',
     birthdayYear:'',
     birthdayMonth:'',
@@ -43,7 +43,7 @@ const registerRule = z.object ({
     username:z.string().max(50,'使用者名稱不能超過50個字元'),
     email:z.string().email('請輸入正確的email'),
     // phone:z.string().length(10,'請輸入正確的手機號碼'),
-    password_hash:z.string().min(8,'密碼至少需要8個字元'),
+    password:z.string().min(8,'密碼至少需要8個字元'),
     gender:z.enum(['m','f','o'],{
         errorMap:() => ({message:'請選擇有效性別'})
     }),
@@ -75,8 +75,8 @@ const handleRegister = async () => {
                 // userId:registerForm.userId,
                 username:registerForm.username,
                 email:registerForm.email,
-                phone:registerForm.phone,
-                password_hash:registerForm.password_hash,
+                // phone:registerForm.phone,
+                password:registerForm.password,
                 gender:registerForm.gender
             })
             const response = await axios.post(`${API_URL}/users/register`, verifyData)
@@ -226,7 +226,7 @@ const handleLogin = async() =>　{
                     <input type="number" name="" id="" autocomplete="tel" placeholder="0912 345 678"/>
                 </div>
                 <div class="password" required>
-                    <input type="text" placeholder="密碼" v-model="registerForm.password_hash" id="password" autocomplete="current-password">
+                    <input type="text" placeholder="密碼" v-model="registerForm.password" id="password" autocomplete="current-password">
                 </div>
                 <div>
                     <select v-model="registerForm.gender" id="gender" required>
