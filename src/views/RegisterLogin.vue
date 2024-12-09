@@ -70,7 +70,7 @@ const handleRegister = async () => {
         try {
             //zod驗證
             const verifyData = registerRule.parse({
-                userId:registerForm.userId,
+                // userId:registerForm.userId,
                 username:registerForm.username,
                 email:registerForm.email,
                 phone:registerForm.phone,
@@ -78,21 +78,34 @@ const handleRegister = async () => {
                 gender:registerForm.gender
             })
             const response = await axios.post(`${API_URL}/users/register`, verifyData)
-            userData.value = response.data
+            userData.value = response.data.user
             
-            isLoggedIn.value = true // 註冊後直接登入
-
-
             localStorage.setItem(STORAGE_KEY, userData.value.userId) 
             // localStorage.setItem('TWT', response.data.token)
             console.log('註冊成功')
+            
+            isLoggedIn.value = true // 註冊後直接登入
 
             //導向首頁
             router.push({
                 name:'home'
             })
+            
+
+            //確認userId是否儲存成功
+            const storedUserId = localStorage.getItem(STORAGE_KEY)
+            console.log('Stored User ID:', storedUserId)
+            console.log('userId:', userData.value.userId)
+            // 可以加入额外验证
+            if (storedUserId === userData.value.userId) {
+                console.log('User ID 成功儲存')
+            }else{
+                console.log('User ID 儲存失敗')
+            }
+
+            
         } catch (error) {
-            console.error('註冊失敗:',error)
+            // console.error('註冊失敗:',error)
             if (error.response && error.response.status === 409) {
                 alert('此電子郵件已被註冊，請使用其他郵箱')
             }
@@ -128,16 +141,31 @@ const handleRegister = async () => {
 const handleLogin = async() =>　{
     try{
         const response = await axios.post(`${API_URL}/users/login`, loginForm)
+        
+        
 
         //儲存userId
-        localStorage.setItem(STORAGE_KEY,response.data.userId)
+        localStorage.setItem(STORAGE_KEY,response.d)
         // localStorage.setItem('TWT', response.data.token)
+
+        console.log('登入成功')
+
+        //確認userId是否儲存成功
+        const storedUserId = localStorage.getItem(STORAGE_KEY)
+        console.log('Stored User ID:', storedUserId)
+        // 可以加入额外验证
+        if (storedUserId === response.userId) {
+            console.log('User ID 成功儲存')
+        }else{
+            console.log('User ID 儲存失敗')
+        }
+        
         //恭喜登入
         isLoggedIn.value = true
 
         //導向首頁
         router.push({
-                name:'home'
+            name:'home'
         })
     }catch(error){
         if(error.response){
