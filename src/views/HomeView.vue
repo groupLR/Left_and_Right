@@ -3,9 +3,13 @@ import Carousel from '@/components/Carousel.vue';
 import ProductItem from '@/components/ProductItem.vue';
 import { storeToRefs } from "pinia";
 import { useProductStore } from '@/stores/products'
-import { ref } from "vue";
+import { onMounted } from 'vue';
 const ProductStore = useProductStore()
 const { coBrandingProductList, paginatedCoBrandingProducts, coBrandingCurrentPage, coBrandingItemsPerPage, paginationOnClickHandler } = storeToRefs(ProductStore)
+
+onMounted( async () => {
+  await ProductStore.fetchCoBrandingProductList()
+})
 
 </script>
 
