@@ -96,16 +96,14 @@ const handleRegister = async () => {
 
             //確認userId是否儲存成功
             const storedUserId = localStorage.getItem(STORAGE_KEY)
-            console.log('Stored User ID:', storedUserId)
-            console.log('userId:', userData.value.userId)
+            // console.log('Stored User ID:', storedUserId)
+            // console.log('userId:', userData.value.userId)
             // 可以加入额外验证
             if (storedUserId === userData.value.userId) {
                 console.log('User ID 成功儲存')
             }else{
                 console.log('User ID 儲存失敗')
             }
-
-            
         } catch (error) {
             // console.error('註冊失敗:',error)
             if (error.response && error.response.status === 409) {
@@ -150,8 +148,8 @@ const handleLogin = async() =>　{
         localStorage.setItem(STORAGE_KEY,userData.value.userId)
         // localStorage.setItem('TWT', response.data.token)
 
-        console.log('登入成功')
         //恭喜登入
+        console.log('登入成功')
         isLoggedIn.value = true
 
         //導向首頁
@@ -161,7 +159,7 @@ const handleLogin = async() =>　{
 
         //確認userId是否儲存成功
         const storedUserId = localStorage.getItem(STORAGE_KEY)
-        console.log('Stored User ID:', storedUserId)
+        // console.log('Stored User ID:', storedUserId)
         // 可以加入额外验证
         if (storedUserId === userData.value.userId) {
             console.log('User ID 成功儲存')
