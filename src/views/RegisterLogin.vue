@@ -49,7 +49,7 @@ const registerRule = z.object ({
 //登入表單資料
 const loginForm = reactive({
     email:'',
-    password_hash:''
+    password:''
 })
 
 // 轉換頁面方法
@@ -78,8 +78,10 @@ const handleRegister = async () => {
                 gender:registerForm.gender
             })
             const response = await axios.post(`${API_URL}/users/register`, verifyData)
+
             userData.value = response.data.user
             
+            //儲存userId在localstorage
             localStorage.setItem(STORAGE_KEY, userData.value.userId) 
             // localStorage.setItem('TWT', response.data.token)
             console.log('註冊成功')
@@ -142,24 +144,13 @@ const handleLogin = async() =>　{
     try{
         const response = await axios.post(`${API_URL}/users/login`, loginForm)
         
+        userData.value = response.data.user
         
-
-        //儲存userId
-        localStorage.setItem(STORAGE_KEY,response.d)
+        //儲存userId在localstorage
+        localStorage.setItem(STORAGE_KEY,userData.value.userId)
         // localStorage.setItem('TWT', response.data.token)
 
         console.log('登入成功')
-
-        //確認userId是否儲存成功
-        const storedUserId = localStorage.getItem(STORAGE_KEY)
-        console.log('Stored User ID:', storedUserId)
-        // 可以加入额外验证
-        if (storedUserId === response.userId) {
-            console.log('User ID 成功儲存')
-        }else{
-            console.log('User ID 儲存失敗')
-        }
-        
         //恭喜登入
         isLoggedIn.value = true
 
@@ -167,6 +158,16 @@ const handleLogin = async() =>　{
         router.push({
             name:'home'
         })
+
+        //確認userId是否儲存成功
+        const storedUserId = localStorage.getItem(STORAGE_KEY)
+        console.log('Stored User ID:', storedUserId)
+        // 可以加入额外验证
+        if (storedUserId === userData.value.userId) {
+            console.log('User ID 成功儲存')
+        }else{
+            console.log('User ID 儲存失敗')
+        }
     }catch(error){
         if(error.response){
             switch(error.response.status) {
@@ -312,7 +313,7 @@ const handleLogin = async() =>　{
                 </div>
                 
                 <div class="password">
-                    <input type="text" placeholder="密碼" v-model="loginForm.password_hash" required autocomplete="password">
+                    <input type="text" placeholder="密碼" v-model="loginForm.password" required autocomplete="password">
                 </div>
                 <div class="mt-5 grid grid-cols-1 justify-between gap-5 text-sm">
                     <button class="w-full p-2 bg-[#3493FB] border-0 rounded-md text-white font-extrabold hover:bg-[#6ab0fb] hover:cursor-pointer" type="submit">開始購物</button>
