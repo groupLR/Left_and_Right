@@ -12,7 +12,7 @@ const toggleCart = () => {
   cartVisible.value = !cartVisible.value;
 };
 const ProductStore = useProductStore()
-const { categoryTitle, productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, itemsPerPage, totalProductCount } = storeToRefs(ProductStore)
+const { categoryTitle, productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, pageSize, totalProductCount } = storeToRefs(ProductStore)
 
 // 監聽路由參數變化
 watch(() => route.params.category, async (newCategory) => {
@@ -20,10 +20,12 @@ watch(() => route.params.category, async (newCategory) => {
   await ProductStore.fetchProductList(newCategory || '')
 }, { immediate: true })
 
-onMounted(async () => {
-  const category = route.params.category || ''
-  await ProductStore.fetchProductList(category)
-})
+// 好像不用這個，會跟 watch 變成打兩次，先放著觀察
+// onMounted(async () => {
+//   const category = route.params.category || ''
+//   await ProductStore.fetchProductList(category)
+// })
+
 
 // 處理加入購物車的事件
 const handleAddToCart = (product) => {
@@ -70,7 +72,7 @@ const cartItemCount = computed(() => {
           <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="pageValue"
             placeholder="每頁顯示 12 個" size="large" class="pl-10">
             <el-option class="selectOption" v-for="item in pageOptions" :key="item.value" :label="item.label"
-              :value="item.value" @click="ProductStore.handleItemNumChange(route.params.category, item.value)" />
+              :value="item.value" @click="ProductStore.handlePageSizeChange(route.params.category, item.value)" />
           </el-select>
         </div>
       </div>
@@ -85,9 +87,9 @@ const cartItemCount = computed(() => {
     </div>
 
     <!-- 分頁 -->
-    <div class="flex justify-center md:relative  md:mb-12">
+    <div class="flex justify-center md:relative  md:mb-12" >
       <vue-awesome-paginate class=" md:absolute md:right-0 text-gray-500 text-sm" :total-items="totalProductCount"
-        :items-per-page="itemsPerPage" :max-pages-shown="5" v-model="currentPage" @click="ProductStore.paginationOnClickHandler(route.params.category, currentPage)"
+        :items-per-page="pageSize" :max-pages-shown="5" v-model="currentPage" @click="ProductStore.paginationOnClickHandler(route.params.category, currentPage)"
         :hide-prev-next-when-ends="true"  />
     </div>
   </section>

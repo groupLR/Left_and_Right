@@ -11,12 +11,12 @@ export const useProductStore = defineStore('products', () => {
   // 預設商品列表
   const productList = ref([])
   // 商品列表標題處理
-  const fetchProductList = async (categoryId = 1, sortBy, itemsPerPage = 12, pageNum = 1) => {
+  const fetchProductList = async (categoryId = 1, sortBy, pageSize = 12, pageNum = 1) => {
     try {
       const response = await axios.get(`${API_URL}/categories${categoryId ? `/${categoryId}` : ''}`,{
         params: {
           sortBy,
-          itemsPerPage,
+          pageSize,
           pageNum,
         }
       })
@@ -31,11 +31,11 @@ export const useProductStore = defineStore('products', () => {
 
   const coBrandingProductList = ref([])
 
-  const fetchCoBrandingProductList = async ( itemsPerPage, pageNum = 1) =>{
+  const fetchCoBrandingProductList = async ( pageSize, pageNum = 1) =>{
     try {
       const response = await axios.get(`${API_URL}/categories/3`, {
         params: {
-          itemsPerPage,
+          pageSize,
           pageNum,
         }
       })
@@ -105,7 +105,7 @@ const cartItemCount = computed(() => {
 
   const handleSortChange = (currentCategoryId, value) => {
     sortValue.value = value
-    fetchProductList(currentCategoryId, value, itemsPerPage.value, currentPage.value)
+    fetchProductList(currentCategoryId, value, pageSize.value, currentPage.value)
   }
 
   const sortOptions = ref([
@@ -148,23 +148,23 @@ const cartItemCount = computed(() => {
 
   // 分頁
   const currentPage = ref(1); // 當前頁碼
-  const itemsPerPage = ref(12); // 每頁顯示的項目數
+  const pageSize = ref(12); // 每頁顯示的項目數
   const coBrandingCurrentPage = ref(1)
-  const coBrandingItemsPerPage = ref(4)
+  const coBrandingPageSize = ref(4)
   const totalProductCount = ref()
   const coBrandingTitle = ref("KOL / Ivy 郁欣聯名")
 
   // 單頁筆數切換
-  const handleItemNumChange = (currentCategoryId, value) => {
-    itemsPerPage.value = Number(value.substring(8))
-    fetchProductList(currentCategoryId, sortValue.value, itemsPerPage.value, currentPage.value)
+  const handlePageSizeChange  = (currentCategoryId, value) => {
+    pageSize.value = Number(value.substring(8))
+    fetchProductList(currentCategoryId, sortValue.value, pageSize.value, currentPage.value)
   }
 
   // 分頁點擊處理函數
   const paginationOnClickHandler = (currentCategoryId, page) => {
     currentPage.value = page; // 更新當前頁碼
     coBrandingCurrentPage.value = page
-    fetchProductList(currentCategoryId, sortValue.value, itemsPerPage.value, page)
+    fetchProductList(currentCategoryId, sortValue.value, pageSize.value, page)
     fetchCoBrandingProductList(4, page) // 單頁筆數、現在頁面
   };
 
@@ -180,11 +180,11 @@ const cartItemCount = computed(() => {
     handleSortChange,
     pageOptions,
     currentPage,
-    itemsPerPage,
+    pageSize,
     totalProductCount,
-    handleItemNumChange,
+    handlePageSizeChange ,
     coBrandingCurrentPage,
-    coBrandingItemsPerPage,
+    coBrandingPageSize,
     coBrandingTitle,
     paginationOnClickHandler,
     cartItems,

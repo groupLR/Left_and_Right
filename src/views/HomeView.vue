@@ -5,10 +5,10 @@ import { storeToRefs } from "pinia";
 import { useProductStore } from '@/stores/products'
 import { onMounted } from 'vue';
 const ProductStore = useProductStore()
-const { coBrandingTitle ,coBrandingProductList, coBrandingCurrentPage, coBrandingItemsPerPage, totalProductCount } = storeToRefs(ProductStore)
+const { coBrandingTitle ,coBrandingProductList, coBrandingCurrentPage, coBrandingPageSize, totalProductCount } = storeToRefs(ProductStore)
 
 onMounted( async () => {
-  await ProductStore.fetchCoBrandingProductList(coBrandingItemsPerPage.value, coBrandingCurrentPage.value)
+  await ProductStore.fetchCoBrandingProductList(coBrandingPageSize.value, coBrandingCurrentPage.value)
 })
 
 </script>
@@ -41,7 +41,7 @@ onMounted( async () => {
       <!-- 分頁 -->
       <div class="flex justify-center pb-4 mb-7">
       <vue-awesome-paginate class=" text-gray-500 text-sm" :total-items="totalProductCount"
-        :items-per-page="coBrandingItemsPerPage" :max-pages-shown="3" v-model="coBrandingCurrentPage" @click="ProductStore.paginationOnClickHandler(3, coBrandingCurrentPage)"
+        :items-per-page="coBrandingPageSize" :max-pages-shown="3" v-model="coBrandingCurrentPage" @click="ProductStore.paginationOnClickHandler(3, coBrandingCurrentPage)"
         :hide-prev-next-when-ends="true"  />
     </div>
     </section>
