@@ -1,8 +1,10 @@
 <script setup>
-import MemberNavbar from "./MemberNavbar.vue"
+import MemberNavbar from "../components/MemberNavbar.vue"
+import SignOut from "@/components/SignOut.vue";
 </script>
 
 <template>
+	<SignOut/>
 	<MemberNavbar />
 
 	<div
