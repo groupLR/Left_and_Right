@@ -16,6 +16,7 @@ export const useProductStore = defineStore('products', () => {
       const response = await axios.get(`${API_URL}/categories${categoryId ? `/${categoryId}` : ''}`,{
         params: {
           sortBy,
+          itemsPerPage,
         }
       })
       productList.value = response.data.products  || []
@@ -95,8 +96,7 @@ const cartItemCount = computed(() => {
 
   const handleSortChange = (currentCategoryId, value) => {
     sortValue.value = value
-    console.log(sortValue.value);
-    fetchProductList(currentCategoryId, value)
+    fetchProductList(currentCategoryId, value, itemsPerPage.value)
   }
 
   const sortOptions = ref([
@@ -124,10 +124,6 @@ const cartItemCount = computed(() => {
 
   const pageOptions = ref([
     {
-      label: '每頁顯示 6 個',
-      value: 'pageItem6',
-    },
-    {
       label: '每頁顯示 12 個',
       value: 'pageItem12',
     },
@@ -135,15 +131,24 @@ const cartItemCount = computed(() => {
       label: '每頁顯示 24 個',
       value: 'pageItem24',
     },
+    {
+      label: '每頁顯示 36 個',
+      value: 'pageItem36',
+    },
   ]);
 
   // 處理每頁幾筆資料的邏輯
 
   // 分頁
   const currentPage = ref(1); // 當前頁碼
-  const itemsPerPage = ref(6); // 每頁顯示的項目數
+  const itemsPerPage = ref(12); // 每頁顯示的項目數
   const coBrandingCurrentPage = ref(1)
   const coBrandingItemsPerPage = ref(4)
+
+  const handleItemNumChange = (currentCategoryId, value) => {
+    itemsPerPage.value = Number(value.substring(8))
+    fetchProductList(currentCategoryId, sortValue.value, value)
+  }
 
   // 分頁後的數據
   const paginatedProducts = computed(() => {
@@ -179,6 +184,7 @@ const cartItemCount = computed(() => {
     currentPage,
     itemsPerPage,
     paginatedProducts,
+    handleItemNumChange,
     coBrandingCurrentPage,
     coBrandingItemsPerPage,
     paginatedCoBrandingProducts,

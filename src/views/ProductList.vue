@@ -68,9 +68,9 @@ const cartItemCount = computed(() => {
         <div class="pageSelectItem  flex items-center relative flex-1">
           <i class="fa-solid fa-bars fa-rotate-90 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
           <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="pageValue"
-            placeholder="每頁顯示 6 個" size="large" class="pl-10">
+            placeholder="每頁顯示 12 個" size="large" class="pl-10">
             <el-option class="selectOption" v-for="item in pageOptions" :key="item.value" :label="item.label"
-              :value="item.value" />
+              :value="item.value" @click="ProductStore.handleItemNumChange(route.params.category, item.value)" />
           </el-select>
         </div>
       </div>
