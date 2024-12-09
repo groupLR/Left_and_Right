@@ -11,9 +11,13 @@ export const useProductStore = defineStore('products', () => {
   // 預設商品列表
   const productList = ref([])
   // 商品列表標題處理
-  const fetchProductList = async (categoryId = 1) => {
+  const fetchProductList = async (categoryId = 1, sortBy, currentPage, itemsPerPage) => {
     try {
-      const response = await axios.get(`${API_URL}/categories${categoryId ? `/${categoryId}` : ''}`)
+      const response = await axios.get(`${API_URL}/categories${categoryId ? `/${categoryId}` : ''}`,{
+        params: {
+          sortBy,
+        }
+      })
       productList.value = response.data.products  || []
       categoryTitle.value = response.data.categoryName
 
@@ -88,6 +92,12 @@ const cartItemCount = computed(() => {
   // 下拉
   const pageValue = ref('')
   const sortValue = ref('')
+
+  const handleSortChange = (currentCategoryId, value) => {
+    sortValue.value = value
+    console.log(sortValue.value);
+    fetchProductList(currentCategoryId, value)
+  }
 
   const sortOptions = ref([
     {
@@ -164,6 +174,7 @@ const cartItemCount = computed(() => {
     pageValue,
     sortValue,
     sortOptions,
+    handleSortChange,
     pageOptions,
     currentPage,
     itemsPerPage,

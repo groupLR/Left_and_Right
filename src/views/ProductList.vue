@@ -60,7 +60,7 @@ const cartItemCount = computed(() => {
             class="fa-solid fa-arrow-up-short-wide absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
           <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="sortValue" placeholder="商品排序"
             size="large" class="pl-10">
-            <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value" @click="ProductStore.handleSortChange(route.params.category , item.value)"/>
           </el-select>
         </div>
         <!-- 每頁資料筆數 -->
