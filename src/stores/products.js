@@ -2,6 +2,10 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import axios from 'axios';
 
+const scrollToTop = () => {
+  window.scrollTo(0,0);
+}
+
 export const useProductStore = defineStore('products', () => {
   const API_URL = 'http://localhost:3300'
 
@@ -104,6 +108,7 @@ export const useProductStore = defineStore('products', () => {
     } else if(from === "list") {
       currentPage.value = page; // 更新當前頁碼
       fetchProductList(currentCategoryId, sortValue.value, pageSize.value, currentPage.value)
+      scrollToTop()
     }
   };
 
