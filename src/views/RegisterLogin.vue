@@ -3,6 +3,7 @@ import { onMounted, ref,reactive } from 'vue'
 import axios from 'axios'
 import { z } from 'zod'
 import { useRouter } from 'vue-router';
+import GoogleLoginButton from '@/components/googleLogin.vue'
 
 const router = useRouter()
 
@@ -38,6 +39,7 @@ const registerForm = reactive({
     birthdayMonth:'',
     birthdayDay:''
 })
+
 //註冊資料格式
 const registerRule = z.object ({
     username:z.string().max(50,'使用者名稱不能超過50個字元'),
@@ -142,7 +144,7 @@ const handleRegister = async () => {
 //   return error ? error.message : ''
 // }
 //登入
-const handleLogin = async() =>　{
+const handleLogin = async() =>{
     try{
         const response = await axios.post(`${API_URL}/users/login`, loginForm)
         
@@ -182,7 +184,6 @@ const handleLogin = async() =>　{
                     alert('伺服器錯誤，請稍後再試');
                     console.error('Server Error Details:', error.response.data);
                     break;
-                    
                 default:
                     alert('登錄失敗');
             }
@@ -200,17 +201,18 @@ const handleLogin = async() =>　{
 <template>
     <div class=" border m-5 md:w-full md:max-w-[600px] md:mx-auto md:justify-center  md:flex md:flex-col">
         <img src="../assets/register-pic.jpeg" alt="">
-        
-        <div class="w-full grid grid-cols-2 text-center leading-[62px]">
-            <div class="border hover:cursor-pointer" @click="switchToRegister">註冊會員</div>
-            <div class="border hover:cursor-pointer" @click="switchToLogin">會員登入</div>
+
+        <div class="w-full grid text-center leading-[62px] grid-cols-2">
+            <div class="border hover:cursor-pointer" :class="{ 'bg-white': isRegister, 'bg-gray-100': !isRegister }" @click="switchToRegister">註冊會員</div>
+            <div class="border hover:cursor-pointer" :class="{ 'bg-white': isLogin, 'bg-gray-100': !isLogin }" @click="switchToLogin">會員登入</div>
         </div>
         <!-- 註冊 -->
-        <div class="p-5 mx-auto" v-if="isRegister">
-            <div class="grid grid-cols-1 justify-between gap-5 px-10 pb-5 lg:grid-cols-2">
-                <button class="text-base px-10 border">使用LINE註冊</button>
-                <button class="text-base px-10 border">使用Facebook註冊</button>
-            </div>
+        <div class=" px-5 pt-5 ">
+            <GoogleLoginButton class="w-full" />
+        </div>
+        <div class="p-5 mx-auto w-full" v-if="isRegister">
+            <hr>
+            <p class="pt-4 text-center text-[#6D7175] text-sm">或使用電子信箱註冊</p>
             <form class="informationInput" method="post" id="registerField" @submit.prevent="handleRegister">
                 <input type="text" placeholder="用戶名" id="username" class="input" v-model="registerForm.username" autocomplete="username'" required>
                 <select v-model="selectedOption">
@@ -306,11 +308,9 @@ const handleLogin = async() =>　{
             
         </div>
         <!-- 登入 -->
-        <div class="p-5" v-if="isLogin">
-            <div class="grid grid-cols-1 justify-between gap-5 px-10 pb-5 lg:grid-cols-2">
-                <button class="text-base px-10 border">使用LINE登入</button>
-                <button class="text-base px-10 border">使用Facebook登入</button>
-            </div>
+        <div class="p-5 mx-auto w-full" v-if="isLogin">
+            <hr>
+            <p class="pt-4 text-center text-[#6D7175] text-sm">或使用電子信箱登入</p>
             <form class="informationInput" @submit.prevent="handleLogin">
                 <div class="emailRegister ">
                     <input type="text" placeholder="電子信箱" v-model="loginForm.email" required autocomplete="email">
@@ -320,7 +320,7 @@ const handleLogin = async() =>　{
                     <input type="text" placeholder="密碼" v-model="loginForm.password" required autocomplete="password">
                 </div>
                 <div class="mt-5 grid grid-cols-1 justify-between gap-5 text-sm">
-                    <button class="w-full p-2 bg-[#3493FB] border-0 rounded-md text-white font-extrabold hover:bg-[#6ab0fb] hover:cursor-pointer" type="submit">開始購物</button>
+                    <button class="w-full p-2 bg-[#000000] border-0 rounded-md text-white font-extrabold hover:bg-[#323335] hover:cursor-pointer">開始購物</button>
                     <a class="mx-auto cursor-pointer text-[#6D7175] no-underline" href="https://www.bonnyread.com.tw/users/password/new">忘記密碼?</a>
                 </div>
             </form>
@@ -334,8 +334,16 @@ input::-webkit-inner-spin-button {
 -webkit-appearance: none;
 margin: 0;
 }
-.border{
-    border: 1px solid #EEEEEE;
+
+.border {
+    border-top: 1px solid #EEEEEE;
+    border-left: 1px solid #EEEEEE;
+    border-right: 1px solid #EEEEEE;
+}
+
+/* 非活躍狀態才加下邊框 */
+.inactive-tab {
+    border-bottom: 1px solid #EEEEEE;
 }
 .borderTop{
     border-top: 1px solid #EEEEEE;
@@ -374,7 +382,7 @@ margin: 0;
     width: 100%;
     margin-top: 20px;
     padding: 10px;
-    background-color: #7BB9FC;
+    background-color: #bfbfc2;
     border: 0;
     border-radius: 5px;
     color: white;
@@ -383,11 +391,11 @@ margin: 0;
     cursor: auto;
 }
 .join:hover{
-    background-color: #6ab0fb;
+    background-color: #323335;
 }
 
 .agreeCheck:checked ~ .join{
-    background-color: #3493FB;
+    background-color: #000000;
     cursor: pointer;
 }
 </style>
