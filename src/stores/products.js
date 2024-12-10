@@ -91,7 +91,8 @@ export const useProductStore = defineStore('products', () => {
   // 排序邏輯實作 
   const handleSortChange = (currentCategoryId, value) => {
     sortValue.value = value
-    fetchProductList(currentCategoryId, value, pageSize.value, currentPage.value)
+    currentPage.value = 1
+    fetchProductList(currentCategoryId, value, pageSize.value, 1)
   }
 
   // pageSize 單頁筆數切換
