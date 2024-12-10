@@ -89,7 +89,7 @@ const cartItemCount = computed(() => {
     <!-- 分頁 -->
     <div class="flex justify-center md:relative  md:mb-12" >
       <vue-awesome-paginate class=" md:absolute md:right-0 text-gray-500 text-sm" :total-items="totalProductCount"
-        :items-per-page="pageSize" :max-pages-shown="5" v-model="currentPage" @click="ProductStore.paginationOnClickHandler(route.params.category, currentPage)"
+        :items-per-page="pageSize" :max-pages-shown="5" v-model="currentPage" @click="ProductStore.paginationOnClickHandler(route.params.category, currentPage, 'list')"
         :hide-prev-next-when-ends="true"  />
     </div>
   </section>
