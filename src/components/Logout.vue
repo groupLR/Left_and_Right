@@ -19,12 +19,12 @@ const handleLogOut = ()=>{
 
 </script>
 <template>
-  <div class="sign-out-area">
-        <p class="sign-out text-sm hover:cursor-pointer" @click="handleLogOut">登出</p>
+  <div class="signOutArea">
+        <p class="signOut text-sm hover:cursor-pointer" @click="handleLogOut">登出</p>
     </div>
 </template>
 <style scoped>
-    .sign-out-area{
+    .signOutArea{
         display: flex;
         margin: 0 auto;
         justify-content: start;
@@ -32,12 +32,12 @@ const handleLogOut = ()=>{
         width: 100%;
         padding: 22px;
     }
-    .sign-out{
+    .signOut{
         color: black;
         text-decoration-line: underline;
     }
     @media screen and (width <= 1024px) {
-        .sign-out-area{
+        .signOutArea{
             width: 90%;
         }
     }
