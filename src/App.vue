@@ -43,8 +43,7 @@ import Footer from "./components/Footer.vue";
     </nav>
   </header>
   <RouterView />
-  <!-- <Carousel/> -->
-  <!-- <StoreInfo4/> -->
+  
   <Footer />
 </template>
 

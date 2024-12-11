@@ -1,8 +1,10 @@
 <script setup>
-import MemberNavbar from "./MemberNavbar.vue"
+import MemberNavbar from "../components/MemberNavbar.vue"
+import LogOut from "@/components/Logout.vue";
 </script>
 
 <template>
+	<LogOut/>
 	<MemberNavbar />
 
 	<div
@@ -165,63 +167,65 @@ import MemberNavbar from "./MemberNavbar.vue"
 				</p>
 			</div>
 			<div class="grid w-full grid-cols-1 gap-5 justify-between lg:grid-cols-2">
-				<div class="w-full p-[25px_21px] pb-5 border">
-					<div class="font-extrabold">
-						<h2><i class="fa-solid fa-circle-user pr-2.5"></i>會員資料</h2>
+				<form id="profile">
+					<div class="w-full p-[25px_21px] pb-5 border">
+						<div class="font-extrabold">
+							<h2><i class="fa-solid fa-circle-user pr-2.5"></i>會員資料</h2>
+						</div>
+						<div class="name">
+							<label>姓名</label>
+							<input type="text" name="" id="" />
+						</div>
+						<div class="email">
+							<label for="">電子郵件</label>
+							<input type="email" name="" id="" />
+						</div>
+						<div class="cellphone">
+							<label for="">手機號碼</label>
+							<select></select>
+							<input type="number" name="" id="" />
+						</div>
+						<div class="gender">
+							<label for="">性別</label>
+							<select>
+								<option selected disabled>請選擇</option>
+								<option value="m">男</option>
+								<option value="f">女</option>
+								<option value="o">不透露</option>
+							</select>
+						</div>
+						<div class="birthday">
+							<label for="">生日日期</label>
+						</div>
+						<div class="phone">
+							<label for="">行動電話(選填)</label>
+							<input type="number" name="" id="" />
+						</div>
+						<div class="store">
+							<label for="">來自門市(選填)</label>
+							<select name="" id="">
+								<option value="" selected disabled>來自門市</option>
+								<option value="">台北 信義威秀門市</option>
+								<option value="">台中 新光三越櫃位</option>
+								<option value="">台南 新光三越百貨小西門櫃位</option>
+								<option value="">高雄 夢時代櫃位</option>
+							</select>
+						</div>
+						<div class="introducer">
+							<label for="">由誰介紹(選填)</label>
+							<input type="text" name="" id="" />
+						</div>
+						<div class="password">
+							<p>密碼</p>
+							<a href="https://www.bonnyread.com.tw/users/edit" class="blue"
+								>設定新的密碼</a
+							>
+						</div>
+						<div class="thirdPartyRegistration">
+							<p>第三方註冊</p>
+						</div>
 					</div>
-					<div class="name">
-						<label>姓名</label>
-						<input type="text" name="" id="" />
-					</div>
-					<div class="email">
-						<label for="">電子郵件</label>
-						<input type="email" name="" id="" />
-					</div>
-					<div class="cellphone">
-						<label for="">手機號碼</label>
-						<select></select>
-						<input type="number" name="" id="" />
-					</div>
-					<div class="gender">
-						<label for="">性別</label>
-						<select>
-							<option selected disabled>請選擇</option>
-							<option>女</option>
-							<option>男</option>
-							<option>不透露</option>
-						</select>
-					</div>
-					<div class="birthday">
-						<label for="">生日日期</label>
-					</div>
-					<div class="phone">
-						<label for="">行動電話(選填)</label>
-						<input type="number" name="" id="" />
-					</div>
-					<div class="store">
-						<label for="">來自門市(選填)</label>
-						<select name="" id="">
-							<option value="" selected disabled>來自門市</option>
-							<option value="">台北 信義威秀門市</option>
-							<option value="">台中 新光三越櫃位</option>
-							<option value="">台南 新光三越百貨小西門櫃位</option>
-							<option value="">高雄 夢時代櫃位</option>
-						</select>
-					</div>
-					<div class="introducer">
-						<label for="">由誰介紹(選填)</label>
-						<input type="text" name="" id="" />
-					</div>
-					<div class="password">
-						<p>密碼</p>
-						<a href="https://www.bonnyread.com.tw/users/edit" class="blue"
-							>設定新的密碼</a
-						>
-					</div>
-					<div class="thirdPartyRegistration">
-						<p>第三方註冊</p>
-					</div>
-				</div>
+				</form>
 				<div class="flex flex-col">
 					<div class="subscribeArea">
 						<h2 class="mb-2 text-lg font-extrabold">

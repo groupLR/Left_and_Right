@@ -70,7 +70,9 @@ export default {
 .memberOptions:first-of-type {
 	border-left: none;
 }
-
+.memberOptions:hover{
+	cursor: pointer;
+}
 @media (max-width: 768px) {
 	/* nav bar */
 	.memberNavbar {

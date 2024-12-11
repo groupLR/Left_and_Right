@@ -1,4 +1,5 @@
 <template>
+	<LogOut/>
 	<MemberNavbar />
 	<div class="memberOrder">
 		<div class="orderContainer">
@@ -28,9 +29,12 @@
 		</div>
 	</div>
 </template>
+
 <script setup>
-import MemberNavbar from "./MemberNavbar.vue"
+import MemberNavbar from "../components/MemberNavbar.vue"
+import LogOut from "@/components/Logout.vue";
 </script>
+
 <style scoped>
 * {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
