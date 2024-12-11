@@ -1,39 +1,205 @@
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+import { onMounted, ref,reactive } from 'vue'
+import axios from 'axios'
+import { z } from 'zod'
+import { useRouter } from 'vue-router';
 import GoogleLoginButton from '@/components/googleLogin.vue'
 
+const router = useRouter()
 
-export default defineComponent({
-    components: {
-        GoogleLoginButton
-    },
-    setup() {
-        // 狀態變數
-        const isLogin = ref(true)
-        const isRegister = ref(false)
+//控制註冊登入頁面切換
+const isLogin = ref(true)
+const isRegister = ref(false)
+//確定一開始資料為空
+const userToken = ref(null)
+const userId = ref(null)
+const isLoggedIn = ref(false)  // 登入狀態
+// 後端 API 網址
+const API_URL = 'http://localhost:3000'
+// localStorage 的 key
+const STORAGE_KEY = 'UID'
+const STORAGE_JWT_KEY = 'TwT'
+// 錯誤訊息狀態
+const errors = ref([])
+//轉換註冊選項
+const selectedOption = ref('email')
+//同意政策才能按下註冊按鈕
+const registerAgree = ref(false)
 
-        // 方法
-        const switchToLogin = () => {
-            isLogin.value = true
-            isRegister.value = false
 
+//註冊表單資料
+const registerForm = reactive({
+    userId:'',
+    username:'',
+    email:'',
+    phone:'',
+    password:'',
+    gender:'',
+    birthdayYear:'',
+    birthdayMonth:'',
+    birthdayDay:''
+})
+
+//註冊資料格式
+const registerRule = z.object ({
+    username:z.string().max(50,'使用者名稱不能超過50個字元'),
+    email:z.string().email('請輸入正確的email'),
+    // phone:z.string().length(10,'請輸入正確的手機號碼'),
+    password:z.string().min(8,'密碼至少需要8個字元'),
+    gender:z.enum(['m','f','o'],{
+        errorMap:() => ({message:'請選擇有效性別'})
+    }),
+})
+//登入表單資料
+const loginForm = reactive({
+    email:'',
+    password:''
+})
+
+// 轉換頁面方法
+const switchToLogin = () => {
+  isLogin.value = true
+  isRegister.value = false
+    
+}
+const switchToRegister = () =>{
+  isRegister.value = true
+  isLogin.value = false
+}
+
+//註冊
+const handleRegister = async () => {
+    errors.value = []
+    if(registerAgree.value){
+        try {
+            //zod驗證
+            const verifyData = registerRule.parse({
+                // userId:registerForm.userId,
+                username:registerForm.username,
+                email:registerForm.email,
+                // phone:registerForm.phone,
+                password:registerForm.password,
+                gender:registerForm.gender
+            })
+            const response = await axios.post(`${API_URL}/users/register`, verifyData)
+
+            userId.value = response.data.newUser.userId
+            userToken.value = response.data.token
+            
+            //儲存token在localstorage
+            localStorage.setItem(STORAGE_KEY, userId.value) 
+            localStorage.setItem(STORAGE_JWT_KEY, userToken.value) 
+            
+            console.log('註冊成功')
+            
+            isLoggedIn.value = true // 註冊後直接登入
+
+            //導向首頁
+            router.push({
+                name:'home'
+            })
+            
+
+            //確認Token是否儲存成功
+            const storedToken = localStorage.getItem(STORAGE_JWT_KEY)
+            // console.log('Stored User ID:', storedUserId)
+            // console.log('userId:', userToken.value.userId)
+            // 可以加入额外验证
+            if (storedToken === userToken.value) {
+                console.log('User Token 成功儲存')
+            }else{
+                console.log('User Token 儲存失敗')
+            }
+        } catch (error) {
+            // console.error('註冊失敗:',error)
+            if (error.response && error.response.status === 409) {
+                alert('此電子郵件已被註冊，請使用其他郵箱')
+            }
+            
+            // Zod 驗證錯誤處理
+            if (error instanceof z.ZodError) {
+                errors.value = error.errors.map(err => ({
+                    field: err.path.join('.'),
+                    message: err.message
+                }))
+            } 
+            // Axios API 錯誤處理  
+            else if (error.response) {
+                const apiErrors = error.response.data.details || 
+                    [{ message: error.response.data.message || '註冊失敗' }]
+                errors.value = apiErrors
+            } 
+            // 網路或其他錯誤
+            else {
+                errors.value = [{ 
+                    field: 'general', 
+                    message: '網路連線錯誤，請稍後再試' 
+                }]
+            }
         }
-        const switchToRegister = () => {
-            isRegister.value = true
-            isLogin.value = false
+    } 
+}
+// const getErrorMessage = (field) => {
+//   const error = errors.value.find(err => err.field === field)
+//   return error ? error.message : ''
+// }
+//登入
+const handleLogin = async() =>{
+    try{
+        const response = await axios.post(`${API_URL}/users/login`, loginForm)
+        
+        userToken.value = response.data.token
+        userId.value = response.data.user.userId
+        
+        //儲存Token在localstorage
+        localStorage.setItem(STORAGE_KEY,userId.value)
+        localStorage.setItem(STORAGE_JWT_KEY,userToken.value)
+        // localStorage.setItem('TWT', response.data.token)
+
+        //恭喜登入
+        console.log('登入成功')
+        isLoggedIn.value = true
+
+        //導向首頁
+        router.push({
+            name:'home'
+        })
+
+        //確認userToken是否儲存成功
+        const storedToken = localStorage.getItem(STORAGE_KEY)
+        // console.log('Stored User ID:', storedUserId)
+        // 可以加入额外验证
+        if (storedToken === userToken.value) {
+            console.log('User Token 成功儲存')
+        }else{
+            console.log('User Token 儲存失敗')
         }
-        return {
-            isLogin,
-            isRegister,
-            switchToLogin,
-            switchToRegister
+    }catch(error){
+        if(error.response){
+            switch(error.response.status) {
+                case 401:
+                    alert('帳號或密碼錯誤');
+                    break;
+                case 500:
+                    alert('伺服器錯誤，請稍後再試');
+                    console.error('Server Error Details:', error.response.data);
+                    break;
+                default:
+                    alert('登錄失敗');
+            }
+        }else if(error.request){
+            alert('網路連接失敗');
+        }else{
+            alert('發生未知錯誤')
         }
     }
-})
+}
+
+
 </script>
 
 <template>
-    <div class="max-w-[600px] w-full justify-center m-[75px_auto] flex flex-col border">
+    <div class=" border m-5 md:w-full md:max-w-[600px] md:mx-auto md:justify-center  md:flex md:flex-col">
         <img src="../assets/register-pic.jpeg" alt="">
 
         <div class="w-full grid text-center leading-[62px] grid-cols-2">
@@ -47,33 +213,38 @@ export default defineComponent({
         <div class="p-5 mx-auto w-full" v-if="isRegister">
             <hr>
             <p class="pt-4 text-center text-[#6D7175] text-sm">或使用電子信箱註冊</p>
-            <form class="informationInput" method="post">
-                <input type="text" placeholder="用戶名" class="input">
-                <select>
-                    <option value="">使用Email註冊</option>
-                    <option value="">使用手機號碼註冊</option>
+            <form class="informationInput" method="post" id="registerField" @submit.prevent="handleRegister">
+                <input type="text" placeholder="用戶名" id="username" class="input" v-model="registerForm.username" autocomplete="username'" required>
+                <select v-model="selectedOption">
+                    <option value="email">使用Email註冊</option>
+                    <option value="phone">使用手機號碼註冊</option>
                 </select>
+                <div v-if="selectedOption === 'email'" required>
+                    <input type="text" placeholder="電子信箱" v-model="registerForm.email" id="email" autocomplete="email" >
+                </div>
+                <div class="mb-5 w-full grid grid-cols-[1fr_3fr]" v-if="selectedOption === 'phone'" required>
+                    <!-- <input type="tel" name="" id="phone" v-model="registerForm.phone" autocomplete="tel"></input> -->
+                    <select></select>
+                    <input type="number" name="" id="" autocomplete="tel" placeholder="0912 345 678"/>
+                </div>
+                <div class="password" required>
+                    <input type="text" placeholder="密碼" v-model="registerForm.password" id="password" autocomplete="current-password">
+                </div>
                 <div>
-                    <input type="text" placeholder="電子信箱">
+                    <select v-model="registerForm.gender" id="gender" required>
+                        <option value="" disabled selected>性別</option>
+                        <option value="m">男</option>
+                        <option value="f">女</option>
+                        <option value="o">不透漏</option>
+                    </select>
+                <!-- <span class="error-text">{{ getErrorMessage('gender') }}</span> -->
                 </div>
-                <div class="mb-5 w-full flex">
-                    <input type="tel" name="" id="phone" ></input>
-                    <!-- <input type="number" placeholder="0912 345 678"> -->
-                </div>
-                <div class="password">
-                    <input type="text" placeholder="密碼" >
-                </div>
-                <select>
-                    <option value="" disabled selected>性別</option>
-                    <option value="">男</option>
-                    <option value="">女</option>
-                    <option value="">不透漏</option>
-                </select>
+                
                 <div class="grid grid-cols-3 gap-2.5">
-                    <select name="" id="birthdarYear">
+                    <select name="" id="birthdayYear" v-model="registerForm.birthdayYear">
                         <option value=""selected disabled>年</option>
                     </select>
-                    <select name="" id="birthaday-month">
+                    <select name="" id="birthdayMonth" v-model="registerForm.birthdayMonth">
                         <option value=""selected disabled>月</option>
                         <option value="">1</option>
                         <option value="">2</option>
@@ -88,7 +259,7 @@ export default defineComponent({
                         <option value="">11</option>
                         <option value="">12</option>
                     </select>
-                    <select name="" id="birthday-day">
+                    <select name="" id="birthdayDay" v-model="registerForm.birthdayDay">
                         <option value=""selected disabled>日</option>
                         <option value="">1</option>
                         <option value="">2</option>
@@ -123,36 +294,36 @@ export default defineComponent({
                         <option value="">31</option>
                     </select>
                 </div>
-                <div >
+                <div>
                     <input type="checkbox" name="" id="" checked >我願意接收 Bonny & Read 飾品 的最新消息、優惠及服務推廣相關資訊
                 </div>
+                <div class="mt-2.5 no-underline borderTop">
+                    <input type="checkbox" class="agreeCheck" id="policy" v-model="registerAgree">
+                    <label>
+                        我同意網站<a href="https://www.bonnyread.com.tw/about/terms" class="text-blue-500">服務條款</a>及<a href="https://www.bonnyread.com.tw/about/privacy-policy" class="text-blue-500">隱私權政策</a>
+                    </label>
+                    <button type="submit" class="join" :disabled="!registerAgree" >立即加入</button>
+                </div>
             </form>
-            <div class="mt-5 mx-5 no-underline">
-                <input type="checkbox" class="agreeCheck">
-                <label>
-                    我同意網站<a href="https://www.bonnyread.com.tw/about/terms" class=" text-blue-600">服務條款</a>及<a href="https://www.bonnyread.com.tw/about/privacy-policy" class=" text-blue-600">隱私權政策</a>
-                </label>
-                <button class="join">立即加入</button>
-            </div>
+            
         </div>
         <!-- 登入 -->
         <div class="p-5 mx-auto w-full" v-if="isLogin">
             <hr>
             <p class="pt-4 text-center text-[#6D7175] text-sm">或使用電子信箱登入</p>
-            <div class="informationInput">
+            <form class="informationInput" @submit.prevent="handleLogin">
                 <div class="emailRegister ">
-                    <input type="text" placeholder="電子信箱">
+                    <input type="text" placeholder="電子信箱" v-model="loginForm.email" required autocomplete="email">
                 </div>
                 
                 <div class="password">
-                    <input type="text" placeholder="密碼" >
+                    <input type="text" placeholder="密碼" v-model="loginForm.password" required autocomplete="password">
                 </div>
                 <div class="mt-5 grid grid-cols-1 justify-between gap-5 text-sm">
                     <button class="w-full p-2 bg-[#000000] border-0 rounded-md text-white font-extrabold hover:bg-[#323335] hover:cursor-pointer">開始購物</button>
                     <a class="mx-auto cursor-pointer text-[#6D7175] no-underline" href="https://www.bonnyread.com.tw/users/password/new">忘記密碼?</a>
                 </div>
-                
-            </div>
+            </form>
         </div>
     </div>
 </template>
@@ -174,11 +345,14 @@ margin: 0;
 .inactive-tab {
     border-bottom: 1px solid #EEEEEE;
 }
+.borderTop{
+    border-top: 1px solid #EEEEEE;
+    padding-top: 20px;
+}
 .informationInput{
     padding: 20px;
     display: grid;
     grid-template-columns: 1fr;
-    border-bottom: 1px solid #EEEEEE;
 }
 .informationInput input[type="text"],.informationInput input[type="number"],.informationInput input[type="tel"],.informationInput select{
     margin-bottom:20px ;

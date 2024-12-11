@@ -1,4 +1,5 @@
 <template>
+	<LogOut/>
 	<MemberNavbar />
 	<section class="memberPointsMain">
 		<div class="memberContent">
@@ -30,8 +31,10 @@
 </template>
 
 <script setup>
-import MemberNavbar from "./MemberNavbar.vue"
+import MemberNavbar from "../components/MemberNavbar.vue"
+import LogOut from "@/components/Logout.vue";
 </script>
+
 <style scoped>
 * {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;

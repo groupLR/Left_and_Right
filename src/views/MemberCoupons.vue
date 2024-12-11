@@ -1,4 +1,5 @@
 <template>
+	<LogOut/>
 	<MemberNavbar />
 
 	<div class="memberCoupon">
@@ -118,7 +119,8 @@
 </template>
 
 <script setup>
-import MemberNavbar from "./MemberNavbar.vue"
+import MemberNavbar from "../components/MemberNavbar.vue"
+import LogOut from "@/components/Logout.vue";
 </script>
 
 <style scoped>
