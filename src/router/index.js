@@ -148,9 +148,9 @@ const router = createRouter({
 			component: () => import("../views/ProductDetail.vue")
 		},
 		{
-			path: "/products/:product_id?", 
-			name: "products-detail(可切換)",
-			component: () => import("../views/ProductDetail.vue"),
+			path: "/productsBackend", 
+			name: "products-detail(連後端)",
+			component: () => import("../views/ProductDetailBackend.vue"),
 			props: true  
 		},
 		{
