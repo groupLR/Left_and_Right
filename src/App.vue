@@ -40,6 +40,8 @@ import Footer from "./components/Footer.vue";
       <RouterLink to="/users/sign-in">register</RouterLink>
       |
       <RouterLink to="/products/detail">products-detail</RouterLink>
+      |
+      <RouterLink to="/products">products-detail(連後端)</RouterLink>
     </nav>
   </header>
   <RouterView />

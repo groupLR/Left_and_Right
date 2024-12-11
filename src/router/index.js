@@ -144,8 +144,14 @@ const router = createRouter({
 		},
 		{
 			path: "/products/detail",
-			name: "products-detail(改)",
+			name: "products-detail",
 			component: () => import("../views/ProductDetail.vue")
+		},
+		{
+			path: "/products/:product_id?", 
+			name: "products-detail(可切換)",
+			component: () => import("../views/ProductDetail.vue"),
+			props: true  
 		},
 		{
 			path: '/Cart',

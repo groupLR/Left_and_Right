@@ -6,6 +6,25 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 
 
+const productProfile = ref([])
+const productMainImg = ref([])
+const productDesImg = ref([])
+const productSpecs = ref([])
+
+const getProductInformation = async() =>{
+  try{
+    const response = await axios.get(`${API_URL}/products${productId}`)
+    productProfile.value = response.data.profile
+    productMainImg.value = response.data.mainImg
+    productDesImg.value = response.data.desImg
+    productSpecs.value = response.data.specs
+  }catch(err){
+    console.error('Error fetching products:', err)
+  }
+}
+
+
+
 
 const images = ref([
   { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 1',colorText:"Silver / 銀色",colorSquare:'#EBEBEB' },

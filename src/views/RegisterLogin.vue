@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { onMounted, ref,reactive } from 'vue'
 import axios from 'axios'
 import { z } from 'zod'
