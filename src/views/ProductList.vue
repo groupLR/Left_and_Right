@@ -12,7 +12,7 @@ const toggleCart = () => {
   cartVisible.value = !cartVisible.value;
 };
 const ProductStore = useProductStore()
-const { categoryTitle, productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, itemsPerPage, paginatedProducts, paginationOnClickHandler } = storeToRefs(ProductStore)
+const { categoryTitle, productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, pageSize, totalProductCount } = storeToRefs(ProductStore)
 
 // 監聽路由參數變化
 watch(() => route.params.category, async (newCategory) => {
@@ -20,10 +20,12 @@ watch(() => route.params.category, async (newCategory) => {
   await ProductStore.fetchProductList(newCategory || '')
 }, { immediate: true })
 
-onMounted(async () => {
-  const category = route.params.category || ''
-  await ProductStore.fetchProductList(category)
-})
+// 好像不用這個，會跟 watch 變成打兩次，先放著觀察
+// onMounted(async () => {
+//   const category = route.params.category || ''
+//   await ProductStore.fetchProductList(category)
+// })
+
 
 // 處理加入購物車的事件
 const handleAddToCart = (product) => {
@@ -60,7 +62,7 @@ const cartItemCount = computed(() => {
             class="fa-solid fa-arrow-up-short-wide absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
           <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="sortValue" placeholder="商品排序"
             size="large" class="pl-10">
-            <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value" @click="ProductStore.handleSortChange(route.params.category , item.value)"/>
           </el-select>
         </div>
         <!-- 每頁資料筆數 -->
@@ -68,9 +70,9 @@ const cartItemCount = computed(() => {
         <div class="pageSelectItem  flex items-center relative flex-1">
           <i class="fa-solid fa-bars fa-rotate-90 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
           <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="pageValue"
-            placeholder="每頁顯示 6 個" size="large" class="pl-10">
+            placeholder="每頁顯示 12 個" size="large" class="pl-10">
             <el-option class="selectOption" v-for="item in pageOptions" :key="item.value" :label="item.label"
-              :value="item.value" />
+              :value="item.value" @click="ProductStore.handlePageSizeChange(route.params.category, item.value)" />
           </el-select>
         </div>
       </div>
@@ -79,16 +81,16 @@ const cartItemCount = computed(() => {
 
     <!-- 產品列表 -->
     <div class="flex flex-wrap">
-      <ProductItem v-for="(item, index) in paginatedProducts" :key="item.id" :title="item.title" :price="item.price"
+      <ProductItem v-for="(item, index) in productList" :key="item.id" :title="item.title" :price="item.price"
         :orginalPrice="item.orginalPrice" :frontImg="item.frontImg" :backImg="item.backImg"  class="md:col-6 lg:col-3"
         @addToCart="handleAddToCart" @removeFromCart="removeFromCart" @updateQuantity="updateQuantity" />
     </div>
 
     <!-- 分頁 -->
-    <div class="flex justify-center md:relative  md:mb-12">
-      <vue-awesome-paginate class=" md:absolute md:right-0 text-gray-500 text-sm" :total-items="productList.length"
-        :items-per-page="itemsPerPage" :max-pages-shown="5" v-model="currentPage" @click="paginationOnClickHandler"
-        :hide-prev-next-when-ends="true" link-url="/products?page=[page]" />
+    <div class="flex justify-center md:relative  md:mb-12" >
+      <vue-awesome-paginate class=" md:absolute md:right-0 text-gray-500 text-sm" :total-items="totalProductCount"
+        :items-per-page="pageSize" :max-pages-shown="5" v-model="currentPage" @click="ProductStore.paginationOnClickHandler(route.params.category, currentPage, 'list')"
+        :hide-prev-next-when-ends="true"  />
     </div>
   </section>
 </template>
