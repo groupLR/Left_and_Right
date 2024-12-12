@@ -10,7 +10,7 @@
           <li><router-link to="/about" class="block">關於品牌 About Us</router-link></li>
           <li><router-link to="/store-info" class="block">門市資訊 Store-info</router-link></li>
           <li><router-link to="/vip" class="block">會員優惠 VIP</router-link></li>
-          <li><router-link to="/blog" class="block">潮流趨勢 BLOG</router-link></li>
+          <li><router-link to="#" class="block">潮流趨勢 BLOG</router-link></li>
           <li><router-link to="/cooperation" class="block">異業合作 Cooperation</router-link></li>
           <li><router-link to="/franchising" class="block">海外經銷 Franchising</router-link></li>
         </ul>
@@ -24,10 +24,10 @@
           <li><router-link to="/packaging" class="block">商品包裝 Packaging</router-link></li>
           <li><router-link to="/after-sales" class="block">售後服務 After-sales service</router-link></li>
           <li><router-link to="/overseas-delivery" class="block">海外運送 Overseas delivery</router-link></li>
-          <li><router-link to="/faq" class="block">常見問題 FAQ</router-link></li>
-          <li><router-link to="/redeem-gift" class="block">點數兌換 Redeem Gift</router-link></li>
-          <li><router-link to="/maintenance" class="block">飾品保養 Maintenance</router-link></li>
-          <li><router-link to="/privacy" class="block">隱私權政策 Privacy</router-link></li>
+          <li><router-link to="#" class="block">常見問題 FAQ</router-link></li>
+          <li><router-link to="#" class="block">點數兌換 Redeem Gift</router-link></li>
+          <li><router-link to="#" class="block">飾品保養 Maintenance</router-link></li>
+          <li><router-link to="#" class="block">隱私權政策 Privacy</router-link></li>
         </ul>
       </div>
 
