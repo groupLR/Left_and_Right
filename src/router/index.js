@@ -157,9 +157,6 @@ const router = createRouter({
 			path: '/Cart',
 			name: 'Cart',
 			component: Cart,
-			meta: {
-				requireAuth: true
-			}
 		},
 
 	],

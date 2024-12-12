@@ -4,13 +4,7 @@ import { ref,computed,onMounted, watch } from "vue"
 import { useRoute } from 'vue-router'
 import { storeToRefs } from "pinia";
 import { useProductStore } from '@/stores/products'
-import SmallCart from "@/components/SmallCart.vue";
-
 const route = useRoute()
-const cartVisible = ref(false); // 控制 SmallCart 的顯示
-const toggleCart = () => {
-  cartVisible.value = !cartVisible.value;
-};
 const ProductStore = useProductStore()
 const { categoryTitle, productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, pageSize, totalProductCount } = storeToRefs(ProductStore)
 
@@ -25,29 +19,6 @@ watch(() => route.params.category, async (newCategory) => {
 //   const category = route.params.category || ''
 //   await ProductStore.fetchProductList(category)
 // })
-
-
-// 處理加入購物車的事件
-const handleAddToCart = (product) => {
-  productStore.addToCart(product); // 呼叫 Pinia store 的方法
-  productStore.toggleCartVisibility(true); // 確保購物車被顯示
-};
-// 从购物车删除商品
-const removeFromCart = (itemId) => {
-  productStore.removeFromCart(itemId);  // 使用 Pinia store 的方法从购物车中删除商品
-};
-
-
-// 更新购物车商品数量
-const updateQuantity = (itemId, quantity) => {
-  productStore.updateQuantity(itemId, quantity);  // 使用 Pinia store 的方法更新商品数量
-};
-
-// 计算购物车内商品的总数量
-const cartItemCount = computed(() => {
-  return cartItems.value.reduce((total, item) => total + item.quantity, 0);
-});
-
 </script>
 
 
