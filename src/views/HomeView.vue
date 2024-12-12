@@ -3,9 +3,13 @@ import Carousel from '@/components/Carousel.vue';
 import ProductItem from '@/components/ProductItem.vue';
 import { storeToRefs } from "pinia";
 import { useProductStore } from '@/stores/products'
-import { ref } from "vue";
+import { onMounted } from 'vue';
 const ProductStore = useProductStore()
-const { coBrandingProductList, paginatedCoBrandingProducts, coBrandingCurrentPage, coBrandingItemsPerPage, paginationOnClickHandler } = storeToRefs(ProductStore)
+const { coBrandingTitle , productList, coBrandingCurrentPage,coBrandingPageSize, totalProductCount } = storeToRefs(ProductStore)
+
+onMounted( async () => {
+  await ProductStore.fetchProductList(3, null, coBrandingPageSize.value, coBrandingCurrentPage.value)
+})
 
 </script>
 
@@ -28,17 +32,17 @@ const { coBrandingProductList, paginatedCoBrandingProducts, coBrandingCurrentPag
     <!-- 聯名產品 -->
     <section class=" px-4 mx-auto md:w-[750px] lg:w-[970px] xl:w-[1170px]">
       <div class=" p-4">
-        <h2 class="coBrandingTitle mb-7 pt-3 pb-6 text-2xl text-center tracking-wide relative">KOL / Ivy 郁欣聯名</h2>
+        <h2 class="coBrandingTitle mb-7 pt-3 pb-6 text-2xl text-center tracking-wide relative">{{ coBrandingTitle }}</h2>
       </div>
       <div class="flex flex-wrap">
-        <ProductItem v-for="(item, index) in paginatedCoBrandingProducts" :key="item.id" :title="item.title" :price="item.price"
+        <ProductItem v-for="(item, index) in productList" :key="item.id" :title="item.title" :price="item.price"
         :orginalPrice="item.orginalPrice" :frontImg="item.frontImg" :backImg="item.backImg" class="md:col-6 lg:col-3"/>
       </div>
       <!-- 分頁 -->
       <div class="flex justify-center pb-4 mb-7">
-      <vue-awesome-paginate class=" text-gray-500 text-sm" :total-items="coBrandingProductList.length"
-        :items-per-page="coBrandingItemsPerPage" :max-pages-shown="3" v-model="coBrandingCurrentPage" @click="paginationOnClickHandler"
-        :hide-prev-next-when-ends="true" link-url="/products?page=[page]" />
+      <vue-awesome-paginate class=" text-gray-500 text-sm" :total-items="totalProductCount"
+        :items-per-page="coBrandingPageSize" :max-pages-shown="3" v-model="coBrandingCurrentPage" @click="ProductStore.paginationOnClickHandler(3, coBrandingCurrentPage, 'home')"
+        :hide-prev-next-when-ends="true"  />
     </div>
     </section>
   </main>
