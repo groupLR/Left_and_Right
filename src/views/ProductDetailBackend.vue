@@ -1,28 +1,99 @@
 <script setup>
-import { onMounted, ref,reactive,computed } from 'vue'
+import { onMounted, ref,watch,computed } from 'vue'
 import axios from 'axios'
-import { useRouter } from 'vue-router';
+import { useRouter,useRoute } from 'vue-router';
+import { storeToRefs } from "pinia";
+import { useProductDetail } from '@/stores/productDetail'
 
 const router = useRouter()
+const route = useRoute()
+
+// const productDetailStore = useProductDetail()
+// const { profile,mainImgs,desImgs} = storeToRefs(productDetailStore)
 
 
-const productProfile = ref([])
-const productMainImg = ref([])
-const productDesImg = ref([])
-const productSpecs = ref([])
 
-const getProductInformation = async() =>{
+// console.log('Product Detail Store:', productDetailStore)
+// console.log('Fetch Product Detail Method:', productDetailStore.fetchProductDetail)
+
+// if (!productDetailStore.fetchProductDetail) {
+//   console.error("fetchProductDetail method is not defined in productDetailStore");
+// }
+
+// 監聽路由參數變化
+// watch(
+//   () => route.params.product_id,
+//    async (productId) => {
+//     try{
+//       // 如果沒有 productId 參數，使用空字串呼叫 API
+//       await productDetailStore.fetchProductDetail(productId || 35);
+//     } catch(err){
+//       // 處理錯誤
+//       console.error('載入產品詳情失敗', err)
+//     }
+//   },{ immediate: true }
+// )
+
+// onMounted(() => {
+//   console.log('組件已掛載')
+//   console.log('Route params:', route.params)
+// })
+
+
+const API_URL = 'http://localhost:3300'
+
+const profile = ref('')
+const mainImgs = ref([])
+const desImgs = ref([])
+const getImageUrl = (imagePath) => {
+  if (!imagePath || typeof imagePath !== 'string') return ''
+  const cleanedPath = imagePath.startsWith('./') ? imagePath.slice(1) : imagePath;
+  return `${API_URL}${cleanedPath}`
+}
+const fetchProductDetail = async(product_id = 35) =>{
   try{
-    const response = await axios.get(`${API_URL}/products${productId}`)
-    productProfile.value = response.data.profile
-    productMainImg.value = response.data.mainImg
-    productDesImg.value = response.data.desImg
-    productSpecs.value = response.data.specs
+    const response = await axios.get(`${API_URL}/products/${product_id}`)
+    profile.value = response.data.profile
+    mainImgs.value = response.data.mainImgs.map((img, index) => ({
+      imgPath: getImageUrl(img.image_path),
+      imgText:img.alt_text,
+      colorText: response.data.specs[index]?.color_text || null,
+      colorSquare: response.data.specs[index]?.color_square || null
+    }))
+    desImgs.value = response.data.desImgs.map(img => img.image_path)
+    console.log(profile.value);
   }catch(err){
-    console.error('Error fetching products:', err)
+    console.error('獲取商品詳情失敗:', err)
   }
 }
 
+// 監聽路由參數變化
+watch(
+  () => route.params.product_id,
+   async (productId) => {
+    try{
+      // 如果沒有 productId 參數，使用空字串呼叫 API
+      await fetchProductDetail(productId || 35);
+    } catch(err){
+      // 處理錯誤
+      console.error('載入產品詳情失敗', err)
+    }
+  },{ immediate: true }
+)
+
+
+// const imgPath = computed(() => { 
+//   return mainImgs.value.imgPath || '無法顯示商品名稱'
+// })
+const title = computed(() => { 
+  return profile.value.product_name || '無法顯示商品名稱'
+})
+const originalPrice = computed(() => { 
+  return profile.value.original_price || '無法顯示商品價格'
+})
+const salePrice = computed(() => { 
+  return profile.value.sale_price || '無法顯示商品價格'
+})
 
 
 
@@ -46,14 +117,14 @@ const scrollPosition = ref(0)
 const isSubscribe = ref(false)
 
 
-const selectedImage = computed(() => images.value[selectedIndex.value])
+const selectedImage = computed(() => mainImgs.value[selectedIndex.value])
     
 const heartColor = computed(() => ({
       color: isSubscribe.value ? 'red' : 'black'
 }))
 // 過濾顏色
 const filterColor = computed(() => 
-      images.value.filter(color => color.colorSquare)
+      mainImgs.value.filter(color => color.colorSquare)
 )
 
 
@@ -66,7 +137,7 @@ const selectImage = (index) => {
     //   this.scrollPosition = Math.max(this.scrollPosition - 100, 0);
     // },
     // scrollDown() {
-    //   this.scrollPosition = Math.min(this.scrollPosition + 100, this.images.length * 100 - 400);
+    //   this.scrollPosition = Math.min(this.scrollPosition + 100, this.mainImgs.length * 100 - 400);
     // },
 
 //數量
@@ -96,23 +167,26 @@ const selectColor = (index) => {
         <div class="carousel">
           <div class="thumbnails">
             <!-- <div class="nav-button up" @click="scrollUp">&uarr;</div> -->
-            <div class="thumbnailItem" v-for="(image, index) in images" :key="index" @click="selectImage(index)">
-              <img :src="image.image" :alt="image.title" />
+            <div class="thumbnailItem" v-for="(image, index) in mainImgs" :key="index" @click="selectImage(index)">
+              <img :src="image.imgPath" :alt="image.imgText" />
             </div>
             <!-- <div class="nav-button down" @click="scrollDown" >&darr;</div> -->
           </div>
           <div class="mainImage">
-            <img :src="selectedImage.image" :alt="selectedImage.title" />
+            <img :src="selectedImage.imgPath" :alt="selectedImage.title" />
           </div>
         </div>
         <!-- 商品概訊 -->
         <div class="m-4 mt-0"> 
-          <h1 class="text-[28px]">[純銀] 圓的流動耳環 / 2色 / Round Flow Earring</h1>
-          <h2 class="my-5 text-[20px] font-extrabold">NT$450</h2>
+          <h1 class="text-[28px]">{{ title }}</h1>
+          <div class="flex">
+            <h2 class="my-5 text-[20px] font-extrabold">NT${{ salePrice }}</h2>
+            <h2 class="ml-5 mt-6 text-s font-bold text-gray-400 line-through" >NT${{ originalPrice }}</h2>
+          </div>
           <div class="font-extralight text-[16px]">
-            <p>全館任選兩件88折，優惠後特價 NT$396</p>
-            <p>全館任選三件85折，優惠後特價 NT$383</p>
-            <p>全館任選四件82折，優惠後特價 NT$369</p>
+            <p>全館任選兩件88折，優惠後特價 NT${{ Math.ceil(salePrice*0.88) }}</p>
+            <p>全館任選三件85折，優惠後特價 NT${{ Math.ceil(salePrice*0.85) }}</p>
+            <p>全館任選四件82折，優惠後特價 NT${{ Math.ceil(salePrice*0.82) }}</p>
           </div>
           <div class="my-[5px] mb-5 flex text-center">
             <p class="text-[14px] text-[#FFC500] pt-[1px]"><font-awesome-icon :icon="['fas', 'star']" class="mr-1" /><font-awesome-icon :icon="['fas', 'star']" class="mr-1"/><font-awesome-icon :icon="['fas', 'star']"class="mr-1" /><font-awesome-icon :icon="['fas', 'star']"class="mr-1" /><font-awesome-icon :icon="['fas', 'star']" class="mr-1"/></p>
@@ -206,7 +280,7 @@ const selectColor = (index) => {
               <h3>了解更多</h3>
             </div>
             <div class="descriptionImg">
-              <img v-for="image in images" :key="image.index" :src="image.image" :alt="image.title" srcset="">
+              <img v-for="image in mainImgs" :key="image.index" :src="image.image" :alt="image.title" srcset="">
             </div>
           </div>
           
@@ -261,11 +335,14 @@ const selectColor = (index) => {
 .thumbnailItem {
   cursor: pointer;
   margin-bottom: 10px;
+  max-width: 72px;
+  max-height: 72px;
 }
 
 .thumbnailItem img {
-  min-width: 72px;
+  width: 72px;
   height: 72px;
+  object-fit: cover;
 }
 
 .mainImage img {
