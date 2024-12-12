@@ -25,33 +25,33 @@ const props = defineProps({
 // 加入購物車
 const handleAddToCart = async () => {
   // 檢查是否登入
-  const isAuthenticated = !!localStorage.getItem('UID')
+  // const isAuthenticated = !!localStorage.getItem('UID')
   
-  if (!isAuthenticated) {
-    // 使用 SweetAlert2 顯示提示
-    Swal.fire({
-      title: '請先登入',
-      text: '加入購物車需要先登入會員',
-      showCancelButton: true,
-      confirmButtonText: '前往登入',
-      cancelButtonText: '取消',
-      confirmButtonColor: '#000000',
-      customClass: {
-        confirmButton: 'swal2-confirm-custom'
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // 導向登入頁面，並記錄當前頁面路徑，這樣之後可以回來 
-        router.push({
-          path: '/users/sign-in',
-          query: { 
-            redirect: route.fullPath
-          }
-        })
-      }
-    })
-    return
-  }
+  // if (!isAuthenticated) {
+  //   // 使用 SweetAlert2 顯示提示
+  //   Swal.fire({
+  //     title: '請先登入',
+  //     text: '加入購物車需要先登入會員',
+  //     showCancelButton: true,
+  //     confirmButtonText: '前往登入',
+  //     cancelButtonText: '取消',
+  //     confirmButtonColor: '#000000',
+  //     customClass: {
+  //       confirmButton: 'swal2-confirm-custom'
+  //     }
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       // 導向登入頁面，並記錄當前頁面路徑，這樣之後可以回來 
+  //       router.push({
+  //         path: '/users/sign-in',
+  //         query: { 
+  //           redirect: route.fullPath
+  //         }
+  //       })
+  //     }
+  //   })
+  //   return
+  // }
 
   // 已登入的情況下，執行加入購物車的邏輯
   try {
