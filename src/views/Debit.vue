@@ -28,14 +28,15 @@
 <div class="m-10 cart mb-0">
   <div class=" sideBorder center text-xl " style="width: 1160px;">
     <h3 class="font-bold">
-      合計: NT$1,634
+      合計: NT$
+      <span>{{itemPrice+60}}</span>
     </h3>
-    <span>購物車(3件)</span>
-    <i class="fa-solid fa-chevron-down"></i>
+    <span>購物車(<span>{{ itemCount }}</span>件)</span>
+    <!-- <i class="fa-solid fa-chevron-down"></i> -->
   </div>
    
 <div class="">
-  <thead >
+  <!-- <thead > -->
     <div class="tittles">
     <div class="tittle">商品資料</div>
     <div class="tittle">優惠</div>
@@ -43,34 +44,36 @@
     <div class="tittle">數量</div>
     <div class="tittle">小計</div>
   </div>
-  </thead>
+  <!-- </thead> -->
 
     <!-- <tbody > -->
-  <div class="prInfo flex justify-between	 " style="width: 1160px;">
-    <div class="prdetail  introduce flex justify-between	 ">
-      <img src="https://fakeimg.pl/50x50/200">
+  <div class="prInfo flex justify-between	 " style="width: 1160px;" v-for="item in products" :key="item.product_id">
+    <div class="prdetail  introduce flex justify-between"	 >
+      <img :src="item.image_path">
       <div class="">
-        [預購] [鋼飾] 叛逆小熊手鍊 / Trendy Bear Bracelet
+        {{ item.product_name }}
       </div>
     </div>
     <div class="prdetail"></div>
-    <div class="prdetail">NT$250</div>
-    <div class="prdetail"></div>
-    <div class="prdetail">NT$250</div>
-    <i class="fa-solid fa-xmark pr-8"></i>
+    <div class="prdetail"> 
+      {{ item.sale_price}}
+    </div>
+    <div class="prdetail">{{ item.quantity }}</div>
+    <div class="prdetail">{{item.sale_price*item.quantity}}</div>
+    <i class="fa-solid fa-xmark pr-8" @click="deleteProduct(item.product_id)"></i>
   </div>
 </div>
 <!-- </tbody> -->
 
   </div>
-
-  <div  class="cart sideBorder p-5 m-10 pb-0 mt-0 mb-0 pb-10 "  style="width: 1160px;">
+<!-- 優惠切版 -->
+  <!-- <div  class="cart sideBorder p-5 m-10 pb-0 mt-0 mb-0 pb-10 "  style="width: 1160px;">
     <h5>已享用之優惠</h5>
     <div class="flex justify-between"> 
       <div class="tagGreen">優惠促銷</div>
       <div class="description">	雙11優惠！全館 兩件85折/三件8折/四件75折！ - 全單 滿 2 件 即享 85 折 再買 1 件 省更多</div>
       <div class="cutPrice">-NT$94</div> </div> 
-  </div>
+  </div> -->
  
    <div class="cart m-10 mt-0 ">
 
@@ -78,21 +81,25 @@
       <div>
         <div class="flex justify-between m-2">
         <div>小計:</div>
-        <div>NT$740</div>
+        <div>NT$
+          <span>{{itemPrice}}</span>
+        </div>
         </div>
   
       <div class="flex justify-between m-2" >
         <div >折扣:</div>
-        <div>-NT$106</div>
+        <div>-NT$0</div>
       </div>
   
       <div class="flex justify-between m-2" >
         <div >運費:</div>
-        <div>NT$1,000</div>
+        <div>NT$60</div>
       </div>
        <div class="flex justify-between font-bold  m-2">
       <div>合計:</div>
-      <div>NT$1,637</div>
+      <div>NT$
+        <span>{{ itemPrice+60 }}</span>
+      </div>
     </div> 
     <hr>
 
@@ -124,6 +131,7 @@
  <div class="cellphone laptop">
 <!-- 左邊表格 -->
   <div class="left  ">
+    <form action="" id="customer_info">
 
     <div class="cart mt-100 ml-10 mr-10  wid">
   <h3 class="  h-10 quarter p-2" >顧客資料</h3>
@@ -131,17 +139,17 @@
   <div class="m-2">
   <label>顧客名稱 </label>
   <br>
-    <input type="text" class="sideBorder options message">
+    <input type="text" class="sideBorder options message" id="cuName">
    </div>
    <div class="m-2">
-  <label for="">電子信箱</label>
+  <label for="">電話號碼</label>
 
-    <p>1234@gmail.com</p>
-  </div>
+  <input type="text" class="sideBorder message"id="cuPhone">
+</div>
     <div class="m-2">
     <label for="" class="" >性別(選填)</label>
     <br>
-    <select name="" id="" class="sideBorder options message">
+    <select name="" id="gender" class="sideBorder options message">
       <option value="" selected>男</option>
       <option value="" >女</option>
       <option value="" >不透露</option>
@@ -172,23 +180,29 @@
   </div>
    
   </div>
+</form>
+<!-- 訂單備註表格 -->
+<form action="" id="note">
 
   <div class="cart mt-100 ml-10 mr-10 wid">
     <h3 class="  h-10 quarter" >訂單備註</h3>
     <textarea name="" id=""  placeholder="有什麼想告訴賣家的嗎?" class="message h-20"></textarea>
   
     </div>
+</form>
 </div>
 
 <!-- 右邊表格 -->
 <div class="right ">
+  <form action="" id="deliver_pro_info">
   <div class="cart mt-100 ml-10 mr-10 wid">
     <div class="flex justify-between quarter p-2">
     <h3 class="  h-10 quarter " >送貨資料</h3>
-    <p >運費: NT$1,000</p>
+    <p >運費: NT$60</p>
     </div>
 
-    <p class="m-2">已選擇的送貨方式: 海外運送 ( 3-7天到貨，採EMS寄送 )</p>
+    <p class="m-2">已選擇的送貨方式:貨到付款 </p>
+      <!-- 海外運送 ( 3-7天到貨，採EMS寄送 )</p> -->
 
     <div class="flex jusify-start mb-2 m-2"> 
     <input type="checkbox" name="" id="" class="m-1">
@@ -208,7 +222,7 @@
    <hr class="mb-5">
    <div class="m-2">
   <p>地址</p>
-   <p>送貨地點: 比利時</p>
+   <p>送貨地點: 台灣</p>
   </div>
   
   <div class="m-2">
@@ -219,8 +233,8 @@
       <input type="text" placeholder="郵政區號"  class="message w-40 ">
       <input type="text" placeholder="地區/洲/省份"  class="message w-40">
     </div>
-  
-    <div class="m-2">
+  <!-- 儲存、設定預設地址切版 -->
+    <!-- <div class="m-2">
     <input type="checkbox">
     <label for="">儲存這個送貨地址
     </label>
@@ -229,18 +243,23 @@
     <input type="checkbox">
     <label for="">設定為預設地址</label>
   </div>
-  
+   -->
   <br>
    </div>
     </div>
+</form>
 
     <div class="cart mt-100 ml-10 mr-10 wid ">
       <div class="flex justify-between quarter" >   
         <h3 class="  h-10 quarter" >付款資料</h3>
-        <p>合計: NT$1,634</p>
+        <p>合計: NT$
+          <span>{{ itemPrice+60 }}</span>
+        </p>
     </div>
-    <p class="m-2">已選擇的付款方式: 信用卡 ( Visa / MasterCard / JCB / 銀聯卡 )</p>
-   <div class="m-2 relative">
+    <p class="m-2">已選擇的付款方式: 貨到付款</p>
+      <!-- 信用卡 ( Visa / MasterCard / JCB / 銀聯卡 )</p> -->
+   <!-- 信用卡結帳時跳出 -->
+    <!-- <div class="m-2 relative">
     <input type="text" placeholder="卡號" class=" message">
     <i class="fa-solid fa-unlock-keyhole lock"></i>
     </div>
@@ -263,7 +282,7 @@
    <hr>
     <div class="p-4">
     <span style="font-size: small; color: #c1c1c1;">本金流服務由 SHOPLINE Payments 提供，通過 PCI-DSS 國際信用卡組織最高等級認證，提供安全的交易服務，支援國內外信用卡刷卡。</span>
-     </div>
+     </div> -->
      </div>
 
     
@@ -301,7 +320,7 @@
   <a href="" style="color:#337AB7 ;" >隱私權政策</a>
 </div>
 <div class="flex align-end justify-end sideBorder cart p-2">
- <a href="" class="buttonBg flex justify-center w-80 ">提交訂單</a>
+ <button class="buttonBg flex justify-center w-80 " @click="submitOrder">提交訂單</button>
   </div>
 </div>
 
@@ -311,7 +330,94 @@
 
      </template>
      
-     <script setup>
+     <script>
+       import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      products: [] ,// 儲存後端返回的商品資料
+      newProduct: { name: "", price: null, description: "" }, // 新增商品資料
+
+    };
+  },computed: {
+  itemCount() {
+    return this.products.filter(item => item.quantity > 0).length;
+  },
+  itemPrice(){
+    return this.products.reduce((total, item) => total + (item.original_price * item.quantity), 0);
+  }
+}
+,
+  mounted() {
+    this.fetchCartItems(); // 組件加載時獲取資料
+  },
+  methods: {
+    async fetchCartItems() {
+      try {
+        const response = await axios.get('http://localhost:3300/cart/cartQuery');
+        this.products = response.data; // 將 API 返回的資料存入 products
+        console.log('資料獲取成功:', this.products);
+      } catch (error) {
+        console.error('獲取資料失敗:', error);
+      }
+    } ,
+     // 刪除商品
+     deleteProduct(id) {
+      axios
+        .delete(`http://localhost:3300/cart/cartDelete/${id}`)
+        .then(() => {
+          this.products = this.products.filter((product) => product.id !== id); // 從列表中移除
+        })
+        .catch((error) => {
+          console.error("刪除商品失敗:", error);
+        });
+    } ,
+  submitOrder() {
+    console.log("開始提交...");
+
+    const customerInfo = {
+      name: document.getElementById("cuName").value,
+      phone: document.getElementById("cuPhone").value,
+      gender: document.getElementById("gender").value,
+    };
+
+    const orderNote =document.querySelector("#note textarea").value;
+
+    const deliveryInfo = {
+      recipientName: document.querySelector('#deliver_pro_info input[type="text"]').value,
+      recipientPhone: document.querySelectorAll('#deliver_pro_info input[type="text"]')[1].value,
+      address: document.querySelectorAll('#deliver_pro_info input[type="text"]')[2].value,
+      city: document.querySelectorAll('#deliver_pro_info input[type="text"]')[3].value,
+      postalCode: document.querySelectorAll('#deliver_pro_info input[type="text"]')[4].value,
+      region: document.querySelectorAll('#deliver_pro_info input[type="text"]')[5].value,
+    };
+
+    console.log("顧客資料:", customerInfo);
+    console.log("訂單備註:", orderNote);
+    console.log("送貨資料:", deliveryInfo);
+
+    axios
+  .post('http://localhost:3300/debit/orderInsert', {
+    customerInfo,
+    orderNote,
+    deliveryInfo
+  })
+  .then((response) => {
+    console.log("訂單成功提交:", response);
+    alert("訂單新增成功");
+  }
+)
+  .catch((error) => {
+    console.error("建立訂單失敗:", error);
+  });
+
+    } ,
+  },
+
+  
+
+};
      </script>
      
      <style scoped>
