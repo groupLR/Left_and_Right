@@ -304,10 +304,10 @@ const toggleHeart = () => {
             <span>設計師大賽實體化 新品限時9折</span>
           </p>
         </div>
-        <div class="flex justify-center my-5">
+        <!-- <div class="flex justify-center my-5">
           <button class="border-none text-gray-500">收起內容<i class="fa-solid fa-angle-up"></i></button>
-        </div>
-    </div>
+        </div> -->
+      </div>
     </div>
     <!-- 商品描述 -->
     <div class="descriptionProfile">
@@ -465,23 +465,29 @@ input::-webkit-inner-spin-button{
 .navbar{
   display: grid;
   font-size:20px ;
-  max-width: 985px;
+  /* max-width: 985px; */
   border-bottom: 3px solid #F3F3F3;
   grid-template-columns: repeat(2,1fr);
+  max-width: 1310px;
   width: 100%;
   padding: 20px 0;
   font-weight: 200;
   color: #DADBDB;
   align-content: center;
   margin: 0 auto;
+  justify-content: center;
 }
 .navbar div{
+  display: flex;
   justify-content: center;
+  margin: 0 auto;
   text-align: center;
-  
+  max-width: 655px;
+  width: 100%;
 }
-.navbar:focus{
-  color:black
+.navbar div:hover{
+  color:black;
+  cursor: pointer;
 }
 .promotionalContainer{
   position: relative;
@@ -524,6 +530,11 @@ input::-webkit-inner-spin-button{
   font-size: 24px;
   letter-spacing:2px;
 }
+.productDescription{
+  display: flex;
+  margin: auto ;
+  justify-content: center;
+}
 .productDescription p{
   padding: 5px 0;
   font-size: 14px;
@@ -556,7 +567,7 @@ input::-webkit-inner-spin-button{
   .descriptionProfile{
     max-width: 1340px;
     width: 100%;
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     margin: 0 auto;
   }
