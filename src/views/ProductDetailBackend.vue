@@ -1,15 +1,77 @@
 <script setup>
-import { onMounted, ref,watch,computed } from 'vue'
+import { onMounted, onUnmounted, ref,watch,computed } from 'vue'
 import axios from 'axios'
 import { useRouter,useRoute } from 'vue-router';
+
 import Swiper from "swiper/bundle";
 import "swiper/css/bundle";
+import { Pagination, Navigation, Scrollbar } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/pagination'
+import 'swiper/css/navigation'
+Swiper.use([Pagination, Navigation, Scrollbar])
+const swiperInstance = ref(null);
 
 const router = useRouter()
 const route = useRoute()
 
-const API_URL = 'http://localhost:3300'
+//輪播圖
+const device = ref('isComputer')
+const checkDevice = () => {
+  const width = window.innerWidth;
+  device.value = width <= 767 ? 'isMobile' : 'isComputer'
+};
+checkDevice()
+window.addEventListener('resize', checkDevice)
 
+onMounted(() => {
+  checkDevice()
+  window.addEventListener('resize', checkDevice)
+
+  const initializeSwiper = () => {
+    swiperInstance.value = new Swiper(".swiper", {
+      modules: [Pagination, Navigation, Scrollbar],
+      speed: 400,
+      spaceBetween: 10,
+      slidesPerView: 1,
+      loop: true,
+
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true, 
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      scrollbar: {
+        el: ".swiper-scrollbar",
+      },
+    });
+  };
+
+  const images = document.querySelectorAll(".swiper-slide img");
+  let loadedCount = 0;
+
+  images.forEach((img) => {
+    img.onload = () => {
+      loadedCount++
+      if (loadedCount === images.length) {
+        initializeSwiper();
+      }
+    }
+    if (img.complete) img.onload();
+  })
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', checkDevice)
+  if (swiperInstance.value) {
+    swiperInstance.value.destroy()
+  }
+})
+
+//獲取產品資料
+const API_URL = 'http://localhost:3300'
 const profile = ref('')
 const mainImgs = ref([])
 const desImgs = ref([])
@@ -53,6 +115,7 @@ watch(
 // const imgPath = computed(() => { 
 //   return mainImgs.value.imgPath || '無法顯示商品名稱'
 // })
+//轉換資料型別
 const title = computed(() => { 
   return profile.value.product_name || '無法顯示商品名稱'
 })
@@ -64,7 +127,7 @@ const salePrice = computed(() => {
 })
 
 
-
+//假資料
 const images = ref([
   { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 1',colorText:"Silver / 銀色",colorSquare:'#EBEBEB' },
   { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 2',colorText:"Rose Gold / 玫瑰金",colorSquare:'#FFBEA8' },
@@ -79,23 +142,20 @@ const images = ref([
 ])
       
 
-const counter = ref(1)
-const selectedIndex = ref(0) 
+
+
 const scrollPosition = ref(0)
-const isSubscribe = ref(false)
 
 
+//切換照片index
+const selectedIndex = ref(0) 
 const selectedImage = computed(() => mainImgs.value[selectedIndex.value])
-    
-const heartColor = computed(() => ({
-      color: isSubscribe.value ? 'red' : 'black'
-}))
-// 過濾顏色
+
+
+// 過濾產品顏色
 const filterColor = computed(() => 
-      mainImgs.value.filter(color => color.colorSquare)
+  mainImgs.value.filter(color => color.colorSquare)
 )
-
-
 
 //輪播圖區塊
 const selectImage = (index) => {
@@ -108,7 +168,8 @@ const selectImage = (index) => {
     //   this.scrollPosition = Math.min(this.scrollPosition + 100, this.mainImgs.length * 100 - 400);
     // },
 
-//數量
+//編輯購買數量
+const counter = ref(1)
 const increase = () => {
   counter.value++
 }
@@ -117,30 +178,35 @@ const decrease = () => {
         counter.value--
   }
 }
-//愛心轉換
-const toggleHeart = () => {
-  isSubscribe.value = !isSubscribe.value
-}
+
 //選擇顏色
 const selectColor = (index) => {
   selectedIndex.value = index
 }
-
+//追蹤清單轉換
+const isSubscribe = ref(false)
+const heartColor = computed(() => ({
+  color: isSubscribe.value ? 'red' : 'black'
+}))
+const toggleHeart = () => {
+  isSubscribe.value = !isSubscribe.value
+}
 </script>
 <template>
     <div class="bg-lightBlue-300 my-8 max-w-full">
       <div class="profile">
         <!-- 輪播圖 -->
-        <!-- <div class="swiper">
+        <div class="swiper" >
           <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="(image, index) in mainImgs" :key="index" @click="selectImage(index)">
+            <div class="swiper-slide" v-for="(image, index) in mainImgs" :key="index">
               <img :src="image.imgPath" :alt="image.imgText" />
             </div>
           </div>
-          <div class="swiper-pagination"></div> -->
-        <div class="carousel">
+          <div class="swiper-pagination"></div>
+        </div>
+        <div class="carousel" >
           <div class="thumbnails">
-            <!-- <div class="nav-button up" @click="scrollUp">&uarr;</div> -->
+            <!-- <div class="nav-button up" @click="scrollUp">&uarr;</div> --> 
             <div class="thumbnailItem" v-for="(image, index) in mainImgs" :key="index" @click="selectImage(index)">
               <img :src="image.imgPath" :alt="image.imgText" />
             </div>
@@ -151,7 +217,7 @@ const selectColor = (index) => {
           </div>
         </div>
         <!-- 商品概訊 -->
-        <div class="m-4 mt-0"> 
+        <div class="m-4 mt-5"> 
           <h1 class="text-[28px]">{{ title }}</h1>
           <div class="flex">
             <h2 class="my-5 text-[20px] font-extrabold">NT${{ salePrice }}</h2>
@@ -290,18 +356,48 @@ const selectColor = (index) => {
 .colorCheckbox:checked + .colorBox   {
   border: 2px solid black;
 }
-/* 輪播圖區塊 */
-.carousel {
+/* 手機輪播圖區塊 */
+.swiper {
   display: flex;
-  justify-content: center;
-  padding-right: 20px;
+  max-width: 768px;
+  max-height: 500px;
   width: 100%;
+  height:  100%;
+  position: relative
+}
+.swiper-slide {
+  /* display: flex; */
+  justify-content: center;
+  align-content: center;
+}
+.swiper-slide img {
+  max-width: 768px;
+  max-height: 500px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.swiper-pagination {
+  width: 100%;
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
+}
+:deep(.swiper-pagination-bullet) {
+  background-color: rgb(0, 0, 0);
+  border: 1px solid #ccc;
+  cursor: pointer; 
+  bottom: 0;
+}
+/* 電腦輪播圖區塊 */
+.carousel {
+  display: none;
 }
 
 .thumbnails {
   min-width: 120px;
   height: 400px;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   margin-right: 20px;
   padding-left: 20px;
 }
@@ -417,6 +513,9 @@ input::-webkit-inner-spin-button{
 }
 
 @media screen and (1024px <= width) {
+  .swiper{
+    display: none;
+  }
   .profile{
     display: flex;
     max-width: 985px;
@@ -424,7 +523,11 @@ input::-webkit-inner-spin-button{
     margin: 0 auto;
   }
   .carousel{
+    display: flex;
     max-width: 550px;
+    width: 100%;
+    justify-content: center;
+    padding-right: 20px;
     width: 100%;
   }
   .descriptionProfile{

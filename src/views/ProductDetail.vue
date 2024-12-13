@@ -223,7 +223,36 @@ const selectColor = (index) => {
 .colorCheckbox:checked + .colorBox   {
   border: 2px solid black;
 }
-/* 輪播圖區塊 */
+/* 手機輪播圖區塊 */
+.swiper {
+  /* display: flex; */
+  max-width: 768px;
+  width: 100%;
+  height:  100%;
+}
+.swiper-slide {
+  /* display: flex; */
+  justify-content: center;
+  align-content: center;
+}
+.swiper-slide img {
+  max-width: 768px;
+  max-height: 768px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.swiper-pagination {
+  position: absolute;
+  top:0;
+  right: 10px;
+}
+.swiper-pagination-bullet {
+  background-color: rgb(0, 0, 0);
+  border: 1px solid #ccc;
+  cursor: pointer; 
+}
+/* 電腦輪播圖區塊 */
 .carousel {
   display: flex;
   justify-content: center;
@@ -234,7 +263,7 @@ const selectColor = (index) => {
 .thumbnails {
   min-width: 120px;
   height: 400px;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   margin-right: 20px;
   padding-left: 20px;
 }

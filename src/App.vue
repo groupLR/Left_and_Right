@@ -42,6 +42,8 @@ import Footer from "./components/Footer.vue";
       <RouterLink to="/products/detail">products-detail</RouterLink>
       |
       <RouterLink to="/productsBackend">products-detail(連後端)</RouterLink>
+      |
+      <RouterLink to="/productCarousel">測試用輪播圖</RouterLink>
     </nav>
   </header>
   <RouterView />

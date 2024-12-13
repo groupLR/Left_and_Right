@@ -161,7 +161,7 @@ const router = createRouter({
 		{
 			path:'/productCarousel',
 			name:'testCarousel',
-			component: () => { import("../views/ProductCarousel.vue") }
+			component: () => import("../views/ProductCarousel.vue") 
 		}
 	],
 
