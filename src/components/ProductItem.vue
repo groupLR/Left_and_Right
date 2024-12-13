@@ -6,9 +6,12 @@ import { useRoute,RouterLink, RouterView } from 'vue-router'
 const route = useRoute()
 
 //${productId}
-const URL = '/products/detail'
+
 
 const props = defineProps({
+  productId:{
+    type: Number,
+  },
   title:{
     type: String,
   },
@@ -26,6 +29,7 @@ const props = defineProps({
   },
 })
 
+const URL =  `/products/${props.productId}`
 // 加入購物車
 const handleAddToCart = async () => {
   // 檢查是否登入

@@ -143,14 +143,9 @@ const router = createRouter({
 			component: () => import("../views/OrderDetails.vue"),
 		},
 		{
-			path: "/products/detail",
-			name: "products-detail",
-			component: () => import("../views/ProductDetail.vue")
-		},
-		{
-			path: "/productsBackend/:productId", 
+			path: "/products/:productId", 
 			name: "products-detail(連後端)",
-			component: () => import("../views/ProductDetailBackend.vue"),
+			component: () => import("../views/ProductDetail.vue"),
 			props: true  
 		},
 		{
@@ -161,7 +156,7 @@ const router = createRouter({
 		{
 			path:'/productCarousel',
 			name:'testCarousel',
-			component: () => import("../views/ProductCarousel.vue") 
+			component: () => import("../../../ProductDetail/ProductCarousel.vue") 
 		}
 	],
 
