@@ -156,8 +156,51 @@ const router = createRouter({
 			}
 		},
 
+		//從這裡開始是在嘗試設定路徑
+		{
+			path: "/categories/:category?/newarrival",
+			name: "newarrival",
+			component: ProductList,
+			props: true 
+		},
+		{
+			path: "/categories/:category?/earrings",
+			name: "earrings",
+			component: ProductList,
+			props: true 
+		},
+		{
+			path: "/categories/:category?/earclip",
+			name: "earclip",
+			component: ProductList,
+			props: true 
+		},
+		{
+			path: "/categories/:category?/rings",
+			name: "rings",
+			component: ProductList,
+			props: true 
+		},
+		{
+			path: "/categories/:category?/bracelets",
+			name: "bracelets",
+			component: ProductList,
+			props: true 
+		},
+		{
+			path: "/categories/:category?/necklaces",
+			name: "necklaces",
+			component: ProductList,
+			props: true 
+		},
+		{
+			path: "/categories/:category?/Kunt",
+			name: "Kunt",
+			component: ProductList,
+			props: true 
+		},	//到這裡結束是在嘗試設定路徑
+		
 	],
-
 })
 
 export default router

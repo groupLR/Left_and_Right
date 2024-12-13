@@ -253,12 +253,18 @@ const closeCart = () => {
   <article
     class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white peer-checked:translate-x-0"
   >
-    <li class="listItems"><a href="#">Kurt Wu 插畫家聯名</a></li>
-    <li class="listItems"><a href="#">KOL / Ivy郁欣聯名</a></li>
-    <li class="listItems"><a href="#">飾品設計師大賽/by.Lab</a></li>
+    <li class="listItems">
+      <RouterLink to="/categories/:category?/Kunt">Kurt Wu 插畫家聯名</RouterLink>
+    </li>
+    <li class="listItems">
+      <a href="#">KOL / Ivy郁欣聯名</a>
+    </li>
+    <li class="listItems">
+      <a href="#">飾品設計師大賽/by.Lab</a>
+    </li>
 
     <li class="relative listItems">
-      <a href="#">1111 新品 / NEW ARRIVAL</a>
+      <RouterLink to="/categories/:category?/newarrival">1111 新品 / NEW ARRIVAL</RouterLink>
       <font-awesome-icon
         :icon="['fas', 'chevron-down']"
         class="absolute right-1 top-5"
@@ -309,7 +315,7 @@ const closeCart = () => {
       </ul>
     </li>
     <li class="listItems">
-      <a href="#">耳環 / Earrings</a>
+      <RouterLink to="/categories/:category?/earrings">耳環 / Earrings</RouterLink>
       <font-awesome-icon
         :icon="['fas', 'chevron-down']"
         class="absolute right-1 top-5"
@@ -328,7 +334,7 @@ const closeCart = () => {
       </ul>
     </li>
     <li class="listItems">
-      <a href="#">耳夾 / Earclip</a>
+      <RouterLink to="/categories/:category?/earclip">耳夾 / Earclip</RouterLink>
       <font-awesome-icon
         :icon="['fas', 'chevron-down']"
         class="absolute right-1 top-5"
@@ -346,7 +352,7 @@ const closeCart = () => {
       </ul>
     </li>
     <li class="listItems">
-      <a href="#">戒指 / Rings</a>
+      <RouterLink to="/categories/:category?/rings">戒指 / Rings</RouterLink>
       <font-awesome-icon
         :icon="['fas', 'chevron-down']"
         class="absolute right-1 top-5"
@@ -366,7 +372,7 @@ const closeCart = () => {
       </ul>
     </li>
     <li class="listItems">
-      <a href="#">手鍊 / Bracelets</a>
+      <RouterLink to="/categories/:category?/bracelets">手鍊 / Bracelets</RouterLink>
       <font-awesome-icon
         :icon="['fas', 'chevron-down']"
         class="absolute right-1 top-5"
@@ -385,7 +391,7 @@ const closeCart = () => {
       </ul>
     </li>
     <li class="listItems">
-      <a href="#">項鍊 / Necklaces</a>
+      <RouterLink to="/categories/:category?/necklaces">項鍊 / Necklaces</RouterLink>
       <font-awesome-icon
         :icon="['fas', 'chevron-down']"
         class="absolute right-1 top-5"
@@ -615,7 +621,7 @@ const closeCart = () => {
     <hr />
     <h2 class="text-xl text-gray-300 listItems">其他</h2>
     <li class="listItems"><a href="#">BLOG</a></li>
-    <li class="listItems"><a href="#">尋找門市</a></li>
+    <li class="listItems"><RouterLink to="/store-info">尋找門市</RouterLink></li>
     <li class="listItems">
       <a href="#">聯絡我們</a>
       <font-awesome-icon
@@ -711,14 +717,14 @@ const closeCart = () => {
     </div>
   </article>
   <div class="hidden items">
-    <a href="#">耳環 / Earrings</a>
-    <a href="#">1111 新品 / NEW ARRIVAL</a>
-    <a href="#">耳夾 / Earclip</a>
-    <a href="#">戒指 / Rings</a>
-    <a href="#">手鍊 / Bracelets</a>
-    <a href="#">項鍊 / Necklaces</a>
-    <a href="#">聯名系列</a>
-    <a href="#">門市資訊</a>
+    <RouterLink to="/categories/:category?/newarrival">1111 新品 / NEW ARRIVAL</RouterLink>
+    <RouterLink to="/categories/:category?/earrings">耳環 / Earrings</RouterLink>
+    <RouterLink to="/categories/:category?/earclip">耳夾 / Earclip</RouterLink>
+    <RouterLink to="/categories/:category?/rings">戒指 / Rings</RouterLink>
+    <RouterLink to="/categories/:category?/bracelets">手鍊 / Bracelets</RouterLink>
+    <RouterLink to="/categories/:category?/necklaces">項鍊 / Necklaces</RouterLink>
+    <RouterLink to="/categories/:category?/Kunt">聯名系列</RouterLink>
+    <RouterLink to="/store-info">門市資訊</RouterLink>
   </div>
 </template>
 
@@ -731,7 +737,7 @@ const closeCart = () => {
   width: 100%;
   height: 100%;
   /* background-color: rgba(0, 0, 0, 0.5); */
-  z-index: 997;
+  z-index: 1000;
 }
 .cart-Count {
   position: absolute;

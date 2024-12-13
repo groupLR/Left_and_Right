@@ -3,7 +3,7 @@ import { ref, computed } from "vue";
 import axios from 'axios';
 
 export const useProductStore = defineStore('products', () => {
-  const API_URL = 'http://localhost:3300'
+  const API_URL = 'http://localhost:3000'
 
   // 用來做預設商品葉面的標題
   const categoryTitle = ref("所有商品") 
