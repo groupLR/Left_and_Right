@@ -3,29 +3,10 @@ import ProductItem from "@/components/ProductItem.vue";
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
-import { useProductStore } from "@/stores/products";
-import SmallCart from "@/components/SmallCart.vue";
-import axios from "axios";
-
-
-const route = useRoute();
-const cartVisible = ref(false); // 控制 SmallCart 的顯示
-const toggleCart = () => {
-  cartVisible.value = !cartVisible.value;
-};
-const ProductStore = useProductStore();
-const {
-  categoryTitle,
-  productList,
-  pageValue,
-  sortValue,
-  sortOptions,
-  pageOptions,
-  currentPage,
-  itemsPerPage,
-  paginatedProducts,
-  paginationOnClickHandler,
-} = storeToRefs(ProductStore);
+import { useProductStore } from '@/stores/products'
+const route = useRoute()
+const ProductStore = useProductStore()
+const { categoryTitle, productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, pageSize, totalProductCount } = storeToRefs(ProductStore)
 
 // 監聽路由參數變化
 watch(
@@ -37,86 +18,36 @@ watch(
   { immediate: true }
 );
 
-onMounted(async () => {
-  const category = route.params.category || "";
-  await ProductStore.fetchProductList(category);
-});
-
-// 處理加入購物車的事件
-const handleAddToCart = (product) => {
-  productStore.addToCart(product); // 呼叫 Pinia store 的方法
-  productStore.toggleCartVisibility(true); // 確保購物車被顯示
-};
-// 从购物车删除商品
-const removeFromCart = (itemId) => {
-  productStore.removeFromCart(itemId); // 使用 Pinia store 的方法从购物车中删除商品
-};
-
-// 更新购物车商品数量
-const updateQuantity = (itemId, quantity) => {
-  productStore.updateQuantity(itemId, quantity); // 使用 Pinia store 的方法更新商品数量
-};
-
-// 计算购物车内商品的总数量
-const cartItemCount = computed(() => {
-  return cartItems.value.reduce((total, item) => total + item.quantity, 0);
-});
+// 好像不用這個，會跟 watch 變成打兩次，先放著觀察
+// onMounted(async () => {
+//   const category = route.params.category || ''
+//   await ProductStore.fetchProductList(category)
+// })
 </script>
 
 <template>
-  <div class="flex m-8 py-4 px-5">
-    <div class="hidden xl:block">
-      <article class="text-base"></article>
-    </div>
+  <section class=" px-4 py-3">
+    <div class="headerContainer px-1 mb-2 md:flex items-center">
+      <h1 class=" py-5 text-xl">{{ categoryTitle }}</h1>
+      <!-- 排序 -->
+      <div class="selectContainer flex">
+        <div class="pageSelectItem  flex items-center relative mr-3 flex-1">
+          <i
+            class="fa-solid fa-arrow-up-short-wide absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+          <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="sortValue" placeholder="商品排序"
+            size="large" class="pl-10">
+            <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value" @click="ProductStore.handleSortChange(route.params.category , item.value)"/>
+          </el-select>
+        </div>
+        <!-- 每頁資料筆數 -->
 
-    <section class="px-4 py-3">
-      <div class="headerContainer px-1 mb-2 md:flex items-center">
-        <h1 class="py-5 text-xl">{{ categoryTitle }}</h1>
-        <!-- 排序 -->
-        <div class="selectContainer flex">
-          <div class="pageSelectItem flex items-center relative mr-3 flex-1">
-            <i
-              class="fa-solid fa-arrow-up-short-wide absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-            ></i>
-            <el-select
-              placement="bottom"
-              :fallback-placements="['bottom-start']"
-              v-model="sortValue"
-              placeholder="商品排序"
-              size="large"
-              class="pl-10"
-            >
-              <el-option
-                v-for="item in sortOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </div>
-          <!-- 每頁資料筆數 -->
-
-          <div class="pageSelectItem flex items-center relative flex-1">
-            <i
-              class="fa-solid fa-bars fa-rotate-90 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-            ></i>
-            <el-select
-              placement="bottom"
-              :fallback-placements="['bottom-start']"
-              v-model="pageValue"
-              placeholder="每頁顯示 6 個"
-              size="large"
-              class="pl-10"
-            >
-              <el-option
-                class="selectOption"
-                v-for="item in pageOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </div>
+        <div class="pageSelectItem  flex items-center relative flex-1">
+          <i class="fa-solid fa-bars fa-rotate-90 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+          <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="pageValue"
+            placeholder="每頁顯示 12 個" size="large" class="pl-10">
+            <el-option class="selectOption" v-for="item in pageOptions" :key="item.value" :label="item.label"
+              :value="item.value" @click="ProductStore.handlePageSizeChange(route.params.category, item.value)" />
+          </el-select>
         </div>
       </div>
 
@@ -136,22 +67,22 @@ const cartItemCount = computed(() => {
           @updateQuantity="updateQuantity"
         />
       </div>
-
-      <!-- 分頁 -->
-      <div class="flex justify-center md:relative md:mb-12">
-        <vue-awesome-paginate
-          class="md:absolute md:right-0 text-gray-500 text-sm"
-          :total-items="productList.length"
-          :items-per-page="itemsPerPage"
-          :max-pages-shown="5"
-          v-model="currentPage"
-          @click="paginationOnClickHandler"
-          :hide-prev-next-when-ends="true"
-          link-url="/products?page=[page]"
-        />
       </div>
-    </section>
-  </div>
+
+    <!-- 產品列表 -->
+    <div class="flex flex-wrap">
+      <ProductItem v-for="(item, index) in productList" :key="item.id" :title="item.title" :price="item.price"
+        :orginalPrice="item.orginalPrice" :frontImg="item.frontImg" :backImg="item.backImg"  class="md:col-6 lg:col-3"
+        @addToCart="handleAddToCart" @removeFromCart="removeFromCart" @updateQuantity="updateQuantity" />
+    </div>
+
+    <!-- 分頁 -->
+    <div class="flex justify-center md:relative  md:mb-12" >
+      <vue-awesome-paginate class=" md:absolute md:right-0 text-gray-500 text-sm" :total-items="totalProductCount"
+        :items-per-page="pageSize" :max-pages-shown="5" v-model="currentPage" @click="ProductStore.paginationOnClickHandler(route.params.category, currentPage, 'list')"
+        :hide-prev-next-when-ends="true"  />
+    </div>
+  </section>
 </template>
 
 <!-- 分頁的 style  -->

@@ -218,7 +218,7 @@ const closeCart = () => {
       </li>
       <Router-link :to="isLoggedIn ? '/users/edit' : '/users/sign-in'" >
       <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
-        <font-awesome-icon :icon="['fas', 'user']" />
+        <router-link to="/users/edit"><font-awesome-icon :icon="['fas', 'user']" /></router-link>
       </li>
       </Router-link>
       <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
