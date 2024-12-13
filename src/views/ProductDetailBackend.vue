@@ -2,43 +2,11 @@
 import { onMounted, ref,watch,computed } from 'vue'
 import axios from 'axios'
 import { useRouter,useRoute } from 'vue-router';
-import { storeToRefs } from "pinia";
-import { useProductDetail } from '@/stores/productDetail'
+import Swiper from "swiper/bundle";
+import "swiper/css/bundle";
 
 const router = useRouter()
 const route = useRoute()
-
-// const productDetailStore = useProductDetail()
-// const { profile,mainImgs,desImgs} = storeToRefs(productDetailStore)
-
-
-
-// console.log('Product Detail Store:', productDetailStore)
-// console.log('Fetch Product Detail Method:', productDetailStore.fetchProductDetail)
-
-// if (!productDetailStore.fetchProductDetail) {
-//   console.error("fetchProductDetail method is not defined in productDetailStore");
-// }
-
-// 監聽路由參數變化
-// watch(
-//   () => route.params.product_id,
-//    async (productId) => {
-//     try{
-//       // 如果沒有 productId 參數，使用空字串呼叫 API
-//       await productDetailStore.fetchProductDetail(productId || 35);
-//     } catch(err){
-//       // 處理錯誤
-//       console.error('載入產品詳情失敗', err)
-//     }
-//   },{ immediate: true }
-// )
-
-// onMounted(() => {
-//   console.log('組件已掛載')
-//   console.log('Route params:', route.params)
-// })
-
 
 const API_URL = 'http://localhost:3300'
 
@@ -69,11 +37,11 @@ const fetchProductDetail = async(product_id = 35) =>{
 
 // 監聽路由參數變化
 watch(
-  () => route.params.product_id,
-   async (productId) => {
+  () => route.params.productId,
+   async (NewProductId) => {
     try{
       // 如果沒有 productId 參數，使用空字串呼叫 API
-      await fetchProductDetail(productId || 35);
+      await fetchProductDetail(NewProductId);
     } catch(err){
       // 處理錯誤
       console.error('載入產品詳情失敗', err)
@@ -162,8 +130,14 @@ const selectColor = (index) => {
 <template>
     <div class="bg-lightBlue-300 my-8 max-w-full">
       <div class="profile">
-        
         <!-- 輪播圖 -->
+        <!-- <div class="swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide" v-for="(image, index) in mainImgs" :key="index" @click="selectImage(index)">
+              <img :src="image.imgPath" :alt="image.imgText" />
+            </div>
+          </div>
+          <div class="swiper-pagination"></div> -->
         <div class="carousel">
           <div class="thumbnails">
             <!-- <div class="nav-button up" @click="scrollUp">&uarr;</div> -->
@@ -344,13 +318,16 @@ const selectColor = (index) => {
   height: 72px;
   object-fit: cover;
 }
+.mainImg{
+  width: 415px;
+  height: 415px;
+  display: block;
+}
 
 .mainImage img {
-  max-width: 600px;
-  max-height: 400px;
-  min-width: 340px;
-  width: 100%;
-  object-fit: contain;
+  width: 415px;
+  height: 415px;
+  object-fit: cover;
 }
 
 .nav-button {
