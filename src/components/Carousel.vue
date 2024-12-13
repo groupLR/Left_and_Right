@@ -44,7 +44,6 @@ onMounted(() => {
     swiperInstance.value = new Swiper(".swiper", {
       speed: 400,
       spaceBetween: 100,
-      direction: "vertical",
       loop: true,
       autoplay: {
         delay: 3000, // 自動播放間隔
@@ -90,7 +89,7 @@ onMounted(() => {
       </div>
       <div class="swiper-pagination"></div>
     </div>
-  </template>
+</template>
 
 <style>
 .swiper {
