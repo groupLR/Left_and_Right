@@ -7,6 +7,7 @@ import StoreInfo4 from "./components/StoreInfo.vue";
 import ProductList from "./views/ProductList.vue";
 import Footer from "./components/Footer.vue";
 import GoogleLoginButton from './components/googleLogin.vue'
+import SearchResult from "./views/SearchResult.vue";
 </script>
 
 <template>
@@ -47,6 +48,7 @@ import GoogleLoginButton from './components/googleLogin.vue'
       <RouterLink to="/products/detail">products-detail</RouterLink>
     </nav>
   </header>
+  <SearchResult/>
   <GoogleLoginButton />
   <RouterView />
   <!-- <Carousel/> -->

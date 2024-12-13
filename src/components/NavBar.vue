@@ -2,6 +2,7 @@
 import SmallCart from './SmallCart.vue';
 import { ref, computed} from 'vue';
 import { useProductStore } from '@/stores/products';  // 引入 Pinia store
+import { useRouter } from 'vue-router';
 
 const productStore = useProductStore(); // 使用 Pinia store
 const cartItemCount = computed(() => productStore.cartItemCount);  // 从 store 获取购物车商品总数量
@@ -14,21 +15,13 @@ const moneyOpen = ref(false);
 const overlayOpen = ref(false);
 
 
-const searchQuery = ref('');
-const data = ref([]);
-const fetchProducts = async () => {
-  try {
-    const response = await axios.get('http://localhost:3300/bonny/products');
-    console.log(response.data);  // 確認是否成功取得資料
-    // 假設這裡回傳的資料是 products，將資料保存到 state 中
-    products.value = response.data.products || [];
-  } catch (error) {
-    console.error('API 請求錯誤:', error);
-  }
-};
-const search = () => {
-  if (searchQuery.value.trim() !== '') {
-    router.push(`/search?q=${searchQuery.value}`);
+const searchKeyword = ref('');
+const router = useRouter();
+
+const goToSearch = () => {
+  if (searchKeyword.value.trim() !== '') {
+    // 使用 router 導航並將關鍵字作為查詢參數
+    router.push(`/search?q=${encodeURIComponent(searchKeyword.value)}`);
   } else {
     alert('請輸入搜尋內容');
   }
@@ -222,14 +215,14 @@ const closeCart = () => {
       </li>
       <li class="relative hidden mx-3 text-black xl:block group hover:text-gray-500">
         <input
-          v-model="searchQuery"
-          @input="fetchSearchResults"
-          type="search"
+          v-model="searchKeyword"
+          @keyup.enter="goToSearch"
+          type="text"
           maxlength="100"
           placeholder="ivy郁欣聯名"
           class="w-0 overflow-hidden transition-all duration-500 ease-in-out border-b border-black outline-none group-hover:w-56 focus:w-56 focus-visible:outline-none"
         />
-        <button type="submit" @click="search">
+        <button  type="submit" @click="goToSearch" >
           <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
         </button>
       </li>
@@ -258,12 +251,12 @@ const closeCart = () => {
     </ul>
   </div>
   <div v-show="isVisible" class="w-full py-4 pl-4 pr-3 z-100 xl:hidden">
-    <button type="submit" class="py-px px-1.5">
+    <button type="submit" @keyup.enter="goToSearch" class="py-px px-1.5">
       <i class="fa fa-search ::before"></i>
     </button>
     <input
-      v-model="searchQuery"
-      @input="fetchSearchResults"
+      v-model="searchKeyword"
+      @keyup.enter="goToSearch"
       type="search"
       maxlength="100"
       placeholder="ivy郁欣聯名"
