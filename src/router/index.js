@@ -162,7 +162,7 @@ const router = createRouter({
 			}
 		},
 		{
-			path: "/Cart/:groupId?",
+			path: "/Cart/:groupId",
 			name: "sharedCart/Group",
 			component: Cart,
 			meta:{

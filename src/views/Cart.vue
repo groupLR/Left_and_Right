@@ -273,7 +273,7 @@ export default {
     },
     itemPrice() {
       return this.products.reduce((total, item) => total + (item.original_price * item.quantity), 0);
-    }
+    },
   }
   ,
   methods: {
@@ -292,7 +292,7 @@ export default {
         this.products = data
         console.log("獲得共享購物車資料");
       } catch (err) {
-        console.log("err",err.message);
+        console.log("err",err);
       }
     },
     // 新增商品
