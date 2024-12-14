@@ -161,6 +161,14 @@ const router = createRouter({
 				requireAuth: true
 			}
 		},
+		{
+			path: "/Cart/:groupId?",
+			name: "sharedCart/Group",
+			component: Cart,
+			meta:{
+				requireAuth: true
+			}
+		},
 	],
 
 })
