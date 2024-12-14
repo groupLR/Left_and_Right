@@ -137,6 +137,13 @@ const originalPrice = computed(() => {
 const salePrice = computed(() => { 
   return profile.value.sale_price || '無法顯示商品價格'
 })
+// const description = computed(() =>{
+//   return profile.value.description || '無法顯示商品敘述'
+// })
+const addLine = (text) =>{
+  return text.replace(/●/g, '<br>●').trim()
+}
+const description = computed(() => addLine(profile.value.description))
 
 
 //假資料
@@ -324,11 +331,7 @@ const toggleHeart = () => {
             <h3>商品描述</h3>
           </div>
           <div class="productDescription">
-            <p>● 提供30日退換貨服務，請詳閱「售後服務」</p>
-            <p>● 商品材質：S925純銀</p>
-            <p>● 耳針材質：S925低敏銀針</p>
-            <p>● 耳環SIZE直徑約：1.3 cm</p>
-            <p>● 一對販售</p>
+            <p v-html="description"></p>
           </div>
           <div class="descriptionTitle">
             <h3>了解更多</h3>
@@ -535,12 +538,20 @@ input::-webkit-inner-spin-button{
 }
 .productDescription{
   display: flex;
-  margin: auto ;
+  margin: auto;
   justify-content: center;
 }
 .productDescription p{
   padding: 5px 0;
   font-size: 14px;
+}
+.descriptionImg{
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 655px;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .descriptionImg img{
