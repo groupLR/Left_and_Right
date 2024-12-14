@@ -97,8 +97,11 @@ const fetchProductDetail = async(product_id = 35) =>{
       colorText: response.data.specs[index]?.color_text || null,
       colorSquare: response.data.specs[index]?.color_square || null
     }))
-    desImgs.value = response.data.desImgs.map(img => img.image_path)
-    console.log(profile.value);
+    desImgs.value = response.data.desImgs.map(img => ({
+      imgPath: getImageUrl(img.image_path),
+      imgText:img.alt_text
+    }))
+    console.log(desImgs.value);
   }catch(err){
     console.error('獲取商品詳情失敗:', err)
   }finally{
@@ -204,7 +207,7 @@ const toggleHeart = () => {
 
 </script>
 <template>
-  <div class="loading bg-lightBlue-300 my-8 max-w-full animate-pulse">
+  <div class="loading bg-lightBlue-300 my-8 max-w-full">
     <div class="profile">
       <!-- 輪播圖 -->
       <div class="swiper" >
@@ -331,7 +334,7 @@ const toggleHeart = () => {
             <h3>了解更多</h3>
           </div>
           <div class="descriptionImg">
-            <img v-for="image in mainImgs" :key="image.index" :src="image.image" :alt="image.title" srcset="">
+            <img v-for="(image,index) in desImgs" :key="index" :src="image.imgPath" :alt="image.imgText">
           </div>
         </div>
       </div>
