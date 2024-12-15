@@ -2,7 +2,7 @@
 import { RouterLink } from 'vue-router';
 const props = defineProps({
   id: {
-    type: Number,
+    type: String,
   },
   name: {
     type: String,
