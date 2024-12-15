@@ -152,6 +152,11 @@ const router = createRouter({
 			name: 'Cart',
 			component: Cart,
 		},
+		{
+			path: "/product_review_comments",
+			name: "product_review_comments",
+			component: () => import("../views/product_review_comments.vue"),
+		},
 
 	],
 
