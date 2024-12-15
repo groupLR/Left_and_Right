@@ -130,22 +130,6 @@ const listOpen19 = ref(true);
 const openList19 = () => {
   listOpen19.value = !listOpen19.value;
 };
-const toggleCart = () => {
-  isCartOpen.value = !isCartOpen.value;
-  if (isCartOpen.value) {
-    document.body.style.overflow = 'hidden'; // 禁止背景滾動
-  } else {
-    document.body.style.overflow = 'auto'; // 恢復背景滾動
-  }
-};
-const handleCartIconClick = () => {
-  productStore.toggleCartVisibility(); // 切换购物车的显示状态
-};
-
-const closeCart = () => {
-  isCartOpen.value = false;
-  document.body.style.overflow = 'auto';
-};
 </script>
 
 <template>

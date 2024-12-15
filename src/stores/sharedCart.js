@@ -43,7 +43,6 @@ export const useSharedCartStore = defineStore('sharedCart', () => {
           }
         }
       )
-      console.log(data);
       return data
     } catch (err) {
       console.log("create err:", err);

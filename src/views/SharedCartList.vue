@@ -11,9 +11,6 @@ onMounted(async () => {
   await SharedCartStore.fetchSharedCartList()
 })
 
-function getId(id) {
-  console.log(id);
-}
 </script>
 
 <template>
@@ -33,7 +30,7 @@ function getId(id) {
         <!-- <button class="text-gray-500 border-gray-400 border-solid border-2 rounded px-4 py-1 max-w-40">新增共享購物車</button> -->
       </div>
       <SharedCartItem v-for="(item, index) in sharedCartList" :key="item.id" :id="item.id" :name="item.name"
-        :member="item.member" @click="getId(item.id)" />
+        :member="item.member" />
     </div>
   </div>
 </template>
