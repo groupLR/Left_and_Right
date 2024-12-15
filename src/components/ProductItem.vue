@@ -37,7 +37,7 @@ const handleAddToCart = async () => {
 
 <template>
   <div class="productContainer relative px-1.5 pt-1.5 pb-4 col-6 md:col-4 lg:static">
-    <a href="#">
+    <!-- <a href="#"> 之後應該會用 routerLink，我先註解調 -->
       <div class=" w-full bg-center bg-cover" :style="{ backgroundImage: `url(${props.backImg})` }">
         <img class="frontImg w-full object-cover align-bottom	" :src="props.frontImg" alt="戒指">
       </div>
@@ -51,7 +51,7 @@ const handleAddToCart = async () => {
           <p class="hidden lg:block lg:text-sm lg:py-3">加入購物車</p>
         </button>
       </div>
-    </a>
+    <!-- </a> -->
   </div>
 
 </template>
