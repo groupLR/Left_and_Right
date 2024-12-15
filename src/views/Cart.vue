@@ -12,8 +12,14 @@
     <span>購物車</span>
     <span>填寫資料</span>
   </div>
-
-  <div class="cart mt-100 ml-10 mr-10 ">
+  <div v-if="products.length==0" class="cart mt-100 ml-10 mr-10 ">
+    <div class="flex  quarter justify-start " style="position: relative;">
+      <h3 class=" cartitems h-10 quarter ml-2">購物車({{ itemCount }}件)</h3>
+      <i class="fa-solid fa-share-nodes link"></i>
+    </div>
+    <el-empty description="購物車還是空的" />
+  </div>
+  <div v-else class="cart mt-100 ml-10 mr-10 ">
     <div class="flex  quarter justify-start " style="position: relative;">
       <h3 class=" cartitems h-10 quarter mr-2">購物車({{ itemCount }}件)</h3>
       <i class="fa-solid fa-share-nodes link"></i>
@@ -120,7 +126,7 @@
 </div>-->
 
   <div class="laptop cellphone">
-    <div class="cart mt-100 ml-10 mr-10 ">
+    <div class="cart w-full mt-100 ml-10 mr-10 ">
 
       <h3 class="  h-10 quarter">選擇送貨及付款方式</h3>
 
@@ -194,7 +200,7 @@
     </div>
   </div>
 
-  <div class="cart mt-100 ml-10 mr-10 w-105 ">
+  <div class="cart mt-100 ml-10 mr-10 w-105">
     <h3 class="  h-10 quarter ">訂單資訊</h3>
     <div>
       <div class="flex justify-between p-2 ">
@@ -226,7 +232,8 @@
 
         </div>
       </div>
-      <a href="" class="buttonBg flex justify-center" @click="goToNext">前往結帳</a>
+        <button class="buttonBg flex justify-center w-[95%] mx-auto my-4 h-8 items-center p-4"  :disabled="products.length === 0"
+        @click="goToNext">前往結帳</button>
 
       <!-- 訂單獲得點數 -->
       <!-- <div class="flex justify-between p-2	">
@@ -364,7 +371,7 @@ export default {
 
 <style scoped>
 .cart {
-  width: 1160px;
+  max-width: 1160px;
   height: auto;
   border: 1px solid#f6f6f6;
   margin-bottom: 50px;
@@ -466,10 +473,12 @@ export default {
   background-color: black;
   color: #f8f6f6;
   border-radius: 5px;
-  padding: 5px 10px;
-  margin-top: 50px;
-  display: flex;
-  margin-left: 10px;
+  /* padding: 5px 10px; */
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .wid {
