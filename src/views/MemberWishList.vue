@@ -57,8 +57,8 @@
                 </button>
                 <button class="btn mt-[10px]" v-if="item.products.status == 1">
                     <font-awesome-icon
-                        style="color: aliceblue"
-                        class="shoppingBag h-[16px] w-[16px] mr-[2px]"
+                        style="color: white"
+                        class="shoppingBag h-[16px] w-[16px] mr-[2px] text-gray-500"
                         :icon="['fas', 'bag-shopping']"
                     />立即結帳
                 </button>
@@ -156,9 +156,10 @@ const removeItem = async (id) => {
     color: #000;
     border: #000 1px solid;
 }
-.btn:hover > .shoppingBag {
+.btn:hover .shoppingBag {
     color: #000 !important;
 }
+
 .shape {
     color: #80808099;
     font-size: 12px;

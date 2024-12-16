@@ -22,14 +22,22 @@
             <div class="commentContent p-[15px]">
                 <span class="text-[11px]">訂單編號：</span>
                 <hr class="my-[20px]" />
-                <div class="commodityInformation flex">
+                <div
+                    class="commodityInformation flex"
+                    v-for="product in products"
+                    :key="product.product_id"
+                >
                     <div class="commodityImg px-[15px]">
-                        <img :src="products.first_image_path" alt="商品圖片" />
+                        <img
+                            v-if="product.first_image_path"
+                            :src="product.first_image_path"
+                            alt="商品圖片"
+                        />
                     </div>
                     <div class="w-full">
                         <div>
                             <h5 class="font-semibold text-[14px]">
-                                {{ products.product_name }}
+                                {{ product.product_name }}
                             </h5>
                         </div>
                         <div class="py-[15px] text-[14px]">評價</div>
@@ -48,19 +56,20 @@
                     <button @click="submitComment" class="postBtn">發佈</button>
                 </div>
             </div>
-            <div></div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted, defineProps, computed, defineEmits } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 
+const API_URL = "http://localhost:3300";
+
 const router = useRouter();
-const products = ref({});
-const purchaseID = "OR1734099868126658"; //訂單編號先寫死
+const products = ref([]);
+const purchaseID = "PU1734101319888458"; //訂單編號先寫死
 const sku = 5; // SKU寫死
 const user_id = ref("");
 const username = ref("");
@@ -73,18 +82,16 @@ onMounted(async () => {
         );
 
         if (response.data.status === "Success") {
-            const fetchedProducts = response.data.data;
-
-            // 保存 user_id 和 username
             user_id.value = response.data.user_id;
             username.value = response.data.username;
-
-            products.value = {
-                ...response.data.data[0],
-                first_image_path: response.data.data[0].image_paths?.[0]
-                    ? `http://localhost:3300/${response.data.data[0].image_paths[0]}`
+            //把路徑的.換掉，不知道有什麼方法可以讓這邊乾淨一點
+            products.value = response.data.data.map((product) => ({
+                ...product,
+                first_image_path: product.image_paths?.[0]
+                    ? `${API_URL}${product.image_paths[0].replace("./", "/")}`
                     : null,
-            };
+                commentText: "",
+            }));
         } else {
             console.error("無法獲取商品資訊:", response.data.message);
         }
