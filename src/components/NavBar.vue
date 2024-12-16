@@ -202,7 +202,7 @@ const openList19 = () => {
       </RouterLink>
       <RouterLink to="/sharedcartlist">
         <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
-          <i class="fa-solid fa-people-carry-box"></i>
+          <i class="fa-brands fa-shopify text-lg"></i>
         </li>
       </RouterLink>
       <li class="relative w-16 h-16 list-none">
