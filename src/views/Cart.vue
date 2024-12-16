@@ -14,7 +14,7 @@
  
   <div class="cart mt-100 ml-10 mr-10 ">
     <div class="flex  quarter justify-start " style="position: relative;">  
-      <h3 class=" cartitems h-10 quarter mr-2" >購物車(1件)</h3>
+      <h3 class=" cartitems h-10 quarter mr-2" >購物車({{itemCount}}件)</h3>
       <i class="fa-solid fa-share-nodes link" ></i>
       </div>
 
@@ -28,23 +28,52 @@
   </div>
   </thead>
 
-<tbody>
-  <div class="prInfo flex justify-between	 ">
-    <div class="prdetail  introduce flex justify-between	 ">
-      <img src="https://fakeimg.pl/50x50/200">
+<!-- <tbody> -->
+  <div class="prInfo flex justify-between	 " style="width: 1160px;" v-for="item in products" :key="item.product_id">
+    <div class="prdetail  introduce flex justify-between"	 >
+      <img :src="item.image_path">
+            <!-- <img src=""> -->
+
       <div class="">
-        [預購] [鋼飾] 叛逆小熊手鍊 / Trendy Bear Bracelet
+        {{ item.product_name }}
       </div>
     </div>
     <div class="prdetail"></div>
-    <div class="prdetail">NT$250</div>
-    <div class="prdetail"></div>
-    <div class="prdetail">NT$250</div>
-    <i class="fa-solid fa-xmark pr-8"></i>
+    <div class="prdetail"> 
+      {{ item.sale_price}}
+    </div>
+    <div class="prdetail flex justify-between">  
+     
+<!--           
+              <span class="input-group-btn">
+                  <button type="button">
+                      <i class="fa fa-minus"></i>
+                  </button>
+              </span> -->
+              <input
+  type="number"
+  v-model.number="item.quantity"
+  min="1"
+  class="input input-bordered"
+  style="height: 20px;"
+  @change="updateQuantity(item)"
+/>
+
+              <!-- <span class="input-group-btn">
+                  <button type="button" disabled>
+                      <i class="fa fa-plus"></i>
+                  </button>
+              </span>
+           -->
+        
+    </div>
+    <div class="prdetail">{{item.sale_price*item.quantity}}</div>
+    <i class="fa-solid fa-xmark pr-8" @click="deleteProduct(item.product_id)"></i>
   </div>
-  </tbody>
-  
-  <div  class="sideBorder p-5 ">
+</div>
+  <!-- </tbody> -->
+  <!-- 優惠切版 -->
+  <!-- <div  class="sideBorder p-5 ">
     <h5 class="p-5">已享用之優惠</h5>
     <div class="flex justify-between"> 
       
@@ -71,14 +100,15 @@
 
   
 
- </div>
+ </div> -->
 
-  </div>
+  <!-- </div> -->
 
  
  
- 
- <div class="cart mt-100 ml-10 mr-10 cards ">
+ <!-- 超值加價購 -->
+
+ <!-- <div class="cart mt-100 ml-10 mr-10 cards ">
   
   <h3 class="  h-10 quarter " >超值加價購 (往左滑)</h3>
   
@@ -88,11 +118,11 @@
       <p class="name">BONNY&READ 送禮萬用小卡  <br>/ Bonny&Read Gift Card</p>
       <p class="pr">NT$30</p>
       <button class="buttonBg">加入購物車</button>
-  </div>
+  </div> 
 
   </div>
 
-</div>
+</div>-->
 
 <div class="laptop cellphone">
 <div class="cart mt-100 ml-10 mr-10 ">
@@ -103,7 +133,7 @@
     <label for="" >送貨地點 </label>
     <br>
     <select name="" id="" class="sideBorder options message">                            
-      <option value="AU">澳大利亞</option>
+      <!-- <option value="AU">澳大利亞</option>
       <option value="BE">比利時</option>
       <option value="CA">加拿大</option>
       <option value="CN">中國</option>
@@ -121,28 +151,36 @@
       <option value="PW">帕勞</option>
       <option value="PE">秘魯</option>
       <option value="PH">菲律賓</option>
-      <option value="SG">新加坡</option>
+      <option value="SG">新加坡</option> -->
       <option value="TW">台灣</option>
-      <option value="TH">泰國</option>
+    <!--   <option value="TH">泰國</option>
       <option value="GB">英國</option>
       <option value="US">美國</option>
-      <option value="VN">越南</option>
+      <option value="VN">越南</option> -->
 
  </select>
   </div>
   <div class="option m-4"> 
     <label for="">送貨方式</label>
     <br>
+    <!-- 跟地點修改選項 -->
     <select name="" id=""class="sideBorder options message"  >                                              
-      <option value="" selected>海外運送 ( 3-7天到貨，採EMS寄送 )</option>
-      <option value="7-11" >海外運送  (3-7天到貨，DHL運送)</option>
+      <!-- <option value="" selected disabled >海外運送 ( 3-7天到貨，採EMS寄送 )</option>
+      <option value="7-11" disabled>海外運送  (3-7天到貨，DHL運送)</option> -->
+      <!-- <option value="" >7-11</option> -->
+      <option value="" >宅配到府</option>
+
+
     </select>
     </div>
 
     <div class="option m-4" > 
     <label for="">付款方式</label>
     <br>
-    <select name="" id="" class="sideBorder options message" >                                             
+    <select name="" id="" class="sideBorder options message" >  
+      <option value="" >
+          貨到付款
+        </option>                                           
         <option value="" selected>
           信用卡 ( Visa / MasterCard / JCB / 銀聯卡 )
         </option>
@@ -166,30 +204,37 @@
   <div>
       <div class="flex justify-between p-2 ">
       <div>小計:</div>
-      <div>NT$740</div>
+      <div>NT$ 
+        <span>{{itemPrice}}</span>
+
+      </div>
       </div>
 
     <div class="flex justify-between p-2" style="color:#A58647 ;">
       <div >折扣:</div>
-      <div>-NT$106</div>
+      <div>-NT$0</div>
     </div>
 
     <div class="flex justify-between pb-5 p-2" style="color:#A58647 ;">
       <div >運費:</div>
-      <div>NT$1,000</div>
+      <div>NT$60</div>
     </div>
     <div class="pb-5">
-    <a href="" style="color:#337AB7 ;" class="p-5">使用優惠代碼</a>
+    <!-- <a href="" style="color:#337AB7 ;" class="p-5">使用優惠代碼</a> -->
     </div>
 
 <hr>
   <div class="flex justify-between font-bold p-2">
     <div>合計:</div>
-    <div>NT$1,637</div>
-  </div>
-    <a href="" class="buttonBg flex justify-center">前往結帳</a>
+    <div>NT$
+      <span>{{itemPrice+60}}</span>
 
-  <div class="flex justify-between p-2	">
+    </div>
+  </div>
+    <a href="" class="buttonBg flex justify-center" @click="goToNext">前往結帳</a>
+
+    <!-- 訂單獲得點數 -->
+  <!-- <div class="flex justify-between p-2	">
     <div>訂單獲得點數:</div>
       <div class="" style="position: relative; transform: translateX(-180px);">
       
@@ -198,14 +243,108 @@
 <div>+10點</div>
 
   
-  </div>
+  </div> -->
 
 </div>
 </div>
 
     </template>
     
-    <script setup>
+    <script>
+      import axios from 'axios';
+
+  export default {
+    data() {
+      return {
+        products: [] // 儲存後端返回的商品資料
+      };
+    },
+    mounted() {
+      this.fetchCartItems(); // 組件加載時獲取資料
+    },
+    computed: {
+  itemCount() {
+    return this.products.filter(item => item.quantity > 0).length;
+  },
+  itemPrice(){
+    return this.products.reduce((total, item) => total + (item.original_price * item.quantity), 0);
+  }
+}
+,
+    methods: {
+      async fetchCartItems() {
+        try {
+          const response = await axios.get('http://localhost:3300/cart/cartQuery');
+          this.products = response.data; // 將 API 返回的資料存入 products
+          console.log('資料獲取成功:', this.products);
+        } catch (error) {
+          console.error('獲取資料失敗:', error);
+        }
+      },// 新增商品
+    addProduct() {
+      axios
+        .post("http://localhost:3300/cart/cartInsert", this.newProduct)
+        .then((response) => {
+          this.products.push(response.data); // 新增成功後直接更新列表
+        })
+        .catch((error) => {
+          console.error("新增商品失敗:", error);
+        });
+    },
+    // 刪除商品
+    deleteProduct(id) {
+      axios
+        .delete(`http://localhost:3300/cart/cartDelete/${id}`)
+        .then(() => {
+          this.products = this.products.filter((product) => product.id !== id); // 從列表中移除
+        })
+        .catch((error) => {
+          console.error("刪除商品失敗:", error);
+        });
+    } ,async updateQuantity(item) {
+      if (item.quantity < 1) {
+        alert("數量不能小於 1");
+        item.quantity = 1;
+        return;
+      }
+
+      try {
+        const response = await axios.put(`http://localhost:3300/cart/update-quantity`, {
+          product_id: item.product_id,
+          quantity: item.quantity,
+        });
+
+        if (response.data.success) {
+          // 更新成功，可以選擇提示用戶或其他操作
+          console.log("數量更新成功");
+        } else {
+          // 處理後端返回的錯誤
+          alert("更新失敗：" + response.data.message);
+        }
+      } catch (error) {
+        console.error("更新數量時出錯", error);
+        alert("更新數量時出錯，請稍後再試");
+      }
+    },
+    
+}  
+  , goToNext() {
+    try {
+    // 設置 Cookie（如果需要）
+//  document.cookie = "visited=true; path=/; max-age=3600";
+
+    // 確保路由導航成功
+    this.$router.push('/Debit').catch(err => {
+      console.error("導航失敗:", err);
+    });
+  } catch (err) {
+    console.error("錯誤發生:", err);
+  }
+}
+  }
+  // 計算小計
+
+  
     </script>
     
     <style scoped>
