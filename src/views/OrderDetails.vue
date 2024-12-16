@@ -21,28 +21,28 @@
                             <div class="orders-title-quantity">數量</div>
                             <div class="orders-title-total">小計</div>
                         </div>
-                        <div class="items-card">
-                            <div
-                                v-for="product in productInfo"
-                                :key="product.product_id"
-                                class="items-name"
-                            >
-                                <img
-                                    v-if="product.image_path"
-                                    :src="product.image_path"
-                                    alt="商品圖片"
-                                />
+                        <div
+                            v-for="product in productInfo"
+                            :key="product.product_id"
+                            class="items-card"
+                        >
+                            <div class="items-name">
+                                <img :src="product.image_path" alt="商品圖片" />
 
-                                [寶可夢/鍍18K厚金] 皮卡丘戒指 / 2色 / 4 size
+                                {{ product.product_name }}
                                 <p>Silver / 銀色</p>
                                 <p>內圍直徑 1.7cm (#12)</p>
                             </div>
                             <div class="items-coupon"></div>
-                            <div class="items-price">NT$750</div>
-                            <div class="items-quantity">
-                                <span>數量:</span>1
+                            <div class="items-price">
+                                NT${{ product.sale_price }}
                             </div>
-                            <div class="items-total">NT$750</div>
+                            <div class="items-quantity">
+                                <span>數量:</span>{{ product.quantity }}
+                            </div>
+                            <div class="items-total">
+                                {{ product.sale_price * product.quantity }}
+                            </div>
                         </div>
                         <div class="coupon-used">
                             <h5>已使用之優惠</h5>
@@ -52,7 +52,9 @@
                     </div>
                     <div class="orders-total">
                         <div class="orders-total-card">
-                            <div class="subtotal">小計:<span>NT$750</span></div>
+                            <div class="subtotal">
+                                小計:<span>{{ totalPrice }}</span>
+                            </div>
                             <div class="delivery">運費:<span>免運</span></div>
                             <div class="total">合計:<span>NT$750</span></div>
                             <hr />
@@ -88,10 +90,10 @@
                 <div class="custom-imformation">
                     <h4>顧客資訊</h4>
                     <ul>
-                        <li>名字</li>
-                        <li>電話</li>
-                        <li>性別</li>
-                        <li>生日</li>
+                        <li>名字: {{ customerInfo.cuName }}</li>
+                        <li>電話: {{ customerInfo.cuPhone }}</li>
+                        <li>性別: {{ customerInfo.gender || "未提供" }}</li>
+                        <li>生日: 1990/01/01</li>
                     </ul>
                 </div>
                 <div class="delivery-imformation">
@@ -101,10 +103,10 @@
                         <li>送貨狀態</li>
                         <li>7-11</li>
                         <li>7-11</li>
-                        <li>收件人名字</li>
-                        <li>收件人電話</li>
+                        <li>收件人名字: {{ deliveryInfo.acName }}</li>
+                        <li>收件人電話: {{ deliveryInfo.acPhone }}</li>
                         <li>配送編號</li>
-                        <li>門市地址</li>
+                        <li>配送地址: {{ deliveryInfo.addr }}</li>
                     </ul>
                 </div>
 
@@ -112,6 +114,10 @@
                     <h4>付款資訊</h4>
                     <ul>
                         <li>付款方式</li>
+                        <li>卡片名稱: {{ paymentInfo?.cardName || "N/A" }}</li>
+                        <li>
+                            有效日期: {{ paymentInfo?.efficentDate || "N/A" }}
+                        </li>
                         <li>付款狀態</li>
                         <li>付款指示</li>
                         <li>發票狀態</li>
@@ -146,15 +152,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import ChatBox from "../components/chatbox.vue";
 
-const currentPage = ref(false);
+const currentPage = ref(true);
 
 const pagetoggle = () => {
     currentPage.value = !currentPage.value;
 };
+
 // 定義資料結構
 const orderInfo = ref({});
 const customerInfo = ref({});
@@ -165,34 +172,26 @@ const productInfo = ref([]);
 // 測試用固定值
 const purchaseID = "OR1734099868126658";
 
+//總價
+const totalPrice = computed(() => {
+    return productInfo.value.reduce((sum, product) => {
+        return sum + product.sale_price * product.quantity;
+    }, 0);
+});
 onMounted(async () => {
     try {
         const response = await axios.get(
             `http://localhost:3300/order/details/${purchaseID}`
         );
-        productInfo.value = data.productInfo.map((product) => {
-            let imagePath = product.image_path;
-            if (imagePath) {
-                // 修正路徑
-                if (imagePath.startsWith("./")) {
-                    imagePath = imagePath.replace("./", "/");
-                }
-                if (!imagePath.startsWith("/")) {
-                    imagePath = "/" + imagePath;
-                }
-                imagePath = `http://localhost:3300${imagePath}`;
-            }
-            return {
-                ...product,
-                image_path: imagePath || null,
-            };
-        });
-        // 綁定後端返回的資料
+
+        const data = response.data;
+
+        // 直接將返回的資料綁定給 productInfo
+        productInfo.value = data.productInfo || [];
         orderInfo.value = data.orderInfo || {};
         customerInfo.value = data.customerInfo || {};
         deliveryInfo.value = data.deliveryInfo || {};
         paymentInfo.value = data.paymentInfo || {};
-        productInfo.value = data.productInfo || [];
     } catch (error) {
         console.error("API 請求失敗：", error);
     }
