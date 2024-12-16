@@ -62,8 +62,8 @@ const createSharedCart = async () => {
     新增共享購物車
   </el-button>
 
-  <el-dialog v-model="dialogFormVisible" title="新增共享購物車" width="500">
-    <el-form :model="form">
+  <el-dialog v-model="dialogFormVisible" title="新增共享購物車" width="80%" class="max-w-[500px]">
+    <el-form :model="form" class="responsiveForm">
       <el-form-item label="共享購物車名稱">
         <el-input v-model="form.name" autocomplete="off" placeholder="爆買 L & R" />
       </el-form-item>
@@ -83,6 +83,21 @@ const createSharedCart = async () => {
 </template>
 
 <style scoped>
+
+/* 小螢幕時變成上下排列 */
+@media screen and (max-width: 768px) {
+  .responsiveForm :deep(.el-form-item) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .responsiveForm :deep(.el-form-item__label) {
+    text-align: left;
+    padding: 0;
+  }
+}
+
 .el-button.is-plain {
   --el-button-hover-text-color: #000;
   --el-button-hover-bg-color: #343232;
@@ -93,6 +108,7 @@ const createSharedCart = async () => {
   border-color: #212121;
   color: #fff;
   outline: none;
+  background-color:#2f2f2f
 }
 
 .el-button--primary {
