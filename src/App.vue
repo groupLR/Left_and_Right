@@ -45,7 +45,14 @@ import Footer from "./components/Footer.vue";
     </nav>
   </header>
   <RouterView />
+  <el-backtop :right="50" :bottom="100" />
   <Footer />
 </template>
 
-<style scoped></style>
+<style scoped>
+
+.el-icon{
+  color:#000
+}
+
+</style>
