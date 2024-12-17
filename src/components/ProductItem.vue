@@ -1,23 +1,14 @@
 <script setup>
 import { defineProps } from 'vue';
-import router from '@/router'
-import { useRoute,RouterLink, RouterView } from 'vue-router'
-
-const route = useRoute()
+import { RouterLink } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { storeToRefs } from "pinia";
 import { useCartStore } from '@/stores/cart'
 const CartStore = useCartStore()
 const { } = storeToRefs(CartStore)
 
-//${productId}
-
-
 const props = defineProps({
   id: {
-    type: Number,
-  },
-  productId:{
     type: Number,
   },
   title:{
@@ -36,8 +27,9 @@ const props = defineProps({
     type: String,
   },
 })
-
+//商品連結
 const URL =  `/products/${props.id}`
+
 // 加入購物車
 const handleAddToCart = async () => {
   await CartStore.addProduct(props.id)
