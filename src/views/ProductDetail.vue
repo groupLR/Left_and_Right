@@ -2,7 +2,6 @@
 import { onMounted, onUnmounted, ref,watch,computed } from 'vue'
 import axios from 'axios'
 import { useRouter,useRoute } from 'vue-router';
-
 import Swiper from "swiper/bundle";
 import "swiper/css/bundle";
 import { Pagination, Navigation, Scrollbar } from 'swiper/modules'
@@ -87,7 +86,7 @@ const isLoading = ref(true)
 const fetchProductDetail = async(product_id = 35) =>{
   isLoading.value = true
   try{
-    await new Promise((resolve) => setTimeout(resolve,100))
+    await new Promise((resolve) => setTimeout(resolve,200))
 
     const response = await axios.get(`${API_URL}/products/${product_id}`)
     profile.value = response.data.profile
@@ -101,7 +100,7 @@ const fetchProductDetail = async(product_id = 35) =>{
       imgPath: getImageUrl(img.image_path),
       imgText:img.alt_text
     }))
-    console.log(desImgs.value);
+    console.log("圖片:",mainImgs.value);
   }catch(err){
     console.error('獲取商品詳情失敗:', err)
   }finally{
@@ -123,9 +122,13 @@ watch(
   },{ immediate: true }
 )
 
+//輪播圖區塊
+const selectImage = (index) => {
+      selectedIndex.value = index
+}
 
 // const imgPath = computed(() => { 
-//   return mainImgs.value.imgPath || '無法顯示商品名稱'
+//   return mainImgs.value[0]?.imgPath || '無法顯示商品名稱'
 // })
 //轉換資料型別
 const title = computed(() => { 
@@ -141,6 +144,7 @@ const salePrice = computed(() => {
 //   return profile.value.description || '無法顯示商品敘述'
 // })
 const addLine = (text) =>{
+  if (!text) return ''
   return text.replace(/●/g, '<br>●').trim()
 }
 const description = computed(() => addLine(profile.value.description))
@@ -160,15 +164,27 @@ const images = ref([
   { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d72305871b4a0001750aabb/800x.webp?source_format=jpg', title: 'Image 10' }
 ])
       
-
-
-
 const scrollPosition = ref(0)
 
 
 //切換照片index
 const selectedIndex = ref(0) 
-const selectedImage = computed(() => mainImgs.value[selectedIndex.value])
+
+console.log("456",mainImgs.value);
+console.log("123",selectedIndex.value);
+// const selectedImage = computed(() => mainImgs.value[selectedIndex.value])
+const selectedImage = computed(() => {
+  // 如果 mainImgs.value 為空或 selectedIndex 超出範圍，返回一個預設對象
+  if (!mainImgs.value.length || selectedIndex.value < 0 || selectedIndex.value >= mainImgs.value.length) {
+    return {
+      imgPath: '', 
+      imgText: '無法顯示圖片',
+      colorText: '',
+      colorSquare: ''
+    }
+  }
+  return mainImgs.value[selectedIndex.value]
+})
 
 
 // 過濾產品顏色
@@ -176,10 +192,7 @@ const filterColor = computed(() =>
   mainImgs.value.filter(color => color.colorSquare)
 )
 
-//輪播圖區塊
-const selectImage = (index) => {
-      selectedIndex.value = index
-}
+
     // scrollUp() {
     //   this.scrollPosition = Math.max(this.scrollPosition - 100, 0);
     // },
