@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, onUnmounted, ref,watch,computed } from 'vue'
 import axios from 'axios'
-import { useRouter,useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 import Swiper from "swiper/bundle";
 import "swiper/css/bundle";
 import { Pagination, Navigation, Scrollbar } from 'swiper/modules'
@@ -12,7 +12,6 @@ import 'swiper/css/navigation'
 Swiper.use([Pagination, Navigation, Scrollbar])
 const swiperInstance = ref(null);
 
-const router = useRouter()
 const route = useRoute()
 
 //輪播圖
@@ -100,7 +99,6 @@ const fetchProductDetail = async(product_id = 35) =>{
       imgPath: getImageUrl(img.image_path),
       imgText:img.alt_text
     }))
-    console.log("圖片:",mainImgs.value);
   }catch(err){
     console.error('獲取商品詳情失敗:', err)
   }finally{
@@ -124,12 +122,9 @@ watch(
 
 //輪播圖區塊
 const selectImage = (index) => {
-      selectedIndex.value = index
+  selectedIndex.value = index
 }
 
-// const imgPath = computed(() => { 
-//   return mainImgs.value[0]?.imgPath || '無法顯示商品名稱'
-// })
 //轉換資料型別
 const title = computed(() => { 
   return profile.value.product_name || '無法顯示商品名稱'
@@ -140,41 +135,20 @@ const originalPrice = computed(() => {
 const salePrice = computed(() => { 
   return profile.value.sale_price || '無法顯示商品價格'
 })
-// const description = computed(() =>{
-//   return profile.value.description || '無法顯示商品敘述'
-// })
 const addLine = (text) =>{
   if (!text) return ''
   return text.replace(/●/g, '<br>●').trim()
 }
 const description = computed(() => addLine(profile.value.description))
-
-
-//假資料
-const images = ref([
-  { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 1',colorText:"Silver / 銀色",colorSquare:'#EBEBEB' },
-  { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 2',colorText:"Rose Gold / 玫瑰金",colorSquare:'#FFBEA8' },
-  { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670bcfc2b00141678ea/800x.webp?source_format=jpg', title: 'Image 3',colorText:"Gold / 金色",colorSquare:'#FFC500'  },
-  { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5ec22beeefc5470036f68c19/800x.webp?source_format=jpg', title: 'Image 4' },
-  { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d70b15d496aa5001a58c2e5/800x.webp?source_format=jpg', title: 'Image 5' },
-  { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d70b15da8ed6d0020d3a5c0/800x.webp?source_format=jpg', title: 'Image 6' },
-  { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d6ce670424fd9001a0d185e/800x.webp?source_format=jpg', title: 'Image 7' },
-  { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/66dac8ba15b4f70010f254e6/800x.webp?source_format=jpg', title: 'Image 8' },
-  { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d72304fe8c7d50017d7e721/800x.webp?source_format=jpg', title: 'Image 9' },
-  { image: 'https://shoplineimg.com/53eb2bccb32b41ef6e000007/5d72305871b4a0001750aabb/800x.webp?source_format=jpg', title: 'Image 10' }
-])
       
-const scrollPosition = ref(0)
+// const scrollPosition = ref(0)
 
 
 //切換照片index
 const selectedIndex = ref(0) 
 
-console.log("456",mainImgs.value);
-console.log("123",selectedIndex.value);
-// const selectedImage = computed(() => mainImgs.value[selectedIndex.value])
 const selectedImage = computed(() => {
-  // 如果 mainImgs.value 為空或 selectedIndex 超出範圍，返回一個預設對象
+  // 如果 mainImgs.value 為空或 selectedIndex 超出範圍，設定預設值
   if (!mainImgs.value.length || selectedIndex.value < 0 || selectedIndex.value >= mainImgs.value.length) {
     return {
       imgPath: '', 
@@ -193,12 +167,12 @@ const filterColor = computed(() =>
 )
 
 
-    // scrollUp() {
-    //   this.scrollPosition = Math.max(this.scrollPosition - 100, 0);
-    // },
-    // scrollDown() {
-    //   this.scrollPosition = Math.min(this.scrollPosition + 100, this.mainImgs.length * 100 - 400);
-    // },
+// scrollUp() {
+//   this.scrollPosition = Math.max(this.scrollPosition - 100, 0);
+// },
+// scrollDown() {
+//   this.scrollPosition = Math.min(this.scrollPosition + 100, this.mainImgs.length * 100 - 400);
+// },
 
 //編輯購買數量
 const counter = ref(1)
@@ -371,7 +345,6 @@ const toggleHeart = () => {
   }
 }
 
-
 .colorBox{
   margin: 20px;
   margin-left: 0;
@@ -408,7 +381,6 @@ const toggleHeart = () => {
   position: relative
 }
 .swiper-slide {
-  /* display: flex; */
   justify-content: center;
   align-content: center;
 }
@@ -594,7 +566,6 @@ input::-webkit-inner-spin-button{
   .descriptionProfile{
     max-width: 1340px;
     width: 100%;
-    /* display: flex; */
     justify-content: center;
     margin: 0 auto;
   }
