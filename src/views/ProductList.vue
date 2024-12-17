@@ -53,7 +53,7 @@ watch(() => route.params.category, async (newCategory) => {
     <!-- 產品列表 -->
     <div class="flex flex-wrap">
       <ProductItem v-for="(item, index) in productList" :key="item.id" :id="item.id" :title="item.title" :price="item.price"
-        :orginalPrice="item.orginalPrice" :frontImg="item.frontImg" :backImg="item.backImg"  class="md:col-6 lg:col-3"/>
+        :originalPrice="item.originalPrice" :frontImg="item.frontImg" :backImg="item.backImg"  class="md:col-6 lg:col-3"/>
     </div>
 
     <!-- 分頁 -->

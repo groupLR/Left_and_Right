@@ -39,7 +39,7 @@ import Footer from "./components/Footer.vue";
       |
       <RouterLink to="/users/sign-in">register</RouterLink>
       |
-      <RouterLink to="/products/detail">products-detail</RouterLink>
+      <RouterLink to="/products/35">products-detail</RouterLink>
       |
       <RouterLink to="/sharedcartlist">sharedCart</RouterLink>
     </nav>

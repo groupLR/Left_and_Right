@@ -44,7 +44,6 @@ onMounted(() => {
     swiperInstance.value = new Swiper(".swiper", {
       speed: 400,
       spaceBetween: 100,
-      direction: "vertical",
       loop: true,
       autoplay: {
         delay: 3000, // 自動播放間隔
@@ -94,17 +93,17 @@ onMounted(() => {
 
 <style>
 .swiper {
-  width: 1903px;
-  height: 731.23px;
+  display: flex;
+  width: 100%;
+  height: 100%;
 }
 .swiper-slide {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  height: 100%;
 }
 .swiper-slide img {
-  object-fit: cover;
   width: 100%;
   height: 100%;
 }
@@ -122,8 +121,7 @@ onMounted(() => {
 @media (max-width: 767px) {
   .swiper {
   width: 100%;
-  max-width: 375px;
-  height: 375px;
+  height: 100%;
 }
 .swiper-pagination {
   position: absolute;
@@ -134,7 +132,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  height: 100%
 }
 }
 
@@ -142,8 +140,8 @@ onMounted(() => {
 @media (min-width: 768px) and (max-width: 1024px) {
   .swiper {
   width: 100%;
-  height: 308.55px;
-  max-width: 803px;
+  height: 100%;
+  max-width: 100%;
 }
 .swiper-pagination {
   position: absolute;
@@ -154,15 +152,15 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  height: 100%
 }
 }
 
 @media (min-width: 1025px) {
   .swiper {
   width: 100%;
-  max-width: 1903px;
-  height: 731.23px;
+  max-width: 100%;
+  height: 100%;
 }
 .swiper-pagination {
   position: absolute;
@@ -173,7 +171,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  height: 100%;
 }
 }
 </style>
