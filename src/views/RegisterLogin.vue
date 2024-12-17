@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref,reactive } from 'vue'
+import { ref,reactive } from 'vue'
 import axios from 'axios'
 import { z } from 'zod'
 import { useRouter } from 'vue-router';
@@ -102,9 +102,7 @@ const handleRegister = async () => {
 
             //確認Token是否儲存成功
             const storedToken = localStorage.getItem(STORAGE_JWT_KEY)
-            // console.log('Stored User ID:', storedUserId)
-            // console.log('userId:', userToken.value.userId)
-            // 可以加入额外验证
+            //額外驗證
             if (storedToken === userToken.value) {
                 console.log('User Token 成功儲存')
             }else{
@@ -154,7 +152,6 @@ const handleLogin = async() =>{
         //儲存Token在localstorage
         localStorage.setItem(STORAGE_KEY,userId.value)
         localStorage.setItem(STORAGE_JWT_KEY,userToken.value)
-        // localStorage.setItem('TWT', response.data.token)
 
         //恭喜登入
         console.log('登入成功')
@@ -168,7 +165,7 @@ const handleLogin = async() =>{
         //確認userToken是否儲存成功
         const storedToken = localStorage.getItem(STORAGE_KEY)
         // console.log('Stored User ID:', storedUserId)
-        // 可以加入额外验证
+        //額外驗證
         if (storedToken === userToken.value) {
             console.log('User Token 成功儲存')
         }else{
