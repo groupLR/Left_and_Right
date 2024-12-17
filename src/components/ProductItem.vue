@@ -1,23 +1,14 @@
 <script setup>
-import { defineProps } from 'vue';
-import router from '@/router'
-import { useRoute,RouterLink, RouterView } from 'vue-router'
-
-const route = useRoute()
 import { ElMessage } from 'element-plus'
+import { defineProps } from 'vue';
+import { RouterLink } from 'vue-router'
 import { storeToRefs } from "pinia";
 import { useCartStore } from '@/stores/cart'
 const CartStore = useCartStore()
 const { } = storeToRefs(CartStore)
 
-//${productId}
-
-
 const props = defineProps({
   id: {
-    type: Number,
-  },
-  productId:{
     type: Number,
   },
   title:{
@@ -60,7 +51,7 @@ const handleAddToCart = async () => {
             <p class="mb-1 text-sm">{{ props.title }}</p>
             <p class=" text-base font-black">NT${{ props.price }}</p>
             <p class="mb-1 text-base text-gray-500 line-through decoration-slate-400">NT${{ props.originalPrice }}</p>
-          <button @click="handleAddToCart" class=" cartButton absolute bottom-4 left-4 right-4 h-8 rounded bg-neutral-100 border-l-neutral-300 lg:bg-white lg:h-10  lg:left-8 lg:right-8 lg:-top-50px lg:hidden">
+          <button @click.prevent="handleAddToCart" class=" cartButton absolute bottom-4 left-4 right-4 h-8 rounded bg-neutral-100 border-l-neutral-300 lg:bg-white lg:h-10  lg:left-8 lg:right-8 lg:-top-50px lg:hidden">
             <i class="fa-solid fa-cart-shopping lg:hidden"></i>
             <p class="hidden lg:block lg:text-sm lg:py-3">加入購物車</p>
           </button>
