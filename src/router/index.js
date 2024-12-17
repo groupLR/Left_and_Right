@@ -4,6 +4,7 @@ import ProductList from '@/views/ProductList.vue'
 import StoreInfo from '../components/StoreInfo.vue'
 import Cart from '../views/Cart.vue'
 import UsersEdit from "@/views/UsersEdit.vue"
+import SharedCartList from '@/views/SharedCartList.vue'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -152,7 +153,22 @@ const router = createRouter({
 			name: 'Cart',
 			component: Cart,
 		},
-
+		{
+			path: "/sharedcartlist",
+			name: "sharedCart",
+			component: SharedCartList,
+			meta:{
+				requireAuth: true
+			}
+		},
+		{
+			path: "/Cart/:groupId",
+			name: "sharedCart/Group",
+			component: Cart,
+			meta:{
+				requireAuth: true
+			}
+		},
 	],
 
 })

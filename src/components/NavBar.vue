@@ -1,8 +1,8 @@
 <script setup>
 import SmallCart from './SmallCart.vue';
-import { ref, computed} from 'vue';
+import { ref, computed } from 'vue';
 import { useProductStore } from '@/stores/products';  // 引入 Pinia store
-import { RouterLink, RouterView } from "vue-router";
+import { RouterLink } from "vue-router";
 
 
 const productStore = useProductStore(); // 使用 Pinia store
@@ -130,41 +130,19 @@ const listOpen19 = ref(true);
 const openList19 = () => {
   listOpen19.value = !listOpen19.value;
 };
-const toggleCart = () => {
-  isCartOpen.value = !isCartOpen.value;
-  if (isCartOpen.value) {
-    document.body.style.overflow = 'hidden'; // 禁止背景滾動
-  } else {
-    document.body.style.overflow = 'auto'; // 恢復背景滾動
-  }
-};
-const handleCartIconClick = () => {
-  productStore.toggleCartVisibility(); // 切换购物车的显示状态
-};
-
-const closeCart = () => {
-  isCartOpen.value = false;
-  document.body.style.overflow = 'auto';
-};
 </script>
 
 <template>
-  <div v-if="isCartOpen"
-      class="overlay"
-      @click="closeCart"></div>
+  <div v-if="isCartOpen" class="overlay" @click="closeCart"></div>
   <input type="checkbox" id="bars" class="hidden peer" />
   <div
     class="fixed inset-0 flex items-center justify-center transition-opacity duration-300 bg-black bg-opacity-50 opacity-0 pointer-events-none peer-checked:pointer-events-auto peer-checked:opacity-100">
     <label for="bars" class="absolute inset-0 cursor-pointer"></label>
   </div>
-  
+
   <div class="flex items-center justify-between">
     <a href="#" class="px-4 py-2">
-      <img
-        src="/src/assets/ourLogo.jpeg"
-        alt="logo"
-        class="object-fill w-20 h-11"
-    /></a>
+      <img src="/src/assets/ourLogo.jpeg" alt="logo" class="object-fill w-20 h-11" /></a>
     <ul class="flex items-center justify-end flex-1 ">
 
       <li class="mx-3 ">
@@ -203,12 +181,8 @@ const closeCart = () => {
         <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
       </li>
       <li class="relative hidden mx-3 text-black xl:block group hover:text-gray-500">
-        <input
-          type="search"
-          maxlength="100"
-          placeholder="ivy郁欣聯名"
-          class="w-0 overflow-hidden transition-all duration-500 ease-in-out border-b border-black outline-none group-hover:w-56 focus:w-56 focus-visible:outline-none"
-        />
+        <input type="search" maxlength="100" placeholder="ivy郁欣聯名"
+          class="w-0 overflow-hidden transition-all duration-500 ease-in-out border-b border-black outline-none group-hover:w-56 focus:w-56 focus-visible:outline-none" />
         <button type="submit">
           <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
         </button>
@@ -216,25 +190,25 @@ const closeCart = () => {
       <li class="hidden mx-3 text-black cursor-pointer xl:block hover:text-gray-500">
         <font-awesome-icon :icon="['fas', 'comment']" />
       </li>
-      <Router-link :to="isLoggedIn ? '/users/edit' : '/users/sign-in'" >
-      <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
-        <router-link to="/users/edit"><font-awesome-icon :icon="['fas', 'user']" /></router-link>
-      </li>
-      </Router-link>
-      <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
-          <label for="cartSidebarSwitch" @click="handleCartIconClick"
-            ><font-awesome-icon :icon="['fas', 'bag-shopping']"
-          /><span v-if="cartItemCount > 0" class="cart-Count">{{ cartItemCount }}</span></label>
+      <RouterLink :to="isLoggedIn ? '/users/edit' : '/users/sign-in'">
+        <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
+          <font-awesome-icon :icon="['fas', 'user']" />
         </li>
-        <!-- 引入小購物車並綁定購物車顯示狀態 -->
-    <!-- <SmallCart :isCartOpen="isCartOpen" @close="closeCart" /> -->
-    <li class="relative w-16 h-16 list-none">
+      </RouterLink>
+      <RouterLink to="/Cart">
+        <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
+          <font-awesome-icon :icon="['fas', 'bag-shopping']" />
+        </li>
+      </RouterLink>
+      <RouterLink to="/sharedcartlist">
+        <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
+          <i class="fa-brands fa-shopify text-lg"></i>
+        </li>
+      </RouterLink>
+      <li class="relative w-16 h-16 list-none">
         <div>
-          <label for="bars"
-            ><font-awesome-icon
-              :icon="['fas', 'bars']"
-              class="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer top-1/2 left-1/2 xl:hidden"
-          /></label>
+          <label for="bars"><font-awesome-icon :icon="['fas', 'bars']"
+              class="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer top-1/2 left-1/2 xl:hidden" /></label>
         </div>
       </li>
     </ul>
@@ -243,28 +217,19 @@ const closeCart = () => {
     <button type="submit" class="py-px px-1.5">
       <i class="fa fa-search ::before"></i>
     </button>
-    <input
-      type="search"
-      maxlength="100"
-      placeholder="ivy郁欣聯名"
-      class="w-4/5 border-b border-black focus-visible:outline-none"
-    />
+    <input type="search" maxlength="100" placeholder="ivy郁欣聯名"
+      class="w-4/5 border-b border-black focus-visible:outline-none" />
   </div>
   <article
-    class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white peer-checked:translate-x-0"
-  >
+    class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white peer-checked:translate-x-0">
     <li class="listItems"><a href="#">Kurt Wu 插畫家聯名</a></li>
     <li class="listItems"><a href="#">KOL / Ivy郁欣聯名</a></li>
     <li class="listItems"><a href="#">飾品設計師大賽/by.Lab</a></li>
 
     <li class="relative listItems">
       <a href="#">1111 新品 / NEW ARRIVAL</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen }"
-        @click="openList"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen }" @click="openList" />
       <ul class="overflow-hidden" :class="listOpen ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">Christmas Gift</li>
         <li class="py-3.5 pr-11 pl-4">FW Pearl</li>
@@ -275,12 +240,8 @@ const closeCart = () => {
     </li>
     <li class="relative listItems">
       <a href="#">限時優惠/Sales</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen2 }"
-        @click="openList2"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen2 }" @click="openList2" />
       <ul class="overflow-hidden" :class="listOpen2 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">登入會員4折起優惠</li>
         <li class="py-3.5 pr-11 pl-4">藝人聯名限時8折起</li>
@@ -288,12 +249,8 @@ const closeCart = () => {
     </li>
     <li class="listItems">
       <a href="#">熱銷商品/B.Sellers</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen3 }"
-        @click="openList3"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen3 }" @click="openList3" />
       <ul class="overflow-hidden" :class="listOpen3 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">Y3K時尚</li>
         <li class="py-3.5 pr-11 pl-4">勃艮第紅</li>
@@ -310,12 +267,8 @@ const closeCart = () => {
     </li>
     <li class="listItems">
       <a href="#">耳環 / Earrings</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen4 }"
-        @click="openList4"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen4 }" @click="openList4" />
       <ul class="overflow-hidden" :class="listOpen4 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">抗敏銀針</li>
         <li class="py-3.5 pr-11 pl-4">耳環組</li>
@@ -329,12 +282,8 @@ const closeCart = () => {
     </li>
     <li class="listItems">
       <a href="#">耳夾 / Earclip</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen5 }"
-        @click="openList5"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen5 }" @click="openList5" />
       <ul class="overflow-hidden" :class="listOpen5 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">純銀耳夾耳扣</li>
         <li class="py-3.5 pr-11 pl-4">垂墜夾式耳環</li>
@@ -347,12 +296,8 @@ const closeCart = () => {
     </li>
     <li class="listItems">
       <a href="#">戒指 / Rings</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen6 }"
-        @click="openList6"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen6 }" @click="openList6" />
       <ul class="overflow-hidden" :class="listOpen6 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">情侶對戒系列</li>
         <li class="py-3.5 pr-11 pl-4">尾戒</li>
@@ -367,12 +312,8 @@ const closeCart = () => {
     </li>
     <li class="listItems">
       <a href="#">手鍊 / Bracelets</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen7 }"
-        @click="openList7"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen7 }" @click="openList7" />
       <ul class="overflow-hidden" :class="listOpen7 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">手鍊</li>
         <li class="py-3.5 pr-11 pl-4">手環</li>
@@ -386,12 +327,8 @@ const closeCart = () => {
     </li>
     <li class="listItems">
       <a href="#">項鍊 / Necklaces</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen8 }"
-        @click="openList8"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen8 }" @click="openList8" />
       <ul class="overflow-hidden" :class="listOpen8 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">頸鏈</li>
         <li class="py-3.5 pr-11 pl-4">鎖骨鏈</li>
@@ -403,24 +340,16 @@ const closeCart = () => {
     </li>
     <li class="listItems">
       <a href="#">鋼飾 / Steel</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen9 }"
-        @click="openList9"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen9 }" @click="openList9" />
       <ul class="overflow-hidden" :class="listOpen9 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">醫療鋼</li>
       </ul>
     </li>
     <li class="listItems">
       <a href="#">銀飾 / Sliver</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen10 }"
-        @click="openList10"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen10 }" @click="openList10" />
       <ul class="overflow-hidden" :class="listOpen10 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">純銀</li>
         <li class="py-3.5 pr-11 pl-4">純銀耳環</li>
@@ -428,12 +357,8 @@ const closeCart = () => {
     </li>
     <li class="listItems">
       <a href="#">髮飾 / Hair Accessory</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen11 }"
-        @click="openList11"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen11 }" @click="openList11" />
       <ul class="overflow-hidden" :class="listOpen11 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">髮帶</li>
         <li class="py-3.5 pr-11 pl-4">髮圈</li>
@@ -445,12 +370,8 @@ const closeCart = () => {
     <li class="listItems"><a href="#">墨鏡 / Sunglasses</a></li>
     <li class="listItems">
       <a href="#">韓國空運 /Korea</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen12 }"
-        @click="openList12"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen12 }" @click="openList12" />
       <ul class="overflow-hidden" :class="listOpen12 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">耳環</li>
         <li class="py-3.5 pr-11 pl-4">耳夾</li>
@@ -463,12 +384,8 @@ const closeCart = () => {
     <li class="listItems"><a href="#">大甲鎮瀾宮 / Dajia Mastu</a></li>
     <li class="listItems">
       <a href="#">藝人聯名 / Co-branding</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen13 }"
-        @click="openList13"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen13 }" @click="openList13" />
       <ul class="overflow-hidden" :class="listOpen13 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">TIMU聯名</li>
         <li class="py-3.5 pr-11 pl-4">KOL / Nina曹婕妤 聯名</li>
@@ -477,12 +394,8 @@ const closeCart = () => {
     </li>
     <li class="listItems">
       <a href="#">B&R設計師支線 海洋NEW</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen14 }"
-        @click="openList14"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen14 }" @click="openList14" />
       <ul class="overflow-hidden" :class="listOpen14 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">New 海洋系列 /Quest For Freedom</li>
         <li class="py-3.5 pr-11 pl-4">礦石系列 / Mineral Select</li>
@@ -490,12 +403,8 @@ const closeCart = () => {
     </li>
     <li class="listItems">
       <a href="#">官方IP授權 / IP Licensing</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen15 }"
-        @click="openList15"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen15 }" @click="openList15" />
       <ul class="overflow-hidden" :class="listOpen15 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">Barbie芭比聯名</li>
         <li class="py-3.5 pr-11 pl-4">Hello Kitty 50週年</li>
@@ -507,12 +416,8 @@ const closeCart = () => {
     </li>
     <li class="listItems">
       <a href="#">中性飾品 / Men's Acc</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen16 }"
-        @click="openList16"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen16 }" @click="openList16" />
       <ul class="overflow-hidden" :class="listOpen16 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">耳環</li>
         <li class="py-3.5 pr-11 pl-4">耳扣</li>
@@ -527,12 +432,8 @@ const closeCart = () => {
     <li class="listItems"><a href="#">手機掛繩配件 / Phone Acc</a></li>
     <li class="listItems">
       <a href="#">飾品盒＆配件 / Other</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen17 }"
-        @click="openList17"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen17 }" @click="openList17" />
       <ul class="overflow-hidden" :class="listOpen17 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">鞋扣 襪套 包包 周邊配件</li>
         <li class="py-3.5 pr-11 pl-4">鑰匙圈</li>
@@ -543,12 +444,8 @@ const closeCart = () => {
     </li>
     <li class="listItems">
       <a href="#">韓國香氛Cosmic Mansion</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen18 }"
-        @click="openList18"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen18 }" @click="openList18" />
       <ul class="overflow-hidden" :class="listOpen18 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">香水</li>
         <li class="py-3.5 pr-11 pl-4">蠟燭</li>
@@ -558,12 +455,8 @@ const closeCart = () => {
     </li>
     <li class="listItems">
       <a href="#">系列 / Series</a>
-      <font-awesome-icon
-        :icon="['fas', 'chevron-down']"
-        class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen19 }"
-        @click="openList19"
-      />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
+        :class="{ 'rotate-180': !listOpen19 }" @click="openList19" />
       <ul class="overflow-hidden" :class="listOpen19 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">施用 施華洛世奇水晶</li>
         <li class="py-3.5 pr-11 pl-4">官網限定系列</li>
@@ -618,31 +511,21 @@ const closeCart = () => {
     <li class="listItems"><a href="#">尋找門市</a></li>
     <li class="listItems">
       <a href="#">聯絡我們</a>
-      <font-awesome-icon
-        :icon="['fas', 'comment']"
-        class="absolute right-1 top-5"
-      />
+      <font-awesome-icon :icon="['fas', 'comment']" class="absolute right-1 top-5" />
     </li>
 
     <li class="relative listItems" @click="openChangeLanguage">
       <span>繁體中文</span>
-      <font-awesome-icon
-        class="absolute right-1 top-5"
-        :icon="['fas', 'globe']"
-      />
+      <font-awesome-icon class="absolute right-1 top-5" :icon="['fas', 'globe']" />
     </li>
     <li class="listItems" @click="openMoney">
       <span>TWD</span>
-      <font-awesome-icon
-        :icon="['fas', 'dollar-sign']"
-        class="absolute right-1 top-5"
-      />
+      <font-awesome-icon :icon="['fas', 'dollar-sign']" class="absolute right-1 top-5" />
     </li>
   </article>
   <article
     class="fixed top-0 z-10 w-3/4 h-screen px-5 pt-4 pb-3 overflow-auto transition-all duration-500 -translate-x-full bg-white"
-    :class="changeLanguageOpen ? 'translate-x-0' : '-translate-x-full'"
-  >
+    :class="changeLanguageOpen ? 'translate-x-0' : '-translate-x-full'">
     <ul>
       <li @click="openChangeLanguage">
         <font-awesome-icon :icon="['fas', 'chevron-left']" />
@@ -655,8 +538,7 @@ const closeCart = () => {
 
   <article
     class="fixed top-0 z-10 w-3/4 h-screen px-5 pt-4 pb-3 overflow-auto transition-all duration-500 -translate-x-full bg-white"
-    :class="moneyOpen ? 'translate-x-0' : '-translate-x-full'"
-  >
+    :class="moneyOpen ? 'translate-x-0' : '-translate-x-full'">
     <ul>
       <font-awesome-icon :icon="['fas', 'chevron-left']" />
       <span class="py-3 ml-2" @click="openMoney">貨幣</span>
@@ -682,10 +564,8 @@ const closeCart = () => {
     </ul>
   </article>
 
-  <article
-    class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white"
-    :class="cartOpen ? 'translate-x-0' : '-translate-x-full'"
-  >
+  <article class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white"
+    :class="cartOpen ? 'translate-x-0' : '-translate-x-full'">
     <div class="bg-white pb-10 px-3.5 pt-3.5 overflow-auto">
       <div class="p-3">
         <img src="/src/assets/ourLogo.jpeg" alt="" />
@@ -701,10 +581,7 @@ const closeCart = () => {
       </div>
       <div class="p-3">
         <p class="relative">
-          數量＆價錢<font-awesome-icon
-            :icon="['fas', 'trash']"
-            class="absolute -translate-y-1/2 right-1 top-1/2"
-          />
+          數量＆價錢<font-awesome-icon :icon="['fas', 'trash']" class="absolute -translate-y-1/2 right-1 top-1/2" />
         </p>
       </div>
       <button class="">訂單結帳</button>
@@ -723,7 +600,6 @@ const closeCart = () => {
 </template>
 
 <style scoped>
-
 .overlay {
   position: fixed;
   top: 0;
@@ -733,27 +609,21 @@ const closeCart = () => {
   /* background-color: rgba(0, 0, 0, 0.5); */
   z-index: 997;
 }
-.cart-Count {
-  position: absolute;
-  top: 15px;
-  /* right: 381px; */
-  background-color: #a58647;
-  color: var(--primary-text, #fff);
-  font-size: 12px;
-  border-radius: 10px;
-  padding: 2px 7px;
-}
-.a{
+
+.a {
   gap: 20px;
 }
+
 .listItems {
   padding: 15px 42px 15px 15px;
   position: relative;
   list-style: none;
 }
+
 .rotate-180 {
   transform: scaleY(-1);
 }
+
 .cartSidebarSwitch {
   position: absolute;
   z-index: 1;
@@ -761,8 +631,9 @@ const closeCart = () => {
   top: 0;
   display: inline-block;
 }
+
 @media screen and (min-width : 1200px) {
-  .items{
+  .items {
     padding: 20px;
     display: flex;
     gap: 20px;

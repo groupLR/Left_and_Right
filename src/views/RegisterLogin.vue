@@ -15,7 +15,7 @@ const userToken = ref(null)
 const userId = ref(null)
 const isLoggedIn = ref(false)  // 登入狀態
 // 後端 API 網址
-const API_URL = 'http://localhost:3000'
+const API_URL = 'http://localhost:3300'
 // localStorage 的 key
 const STORAGE_KEY = 'UID'
 const STORAGE_JWT_KEY = 'TwT'
