@@ -52,6 +52,7 @@ const closeCart = () => {
 onMounted(() => {
   fetchParents(); // 確保在組件掛載後載入資料
 });
+const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$ AUD','£ GBP','₱ PHP','RM MYR','฿ THB','د.إ AED','¥ JPY','$ BND','₩ KRW','Rp IDR','₫ VND','$ CAD']
 </script>
 
 <template>
@@ -260,6 +261,7 @@ onMounted(() => {
     <ul>
       <font-awesome-icon :icon="['fas', 'chevron-left']" />
       <span class="py-3 ml-2" @click="openMoney">貨幣</span>
+      <!-- <li v-for="currency in currencies">{{ currency }}</li> -->
       <li class="justify-center py-3">$ HKD</li>
       <li class="justify-center py-3">P MOP</li>
       <li class="justify-center py-3">¥ CNY</li>
