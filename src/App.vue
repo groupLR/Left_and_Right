@@ -9,10 +9,10 @@ import Footer from "./components/Footer.vue";
 		<NavBar />
 		<nav>
 			<RouterLink to="/about">About</RouterLink>
+      |
 			<RouterLink to="/">Home</RouterLink>
 			|
 			<RouterLink to="/reviews">Reviews</RouterLink>
-
       |
       <!-- COMPANY -->
       <RouterLink to="/about">關於品牌</RouterLink>
@@ -39,11 +39,12 @@ import Footer from "./components/Footer.vue";
       |
       <RouterLink to="/users/sign-in">register</RouterLink>
       |
-      <RouterLink to="/products/35">products-detail(連後端)</RouterLink>
+      <RouterLink to="/products/35">products-detail</RouterLink>
+      |
+      <RouterLink to="/sharedcartlist">sharedCart</RouterLink>
     </nav>
   </header>
   <RouterView />
-  
   <Footer />
 </template>
 

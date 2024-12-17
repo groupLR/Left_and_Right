@@ -4,11 +4,19 @@ import router from '@/router'
 import { useRoute,RouterLink, RouterView } from 'vue-router'
 
 const route = useRoute()
+import { ElMessage } from 'element-plus'
+import { storeToRefs } from "pinia";
+import { useCartStore } from '@/stores/cart'
+const CartStore = useCartStore()
+const { } = storeToRefs(CartStore)
 
 //${productId}
 
 
 const props = defineProps({
+  id: {
+    type: Number,
+  },
   productId:{
     type: Number,
   },
@@ -21,53 +29,19 @@ const props = defineProps({
   originalPrice:{
     type: Number,
   },
-  frontImg:{
+  frontImg: {
     type: String,
   },
-  backImg:{
+  backImg: {
     type: String,
   },
 })
 
-const URL =  `/products/${props.productId}`
+const URL =  `/products/${props.id}`
 // 加入購物車
 const handleAddToCart = async () => {
-  // 檢查是否登入
-  // const isAuthenticated = !!localStorage.getItem('UID')
-  
-  // if (!isAuthenticated) {
-  //   // 使用 SweetAlert2 顯示提示
-  //   Swal.fire({
-  //     title: '請先登入',
-  //     text: '加入購物車需要先登入會員',
-  //     showCancelButton: true,
-  //     confirmButtonText: '前往登入',
-  //     cancelButtonText: '取消',
-  //     confirmButtonColor: '#000000',
-  //     customClass: {
-  //       confirmButton: 'swal2-confirm-custom'
-  //     }
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       // 導向登入頁面，並記錄當前頁面路徑，這樣之後可以回來 
-  //       router.push({
-  //         path: '/users/sign-in',
-  //         query: { 
-  //           redirect: route.fullPath
-  //         }
-  //       })
-  //     }
-  //   })
-  //   return
-  // }
-
-  // 已登入的情況下，執行加入購物車的邏輯
-  try {
-    await addToCart(productId, quantity)
-    // 成功加入購物車的處理...~~ 不是我寫ㄉ
-  } catch (error) {
-    // 錯誤處理...
-  }
+  await CartStore.addProduct(props.id)
+  ElMessage.success('添加成功')
 }
 
 </script>
@@ -97,23 +71,21 @@ const handleAddToCart = async () => {
 </template>
 
 <style scoped>
-
-.productContainer:hover .frontImg{
+.productContainer:hover .frontImg {
   opacity: 0;
   transition-duration: 500ms;
 }
 
-.productContainer:hover .cartButton{
+.productContainer:hover .cartButton {
   display: block;
 }
 
-@media screen and (992px <= width) {
-  
-  .cartButton:hover{
+@media screen and (992px <=width) {
+
+  .cartButton:hover {
     background-color: black;
     color: white;
     transition-duration: 500ms;
   }
 }
-  
 </style>
