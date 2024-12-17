@@ -1,10 +1,11 @@
 <script setup>
-// import SmallCart from './SmallCart.vue';
 import { ref, computed, onMounted } from "vue";
 import { useProductStore } from "@/stores/products"; // 引入 Pinia store
 import { RouterLink, RouterView } from "vue-router";
 import { useSidebar } from "@/stores/sidebar";
+import SmallCart from './SmallCart.vue';
 const { parents, fetchParents, toggleChildren } = useSidebar();
+
 const productStore = useProductStore(); // 使用 Pinia store
 const cartItemCount = computed(() => productStore.cartItemCount); // 从 store 获取购物车商品总数量
 const isCartOpen = ref(false);
@@ -66,16 +67,11 @@ const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$
 
   <div class="flex items-center justify-between">
     <a href="#" class="px-4 py-2">
-      <img
-        src="/src/assets/ourLogo.jpeg"
-        alt="logo"
-        class="object-fill w-20 h-11"
-    /></a>
-    <ul class="flex items-center justify-end flex-1">
-      <li class="mx-3">
-        <select
-          class="hidden text-black outline-none cursor-pointer xl:block hover:text-gray-500"
-        >
+      <img src="/src/assets/ourLogo.jpeg" alt="logo" class="object-fill w-20 h-11" /></a>
+    <ul class="flex items-center justify-end flex-1 ">
+
+      <li class="mx-3 ">
+        <select class="hidden text-black outline-none cursor-pointer xl:block hover:text-gray-500">
           <option>$ HKD</option>
           <option>P MOP</option>
           <option>¥ CNY</option>
@@ -131,31 +127,25 @@ const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$
       >
         <font-awesome-icon :icon="['fas', 'comment']" />
       </li>
-      <Router-link :to="isLoggedIn ? '/users/edit' : '/users/sign-in'">
+      <RouterLink :to="isLoggedIn ? '/users/edit' : '/users/sign-in'">
         <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
-          <router-link to="/users/edit"
-            ><font-awesome-icon :icon="['fas', 'user']"
-          /></router-link>
+          <font-awesome-icon :icon="['fas', 'user']" />
         </li>
-      </Router-link>
-      <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
-        <label for="cartSidebarSwitch" @click="handleCartIconClick"
-          ><font-awesome-icon :icon="['fas', 'bag-shopping']" /><span
-            v-if="cartItemCount > 0"
-            class="cart-Count"
-            >{{ cartItemCount }}</span
-          ></label
-        >
-      </li>
-      <!-- 引入小購物車並綁定購物車顯示狀態 -->
-      <!-- <SmallCart :isCartOpen="isCartOpen" @close="closeCart" /> -->
+      </RouterLink>
+      <RouterLink to="/Cart">
+        <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
+          <font-awesome-icon :icon="['fas', 'bag-shopping']" />
+        </li>
+      </RouterLink>
+      <RouterLink to="/sharedcartlist">
+        <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
+          <i class="fa-brands fa-shopify text-lg"></i>
+        </li>
+      </RouterLink>
       <li class="relative w-16 h-16 list-none">
         <div>
-          <label for="bars"
-            ><font-awesome-icon
-              :icon="['fas', 'bars']"
-              class="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer top-1/2 left-1/2 xl:hidden"
-          /></label>
+          <label for="bars"><font-awesome-icon :icon="['fas', 'bars']"
+              class="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer top-1/2 left-1/2 xl:hidden" /></label>
         </div>
       </li>
     </ul>
@@ -164,12 +154,8 @@ const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$
     <button type="submit" class="py-px px-1.5">
       <i class="fa fa-search ::before"></i>
     </button>
-    <input
-      type="search"
-      maxlength="100"
-      placeholder="ivy郁欣聯名"
-      class="w-4/5 border-b border-black focus-visible:outline-none"
-    />
+    <input type="search" maxlength="100" placeholder="ivy郁欣聯名"
+      class="w-4/5 border-b border-black focus-visible:outline-none" />
   </div>
   <article
     class="w-3/4 max-w-72 h-screen fixed -translate-x-full transition-all duration-500 bg-white z-10 top-0 overflow-auto peer-checked:translate-x-0"
@@ -218,25 +204,16 @@ const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$
     <li class="listItems"><RouterLink to="/store-info">尋找門市</RouterLink></li>
     <li class="listItems">
       <a href="#">聯絡我們</a>
-      <font-awesome-icon
-        :icon="['fas', 'comment']"
-        class="absolute right-1 top-5"
-      />
+      <font-awesome-icon :icon="['fas', 'comment']" class="absolute right-1 top-5" />
     </li>
 
     <li class="listItems relative" @click="openChangeLanguage">
       <span>繁體中文</span>
-      <font-awesome-icon
-        class="absolute right-1 top-5"
-        :icon="['fas', 'globe']"
-      />
+      <font-awesome-icon class="absolute right-1 top-5" :icon="['fas', 'globe']" />
     </li>
     <li class="listItems" @click="openMoney">
       <span>TWD</span>
-      <font-awesome-icon
-        :icon="['fas', 'dollar-sign']"
-        class="absolute right-1 top-5"
-      />
+      <font-awesome-icon :icon="['fas', 'dollar-sign']" class="absolute right-1 top-5" />
     </li>
   </article>
 
@@ -283,35 +260,6 @@ const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$
       <li class="justify-center py-3">$ CAD</li>
     </ul>
   </article>
-  <!-- 下面是原本的加入購物車 -->
-  <!-- <article
-    class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white"
-    :class="cartOpen ? 'translate-x-0' : '-translate-x-full'"
-  >
-    <div class="bg-white pb-10 px-3.5 pt-3.5 overflow-auto">
-      <div class="p-3">
-        <img src="/src/assets/ourLogo.jpeg" alt="" />
-      </div>
-      <div>
-        <p class="p-3">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo itaque
-          necessitatibus nostrum. Vero, aliquam deleniti provident distinctio
-          tempora tenetur consectetur, possimus veritatis odit repellat porro,
-          rerum recusandae voluptatem natus dolorem!
-        </p>
-        <p class="p-3">商品名稱</p>
-      </div>
-      <div class="p-3">
-        <p class="relative">
-          數量＆價錢<font-awesome-icon
-            :icon="['fas', 'trash']"
-            class="absolute -translate-y-1/2 right-1 top-1/2"
-          />
-        </p>
-      </div>
-      <button class="">訂單結帳</button>
-    </div>
-  </article> -->
   <div class="hidden items">
     <RouterLink to="/categories/:category?/newarrival"
       >1111 新品 / NEW ARRIVAL</RouterLink
@@ -342,27 +290,20 @@ const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$
   /* background-color: rgba(0, 0, 0, 0.5); */
   z-index: 1000;
 }
-.cart-Count {
-  position: absolute;
-  top: 15px;
-  /* right: 381px; */
-  background-color: #a58647;
-  color: var(--primary-text, #fff);
-  font-size: 12px;
-  border-radius: 10px;
-  padding: 2px 7px;
-}
 .a {
   gap: 20px;
 }
+
 .listItems {
   padding: 15px 42px 15px 15px;
   position: relative;
   list-style: none;
 }
+
 .rotate-180 {
   transform: scaleY(-1);
 }
+
 .cartSidebarSwitch {
   position: absolute;
   z-index: 1;
@@ -370,7 +311,8 @@ const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$
   top: 0;
   display: inline-block;
 }
-@media screen and (min-width: 1200px) {
+
+@media screen and (min-width : 1200px) {
   .items {
     padding: 20px;
     display: flex;

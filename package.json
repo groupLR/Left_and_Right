@@ -16,6 +16,7 @@
     "@prisma/client": "^6.0.1",
     "axios": "^1.7.8",
     "element-plus": "^2.8.8",
+    "jwt-decode": "^4.0.0",
     "pinia": "^2.2.6",
     "swiper": "^11.1.15",
     "vue": "^3.5.12",
