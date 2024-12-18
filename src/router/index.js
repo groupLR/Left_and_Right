@@ -18,7 +18,7 @@ const router = createRouter({
 		{ path: '/search',
 			name: 'SearchResult',
 			component: ()=>import("../views/SearchResult.vue"),
-			props: route => ({ keyword: route.query.q }),
+			props: route => ({ keyword: route.query.q })
 		},
 		{
 			path: "/franchising",

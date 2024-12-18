@@ -3,7 +3,8 @@ import SmallCart from './SmallCart.vue';
 import { ref, computed} from 'vue';
 import { useProductStore } from '@/stores/products';  // 引入 Pinia store
 import { useRouter } from 'vue-router';
-
+import axios from 'axios';
+import { debounce } from 'lodash';
 const productStore = useProductStore(); // 使用 Pinia store
 const cartItemCount = computed(() => productStore.cartItemCount);  // 从 store 获取购物车商品总数量
 const isCartOpen = ref(false);
@@ -18,14 +19,21 @@ const overlayOpen = ref(false);
 const searchKeyword = ref('');
 const router = useRouter();
 
-const goToSearch = () => {
+const fetchSearchResults = async () => {
   if (searchKeyword.value.trim() !== '') {
     // 使用 router 導航並將關鍵字作為查詢參數
-    router.push(`/search?q=${encodeURIComponent(searchKeyword.value)}`);
+    const { data } = await axios.get(`http://localhost:3300/search?q=${encodeURIComponent(searchKeyword.value)}`);
+    router.push({
+      path: '/search',
+      query: { q: searchKeyword.value.trim() }
+    });
   } else {
     alert('請輸入搜尋內容');
   }
 };
+
+// 將 fetchSearchResults 包裝成 debounce 函數
+const goToSearch = debounce(fetchSearchResults, 800);
 
 
 const inputShow = () => {
@@ -216,7 +224,7 @@ const closeCart = () => {
       <li class="relative hidden mx-3 text-black xl:block group hover:text-gray-500">
         <input
           v-model="searchKeyword"
-          @keyup.enter="goToSearch"
+          @keyup.enter="goToSearch" 
           type="text"
           maxlength="100"
           placeholder="ivy郁欣聯名"
