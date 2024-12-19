@@ -51,8 +51,8 @@ import Footer from "./components/Footer.vue";
 
 <style scoped>
 
-.el-icon{
-  color:#000
+:deep(.el-icon){
+  color:#000;
 }
 
 </style>
