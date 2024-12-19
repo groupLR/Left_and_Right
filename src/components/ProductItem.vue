@@ -11,9 +11,6 @@ const props = defineProps({
   id: {
     type: Number,
   },
-  productId: {
-    type: Number,
-  },
   title: {
     type: String,
   },
