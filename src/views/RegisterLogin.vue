@@ -104,7 +104,6 @@ const handleRegister = async () => {
       if (error instanceof z.ZodError) {
         const errorsMessage = error.errors.map((err) => err.message)
         alert(errorsMessage)
-        console.log(errorsMessage)
       }
       // Axios API 錯誤處理
       else if (error.response) {
@@ -152,7 +151,6 @@ const handleLogin = async () => {
           break
         case 500:
           alert("伺服器錯誤，請稍後再試")
-          console.error("Server Error Details:", error.response.data)
           break
         default:
           alert("登錄失敗")
@@ -203,7 +201,7 @@ const days = Array.from({ length: 31 }, (_, i) => i + 1)
         <input type="text" placeholder="用戶名" id="username" class="input" v-model="registerForm.username" autocomplete="username'" required />
         <select v-model="selectedOption">
           <option value="email">使用Email註冊</option>
-          <option value="phone">使用手機號碼註冊</option>
+          <!-- <option value="phone">使用手機號碼註冊</option> -->
         </select>
         <div v-if="selectedOption === 'email'" required>
           <input type="text" placeholder="電子信箱" v-model="registerForm.email" id="email" autocomplete="email" />
@@ -223,7 +221,6 @@ const days = Array.from({ length: 31 }, (_, i) => i + 1)
             <option value="f">女</option>
             <option value="o">不透漏</option>
           </select>
-          <!-- <span class="error-text">{{ getErrorMessage('gender') }}</span> -->
         </div>
 
         <div class="grid grid-cols-3 gap-2.5">
