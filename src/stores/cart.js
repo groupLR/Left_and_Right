@@ -6,13 +6,15 @@ export const useCartStore = defineStore("cart", () => {
   const addProduct = async (productId) => {
     try {
       const userId = localStorage.getItem("UID")
-      const { data } = await axios.post(`${process.env.API_URL}/cart/cartInsert`, {
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, {
         user_id: userId,
         product_id: productId,
         quantity: 1,
       })
       return data
     } catch (err) {
+      console.log(err)
+
       return err
     }
   }
