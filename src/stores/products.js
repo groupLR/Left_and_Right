@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import { ref, computed } from "vue"
+import { ref } from "vue"
 import axios from "axios"
 
 const scrollToTop = () => {
@@ -7,9 +7,7 @@ const scrollToTop = () => {
 }
 
 export const useProductStore = defineStore("products", () => {
-  const API_URL = "http://localhost:3300"
-
-  // 用來做預設商品葉面的標題
+  // 用來做預設商品頁面的標題
   const categoryTitle = ref("所有商品")
 
   // 預設商品列表
@@ -17,18 +15,18 @@ export const useProductStore = defineStore("products", () => {
   // 商品列表標題處理
   const fetchProductList = async (categoryId = 1, sortBy, pageSize = 12, pageNum = 1) => {
     try {
-      const response = await axios.get(`${API_URL}/categories${categoryId ? `/${categoryId}` : ""}`, {
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/categories${categoryId ? `/${categoryId}` : ""}`, {
         params: {
           sortBy,
           pageSize,
           pageNum,
         },
       })
-      productList.value = response.data.products || []
-      categoryTitle.value = response.data.categoryName
-      totalProductCount.value = response.data.totalProduct
+      productList.value = data.products || []
+      categoryTitle.value = data.categoryName
+      totalProductCount.value = data.totalProduct
       // 處理聯名
-      coBrandingTitle.value = response.data.categoryName
+      coBrandingTitle.value = data.categoryName
     } catch (error) {
       console.error("Error fetching products:", error)
     }
