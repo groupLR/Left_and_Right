@@ -13,7 +13,6 @@ export const useCartStore = defineStore("cart", () => {
       })
       return data
     } catch (err) {
-      console.log("加入購物車失敗", err)
       return err
     }
   }
