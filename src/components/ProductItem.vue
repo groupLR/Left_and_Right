@@ -31,7 +31,7 @@ const props = defineProps({
 const URL = `/products/${props.id}`
 // 加入購物車
 const handleAddToCart = async () => {
-  const data = await CartStore.addProduct(props.id)
+  await CartStore.addProduct(props.id)
   ElMessage.success("新增成功")
 }
 </script>

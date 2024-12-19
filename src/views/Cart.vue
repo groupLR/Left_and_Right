@@ -3,6 +3,8 @@
 import axios from "axios"
 import { useRoute, useRouter } from "vue-router"
 import { onMounted, ref, computed } from "vue"
+import { useSharedCartStore } from "@/stores/sharedCart"
+const SharedCartStore = useSharedCartStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -29,15 +31,6 @@ const fetchCartItems = async () => {
     console.log("資料獲取成功:", products.value)
   } catch (error) {
     console.error("獲取資料失敗:", error)
-  }
-}
-// 獲取共享購物車商品
-const fetchSharedCartItems = async (groupId) => {
-  try {
-    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/sharedCartItem/${groupId}`)
-    products.value = data
-  } catch (err) {
-    console.log("err", err)
   }
 }
 
@@ -106,7 +99,8 @@ onMounted(async () => {
   // 檢查路由是否包含 groupId 參數，有就抓共享購物車，沒有就抓自己的購物車
   if ("groupId" in route.params) {
     isSharedCart.value = true
-    await fetchSharedCartItems(route.params.groupId)
+    const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
+    products.value = data
   } else {
     await fetchCartItems()
   }
