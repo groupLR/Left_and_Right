@@ -57,7 +57,6 @@ const handleRegister = async (googleData) => {
 
 // Google 登入 callback fn
 const onLogin = (res) => {
-  console.log("Google Response:", res)
   // 確保後端允許跨域請求
   const axiosOptions = {
     headers: {
