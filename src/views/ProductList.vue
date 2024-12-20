@@ -1,12 +1,13 @@
 <script setup>
-import ProductItem from "@/components/ProductItem.vue";
-import { ref, computed, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
-import { storeToRefs } from "pinia";
-import { useProductStore } from "@/stores/products";
-import { useSidebar } from '@/stores/sidebar';
-const route = useRoute();
-const ProductStore = useProductStore();
+import ProductItem from "@/components/ProductItem.vue"
+import { ref, computed, onMounted, watch } from "vue"
+import { useRoute } from "vue-router"
+import { storeToRefs } from "pinia"
+import { useProductStore } from "@/stores/products"
+import { useSidebar } from "@/stores/sidebar"
+
+const route = useRoute()
+const ProductStore = useProductStore()
 const {
   categoryTitle,
   productList,
@@ -17,27 +18,21 @@ const {
   currentPage,
   pageSize,
   totalProductCount,
-} = storeToRefs(ProductStore);
+} = storeToRefs(ProductStore)
+const { parents, fetchParents, toggleChildren } = useSidebar()
 
 // 監聽路由參數變化
 watch(
   () => route.params.category,
   async (newCategory) => {
     // 如果沒有 category 參數，使用空字串呼叫 API
-    await ProductStore.fetchProductList(newCategory || "");
+    await ProductStore.fetchProductList(newCategory || "")
   },
   { immediate: true }
-);
+)
 
-
-// 好像不用這個，會跟 watch 變成打兩次，先放著觀察
-// onMounted(async () => {
-//   const category = route.params.category || ''
-//   await ProductStore.fetchProductList(category)
-// })
-const { parents, fetchParents, toggleChildren } = useSidebar();
 // 組件掛載時請求父項目
-onMounted(fetchParents);
+onMounted(fetchParents)
 </script>
 
 <template>
@@ -50,17 +45,22 @@ onMounted(fetchParents);
             <!-- 僅當 hasChildren 為 true 時顯示圖示 -->
             <i
               v-if="parent.hasChildren"
-              @click="parent.hasChildren && toggleChildren(parent.categories_id)"
+              @click="
+                parent.hasChildren && toggleChildren(parent.categories_id)
+              "
               :class="{
                 'fas fa-chevron-down': !parent.showChildren,
                 'fas fa-chevron-up': parent.showChildren,
-              }"class="ml-2"
+              }"
+              class="ml-2"
             ></i>
           </div>
           <!-- 顯示子項目 -->
           <ul v-if="parent.showChildren" class="pl-1.5">
             <li v-for="child in parent.children" :key="child.categories_id">
-              <span class="  text-gray-400 hover:text-black">{{ child.category_name }}</span>
+              <span class="text-gray-400 hover:text-black">{{
+                child.category_name
+              }}</span>
             </li>
           </ul>
         </li>
@@ -138,31 +138,13 @@ onMounted(fetchParents);
             :orginalPrice="item.orginalPrice"
             :frontImg="item.frontImg"
             :backImg="item.backImg"
-            class="md:col-6  lg:col-3"
+            class="md:col-6 lg:col-3"
             @addToCart="handleAddToCart"
             @removeFromCart="removeFromCart"
             @updateQuantity="updateQuantity"
           />
         </div>
       </div>
-
-      <!-- 產品列表 -->
-      <div class="flex flex-wrap">
-        <ProductItem
-          v-for="(item, index) in productList"
-          :key="item.id"
-          :title="item.title"
-          :price="item.price"
-          :orginalPrice="item.orginalPrice"
-          :frontImg="item.frontImg"
-          :backImg="item.backImg"
-          class="md:col-6 lg:col-3"
-          @addToCart="handleAddToCart"
-          @removeFromCart="removeFromCart"
-          @updateQuantity="updateQuantity"
-        />
-      </div>
-
       <!-- 分頁 -->
       <div class="flex justify-center md:relative md:mb-12">
         <vue-awesome-paginate
@@ -184,7 +166,6 @@ onMounted(fetchParents);
     </div>
   </div>
 </template>
-
 <!-- 分頁的 style  -->
 <style>
 ul {
@@ -194,7 +175,7 @@ ul {
 li {
   margin: 10px 0;
 }
-span{
+span {
   cursor: pointer;
 }
 i {

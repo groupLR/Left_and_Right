@@ -1,20 +1,3 @@
-<template>
-  <div v-if="!isLoggedIn">
-    <div class="google-btn-wrapper">
-      <div id="googleButton"></div>
-    </div>
-  </div>
-  <!-- ↓ 這邊之後會拿掉 -->
-  <div v-else class="flex items-center gap-4">
-    <div class="flex items-center gap-2">
-      <span>{{ userData.username }}</span>
-    </div>
-    <button @click="handleLogout" class="w-12 h-6 bg-orange-200 rounded">
-      登出
-    </button>
-  </div>
-</template>
-
 <script setup>
 import { onMounted, ref } from "vue"
 import axios from "axios"
@@ -26,8 +9,6 @@ const redirectUrl = ref("") // 用 ref 來存儲重定向 URL
 // CLIENT_ID
 const CLIENT_ID =
   "201131820318-om98jaudikrjuraavdmt8o0jlitaf7b1.apps.googleusercontent.com"
-// 後端 API 網址
-const API_URL = "http://localhost:3300"
 // localSrotage 的 key
 const STORAGE_KEY = "UID"
 const STORAGE_JWT_KEY = "TwT"
@@ -54,11 +35,14 @@ function loginProcess(response) {
 // 處理 google 註冊新用戶
 const handleRegister = async (googleData) => {
   try {
-    const response = await axios.post(`${API_URL}/auth/register`, googleData)
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/auth/register`,
+      googleData
+    )
 
     loginProcess(response)
   } catch (error) {
-    console.error("註冊失敗 QAQ:", error)
+    console.error("註冊失敗", error)
     Swal.fire({
       title: "註冊失敗",
       text: error.message,
@@ -82,7 +66,11 @@ const onLogin = (res) => {
   }
 
   axios
-    .post(`${API_URL}/auth/verify-token`, res, axiosOptions)
+    .post(
+      `${import.meta.env.VITE_API_URL}/auth/verify-token`,
+      res,
+      axiosOptions
+    )
     .then((res) => {
       if (res.data.exists) {
         // 用戶存在（可能是一般註冊或 Google 註冊），直接登入
@@ -120,23 +108,6 @@ const onLogin = (res) => {
     })
 }
 
-// 先自己加登出功能測試
-const handleLogout = () => {
-  userData.value = null
-  isLoggedIn.value = false
-  localStorage.removeItem(STORAGE_KEY) // 移除 localStorage
-  localStorage.removeItem(STORAGE_JWT_KEY) // 移除 localStorage
-  delete axios.defaults.headers.common["Authorization"] // 移除預設標頭
-
-  // 重定向到登入頁
-  router.push("/users/sign-in")
-
-  // 等待 DOM 更新後再重新渲染按鈕
-  setTimeout(() => {
-    initializeGoogle()
-  }, 0)
-}
-
 // 初始化 Google 登入
 const initializeGoogle = () => {
   if (!window.google) {
@@ -157,13 +128,13 @@ const initializeGoogle = () => {
   })
 
   // 獲取容器寬度
-  const container = document.querySelector(".google-btn-wrapper")
+  const container = document.querySelector(".googleBtnWrapper")
   const containerWidth = container?.offsetWidth || 800
 
   // 設定按鈕寬度（確保不小於最小值）
   const buttonWidth = containerWidth - 40
 
-  // 渲染 Google 登入按鈕~~~ 可以選樣式啦
+  // 渲染 Google 登入按鈕
   window.google.accounts.id.renderButton(
     document.getElementById("googleButton"),
     {
@@ -192,7 +163,7 @@ onMounted(() => {
     // 預設帶上標頭
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
   }
-
+  // 如果 Google API 載入完成，進行初始化；如果還沒，在頁面完全載入後才初始化
   if (window.google) {
     initializeGoogle()
   } else {
@@ -209,8 +180,16 @@ window.addEventListener("resize", () => {
 })
 </script>
 
+<template>
+  <div v-if="!isLoggedIn">
+    <div class="googleBtnWrapper">
+      <div id="googleButton"></div>
+    </div>
+  </div>
+</template>
+
 <style scoped>
-.google-btn-wrapper {
+.googleBtnWrapper {
   display: flex;
   justify-content: center;
   align-items: center;

@@ -21,7 +21,7 @@ const URL = `/Cart/${props.id}`
       <div class=" w-full box-border flex justify-between p-4">
         <div class=" flex flex-row mx-1 items-center flex-wrap" v-if="props.name == null">
           <span>你與</span>
-          <span>{{ props.member[0] }}</span>
+          <span class="mx-1">{{ props.member[0] }}</span>
           <span v-if="props.member.length >= 2">與其他 {{ props.member.length - 1 }} 個人</span>
           <span>的共享購物車</span>
         </div>

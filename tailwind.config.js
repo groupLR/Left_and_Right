@@ -17,7 +17,6 @@ export default {
     },
     extend: {
       spacing: {
-        '50px': '50px',
       },
     },
   },
