@@ -2,7 +2,7 @@
 import MemberNavbar from "../components/MemberNavbar.vue"
 import LogOut from "@/components/Logout.vue"
 import { ref, computed, onMounted } from "vue"
-import { useUsersInformation } from "/src/stores/memberInformation"
+import { useUsersInformation } from "/src/stores/memberInformation.js"
 const { information, fetchInformation } = useUsersInformation()
 onMounted(() => {
   fetchInformation()
@@ -189,7 +189,7 @@ onMounted(() => {
               <label for="">手機號碼</label>
               <select></select>
               <input
-                type="tel"
+                type="number"
                 :value="information.phone"
                 :placeholder="information.phone === null ? '未填寫' : ''"
               />

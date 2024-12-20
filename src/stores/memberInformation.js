@@ -9,15 +9,11 @@ export const useUsersInformation = () => {
         `http://localhost:3300/memberInformation?uid=${UID}`
       )
       const data = await res.json()
-      if (data.length > 0) {
-        // 取第一筆資料
-        information.value = data[0]
-      }
+      information.value = data
     } catch (error) {
       console.error("請求失敗：", error)
     }
   }
-
   return {
     information, // 返回用戶資訊
     fetchInformation, // 返回方法，供外部重新加載數據

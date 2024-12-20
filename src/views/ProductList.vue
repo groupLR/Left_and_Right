@@ -66,6 +66,7 @@ onMounted(fetchParents)
         </li>
       </ul>
     </div>
+
     <div class="px-4 py-3 w-[80%]">
       <div class="headerContainer px-1 mb-2 md:flex items-center">
         <h1 class="py-5 text-xl">{{ categoryTitle }}</h1>
@@ -127,24 +128,23 @@ onMounted(fetchParents)
             </el-select>
           </div>
         </div>
-
-        <!-- 產品列表 -->
-        <div class="flex flex-wrap">
-          <ProductItem
-            v-for="(item, index) in paginatedProducts"
-            :key="item.id"
-            :title="item.title"
-            :price="item.price"
-            :orginalPrice="item.orginalPrice"
-            :frontImg="item.frontImg"
-            :backImg="item.backImg"
-            class="md:col-6 lg:col-3"
-            @addToCart="handleAddToCart"
-            @removeFromCart="removeFromCart"
-            @updateQuantity="updateQuantity"
-          />
-        </div>
       </div>
+
+      <!-- 產品列表 -->
+      <div class="flex flex-wrap">
+        <ProductItem
+          v-for="(item, index) in productList"
+          :key="item.id"
+          :id="item.id"
+          :title="item.title"
+          :price="item.price"
+          :originalPrice="item.originalPrice"
+          :frontImg="item.frontImg"
+          :backImg="item.backImg"
+          class="md:col-6 lg:col-3"
+        />
+      </div>
+
       <!-- 分頁 -->
       <div class="flex justify-center md:relative md:mb-12">
         <vue-awesome-paginate
