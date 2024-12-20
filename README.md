@@ -1,4 +1,4 @@
-# BonnyandRead-Front End Clone
+# Left and Right
 
 本專案為飾品商 BonnyRead 的網站的前端復刻版,重現了該網站上的排版、資訊和功能等元素，並依據飾品購買者的共同需求增加了新的功能。
 技術上以Vue3+Vite 開發，並輔以開發套件如 pinia,axios, vue-router 等。
