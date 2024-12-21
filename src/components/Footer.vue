@@ -1,8 +1,7 @@
 <template>
   <hr />
-  <!-- Footer -->
-  <footer class="footer mt-8">
-    <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 p-5 gap-8 mb-20 lg:m-8">
+  <footer class=" w-full bg-white mt-8">
+    <div class="m-auto pb-3 mx-auto grid grid-cols-1 md:grid-cols-4 p-5 gap-8 mb-20 lg:m-8">
       <!-- COMPANY -->
       <div class="flex flex-col ">
         <h3 class="font-extrabold text-[18px] mb-4">COMPANY</h3>
@@ -37,10 +36,10 @@
         <p class="text-sm">免付費電話 / 0800 000 004</p>
         <p class="text-sm mb-4">MON - FRI / 9:00 am - 18:00 pm</p>
         <div class="flex space-x-4">
-          <a href="https://page.line.me/ykt7461g?openQrModal=true" target="_blank">
+          <a href="https://github.com/33test">
             <img class="w-10" src="https://img.shoplineapp.com/media/image_clips/5eb0e9af1f1d01002a3dfaf7/original.png?1588652463" alt="">
           </a>
-          <a href="https://www.bonnyread.com.tw/pages/store-info" target="_blank">
+          <a href="https://github.com/33test">
             <img class="w-10" src="https://img.shoplineapp.com/media/image_clips/5eb0e8f8d4a797001baa024e/original.png?1588652280" alt="">
           </a>
         </div>
@@ -50,10 +49,9 @@
       <div class="flex flex-col ">
         <h3 class="font-extrabold text-[18px] mb-4">FOLLOW US</h3>
         <div class="flex space-x-4">
-          <a href="https://www.facebook.com/bonnyread.tw/?hl=zh-tw" target="_blank">
-            <img class="w-10" src="https://img.shoplineapp.com/media/image_clips/5e9d72cff915300015059501/original.png?1587376847" alt="Facebook">
+          <a href="https://github.com/33test">
           </a>
-          <a href="https://www.instagram.com/bonnyread.tw/?hl=zh-tw" target="_blank">
+          <a href="https://github.com/33test">
             <img class="w-10" src="https://img.shoplineapp.com/media/image_clips/5e9d72cf9546400021f6f837/original.png?1587376847" alt="Instagram">
           </a>
         </div>
@@ -61,28 +59,9 @@
     </div>
 
     <!-- Footer Bottom Section -->
-    <div class="footerBgc bg-gray-200 py-4 text-center">
-      <p class="text-sm font-semibold">2024 © BONNY & READ CO. LTD. ALL RIGHTS RESERVED.</p>
-      <p class="text-sm">營業人名稱：邦尼利得國際實業股份有限公司 / 統一編號：24687347</p>
+    <div class=" text-xs bg-gray-200 py-4 text-center">
+      <p class="text-sm font-semibold">2024 ©LEFT RIGHT .</p>
+      <p class="text-sm">營業人名稱：L&R股份有限公司/ 統一編號：1234678</p>
     </div>
   </footer>
 </template>
-
-<style scoped>
-.container{
- margin: 0 auto;
-padding-bottom: 10px;
-}
-.footer {
-  width: 100%;
-
-  background-color: white;
-}
-.footerBgc {
-  font-size: 12px;
-}
-li,
-.pText {
-  font-size: 13px;
-}
-</style>
