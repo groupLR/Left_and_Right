@@ -132,55 +132,112 @@
 <!-- 左邊表格 -->
   <div class="left  ">
     <form action="" id="customer_info">
+  <div class="left">
+    <div class="cart mt-100 ml-10 mr-10 wid">
+      <h3 class="h-10 quarter p-2">顧客資料</h3>
+      
+      <div class="m-2">
+        <label>顧客名稱</label>
+        <br>
+        <input
+          id="customerName"
+          type="text"
+          class="sideBorder options message"
+          v-model="customerData.name"
+          placeholder="請輸入中文"
+        />
+      </div>
 
-    <div class="cart mt-100 ml-10 mr-10  wid">
-  <h3 class="  h-10 quarter p-2" >顧客資料</h3>
- 
-  <div class="m-2">
-  <label>顧客名稱 </label>
-  <br>
-    <input type="text" class="sideBorder options message" id="cuName">
-   </div>
-   <div class="m-2">
-  <label for="">電話號碼</label>
+      <div class="m-2">
+        <label for="customerPhone">電話號碼</label>
+        <br>
+        <div class="flex items-center">
+          <select
+            id="countryCode"
+            v-model="customerData.countryCode"
+            class="w-40 sideBorder options message"
+          >
+            <option
+              v-for="country in countryList"
+              :key="country.code"
+              :value="country.code"
+            >
+              {{ country.countryEn }} ({{ country.countryZh }})
+              <span class="text-gray-400">{{ country.code }}</span>
+            </option>
+          </select>
+          <input
+            id="customerPhone"
+            type="tel"
+            class="sideBorder options message"
+            v-model="customerData.phone"
+            placeholder="0912345678"
+          />
+        </div>
+      </div>
 
-  <input type="text" class="sideBorder message"id="cuPhone">
-</div>
-    <div class="m-2">
-    <label for="" class="" >性別(選填)</label>
-    <br>
-    <select name="" id="gender" class="sideBorder options message">
-      <option value="" selected>男</option>
-      <option value="" >女</option>
-      <option value="" >不透露</option>
+      <div class="m-2">
+        <label for="">電子信箱</label>
+        <input
+          id="customerEmail"
+          type="email"
+          class="sideBorder options message"
+          v-model="customerData.email"
+          placeholder="1234@gmail.com"
+        />
+      </div>
 
-    </select>
-  
-  </div>
+      <div class="m-2">
+        <label for="" class="">性別(選填)</label>
+        <br>
+        <select name="" id="gender" class="sideBorder options message">
+          <option value="" selected>男</option>
+          <option value="">女</option>
+          <option value="">不透露</option>
+        </select>
+      </div>
 
-    <div class="relative">
-    <label for="">生日日期(選填)</label>
-    <i class="fa-solid fa-circle-question birthday" style="color: #0e2c44;"></i>
-    <div class="flex justfy-start">
-   
-      <select name="" id="" class="options message w-80" >
-      <option value=""></option>
-    </select>
-
-    <br>
-    <select name="" id="" class="options message w-80" disabled>
-      <option value="" selected></option>
-    </select>
-    <br>
-    <select name="" id="" class="options message w-80" disabled>
-      <option value="" selected></option>
-    </select>
-    
-  </div>
-  </div>
-   
+      <div class="relative">
+        <label for="">生日日期(選填)</label>
+        <i class="fa-solid fa-circle-question birthday" style="color: #0e2c44;"></i>
+        <div class="flex justfy-start">
+          <select
+            class="options message w-80"
+            v-model="customerData.birthday.year"
+          >
+            <option value="">年</option>
+            <option v-for="year in years" :key="year" :value="year">
+              {{ year }}
+            </option>
+          </select>
+          <select
+            class="options message w-80"
+            v-model="customerData.birthday.month"
+          >
+            <option value="">月</option>
+            <option v-for="month in months" :key="month" :value="month">
+              {{ month }}
+            </option>
+          </select>
+          <select
+            class="options message w-80"
+            v-model="customerData.birthday.day"
+          >
+            <option value="">日</option>
+            <option
+              v-for="day in days(customerData.birthday.year, customerData.birthday.month)"
+              :key="day"
+              :value="day"
+            >
+              {{ day }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
   </div>
 </form>
+
 <!-- 訂單備註表格 -->
 <form action="" id="note">
 
@@ -195,82 +252,182 @@
 <!-- 右邊表格 -->
 <div class="right ">
   <form action="" id="deliver_pro_info">
-  <div class="cart mt-100 ml-10 mr-10 wid">
-    <div class="flex justify-between quarter p-2">
-    <h3 class="  h-10 quarter " >送貨資料</h3>
-    <p >運費: NT$60</p>
-    </div>
+    <div class="cart mt-100 ml-10 mr-10 wid">
+      <div class="flex justify-between quarter p-2">
+        <h3 class="h-10 quarter">送貨資料</h3>
+        <p>運費: NT$60</p>
+      </div>
 
-    <p class="m-2">已選擇的送貨方式:貨到付款 </p>
-      <!-- 海外運送 ( 3-7天到貨，採EMS寄送 )</p> -->
+      <p class="m-2">選擇的送貨方式：{{ shippingMethod }}</p>
 
-    <div class="flex jusify-start mb-2 m-2"> 
-    <input type="checkbox" name="" id="" class="m-1">
-    <p >收件人資料與顧客資料相同</p></div>
-<div class="m-2">
-    <label for="" >收件人名稱</label>
-    <br>
-    <input type="text" class="sideBorder message">
-    <br>
-    <span>請填入收件人真實姓名，以確保順利收件</span>
-    <br></div>
-    <div class="mb-5 m-2">
-    <label for="">收件人電話號碼</label>
-   <br>
-    <input type="text" class="sideBorder message">
-   </div>
-   <hr class="mb-5">
-   <div class="m-2">
-  <p>地址</p>
-   <p>送貨地點: 台灣</p>
-  </div>
-  
-  <div class="m-2">
-    <input type="text" placeholder="地址" class="message">
-    <br>
-    <input type="text" placeholder="城市/市鎮"  class="message">
-    <div class="flex justify-start mb-5">
-      <input type="text" placeholder="郵政區號"  class="message w-40 ">
-      <input type="text" placeholder="地區/洲/省份"  class="message w-40">
-    </div>
-  <!-- 儲存、設定預設地址切版 -->
-    <!-- <div class="m-2">
-    <input type="checkbox">
-    <label for="">儲存這個送貨地址
-    </label>
-  </div>
-    <div class="m-2">
-    <input type="checkbox">
-    <label for="">設定為預設地址</label>
-  </div>
-   -->
-  <br>
-   </div>
-    </div>
-</form>
+      <div class="flex jusify-start mb-2 m-2"> 
+        <label>
+          <input
+            type="checkbox"
+            v-model="sameAsCustomer"
+            @change="syncCustomerToRecipient"
+            class="m-1"
+          />
+          收件人資料與顧客資料相同
+        </label>
+      </div>
 
-    <div class="cart mt-100 ml-10 mr-10 wid ">
+      <div class="m-2">
+        <label for="">收件人名稱</label>
+        <br>
+        <input
+          id="recipientName"
+          type="text"
+          class="sideBorder options message"
+          v-model="recipientData.name"
+          placeholder="請填入收件人真實姓名"
+        />
+      </div>
+
+      <div class="mb-5 m-2">
+        <label for="">收件人電話號碼</label>
+        <br>
+        <div class="flex items-center">
+          <!-- 國碼選單 -->
+          <select
+            id="countryCode"
+            v-model="customerData.countryCode"
+            class="w-40 sideBorder options message"
+          >
+            <option
+              v-for="country in countryList"
+              :key="country.code"
+              :value="country.code"
+            >
+              {{ country.countryEn }} ({{ country.countryZh }}) 
+              <span class="text-gray-400">{{ country.code }}</span>
+            </option>
+          </select>
+          <input
+            id="recipientPhone"
+            type="tel"
+            class="sideBorder options message"
+            v-model="recipientData.phone"
+            placeholder="0912345678"
+          />
+        </div>
+      </div>
+
+      <hr class="mb-5">
+
+      <div class="m-2">
+        <!-- 地址區域 -->
+        <p>地址</p>
+        <div v-if="recipientData.country === 'TW' || isAsianCountry">
+          <!-- 亞洲模板 (包括台灣) -->
+          <p>送貨地點:{{ recipientData.country }}</p>
+          <input
+            type="text"
+            v-model="address"
+            placeholder="地址1"
+            class="w-full message"
+          />
+          <br>
+          <input
+            type="text"
+            v-model="city"
+            placeholder="城市/市鎮"
+            class="w-full mt-2 message"
+          />
+          <div class="flex justify-start mb-5">
+            <input
+              type="text"
+              v-model="postalCode"
+              placeholder="郵政區號"
+              class="w-40 message"
+            />
+            <input
+              type="text"
+              v-model="region"
+              placeholder="地區/洲/省份(選填)"
+              class="w-40 message"
+            />
+          </div>
+        </div>
+
+        <div v-else>
+          <!-- 歐美模板 -->
+          <p>送貨地點:{{ recipientData.country }}</p>
+          <input
+            type="text"
+            v-model="address1"
+            placeholder="地址1"
+            class="w-full message"
+          />
+          <input
+            type="text"
+            v-model="address2"
+            placeholder="地址2"
+            class="w-full mt-2 message"
+          />
+          <input
+            type="text"
+            v-model="city"
+            placeholder="城市/市鎮"
+            class="w-full mt-2 message"
+          />
+          <input
+            type="text"
+            v-model="region"
+            placeholder="州郡/省"
+            class="w-40 message"
+          />
+          <input
+            type="text"
+            v-model="postalCode"
+            placeholder="郵遞區號"
+            class="w-40 message"
+          />
+        </div>
+      </div>
+
+      <div class="m-2">
+        <input
+          type="checkbox"
+          id="saveAddress"
+          v-model="saveAddress"
+          class="mr-2"
+        />
+        <label for="saveAddress">儲存這個送貨地址</label>
+      </div>
+
+      <div class="m-2">
+        <input
+          type="checkbox"
+          id="defaultAddress"
+          v-model="defaultAddress"
+          class="mr-2"
+        />
+        <label for="defaultAddress">設定為預設地址</label>
+      </div>
+    </div>
+  </form>
+</div>
+</div>
+<div>
+    <div v-if="checkoutStore.selectedPaymentMethod === '信用卡 (Visa / MasterCard / JCB / 銀聯卡)'" class="ml-10 mr-10 cart mt-100 wid ">
       <div class="flex justify-between quarter" >   
-        <h3 class="  h-10 quarter" >付款資料</h3>
-        <p>合計: NT$
-          <span>{{ itemPrice+60 }}</span>
-        </p>
+        <h3 class="h-10 quarter" >付款資料</h3>
+        <p>合計: <span>{{ itemPrice+60 }}</span></p>
     </div>
-    <p class="m-2">已選擇的付款方式: 貨到付款</p>
-      <!-- 信用卡 ( Visa / MasterCard / JCB / 銀聯卡 )</p> -->
-   <!-- 信用卡結帳時跳出 -->
-    <!-- <div class="m-2 relative">
+    <p class="m-2">已選擇的付款方式: 信用卡 ( Visa / MasterCard / JCB / 銀聯卡 )</p>
+   <div class="relative m-2">
     <input type="text" placeholder="卡號" class=" message">
     <i class="fa-solid fa-unlock-keyhole lock"></i>
     </div>
-    <div class="m-2 relative">
+    <div class="relative m-2">
     <input type="text" placeholder="持卡人姓名" class=" message">
     <i class="fa-regular fa-circle-question name-quote"></i>
     </div>
     <div class="flex m-2">
-    <input type="text" placeholder="有效期(MM/YY)" class="message w-40 ">
+    <input type="text" placeholder="有效期(MM/YY)" class="w-40 message ">
     
-    <input type="text" placeholder="安全碼" class="message w-40  ">
+    <input type="text" placeholder="安全碼" class="w-40 message ">
     <div class="relative p-4 pl-2">
     <i class="fa-regular fa-circle-question security "></i>
    </div>
@@ -282,12 +439,20 @@
    <hr>
     <div class="p-4">
     <span style="font-size: small; color: #c1c1c1;">本金流服務由 SHOPLINE Payments 提供，通過 PCI-DSS 國際信用卡組織最高等級認證，提供安全的交易服務，支援國內外信用卡刷卡。</span>
-     </div> -->
+     </div>
      </div>
 
+    <div v-else-if="checkoutStore.selectedPaymentMethod === '現金付款'" class="ml-10 mr-10 cart mt-100 wid">
+      <div class="flex justify-between quarter">   
+        <h3 class="h-10 quarter">付款資料</h3>
+        <p>合計: NT$2,558</p>
+      </div>
+      <p class="m-2">已選擇的付款方式: 貨到付現</p>
+    </div>
+  </div>
     
-    <div class="cart mt-100 ml-10 mr-10 wid">
-      <h3 class="  h-10 quarter" >索取發票</h3>
+    <div class="ml-10 mr-10 cart mt-100 wid">
+      <h3 class="h-10 quarter" >索取發票</h3>
       <div class="flex">
       <div class="m-2">
       <label for="" >發票類型</label>
@@ -309,8 +474,6 @@
       </div>
     </div>
 </div>
-  </div>
-  </div>
 <br>
   <!-- 完成訂單按鈕 -->
 <div  class="sideBorder cart" style="display: block;">
@@ -330,94 +493,159 @@
 
      </template>
      
-     <script>
-       import axios from 'axios';
+     <script setup>
+import axios from 'axios';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
+import { useRoute, onBeforeRouteUpdate } from 'vue-router';
+import { useCheckoutStore } from '../stores/payment';
 
-export default {
-  data() {
-    return {
-      products: [] ,// 儲存後端返回的商品資料
-      newProduct: { name: "", price: null, description: "" }, // 新增商品資料
+const checkoutStore = useCheckoutStore();
+const selectedLocation = computed(() => checkoutStore.selectedLocation);
+const selectedShippingMethod = computed(() => checkoutStore.selectedShippingMethod);
+const paymentMethods = computed(() => checkoutStore.paymentMethods);
 
-    };
-  },computed: {
-  itemCount() {
-    return this.products.filter(item => item.quantity > 0).length;
-  },
-  itemPrice(){
-    return this.products.reduce((total, item) => total + (item.original_price * item.quantity), 0);
+// 使用 ref 來管理響應式數據
+const products = ref([]); // 儲存後端返回的商品資料
+const route = useRoute();
+
+// 定義獲取資料的函數
+const fetchCartItems = async () => {
+  try {
+    const response = await axios.get('http://localhost:3300/cart/cartQuery');
+    products.value = response.data;
+    console.log('資料獲取成功:', products.value);
+  } catch (error) {
+    console.error('獲取資料失敗:', error);
   }
-}
-,
-  mounted() {
-    this.fetchCartItems(); // 組件加載時獲取資料
-  },
-  methods: {
-    async fetchCartItems() {
-      try {
-        const response = await axios.get('http://localhost:3300/cart/cartQuery');
-        this.products = response.data; // 將 API 返回的資料存入 products
-        console.log('資料獲取成功:', this.products);
-      } catch (error) {
-        console.error('獲取資料失敗:', error);
-      }
-    } ,
-     // 刪除商品
-     deleteProduct(id) {
-      axios
-        .delete(`http://localhost:3300/cart/cartDelete/${id}`)
-        .then(() => {
-          this.products = this.products.filter((product) => product.id !== id); // 從列表中移除
-        })
-        .catch((error) => {
-          console.error("刪除商品失敗:", error);
-        });
-    } ,
-  submitOrder() {
-    console.log("開始提交...");
-
-    const customerInfo = {
-      name: document.getElementById("cuName").value,
-      phone: document.getElementById("cuPhone").value,
-      gender: document.getElementById("gender").value,
-    };
-
-    const orderNote =document.querySelector("#note textarea").value;
-
-    const deliveryInfo = {
-      recipientName: document.querySelector('#deliver_pro_info input[type="text"]').value,
-      recipientPhone: document.querySelectorAll('#deliver_pro_info input[type="text"]')[1].value,
-      address: document.querySelectorAll('#deliver_pro_info input[type="text"]')[2].value,
-      city: document.querySelectorAll('#deliver_pro_info input[type="text"]')[3].value,
-      postalCode: document.querySelectorAll('#deliver_pro_info input[type="text"]')[4].value,
-      region: document.querySelectorAll('#deliver_pro_info input[type="text"]')[5].value,
-    };
-
-    console.log("顧客資料:", customerInfo);
-    console.log("訂單備註:", orderNote);
-    console.log("送貨資料:", deliveryInfo);
-
-    axios
-  .post('http://localhost:3300/debit/orderInsert', {
-    customerInfo,
-    orderNote,
-    deliveryInfo
-  })
-  .then((response) => {
-    console.log("訂單成功提交:", response);
-    alert("訂單新增成功");
-  }
-)
-  .catch((error) => {
-    console.error("建立訂單失敗:", error);
-  });
-
-    } ,
-  },
-
-  
-
 };
+
+// 在組件加載時調用 fetchCartItems
+onMounted(fetchCartItems);
+
+// 顧客資料
+const customerData = reactive({
+  name: "",
+  phone: "",
+  city: "",
+  country: "",
+  countryCode: "+886", // 預設為台灣
+  email: "",
+  gender: "",
+  birthday: {
+    year: "",
+    month: "",
+    day: "",
+  },
+});
+
+// 收件人資料
+const recipientData = reactive({
+  name: "",
+  phone: "",
+  country: selectedLocation.value,
+  city: "",
+});
+
+// 是否同步顧客資料
+const sameAsCustomer = ref(false);
+
+// 年/月選項
+const years = Array.from({ length: 101 }, (_, i) => new Date().getFullYear() - i);
+const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+// 動態生成天數
+const days = (year, month) => {
+  if (!year || !month) return Array.from({ length: 31 }, (_, i) => i + 1);
+  const date = new Date(year, month, 0);
+  return Array.from({ length: date.getDate() }, (_, i) => i + 1);
+};
+
+// 修改同步顧客資料的功能
+const syncCustomerToRecipient = () => {
+  if (sameAsCustomer.value) {
+    Object.assign(recipientData, {
+      name: customerData.name,
+      phone: customerData.phone,
+      countryCode: customerData.countryCode,
+      country: checkoutStore.selectedLocation,
+      city: customerData.city,
+    });
+  } else {
+    Object.assign(recipientData, {
+      name: "",
+      phone: "",
+      countryCode: "+886",
+      country: checkoutStore.selectedLocation,
+      city: "",
+    });
+  }
+};
+
+watch(sameAsCustomer, syncCustomerToRecipient);
+watch(
+  () => checkoutStore.selectedLocation,
+  (newLocation) => {
+    recipientData.country = newLocation;
+  },
+  { immediate: true }
+);
+
+const address = ref("");
+const address1 = ref("");
+const address2 = ref("");
+const city = ref("");
+const region = ref("");
+const postalCode = ref("");
+
+const countryList = [
+  { code: "+886", countryEn: "Taiwan", countryZh: "台灣" },
+  { code: "+852", countryEn: "Hong Kong", countryZh: "香港" },
+  { code: "+853", countryEn: "Macau", countryZh: "澳門" },
+  // ...其他國家
+];
+
+const isAsianCountry = computed(() => {
+  const asianCountries = ["TW", "CN", "JP", "KR", "SG", "MY", "VN", "TH", "HK", "MO", "ID", "NP", "KH"];
+  return asianCountries.includes(checkoutStore.selectedLocation);
+});
+
+// 處理訂單提交
+const submitOrder = async () => {
+  const customerInfo = {
+    name: customerData.name,
+    phone: customerData.phone,
+    gender: customerData.gender,
+  };
+
+  const deliveryInfo = {
+    recipientName: recipientData.name,
+    recipientPhone: recipientData.phone,
+    address: `${address.value}, ${city.value}`,
+    city: city.value,
+    postalCode: postalCode.value,
+    region: region.value,
+  };
+
+  try {
+    const response = await axios.post('http://localhost:3300/debit/orderInsert', {
+      customerInfo,
+      deliveryInfo,
+    });
+    console.log("訂單成功提交:", response.data);
+    alert("訂單新增成功");
+  } catch (error) {
+    console.error("建立訂單失敗:", error);
+  }
+};
+
+// 在路由更新時同步位置
+onBeforeRouteUpdate((to) => {
+  if (to.query && to.query.location) {
+    checkoutStore.setSelectedLocation(to.query.location);
+  }
+});
+
+
      </script>
      
      <style scoped>

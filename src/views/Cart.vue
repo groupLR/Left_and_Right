@@ -133,8 +133,13 @@
       <div class="option m-4">
         <label for="">送貨地點 </label>
         <br>
-        <select name="" id="" class="sideBorder options message">
-          <!-- <option value="AU">澳大利亞</option>
+        <select
+      id="delivery-location"
+      class="sideBorder options message"
+      v-model="selectedLocation"
+      @change="updateLocation($event.target.value)"
+    >  
+      <option value="AU">澳大利亞</option>
       <option value="BE">比利時</option>
       <option value="CA">加拿大</option>
       <option value="CN">中國</option>
@@ -152,12 +157,12 @@
       <option value="PW">帕勞</option>
       <option value="PE">秘魯</option>
       <option value="PH">菲律賓</option>
-      <option value="SG">新加坡</option> -->
-          <option value="TW">台灣</option>
-          <!--   <option value="TH">泰國</option>
+      <option value="SG">新加坡</option>
+      <option value="TW">台灣</option>
+      <option value="TH">泰國</option>
       <option value="GB">英國</option>
       <option value="US">美國</option>
-      <option value="VN">越南</option> -->
+      <option value="VN">越南</option>
 
         </select>
       </div>
@@ -165,29 +170,40 @@
         <label for="">送貨方式</label>
         <br>
         <!-- 跟地點修改選項 -->
-        <select name="" id="" class="sideBorder options message">
-          <!-- <option value="" selected disabled >海外運送 ( 3-7天到貨，採EMS寄送 )</option>
-      <option value="7-11" disabled>海外運送  (3-7天到貨，DHL運送)</option> -->
-          <!-- <option value="" >7-11</option> -->
-          <option value="">宅配到府</option>
-
-
-        </select>
-      </div>
+        <select
+      id="shipping-method"
+      class="sideBorder options message"
+      v-model="selectedShippingMethod"
+      @change="updateShippingMethod($event.target.value)"
+    >                                             
+    <option
+        v-for="(method, index) in shippingMethods"
+        :key="index"
+        :value="method"
+      >
+        {{ method }}
+      </option>
+    </select>
+    </div>
 
       <div class="option m-4">
         <label for="">付款方式</label>
         <br>
-        <select name="" id="" class="sideBorder options message">
-          <option value="">
-            貨到付款
-          </option>
-          <option value="" selected>
-            信用卡 ( Visa / MasterCard / JCB / 銀聯卡 )
-          </option>
-          <option value="" disabled> ↳ 刷星展卡滿 3,000 送 100 刷卡金</option>
-        </select>
-      </div>
+        <select
+        id="payment-method"
+        class="sideBorder options message"
+        v-model="checkoutStore.selectedPaymentMethod"
+        @change="updatePaymentMethod"
+      >
+        <option
+          v-for="method in checkoutStore.paymentMethods"
+          :key="method"
+          :value="method"
+        >
+          {{ method }}
+        </option>
+      </select>
+    </div>
 
       <br>
       <span>取貨通知：<br />- 訂單到達超商七日內，每日皆會傳送取貨簡訊，並於第五日時撥打語音電話通知取貨哦！<br />
@@ -232,9 +248,22 @@
 
         </div>
       </div>
-        <button class="buttonBg flex justify-center w-[95%] mx-auto my-4 h-8 items-center p-4"  :disabled="products.length === 0"
-        @click="goToNext">前往結帳</button>
-
+        <!-- <button class="buttonBg flex justify-center w-[95%] mx-auto my-4 h-8 items-center p-4"  :disabled="products.length === 0"
+        @click="goToNext">前往結帳</button> -->
+        <RouterLink
+         :to="{
+           name: 'Debit',
+           query: {
+             location: selectedLocation,
+             shipping: selectedShippingMethod,
+             payment: selectedPaymentMethod,
+           },
+         }"
+          
+         class="flex justify-center buttonBg"
+>
+  前往結帳
+</RouterLink>
       <!-- 訂單獲得點數 -->
       <!-- <div class="flex justify-between p-2	">
     <div>訂單獲得點數:</div>
@@ -252,120 +281,170 @@
 
 </template>
 
-<script>
+<script setup>
 import axios from 'axios';
-import { useRoute } from 'vue-router'
+import { ref, computed, watch, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useCheckoutStore } from '../stores/payment';
 
-export default {
-  data() {
-    return {
-      products: [], // 儲存後端返回的商品資料
-      isSharedCart: false // 是不是共享購物車（用cart/後面有沒有帶 groupId 判斷 )
-    };
+const checkoutStore = useCheckoutStore();
+const route = useRoute();
+const router = useRouter();
+
+// State management from store
+const selectedLocation = computed(() => checkoutStore.selectedLocation);
+const selectedShippingMethod = computed(() => checkoutStore.selectedShippingMethod);
+const paymentMethods = computed(() => checkoutStore.paymentMethods);
+const deliveryOptions = computed(() => checkoutStore.deliveryOptions);
+const shippingMethods = computed(() => deliveryOptions.value);
+const selectedPaymentMethod = computed({
+  get: () => checkoutStore.selectedPaymentMethod,
+  set: (value) => checkoutStore.setSelectedPaymentMethod(value),
+});
+
+// Local state
+const products = ref([]);
+const isSharedCart = ref(false);
+const location = ref(route.query.location || 'TW');
+
+// Update methods
+const updateLocation = (newLocation) => {
+  checkoutStore.setSelectedLocation(newLocation);
+  onLocationChange();
+};
+
+const updateShippingMethod = (method) => {
+  checkoutStore.setSelectedShippingMethod(method);
+};
+
+const updatePaymentMethod = (event) => {
+  checkoutStore.setSelectedPaymentMethod(event.target.value);
+};
+
+// Handle location change
+const onLocationChange = () => {
+  checkoutStore.setSelectedShippingMethod(shippingMethods.value[0] || '');
+  checkoutStore.setSelectedPaymentMethod(paymentMethods.value[0] || '');
+  console.log(`送貨地點變更為: ${selectedLocation.value}`);
+};
+
+// Watchers
+watch(selectedShippingMethod, (newMethod) => {
+  if (!paymentMethods.value.includes(checkoutStore.selectedPaymentMethod)) {
+    checkoutStore.setSelectedPaymentMethod(paymentMethods.value[0]);
+  }
+});
+
+watch(selectedPaymentMethod, (newPaymentMethod) => {
+  router.replace({
+    query: { ...route.query, payment: newPaymentMethod },
+  });
+});
+
+watch(
+  () => route.query,
+  (newQuery) => {
+    if (newQuery.location) {
+      checkoutStore.setSelectedLocation(newQuery.location);
+    }
   },
-  mounted() {
-    const route = useRoute()
+  { immediate: true }
+);
 
-    // 檢查路由是否包含 groupId 參數
-    if ('groupId' in route.params) {
-      this.isSharedCart = true
-      this.fetchSharedCartItems(route.params.groupId)
+// API Methods
+const fetchCartItems = async () => {
+  try {
+    const response = await axios.get('http://localhost:3300/cart/cartQuery');
+    products.value = response.data;
+    console.log('資料獲取成功:', products.value);
+  } catch (error) {
+    console.error('獲取資料失敗:', error);
+  }
+};
+
+const fetchSharedCartItems = async (groupId) => {
+  try {
+    const response = await axios.get(`http://localhost:3300/sharedCartItem/${groupId}`);
+    products.value = response.data;
+    console.log('獲得共享購物車資料');
+  } catch (error) {
+    console.error('Error fetching shared cart items:', error);
+  }
+};
+
+const addProduct = (newProduct) => {
+  axios
+    .post('http://localhost:3300/cart/cartInsert', newProduct)
+    .then((response) => {
+      products.value.push(response.data);
+    })
+    .catch((error) => {
+      console.error('新增商品失敗:', error);
+    });
+};
+
+const deleteProduct = (id) => {
+  axios
+    .delete(`http://localhost:3300/cart/cartDelete/${id}`)
+    .then(() => {
+      products.value = products.value.filter((product) => product.id !== id);
+    })
+    .catch((error) => {
+      console.error('刪除商品失敗:', error);
+    });
+};
+
+const updateQuantity = async (item) => {
+  if (item.quantity < 1) {
+    alert('數量不能小於 1');
+    item.quantity = 1;
+    return;
+  }
+  try {
+    const response = await axios.put('http://localhost:3300/cart/update-quantity', {
+      product_id: item.product_id,
+      quantity: item.quantity,
+    });
+    if (response.data.success) {
+      console.log('數量更新成功');
     } else {
-      this.fetchCartItems()
+      alert(`更新失敗: ${response.data.message}`);
     }
-  },
-  computed: {
-    itemCount() {
-      return this.products.filter(item => item.quantity > 0).length;
-    },
-    itemPrice() {
-      return this.products.reduce((total, item) => total + (item.original_price * item.quantity), 0);
-    },
+  } catch (error) {
+    console.error('更新數量時出錯', error);
+    alert('更新數量時出錯，請稍後再試');
   }
-  ,
-  methods: {
-    async fetchCartItems() {
-      try {
-        const response = await axios.get('http://localhost:3300/cart/cartQuery');
-        this.products = response.data; // 將 API 返回的資料存入 products
-        console.log('資料獲取成功:', this.products);
-      } catch (error) {
-        console.error('獲取資料失敗:', error);
-      }
-    },
-    async fetchSharedCartItems(groupId){
-      try {
-        const {data} = await axios.get(`http://localhost:3300/sharedCartItem/${groupId}`)
-        this.products = data
-        console.log("獲得共享購物車資料");
-      } catch (err) {
-        console.log("err",err);
-      }
-    },
-    // 新增商品
-    addProduct() {
-      axios
-        .post("http://localhost:3300/cart/cartInsert", this.newProduct)
-        .then((response) => {
-          this.products.push(response.data); // 新增成功後直接更新列表
-        })
-        .catch((error) => {
-          console.error("新增商品失敗:", error);
-        });
-    },
-    // 刪除商品
-    deleteProduct(id) {
-      axios
-        .delete(`http://localhost:3300/cart/cartDelete/${id}`)
-        .then(() => {
-          this.products = this.products.filter((product) => product.id !== id); // 從列表中移除
-        })
-        .catch((error) => {
-          console.error("刪除商品失敗:", error);
-        });
-    }, async updateQuantity(item) {
-      if (item.quantity < 1) {
-        alert("數量不能小於 1");
-        item.quantity = 1;
-        return;
-      }
+};
 
-      try {
-        const response = await axios.put(`http://localhost:3300/cart/update-quantity`, {
-          product_id: item.product_id,
-          quantity: item.quantity,
-        });
-
-        if (response.data.success) {
-          // 更新成功，可以選擇提示用戶或其他操作
-          console.log("數量更新成功");
-        } else {
-          // 處理後端返回的錯誤
-          alert("更新失敗：" + response.data.message);
-        }
-      } catch (error) {
-        console.error("更新數量時出錯", error);
-        alert("更新數量時出錯，請稍後再試");
-      }
-    },
-
+const goToNext = () => {
+  try {
+    router.push('/Debit').catch((err) => {
+      console.error('導航失敗:', err);
+    });
+  } catch (error) {
+    console.error('錯誤發生:', error);
   }
-  , goToNext() {
-    try {
-      // 設置 Cookie（如果需要）
-      //  document.cookie = "visited=true; path=/; max-age=3600";
+};
 
-      // 確保路由導航成功
-      this.$router.push('/Debit').catch(err => {
-        console.error("導航失敗:", err);
-      });
-    } catch (err) {
-      console.error("錯誤發生:", err);
-    }
+// Computed properties
+const itemCount = computed(() => products.value.filter((item) => item.quantity > 0).length);
+const itemPrice = computed(() =>
+  products.value.reduce((total, item) => total + item.original_price * item.quantity, 0)
+);
+
+// Lifecycle hooks
+onMounted(() => {
+  if ('groupId' in route.params) {
+    isSharedCart.value = true;
+    fetchSharedCartItems(route.params.groupId);
+  } else {
+    fetchCartItems();
   }
-}
-// 計算小計
+});
 
+// Initialize options
+checkoutStore.setSelectedShippingMethod('貨到付款-黑貓宅配/滿499免運');
+onLocationChange();
 
 </script>
 
