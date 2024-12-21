@@ -1,7 +1,7 @@
 <script setup>
+import { ElMessage } from "element-plus"
 import { defineProps } from "vue"
 import { RouterLink } from "vue-router"
-import { ElMessage } from "element-plus"
 import { storeToRefs } from "pinia"
 import { useCartStore } from "@/stores/cart"
 const CartStore = useCartStore()
