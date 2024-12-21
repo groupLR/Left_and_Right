@@ -66,6 +66,27 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
     }
   }
 
+  // 新增好友到共享購物車
+  const addMemberToSharedCart = async (groupId, memberEmails) => {
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/addMemberToSharedCart`,
+        {
+          groupId,
+          memberEmails,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      return data
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
   return {
     sharedCartList,
     fetchSharedCartList,
@@ -74,5 +95,6 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
     fetchSharedCartItems,
     creatSharedCart,
     deleteSharedCart,
+    addMemberToSharedCart,
   }
 })

@@ -40,7 +40,7 @@ const handleAddToCart = async () => {
   <div class="productContainer relative px-1.5 pt-1.5 pb-4 col-6 md:col-4 lg:static">
     <RouterLink :to="URL">
       <div class="w-full bg-center bg-cover" :style="{ backgroundImage: `url(${props.backImg})` }">
-        <img class="frontImg w-full object-cover align-bottom" :src="props.frontImg" alt="戒指" />
+        <img class="frontImg w-full object-cover align-bottom aspect-square" :src="props.frontImg" alt="戒指" />
       </div>
       <div class="px-2.5 pt-2.5 pb-7 mb-6 text-center lg:relative lg:mb-0">
         <p class="mb-1 text-sm">{{ props.title }}</p>

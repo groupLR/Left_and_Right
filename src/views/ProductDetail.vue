@@ -63,7 +63,7 @@ const desImgs = ref([])
 const getImageUrl = (imagePath) => {
   if (!imagePath || typeof imagePath !== "string") return ""
   const cleanedPath = imagePath.startsWith("./") ? imagePath.slice(1) : imagePath
-  return `${API_URL}${cleanedPath}`
+  return `${API_URL}/${cleanedPath}`
 }
 
 const isLoading = ref(true)
@@ -257,7 +257,8 @@ const toggleHeart = () => {
         <div class="grid grid-cols-2 gap-5 my-5">
           <button class="bg-black text-gray-50 border border-black rounded-lg text-lg p-1">加入購物車</button>
           <button class="bg-black text-gray-50 border border-black rounded-lg text-lg p-1">
-            <i class="fa-solid fa-bag-shopping text-[14px] mr-1"></i>立即購買
+            <i class="fa-brands fa-shopify ml-4 text-xl"></i>
+            加入共享購物車
           </button>
         </div>
         <div class="mx-auto my-5 flex justify-center text-sm hover:cursor-pointer">

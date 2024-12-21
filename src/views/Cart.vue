@@ -4,6 +4,7 @@ import axios from "axios"
 import { useRoute, useRouter } from "vue-router"
 import { onMounted, ref, computed } from "vue"
 import { useSharedCartStore } from "@/stores/sharedCart"
+import AddMember from "@/components/AddMember.vue"
 const SharedCartStore = useSharedCartStore()
 
 const route = useRoute()
@@ -12,6 +13,8 @@ const router = useRouter()
 // data
 const products = ref([]) // 儲存後端返回的商品資料
 const isSharedCart = ref(false) // 是不是共享購物車（用cart/後面有沒有帶 groupId 判斷 )
+const sharedCartName = ref("") // 共享購物車名稱
+const sharedCartMembers = ref([]) // 共享購物車成員
 
 // computed
 const itemCount = computed(() => {
@@ -94,19 +97,38 @@ const goToNext = async () => {
   }
 }
 
+const refreshSharedCart = async () => {
+  const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
+  products.value = data.productDataList
+  sharedCartMembers.value = data.info.memberName
+}
+
 // onMounted
 onMounted(async () => {
   // 檢查路由是否包含 groupId 參數，有就抓共享購物車，沒有就抓自己的購物車
   if ("groupId" in route.params) {
     isSharedCart.value = true
     const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
-    products.value = data
+    products.value = data.productDataList
+    sharedCartName.value = data.info.cartName
+    sharedCartMembers.value = data.info.memberName
   } else {
     await fetchCartItems()
   }
 })
 </script>
 <template>
+  <section class="mx-10 mt-5">
+    <div>
+      <h1 class="text-2xl font-bold">共享購物車</h1>
+      <h2 class="text-xl font-bold">{{ sharedCartName }}</h2>
+      <p>{{ sharedCartMembers.join("、") }}</p>
+    </div>
+    <div>
+      <AddMember :groupId="route.params.groupId" :members="sharedCartMembers" @memberAdded="refreshSharedCart" />
+      <button>刪除共享購物車</button>
+    </div>
+  </section>
   <div class="flex justify-center my-5">
     <div class="stepOne flex justify-center items-center text-center">1</div>
     <div class="h-0.5 mt-3 w-60 m-0 flex justify-center items-center text-center" style="background-color: #ddd5e4"></div>
