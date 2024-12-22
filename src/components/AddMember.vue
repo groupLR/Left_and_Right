@@ -92,8 +92,11 @@ onMounted(async () => {
 
 <template>
   <el-button plain @click="dialogFormVisible = true">新增好友</el-button>
-  <el-dialog v-model="dialogFormVisible" title="新增共享購物車" width="80%" class="max-w-[500px]">
-    <button @click="addInput">+</button>
+  <el-dialog v-model="dialogFormVisible" title="新增購朋友" width="80%" class="max-w-[500px]">
+    <!-- 新增按鈕 -->
+    <div class="flex justify-end mb-3">
+      <button class="border rounded-full px-2 py-1" @click="addInput"><i class="fa-solid fa-plus"></i></button>
+    </div>
     <el-form :model="form" class="responsiveForm">
       <AddMemberInput v-for="(input, index) in inputCount" :key="index" v-model="form.emails[index]" @remove="removeInput(index)" />
     </el-form>
