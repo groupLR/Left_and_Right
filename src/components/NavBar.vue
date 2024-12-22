@@ -1,151 +1,147 @@
 <script setup>
-import SmallCart from './SmallCart.vue';
-import { ref, computed } from 'vue';
-import { useProductStore } from '@/stores/products';  // 引入 Pinia store
-import { RouterLink } from "vue-router";
+import { ref, computed } from "vue"
+import { useProductStore } from "@/stores/products" // 引入 Pinia store
+import { RouterLink } from "vue-router"
 
-
-const productStore = useProductStore(); // 使用 Pinia store
-const cartItemCount = computed(() => productStore.cartItemCount);  // 从 store 获取购物车商品总数量
-const isCartOpen = ref(false);
-const isVisible = ref(false);
-const articleOpen = ref(false);
-const cartOpen = ref(false);
-const changeLanguageOpen = ref(false);
-const moneyOpen = ref(false);
-const overlayOpen = ref(false);
-const isLoggedIn = ref(!!localStorage.getItem('UID'))
-
+const productStore = useProductStore() // 使用 Pinia store
+const cartItemCount = computed(() => productStore.cartItemCount) // 从 store 获取购物车商品总数量
+const isCartOpen = ref(false)
+const isVisible = ref(false)
+const articleOpen = ref(false)
+const cartOpen = ref(false)
+const changeLanguageOpen = ref(false)
+const moneyOpen = ref(false)
+const overlayOpen = ref(false)
+const isLoggedIn = ref(!!localStorage.getItem("UID"))
 
 const inputShow = () => {
-  isVisible.value = !isVisible.value;
-};
+  isVisible.value = !isVisible.value
+}
 const openArticle = () => {
-  articleOpen.value = !articleOpen.value;
-};
+  articleOpen.value = !articleOpen.value
+}
 const openCart = () => {
-  cartOpen.value = !cartOpen.value;
-};
+  cartOpen.value = !cartOpen.value
+}
 const openChangeLanguage = () => {
-  changeLanguageOpen.value = !changeLanguageOpen.value;
-};
+  changeLanguageOpen.value = !changeLanguageOpen.value
+}
 const openMoney = () => {
-  moneyOpen.value = !moneyOpen.value;
-};
+  moneyOpen.value = !moneyOpen.value
+}
 const openOverlay = () => {
-  overlayOpen.value = !overlayOpen.value;
-};
+  overlayOpen.value = !overlayOpen.value
+}
 // 1
-const listOpen = ref(true);
+const listOpen = ref(true)
 const openList = () => {
-  listOpen.value = !listOpen.value;
-};
+  listOpen.value = !listOpen.value
+}
 // 2
-const listOpen2 = ref(true);
+const listOpen2 = ref(true)
 const openList2 = () => {
-  listOpen2.value = !listOpen2.value;
-};
+  listOpen2.value = !listOpen2.value
+}
 // 3
-const listOpen3 = ref(true);
+const listOpen3 = ref(true)
 const openList3 = () => {
-  listOpen3.value = !listOpen3.value;
-};
+  listOpen3.value = !listOpen3.value
+}
 // 4
-const listOpen4 = ref(true);
+const listOpen4 = ref(true)
 const openList4 = () => {
-  listOpen4.value = !listOpen4.value;
-};
+  listOpen4.value = !listOpen4.value
+}
 // 5
-const listOpen5 = ref(true);
+const listOpen5 = ref(true)
 const openList5 = () => {
-  listOpen5.value = !listOpen5.value;
-};
+  listOpen5.value = !listOpen5.value
+}
 // 6
-const listOpen6 = ref(true);
+const listOpen6 = ref(true)
 const openList6 = () => {
-  listOpen6.value = !listOpen6.value;
-};
+  listOpen6.value = !listOpen6.value
+}
 // 7
-const listOpen7 = ref(true);
+const listOpen7 = ref(true)
 const openList7 = () => {
-  listOpen7.value = !listOpen7.value;
-};
+  listOpen7.value = !listOpen7.value
+}
 // 8
-const listOpen8 = ref(true);
+const listOpen8 = ref(true)
 const openList8 = () => {
-  listOpen8.value = !listOpen8.value;
-};
+  listOpen8.value = !listOpen8.value
+}
 // 9
-const listOpen9 = ref(true);
+const listOpen9 = ref(true)
 const openList9 = () => {
-  listOpen9.value = !listOpen9.value;
-};
+  listOpen9.value = !listOpen9.value
+}
 // 10
-const listOpen10 = ref(true);
+const listOpen10 = ref(true)
 const openList10 = () => {
-  listOpen10.value = !listOpen10.value;
-};
+  listOpen10.value = !listOpen10.value
+}
 // 11
-const listOpen11 = ref(true);
+const listOpen11 = ref(true)
 const openList11 = () => {
-  listOpen11.value = !listOpen11.value;
-};
+  listOpen11.value = !listOpen11.value
+}
 // 12
-const listOpen12 = ref(true);
+const listOpen12 = ref(true)
 const openList12 = () => {
-  listOpen12.value = !listOpen12.value;
-};
+  listOpen12.value = !listOpen12.value
+}
 // 13
-const listOpen13 = ref(true);
+const listOpen13 = ref(true)
 const openList13 = () => {
-  listOpen13.value = !listOpen13.value;
-};
+  listOpen13.value = !listOpen13.value
+}
 // 14
-const listOpen14 = ref(true);
+const listOpen14 = ref(true)
 const openList14 = () => {
-  listOpen14.value = !listOpen14.value;
-};
+  listOpen14.value = !listOpen14.value
+}
 // 15
-const listOpen15 = ref(true);
+const listOpen15 = ref(true)
 const openList15 = () => {
-  listOpen15.value = !listOpen15.value;
-};
+  listOpen15.value = !listOpen15.value
+}
 // 16
-const listOpen16 = ref(true);
+const listOpen16 = ref(true)
 const openList16 = () => {
-  listOpen16.value = !listOpen16.value;
-};
+  listOpen16.value = !listOpen16.value
+}
 // 17
-const listOpen17 = ref(true);
+const listOpen17 = ref(true)
 const openList17 = () => {
-  listOpen17.value = !listOpen17.value;
-};
+  listOpen17.value = !listOpen17.value
+}
 // 18
-const listOpen18 = ref(true);
+const listOpen18 = ref(true)
 const openList18 = () => {
-  listOpen18.value = !listOpen18.value;
-};
+  listOpen18.value = !listOpen18.value
+}
 // 19
-const listOpen19 = ref(true);
+const listOpen19 = ref(true)
 const openList19 = () => {
-  listOpen19.value = !listOpen19.value;
-};
+  listOpen19.value = !listOpen19.value
+}
 </script>
 
 <template>
   <div v-if="isCartOpen" class="overlay" @click="closeCart"></div>
   <input type="checkbox" id="bars" class="hidden peer" />
   <div
-    class="fixed inset-0 flex items-center justify-center transition-opacity duration-300 bg-black bg-opacity-50 opacity-0 pointer-events-none peer-checked:pointer-events-auto peer-checked:opacity-100">
+    class="fixed inset-0 flex items-center justify-center transition-opacity duration-300 bg-black bg-opacity-50 opacity-0 pointer-events-none peer-checked:pointer-events-auto peer-checked:opacity-100"
+  >
     <label for="bars" class="absolute inset-0 cursor-pointer"></label>
   </div>
 
   <div class="flex items-center justify-between">
-    <a href="#" class="px-4 py-2">
-      <img src="/src/assets/ourLogo.jpeg" alt="logo" class="object-fill w-20 h-11" /></a>
-    <ul class="flex items-center justify-end flex-1 ">
-
-      <li class="mx-3 ">
+    <a href="/" class="px-4 py-2"> <img src="/src/assets/LRlogo.jpg" alt="logo" class="object-fill w-20 h-11" /></a>
+    <ul class="flex items-center justify-end flex-1">
+      <li class="mx-3">
         <select class="hidden text-black outline-none cursor-pointer xl:block hover:text-gray-500">
           <option>$ HKD</option>
           <option>P MOP</option>
@@ -181,8 +177,12 @@ const openList19 = () => {
         <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
       </li>
       <li class="relative hidden mx-3 text-black xl:block group hover:text-gray-500">
-        <input type="search" maxlength="100" placeholder="ivy郁欣聯名"
-          class="w-0 overflow-hidden transition-all duration-500 ease-in-out border-b border-black outline-none group-hover:w-56 focus:w-56 focus-visible:outline-none" />
+        <input
+          type="search"
+          maxlength="100"
+          placeholder="ivy郁欣聯名"
+          class="w-0 overflow-hidden transition-all duration-500 ease-in-out border-b border-black outline-none group-hover:w-56 focus:w-56 focus-visible:outline-none"
+        />
         <button type="submit">
           <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
         </button>
@@ -207,8 +207,9 @@ const openList19 = () => {
       </RouterLink>
       <li class="relative w-16 h-16 list-none">
         <div>
-          <label for="bars"><font-awesome-icon :icon="['fas', 'bars']"
-              class="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer top-1/2 left-1/2 xl:hidden" /></label>
+          <label for="bars"
+            ><font-awesome-icon :icon="['fas', 'bars']" class="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer top-1/2 left-1/2 xl:hidden"
+          /></label>
         </div>
       </li>
     </ul>
@@ -217,19 +218,16 @@ const openList19 = () => {
     <button type="submit" class="py-px px-1.5">
       <i class="fa fa-search ::before"></i>
     </button>
-    <input type="search" maxlength="100" placeholder="ivy郁欣聯名"
-      class="w-4/5 border-b border-black focus-visible:outline-none" />
+    <input type="search" maxlength="100" placeholder="ivy郁欣聯名" class="w-4/5 border-b border-black focus-visible:outline-none" />
   </div>
-  <article
-    class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white peer-checked:translate-x-0">
+  <article class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white peer-checked:translate-x-0">
     <li class="listItems"><a href="#">Kurt Wu 插畫家聯名</a></li>
     <li class="listItems"><a href="#">KOL / Ivy郁欣聯名</a></li>
     <li class="listItems"><a href="#">飾品設計師大賽/by.Lab</a></li>
 
     <li class="relative listItems">
       <a href="#">1111 新品 / NEW ARRIVAL</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen }" @click="openList" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen }" @click="openList" />
       <ul class="overflow-hidden" :class="listOpen ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">Christmas Gift</li>
         <li class="py-3.5 pr-11 pl-4">FW Pearl</li>
@@ -240,8 +238,7 @@ const openList19 = () => {
     </li>
     <li class="relative listItems">
       <a href="#">限時優惠/Sales</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen2 }" @click="openList2" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen2 }" @click="openList2" />
       <ul class="overflow-hidden" :class="listOpen2 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">登入會員4折起優惠</li>
         <li class="py-3.5 pr-11 pl-4">藝人聯名限時8折起</li>
@@ -249,8 +246,7 @@ const openList19 = () => {
     </li>
     <li class="listItems">
       <a href="#">熱銷商品/B.Sellers</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen3 }" @click="openList3" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen3 }" @click="openList3" />
       <ul class="overflow-hidden" :class="listOpen3 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">Y3K時尚</li>
         <li class="py-3.5 pr-11 pl-4">勃艮第紅</li>
@@ -267,8 +263,7 @@ const openList19 = () => {
     </li>
     <li class="listItems">
       <a href="#">耳環 / Earrings</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen4 }" @click="openList4" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen4 }" @click="openList4" />
       <ul class="overflow-hidden" :class="listOpen4 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">抗敏銀針</li>
         <li class="py-3.5 pr-11 pl-4">耳環組</li>
@@ -282,8 +277,7 @@ const openList19 = () => {
     </li>
     <li class="listItems">
       <a href="#">耳夾 / Earclip</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen5 }" @click="openList5" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen5 }" @click="openList5" />
       <ul class="overflow-hidden" :class="listOpen5 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">純銀耳夾耳扣</li>
         <li class="py-3.5 pr-11 pl-4">垂墜夾式耳環</li>
@@ -296,8 +290,7 @@ const openList19 = () => {
     </li>
     <li class="listItems">
       <a href="#">戒指 / Rings</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen6 }" @click="openList6" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen6 }" @click="openList6" />
       <ul class="overflow-hidden" :class="listOpen6 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">情侶對戒系列</li>
         <li class="py-3.5 pr-11 pl-4">尾戒</li>
@@ -312,8 +305,7 @@ const openList19 = () => {
     </li>
     <li class="listItems">
       <a href="#">手鍊 / Bracelets</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen7 }" @click="openList7" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen7 }" @click="openList7" />
       <ul class="overflow-hidden" :class="listOpen7 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">手鍊</li>
         <li class="py-3.5 pr-11 pl-4">手環</li>
@@ -327,8 +319,7 @@ const openList19 = () => {
     </li>
     <li class="listItems">
       <a href="#">項鍊 / Necklaces</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen8 }" @click="openList8" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen8 }" @click="openList8" />
       <ul class="overflow-hidden" :class="listOpen8 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">頸鏈</li>
         <li class="py-3.5 pr-11 pl-4">鎖骨鏈</li>
@@ -340,16 +331,14 @@ const openList19 = () => {
     </li>
     <li class="listItems">
       <a href="#">鋼飾 / Steel</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen9 }" @click="openList9" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen9 }" @click="openList9" />
       <ul class="overflow-hidden" :class="listOpen9 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">醫療鋼</li>
       </ul>
     </li>
     <li class="listItems">
       <a href="#">銀飾 / Sliver</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen10 }" @click="openList10" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen10 }" @click="openList10" />
       <ul class="overflow-hidden" :class="listOpen10 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">純銀</li>
         <li class="py-3.5 pr-11 pl-4">純銀耳環</li>
@@ -357,8 +346,7 @@ const openList19 = () => {
     </li>
     <li class="listItems">
       <a href="#">髮飾 / Hair Accessory</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen11 }" @click="openList11" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen11 }" @click="openList11" />
       <ul class="overflow-hidden" :class="listOpen11 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">髮帶</li>
         <li class="py-3.5 pr-11 pl-4">髮圈</li>
@@ -370,8 +358,7 @@ const openList19 = () => {
     <li class="listItems"><a href="#">墨鏡 / Sunglasses</a></li>
     <li class="listItems">
       <a href="#">韓國空運 /Korea</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen12 }" @click="openList12" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen12 }" @click="openList12" />
       <ul class="overflow-hidden" :class="listOpen12 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">耳環</li>
         <li class="py-3.5 pr-11 pl-4">耳夾</li>
@@ -384,8 +371,7 @@ const openList19 = () => {
     <li class="listItems"><a href="#">大甲鎮瀾宮 / Dajia Mastu</a></li>
     <li class="listItems">
       <a href="#">藝人聯名 / Co-branding</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen13 }" @click="openList13" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen13 }" @click="openList13" />
       <ul class="overflow-hidden" :class="listOpen13 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">TIMU聯名</li>
         <li class="py-3.5 pr-11 pl-4">KOL / Nina曹婕妤 聯名</li>
@@ -394,8 +380,7 @@ const openList19 = () => {
     </li>
     <li class="listItems">
       <a href="#">B&R設計師支線 海洋NEW</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen14 }" @click="openList14" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen14 }" @click="openList14" />
       <ul class="overflow-hidden" :class="listOpen14 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">New 海洋系列 /Quest For Freedom</li>
         <li class="py-3.5 pr-11 pl-4">礦石系列 / Mineral Select</li>
@@ -403,8 +388,7 @@ const openList19 = () => {
     </li>
     <li class="listItems">
       <a href="#">官方IP授權 / IP Licensing</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen15 }" @click="openList15" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen15 }" @click="openList15" />
       <ul class="overflow-hidden" :class="listOpen15 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">Barbie芭比聯名</li>
         <li class="py-3.5 pr-11 pl-4">Hello Kitty 50週年</li>
@@ -416,8 +400,7 @@ const openList19 = () => {
     </li>
     <li class="listItems">
       <a href="#">中性飾品 / Men's Acc</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen16 }" @click="openList16" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen16 }" @click="openList16" />
       <ul class="overflow-hidden" :class="listOpen16 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">耳環</li>
         <li class="py-3.5 pr-11 pl-4">耳扣</li>
@@ -432,8 +415,7 @@ const openList19 = () => {
     <li class="listItems"><a href="#">手機掛繩配件 / Phone Acc</a></li>
     <li class="listItems">
       <a href="#">飾品盒＆配件 / Other</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen17 }" @click="openList17" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen17 }" @click="openList17" />
       <ul class="overflow-hidden" :class="listOpen17 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">鞋扣 襪套 包包 周邊配件</li>
         <li class="py-3.5 pr-11 pl-4">鑰匙圈</li>
@@ -444,8 +426,7 @@ const openList19 = () => {
     </li>
     <li class="listItems">
       <a href="#">韓國香氛Cosmic Mansion</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen18 }" @click="openList18" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen18 }" @click="openList18" />
       <ul class="overflow-hidden" :class="listOpen18 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">香水</li>
         <li class="py-3.5 pr-11 pl-4">蠟燭</li>
@@ -455,8 +436,7 @@ const openList19 = () => {
     </li>
     <li class="listItems">
       <a href="#">系列 / Series</a>
-      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5"
-        :class="{ 'rotate-180': !listOpen19 }" @click="openList19" />
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="absolute right-1 top-5" :class="{ 'rotate-180': !listOpen19 }" @click="openList19" />
       <ul class="overflow-hidden" :class="listOpen19 ? 'h-0' : 'h-auto'">
         <li class="py-3.5 pr-11 pl-4">施用 施華洛世奇水晶</li>
         <li class="py-3.5 pr-11 pl-4">官網限定系列</li>
@@ -525,7 +505,8 @@ const openList19 = () => {
   </article>
   <article
     class="fixed top-0 z-10 w-3/4 h-screen px-5 pt-4 pb-3 overflow-auto transition-all duration-500 -translate-x-full bg-white"
-    :class="changeLanguageOpen ? 'translate-x-0' : '-translate-x-full'">
+    :class="changeLanguageOpen ? 'translate-x-0' : '-translate-x-full'"
+  >
     <ul>
       <li @click="openChangeLanguage">
         <font-awesome-icon :icon="['fas', 'chevron-left']" />
@@ -538,7 +519,8 @@ const openList19 = () => {
 
   <article
     class="fixed top-0 z-10 w-3/4 h-screen px-5 pt-4 pb-3 overflow-auto transition-all duration-500 -translate-x-full bg-white"
-    :class="moneyOpen ? 'translate-x-0' : '-translate-x-full'">
+    :class="moneyOpen ? 'translate-x-0' : '-translate-x-full'"
+  >
     <ul>
       <font-awesome-icon :icon="['fas', 'chevron-left']" />
       <span class="py-3 ml-2" @click="openMoney">貨幣</span>
@@ -564,25 +546,23 @@ const openList19 = () => {
     </ul>
   </article>
 
-  <article class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white"
-    :class="cartOpen ? 'translate-x-0' : '-translate-x-full'">
+  <article
+    class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white"
+    :class="cartOpen ? 'translate-x-0' : '-translate-x-full'"
+  >
     <div class="bg-white pb-10 px-3.5 pt-3.5 overflow-auto">
       <div class="p-3">
-        <img src="/src/assets/ourLogo.jpeg" alt="" />
+        <img src="/src/assets/LRlogo.jpg" alt="" />
       </div>
       <div>
         <p class="p-3">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo itaque
-          necessitatibus nostrum. Vero, aliquam deleniti provident distinctio
-          tempora tenetur consectetur, possimus veritatis odit repellat porro,
-          rerum recusandae voluptatem natus dolorem!
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo itaque necessitatibus nostrum. Vero, aliquam deleniti provident distinctio tempora
+          tenetur consectetur, possimus veritatis odit repellat porro, rerum recusandae voluptatem natus dolorem!
         </p>
         <p class="p-3">商品名稱</p>
       </div>
       <div class="p-3">
-        <p class="relative">
-          數量＆價錢<font-awesome-icon :icon="['fas', 'trash']" class="absolute -translate-y-1/2 right-1 top-1/2" />
-        </p>
+        <p class="relative">數量＆價錢<font-awesome-icon :icon="['fas', 'trash']" class="absolute -translate-y-1/2 right-1 top-1/2" /></p>
       </div>
       <button class="">訂單結帳</button>
     </div>
@@ -632,7 +612,7 @@ const openList19 = () => {
   display: inline-block;
 }
 
-@media screen and (min-width : 1200px) {
+@media screen and (min-width: 1200px) {
   .items {
     padding: 20px;
     display: flex;
