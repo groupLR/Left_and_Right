@@ -1,23 +1,17 @@
 <script setup>
-import { ElMessage } from 'element-plus'
-import { jwtDecode } from 'jwt-decode' // 之後有取得會員資料 API，我就不用在前端解了
-import { onMounted, reactive, ref } from 'vue'
-import { storeToRefs } from "pinia";
-import { useSharedCartStore } from '@/stores/sharedCart'
+import { ElMessage } from "element-plus"
+import { jwtDecode } from "jwt-decode" // 之後有取得會員資料 API，我就不用在前端解了
+import { onMounted, reactive, ref } from "vue"
+import { storeToRefs } from "pinia"
+import { useSharedCartStore } from "@/stores/sharedCart"
 const SharedCartStore = useSharedCartStore()
 const { userEmailList } = storeToRefs(SharedCartStore)
 
 const dialogFormVisible = ref(false)
 
 const form = reactive({
-  name: '',
-  region: '',
-  date1: '',
-  date2: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: '',
+  name: "",
+  email: "",
 })
 
 onMounted(async () => {
@@ -26,41 +20,36 @@ onMounted(async () => {
 const createSharedCart = async () => {
   const JWT = localStorage.getItem("TwT")
   const { email: userEmail, userId } = jwtDecode(JWT)
-  
-  if(form.email === "") {
+
+  if (form.email === "") {
     ElMessage.error("請正確輸入信箱")
     return
-  } 
-  
-  if(userEmail === form.email) {
-    ElMessage.error('請不要輸入自己的信箱')
+  }
+
+  if (userEmail === form.email) {
+    ElMessage.error("請不要輸入自己的信箱")
     return
   }
-  
+
   const found = userEmailList.value.includes(form.email)
-  if(!found) {
-    ElMessage.error('請輸入正確的好友信箱')
+  if (!found) {
+    ElMessage.error("請輸入正確的好友信箱")
     return
   }
-  
+
   try {
     await SharedCartStore.creatSharedCart(form.name, userId, form.email)
     dialogFormVisible.value = false
-    ElMessage.success('添加成功')
-    await SharedCartStore.fetchSharedCartList()
-
-  } catch(err) {
-    ElMessage.error('添加失敗')
+    ElMessage.success("添加成功")
+    await SharedCartStore.fetchSharedCartList(userId)
+  } catch (err) {
+    ElMessage.error("添加失敗")
   }
 }
-
 </script>
 
 <template>
-
-  <el-button plain @click="dialogFormVisible = true">
-    新增共享購物車
-  </el-button>
+  <el-button plain @click="dialogFormVisible = true"> 新增共享購物車 </el-button>
 
   <el-dialog v-model="dialogFormVisible" title="新增共享購物車" width="80%" class="max-w-[500px]">
     <el-form :model="form" class="responsiveForm">
@@ -74,16 +63,13 @@ const createSharedCart = async () => {
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="createSharedCart">
-          新增
-        </el-button>
+        <el-button type="primary" @click="createSharedCart"> 新增 </el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 
 <style scoped>
-
 /* 小螢幕時變成上下排列 */
 @media screen and (max-width: 768px) {
   .responsiveForm :deep(.el-form-item) {
@@ -91,7 +77,7 @@ const createSharedCart = async () => {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .responsiveForm :deep(.el-form-item__label) {
     text-align: left;
     padding: 0;
@@ -108,7 +94,7 @@ const createSharedCart = async () => {
   border-color: #212121;
   color: #fff;
   outline: none;
-  background-color:#2f2f2f
+  background-color: #2f2f2f;
 }
 
 .el-button--primary {
