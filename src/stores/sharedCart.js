@@ -31,8 +31,13 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
 
   // 獲取共享購物車商品
   const fetchSharedCartItems = async (groupId) => {
+    const userId = localStorage.getItem("UID")
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/sharedCartItem/${groupId}`)
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/sharedCartItem/${groupId}`, {
+        headers: {
+          userId,
+        },
+      })
       return data
     } catch (err) {
       console.log("err", err)
