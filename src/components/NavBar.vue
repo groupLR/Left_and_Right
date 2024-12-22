@@ -1,10 +1,10 @@
 <script setup>
 import { ref, computed } from "vue"
-import { useProductStore } from "@/stores/products" // 引入 Pinia store
 import { RouterLink } from "vue-router"
+import { useRouter } from "vue-router"
+import debounce from "lodash/debounce"
+import axios from "axios"
 
-const productStore = useProductStore() // 使用 Pinia store
-const cartItemCount = computed(() => productStore.cartItemCount) // 从 store 获取购物车商品总数量
 const isCartOpen = ref(false)
 const isVisible = ref(false)
 const articleOpen = ref(false)
@@ -13,6 +13,25 @@ const changeLanguageOpen = ref(false)
 const moneyOpen = ref(false)
 const overlayOpen = ref(false)
 const isLoggedIn = ref(!!localStorage.getItem("UID"))
+
+const searchKeyword = ref("")
+const router = useRouter()
+
+const fetchSearchResults = async () => {
+  if (searchKeyword.value.trim() !== "") {
+    // 使用 router 導航並將關鍵字作為查詢參數
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/search?q=${encodeURIComponent(searchKeyword.value)}`)
+    router.push({
+      path: "/search",
+      query: { q: searchKeyword.value.trim() },
+    })
+  } else {
+    alert("請輸入搜尋內容")
+  }
+}
+
+// 將 fetchSearchResults 包裝成 debounce 函數
+const goToSearch = debounce(fetchSearchResults, 800)
 
 const inputShow = () => {
   isVisible.value = !isVisible.value
@@ -179,11 +198,13 @@ const openList19 = () => {
       <li class="relative hidden mx-3 text-black xl:block group hover:text-gray-500">
         <input
           type="search"
+          v-model="searchKeyword"
+          @keyup.enter="goToSearch"
           maxlength="100"
           placeholder="ivy郁欣聯名"
           class="w-0 overflow-hidden transition-all duration-500 ease-in-out border-b border-black outline-none group-hover:w-56 focus:w-56 focus-visible:outline-none"
         />
-        <button type="submit">
+        <button type="submit" @click="goToSearch">
           <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
         </button>
       </li>
@@ -215,10 +236,17 @@ const openList19 = () => {
     </ul>
   </div>
   <div v-show="isVisible" class="w-full py-4 pl-4 pr-3 z-100 xl:hidden">
-    <button type="submit" class="py-px px-1.5">
+    <button type="submit" @click="goToSearch" class="py-px px-1.5">
       <i class="fa fa-search ::before"></i>
     </button>
-    <input type="search" maxlength="100" placeholder="ivy郁欣聯名" class="w-4/5 border-b border-black focus-visible:outline-none" />
+    <input
+      type="search"
+      v-model="searchKeyword"
+      @keyup.enter="goToSearch"
+      maxlength="100"
+      placeholder="ivy郁欣聯名"
+      class="w-4/5 border-b border-black focus-visible:outline-none"
+    />
   </div>
   <article class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white peer-checked:translate-x-0">
     <li class="listItems"><a href="#">Kurt Wu 插畫家聯名</a></li>
