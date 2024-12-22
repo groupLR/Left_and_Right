@@ -2,7 +2,7 @@
 <script setup>
 import axios from "axios"
 import { useRoute, useRouter } from "vue-router"
-import { onMounted, ref, computed } from "vue"
+import { onMounted, ref, computed, watch } from "vue"
 import { ElMessage } from "element-plus"
 import { useSharedCartStore } from "@/stores/sharedCart"
 import AddMember from "@/components/AddMember.vue"
@@ -113,15 +113,14 @@ const deleteSharedCart = async () => {
     ElMessage.error("刪除購物車失敗，請稍後再試")
   }
 }
-
+// 新增好友後重新渲染共享購物車
 const refreshSharedCart = async () => {
   const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
   products.value = data.productDataList
   sharedCartMembers.value = data.info.memberName
 }
 
-// onMounted
-onMounted(async () => {
+const initializeCartPage = async () => {
   // 檢查路由是否包含 groupId 參數，有就抓共享購物車，沒有就抓自己的購物車
   if ("groupId" in route.params) {
     isSharedCart.value = true
@@ -130,9 +129,23 @@ onMounted(async () => {
     sharedCartName.value = data.info.cartName || ""
     sharedCartMembers.value = data.info.memberName || []
   } else {
+    isSharedCart.value = false
     await fetchCartItems()
   }
+}
+
+// onMounted
+onMounted(async () => {
+  await initializeCartPage()
 })
+
+// watch
+watch(
+  () => route.params,
+  async () => {
+    await initializeCartPage()
+  }
+)
 </script>
 <template>
   <section class="mx-10 mt-5" v-if="isSharedCart">
