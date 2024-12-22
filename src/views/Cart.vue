@@ -3,8 +3,10 @@
 import axios from "axios"
 import { useRoute, useRouter } from "vue-router"
 import { onMounted, ref, computed } from "vue"
+import { ElMessage } from "element-plus"
 import { useSharedCartStore } from "@/stores/sharedCart"
 import AddMember from "@/components/AddMember.vue"
+import Warning from "@/components/Warning.vue"
 const SharedCartStore = useSharedCartStore()
 
 const route = useRoute()
@@ -97,6 +99,21 @@ const goToNext = async () => {
   }
 }
 
+// 刪除共享購物車
+const deleteSharedCart = async () => {
+  try {
+    await SharedCartStore.deleteSharedCart(route.params.groupId)
+    await SharedCartStore.fetchSharedCartList()
+    const message = sharedCartName.value ? `刪除 ${sharedCartName.value} 成功` : "刪除共享購物車成功"
+    ElMessage.success(message)
+    // 導航到共享購物車列表
+    router.push("/sharedcartlist")
+  } catch (error) {
+    console.error("刪除購物車失敗:", error)
+    ElMessage.error("刪除購物車失敗，請稍後再試")
+  }
+}
+
 const refreshSharedCart = async () => {
   const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
   products.value = data.productDataList
@@ -109,24 +126,27 @@ onMounted(async () => {
   if ("groupId" in route.params) {
     isSharedCart.value = true
     const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
-    products.value = data.productDataList
-    sharedCartName.value = data.info.cartName
-    sharedCartMembers.value = data.info.memberName
+    products.value = data.productDataList || []
+    sharedCartName.value = data.info.cartName || ""
+    sharedCartMembers.value = data.info.memberName || []
   } else {
     await fetchCartItems()
   }
 })
 </script>
 <template>
-  <section class="mx-10 mt-5">
-    <div>
+  <section class="mx-10 mt-5" v-if="isSharedCart">
+    <div class="flex justify-between">
       <h1 class="text-2xl font-bold">共享購物車</h1>
-      <h2 class="text-xl font-bold">{{ sharedCartName }}</h2>
-      <p>{{ sharedCartMembers.join("、") }}</p>
+      <div>
+        <AddMember :groupId="route.params.groupId" :members="sharedCartMembers" @memberAdded="refreshSharedCart" />
+        <Warning content="您確定要刪除共享購物車嗎？" @confirm="deleteSharedCart" />
+      </div>
     </div>
-    <div>
-      <AddMember :groupId="route.params.groupId" :members="sharedCartMembers" @memberAdded="refreshSharedCart" />
-      <button>刪除共享購物車</button>
+    <div class="my-5 bg-gray-100 p-3 border-solid border-2 rounded">
+      <h2 class="text-xl font-bold mb-2 text-cyan-900">{{ sharedCartName }}</h2>
+      <p class="font-bold">購朋友：</p>
+      <p>{{ sharedCartMembers.join("、") }}</p>
     </div>
   </section>
   <div class="flex justify-center my-5">
