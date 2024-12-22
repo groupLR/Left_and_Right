@@ -41,7 +41,7 @@ const createSharedCart = async () => {
     await SharedCartStore.creatSharedCart(form.name, userId, form.email)
     dialogFormVisible.value = false
     ElMessage.success("添加成功")
-    await SharedCartStore.fetchSharedCartList()
+    await SharedCartStore.fetchSharedCartList(userId)
   } catch (err) {
     ElMessage.error("添加失敗")
   }

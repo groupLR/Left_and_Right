@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink } from "vue-router"
 import { ElMessage } from "element-plus"
+import Warning from "./Warning.vue"
 import { useSharedCartStore } from "@/stores/sharedCart"
 const SharedCartStore = useSharedCartStore()
 
@@ -18,9 +19,10 @@ const props = defineProps({
 // 處理換頁
 const URL = `/Cart/${props.id}`
 // 刪除共享購物車
+const userId = localStorage.getItem("UID")
 const deleteSharedCart = async () => {
   await SharedCartStore.deleteSharedCart(props.id)
-  await SharedCartStore.fetchSharedCartList()
+  await SharedCartStore.fetchSharedCartList(userId)
   const message = props.name ? `刪除 ${props.name} 成功` : "刪除共享購物車成功"
   ElMessage.success(message)
 }
@@ -41,8 +43,11 @@ const deleteSharedCart = async () => {
         </div>
         <div class="flex">
           <button class="hidden md:block border px-4 py-1 rounded bg-black text-white hover:bg-emerald-300">查看</button>
+
           <!-- 刪除按鈕 -->
-          <button class="hidden md:block ml-6" @click.prevent="deleteSharedCart"><i class="fa-solid fa-trash text-gray-400 hover:text-red-400"></i></button>
+          <div class="hidden md:block" @click.prevent>
+            <Warning content="您確定要刪除共享購物車嗎？" @confirm="deleteSharedCart" />
+          </div>
         </div>
       </div>
     </div>

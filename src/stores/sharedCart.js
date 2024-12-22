@@ -7,7 +7,12 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
   // 取得共享購物車列表
   const fetchSharedCartList = async (userId) => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/sharedCartList`)
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/sharedCartList`, {
+        headers: {
+          "Content-Type": "application/json",
+          userId,
+        },
+      })
       sharedCartList.value = data.sharedCartList
     } catch (err) {
       console.error("Error fetching shared cart list:", err)

@@ -8,7 +8,8 @@ const SharedCartStore = useSharedCartStore()
 const { sharedCartList } = storeToRefs(SharedCartStore)
 
 onMounted(async () => {
-  await SharedCartStore.fetchSharedCartList()
+  const userId = localStorage.getItem("UID")
+  await SharedCartStore.fetchSharedCartList(userId)
 })
 </script>
 

@@ -39,7 +39,7 @@ const handleConfirm = () => {
 </script>
 
 <template>
-  <el-button :type="buttonType" plain @click="dialogVisible = true">
+  <el-button class="ml-2" :type="buttonType" plain @click="dialogVisible = true">
     {{ buttonText }}
   </el-button>
 

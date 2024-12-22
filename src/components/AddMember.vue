@@ -27,7 +27,6 @@ const form = reactive({
 const inputCount = ref(1)
 
 const addInput = () => {
-  inputCount.value++
   form.emails.push("") // 新增一個空字串到陣列
 }
 
@@ -76,7 +75,6 @@ const addMembers = async () => {
     await SharedCartStore.addMemberToSharedCart(props.groupId, form.emails)
     emit("memberAdded")
     form.emails = [""]
-    inputCount.value = 1 // 重置輸入框數量
     dialogFormVisible.value = false
     ElMessage.success("成功新增好友到共享購物車")
   } catch (err) {
@@ -91,14 +89,14 @@ onMounted(async () => {
 </script>
 
 <template>
-  <el-button plain @click="dialogFormVisible = true">新增好友</el-button>
+  <el-button plain @click="dialogFormVisible = true">新增購朋友</el-button>
   <el-dialog v-model="dialogFormVisible" title="新增購朋友" width="80%" class="max-w-[500px]">
     <!-- 新增按鈕 -->
     <div class="flex justify-end mb-3">
       <button class="border rounded-full px-2 py-1" @click="addInput"><i class="fa-solid fa-plus"></i></button>
     </div>
     <el-form :model="form" class="responsiveForm">
-      <AddMemberInput v-for="(input, index) in inputCount" :key="index" v-model="form.emails[index]" @remove="removeInput(index)" />
+      <AddMemberInput v-for="(input, index) in form.emails" :key="index" v-model="form.emails[index]" @remove="removeInput(index)" />
     </el-form>
     <template #footer>
       <div class="dialog-footer">
