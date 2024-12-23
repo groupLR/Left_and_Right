@@ -599,8 +599,24 @@ const postalCode = ref("");
 
 const countryList = [
   { code: "+886", countryEn: "Taiwan", countryZh: "台灣" },
-  { code: "+852", countryEn: "Hong Kong", countryZh: "香港" },
+  { code: "852", countryEn: "Hong Kong", countryZh: "香港" },
   { code: "+853", countryEn: "Macau", countryZh: "澳門" },
+  { code: "+60", countryEn: "Malaysia", countryZh: "馬來西亞" },
+  { code: "+1", countryEn: "United States", countryZh: "美國" },
+  { code: "+86", countryEn: "China", countryZh: "中國" },
+  { code: "+65", countryEn: "Singapore", countryZh: "新加坡" },
+  { code: "+66", countryEn: "Thailand", countryZh: "泰國" },
+  { code: "+84", countryEn: "Vietnam", countryZh: "越南" },
+  { code: "+63", countryEn: "Philippines", countryZh: "菲律賓" },
+  { code: "+81", countryEn: "Japan", countryZh: "日本" },
+  { code: "+82", countryEn: "South Korea", countryZh: "韓國" },
+  { code: "+61", countryEn: "Australia", countryZh: "澳大利亞" },
+  { code: "+64", countryEn: "New Zealand", countryZh: "新西蘭" },
+  { code: "+1", countryEn: "Canada", countryZh: "加拿大" },
+  { code: "+44", countryEn: "United Kingdom", countryZh: "英國" },
+  { code: "+59", countryEn: "Italy", countryZh: "義大利" },
+  { code: "+33", countryEn: "France", countryZh: "法國" },
+  { code: "+49", countryEn: "Germany", countryZh: "德國" },
   // ...其他國家
 ];
 
