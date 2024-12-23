@@ -1,59 +1,101 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
-import { useProductStore } from "@/stores/products"; // 引入 Pinia store
-import { RouterLink, RouterView } from "vue-router";
-import { useSidebar } from "@/stores/sidebar";
-import SmallCart from './SmallCart.vue';
-const { parents, fetchParents, toggleChildren } = useSidebar();
-
-const productStore = useProductStore(); // 使用 Pinia store
-const cartItemCount = computed(() => productStore.cartItemCount); // 从 store 获取购物车商品总数量
-const isCartOpen = ref(false);
-const isVisible = ref(false);
-const articleOpen = ref(false);
-const cartOpen = ref(false);
-const changeLanguageOpen = ref(false);
-const moneyOpen = ref(false);
-const overlayOpen = ref(false);
-const isLoggedIn = ref(!!localStorage.getItem("UID"));
-const inputShow = () => {
-  isVisible.value = !isVisible.value;
-};
-const openArticle = () => {
-  articleOpen.value = !articleOpen.value;
-};
-// const openCart = () => {
-//   cartOpen.value = !cartOpen.value;
-// };
-const openChangeLanguage = () => {
-  changeLanguageOpen.value = !changeLanguageOpen.value;
-};
-const openMoney = () => {
-  moneyOpen.value = !moneyOpen.value;
-};
-const openOverlay = () => {
-  overlayOpen.value = !overlayOpen.value;
-};
-const toggleCart = () => {
-  isCartOpen.value = !isCartOpen.value;
-  if (isCartOpen.value) {
-    document.body.style.overflow = "hidden"; // 禁止背景滾動
+import { ref, computed, onMounted } from "vue"
+import { useProductStore } from "@/stores/products" // 引入 Pinia store
+import { RouterLink, RouterView } from "vue-router"
+import { useSidebar } from "@/stores/sidebar"
+import SmallCart from "./SmallCart.vue"
+import { useRouter } from "vue-router"
+import debounce from "lodash/debounce"
+import axios from "axios"
+const { parents, fetchParents, toggleChildren } = useSidebar()
+const productStore = useProductStore() // 使用 Pinia store
+const cartItemCount = computed(() => productStore.cartItemCount) // 从 store 获取购物车商品总数量
+const isCartOpen = ref(false)
+const isVisible = ref(false)
+const articleOpen = ref(false)
+const cartOpen = ref(false)
+const changeLanguageOpen = ref(false)
+const moneyOpen = ref(false)
+const overlayOpen = ref(false)
+const isLoggedIn = ref(!!localStorage.getItem("UID"))
+const searchKeyword = ref("")
+const router = useRouter()
+const fetchSearchResults = async () => {
+  if (searchKeyword.value.trim() !== "") {
+    // 使用 router 導航並將關鍵字作為查詢參數
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_API_URL}/search?q=${encodeURIComponent(
+        searchKeyword.value
+      )}`
+    )
+    router.push({
+      path: "/search",
+      query: { q: searchKeyword.value.trim() },
+    })
   } else {
-    document.body.style.overflow = "auto"; // 恢復背景滾動
+    alert("請輸入搜尋內容")
   }
-};
+}
+// 將 fetchSearchResults 包裝成 debounce 函數
+const goToSearch = debounce(fetchSearchResults, 800)
+const inputShow = () => {
+  isVisible.value = !isVisible.value
+}
+const openArticle = () => {
+  articleOpen.value = !articleOpen.value
+}
+const openCart = () => {
+  cartOpen.value = !cartOpen.value
+}
+const openChangeLanguage = () => {
+  changeLanguageOpen.value = !changeLanguageOpen.value
+}
+const openMoney = () => {
+  moneyOpen.value = !moneyOpen.value
+}
+const openOverlay = () => {
+  overlayOpen.value = !overlayOpen.value
+}
+const toggleCart = () => {
+  isCartOpen.value = !isCartOpen.value
+  if (isCartOpen.value) {
+    document.body.style.overflow = "hidden" // 禁止背景滾動
+  } else {
+    document.body.style.overflow = "auto" // 恢復背景滾動
+  }
+}
 const handleCartIconClick = () => {
-  productStore.toggleCartVisibility(); // 切换购物车的显示状态
-};
+  productStore.toggleCartVisibility() // 切换购物车的显示状态
+}
 
 const closeCart = () => {
-  isCartOpen.value = false;
-  document.body.style.overflow = "auto";
-};
+  isCartOpen.value = false
+  document.body.style.overflow = "auto"
+}
 onMounted(() => {
-  fetchParents(); // 確保在組件掛載後載入資料
-});
-const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$ AUD','£ GBP','₱ PHP','RM MYR','฿ THB','د.إ AED','¥ JPY','$ BND','₩ KRW','Rp IDR','₫ VND','$ CAD']
+  fetchParents() // 確保在組件掛載後載入資料
+})
+const currencies = [
+  "$ HKD",
+  "P MOP",
+  "¥ CNY",
+  "$ TWD",
+  "$ USD",
+  "$ SGD",
+  "€ EUR",
+  "$ AUD",
+  "£ GBP",
+  "₱ PHP",
+  "RM MYR",
+  "฿ THB",
+  "د.إ AED",
+  "¥ JPY",
+  "$ BND",
+  "₩ KRW",
+  "Rp IDR",
+  "₫ VND",
+  "$ CAD",
+]
 </script>
 
 <template>
@@ -66,12 +108,17 @@ const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$
   </div>
 
   <div class="flex items-center justify-between">
-    <a href="#" class="px-4 py-2">
-      <img src="/src/assets/ourLogo.jpeg" alt="logo" class="object-fill w-20 h-11" /></a>
-    <ul class="flex items-center justify-end flex-1 ">
-
-      <li class="mx-3 ">
-        <select class="hidden text-black outline-none cursor-pointer xl:block hover:text-gray-500">
+    <a href="/" class="px-4 py-2">
+      <img
+        src="/src/assets/LRlogo.jpg"
+        alt="logo"
+        class="object-fill w-20 h-11"
+    /></a>
+    <ul class="flex items-center justify-end flex-1">
+      <li class="mx-3">
+        <select
+          class="hidden text-black outline-none cursor-pointer xl:block hover:text-gray-500"
+        >
           <option>$ HKD</option>
           <option>P MOP</option>
           <option>¥ CNY</option>
@@ -114,11 +161,13 @@ const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$
       >
         <input
           type="search"
+          v-model="searchKeyword"
+          @keyup.enter="goToSearch"
           maxlength="100"
           placeholder="ivy郁欣聯名"
           class="w-0 overflow-hidden transition-all duration-500 ease-in-out border-b border-black outline-none group-hover:w-56 focus:w-56 focus-visible:outline-none"
         />
-        <button type="submit">
+        <button type="submit" @click="goToSearch">
           <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
         </button>
       </li>
@@ -144,18 +193,27 @@ const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$
       </RouterLink>
       <li class="relative w-16 h-16 list-none">
         <div>
-          <label for="bars"><font-awesome-icon :icon="['fas', 'bars']"
-              class="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer top-1/2 left-1/2 xl:hidden" /></label>
+          <label for="bars"
+            ><font-awesome-icon
+              :icon="['fas', 'bars']"
+              class="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer top-1/2 left-1/2 xl:hidden"
+          /></label>
         </div>
       </li>
     </ul>
   </div>
   <div v-show="isVisible" class="w-full py-4 pl-4 pr-3 z-100 xl:hidden">
-    <button type="submit" class="py-px px-1.5">
+    <button type="submit" @click="goToSearch" class="py-px px-1.5">
       <i class="fa fa-search ::before"></i>
     </button>
-    <input type="search" maxlength="100" placeholder="ivy郁欣聯名"
-      class="w-4/5 border-b border-black focus-visible:outline-none" />
+    <input
+      type="search"
+      v-model="searchKeyword"
+      @keyup.enter="goToSearch"
+      maxlength="100"
+      placeholder="ivy郁欣聯名"
+      class="w-4/5 border-b border-black focus-visible:outline-none"
+    />
   </div>
   <article
     class="w-3/4 max-w-72 h-screen fixed -translate-x-full transition-all duration-500 bg-white z-10 top-0 overflow-auto peer-checked:translate-x-0"
@@ -195,30 +253,42 @@ const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$
     </ul>
     <!-- 帳戶這邊登入會員時會消失 -->
     <h2 class="listItems text-xl text-gray-300">帳戶</h2>
-    <li class="listItems"><router-link to="/users/edit"
-            >會員登入</router-link></li>
+    <li class="listItems">
+      <router-link to="/users/edit">會員登入</router-link>
+    </li>
     <li class="listItems"><a href="#">新用戶註冊</a></li>
     <hr />
     <h2 class="listItems text-xl text-gray-300">其他</h2>
     <li class="listItems"><a href="#">BLOG</a></li>
-    <li class="listItems"><RouterLink to="/store-info">尋找門市</RouterLink></li>
+    <li class="listItems">
+      <RouterLink to="/store-info">尋找門市</RouterLink>
+    </li>
     <li class="listItems">
       <a href="#">聯絡我們</a>
-      <font-awesome-icon :icon="['fas', 'comment']" class="absolute right-1 top-5" />
+      <font-awesome-icon
+        :icon="['fas', 'comment']"
+        class="absolute right-1 top-5"
+      />
     </li>
 
     <li class="listItems relative" @click="openChangeLanguage">
       <span>繁體中文</span>
-      <font-awesome-icon class="absolute right-1 top-5" :icon="['fas', 'globe']" />
+      <font-awesome-icon
+        class="absolute right-1 top-5"
+        :icon="['fas', 'globe']"
+      />
     </li>
     <li class="listItems" @click="openMoney">
       <span>TWD</span>
-      <font-awesome-icon :icon="['fas', 'dollar-sign']" class="absolute right-1 top-5" />
+      <font-awesome-icon
+        :icon="['fas', 'dollar-sign']"
+        class="absolute right-1 top-5"
+      />
     </li>
   </article>
 
   <article
-    class="fixed  max-w-72 top-0 z-10 w-3/4 h-screen px-5 pt-4 pb-3 overflow-auto transition-all duration-500 -translate-x-full bg-white"
+    class="fixed max-w-72 top-0 z-10 w-3/4 h-screen px-5 pt-4 pb-3 overflow-auto transition-all duration-500 -translate-x-full bg-white"
     :class="changeLanguageOpen ? 'translate-x-0' : '-translate-x-full'"
   >
     <ul>
@@ -312,7 +382,7 @@ const currencie = ['$ HKD','P MOP','¥ CNY','$ TWD','$ USD','$ SGD','€ EUR','$
   display: inline-block;
 }
 
-@media screen and (min-width : 1200px) {
+@media screen and (min-width: 1200px) {
   .items {
     padding: 20px;
     display: flex;

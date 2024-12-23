@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, reactive } from "vue"
+import { ref, reactive } from "vue"
 import axios from "axios"
 import { z } from "zod"
 import { useRouter } from "vue-router"
@@ -15,7 +15,7 @@ const userToken = ref(null)
 const userId = ref(null)
 const isLoggedIn = ref(false) // 登入狀態
 // 後端 API 網址
-const API_URL = "http://localhost:3300"
+const API_URL = import.meta.env.VITE_API_URL
 // localStorage 的 key
 const STORAGE_KEY = "UID"
 const STORAGE_JWT_KEY = "TwT"
@@ -88,37 +88,22 @@ const handleRegister = async () => {
       localStorage.setItem(STORAGE_KEY, userId.value)
       localStorage.setItem(STORAGE_JWT_KEY, userToken.value)
 
-      console.log("註冊成功")
-
       isLoggedIn.value = true // 註冊後直接登入
 
       //導向首頁
       router.push({
         name: "home",
       })
-
-      //確認Token是否儲存成功
-      const storedToken = localStorage.getItem(STORAGE_JWT_KEY)
-      // console.log('Stored User ID:', storedUserId)
-      // console.log('userId:', userToken.value.userId)
-      // 可以加入额外验证
-      if (storedToken === userToken.value) {
-        console.log("User Token 成功儲存")
-      } else {
-        console.log("User Token 儲存失敗")
-      }
+      alert("註冊成功")
     } catch (error) {
-      // console.error('註冊失敗:',error)
       if (error.response && error.response.status === 409) {
         alert("此電子郵件已被註冊，請使用其他郵箱")
       }
 
       // Zod 驗證錯誤處理
       if (error instanceof z.ZodError) {
-        errors.value = error.errors.map((err) => ({
-          field: err.path.join("."),
-          message: err.message,
-        }))
+        const errorsMessage = error.errors.map((err) => err.message)
+        alert(errorsMessage)
       }
       // Axios API 錯誤處理
       else if (error.response) {
@@ -139,10 +124,7 @@ const handleRegister = async () => {
     }
   }
 }
-// const getErrorMessage = (field) => {
-//   const error = errors.value.find(err => err.field === field)
-//   return error ? error.message : ''
-// }
+
 //登入
 const handleLogin = async () => {
   try {
@@ -154,26 +136,15 @@ const handleLogin = async () => {
     //儲存Token在localstorage
     localStorage.setItem(STORAGE_KEY, userId.value)
     localStorage.setItem(STORAGE_JWT_KEY, userToken.value)
-    // localStorage.setItem('TWT', response.data.token)
 
-    //恭喜登入
-    console.log("登入成功")
+    //登入成功
     isLoggedIn.value = true
 
     //導向首頁
     router.push({
       name: "home",
     })
-
-    //確認userToken是否儲存成功
-    const storedToken = localStorage.getItem(STORAGE_KEY)
-    // console.log('Stored User ID:', storedUserId)
-    // 可以加入额外验证
-    if (storedToken === userToken.value) {
-      console.log("User Token 成功儲存")
-    } else {
-      console.log("User Token 儲存失敗")
-    }
+    alert("登入成功")
   } catch (error) {
     if (error.response) {
       switch (error.response.status) {
@@ -182,7 +153,6 @@ const handleLogin = async () => {
           break
         case 500:
           alert("伺服器錯誤，請稍後再試")
-          console.error("Server Error Details:", error.response.data)
           break
         default:
           alert("登錄失敗")
@@ -194,6 +164,27 @@ const handleLogin = async () => {
     }
   }
 }
+
+const currentYear = ref(new Date().getFullYear())
+const years = Array.from(
+  { length: currentYear.value - 1899 },
+  (_, i) => currentYear.value - i
+)
+const months = Array.from({ length: 12 }, (_, i) => i + 1)
+const days = Array.from({ length: 31 }, (_, i) => i + 1)
+
+// onMounted(() => {
+//   years.value = Array.from({ length: currentYear.value - 1899 },(_, i) => currentYear.value - i)
+
+// 每天檢查年份是否改變
+// setInterval(() => {
+//   const newYear = new Date().getFullYear()
+//   if (newYear !== currentYear.value) {
+//     currentYear.value = newYear
+//     years.value = Array.from({ length: currentYear.value - 1899 }, (_, i) => currentYear.value - i)
+//   }
+// }, 24 * 60 * 60 * 1000)
+// })
 </script>
 
 <template>
@@ -242,7 +233,7 @@ const handleLogin = async () => {
         />
         <select v-model="selectedOption">
           <option value="email">使用Email註冊</option>
-          <option value="phone">使用手機號碼註冊</option>
+          <!-- <option value="phone">使用手機號碼註冊</option> -->
         </select>
         <div v-if="selectedOption === 'email'" required>
           <input
@@ -270,7 +261,7 @@ const handleLogin = async () => {
         </div>
         <div class="password" required>
           <input
-            type="text"
+            type="password"
             placeholder="密碼"
             v-model="registerForm.password"
             id="password"
@@ -284,12 +275,12 @@ const handleLogin = async () => {
             <option value="f">女</option>
             <option value="o">不透漏</option>
           </select>
-          <!-- <span class="error-text">{{ getErrorMessage('gender') }}</span> -->
         </div>
 
         <div class="grid grid-cols-3 gap-2.5">
           <select name="" id="birthdayYear" v-model="registerForm.birthdayYear">
             <option value="" selected disabled>年</option>
+            <option value="" v-for="year in years">{{ year }}</option>
           </select>
           <select
             name=""
@@ -297,52 +288,11 @@ const handleLogin = async () => {
             v-model="registerForm.birthdayMonth"
           >
             <option value="" selected disabled>月</option>
-            <option value="">1</option>
-            <option value="">2</option>
-            <option value="">3</option>
-            <option value="">4</option>
-            <option value="">5</option>
-            <option value="">6</option>
-            <option value="">7</option>
-            <option value="">8</option>
-            <option value="">9</option>
-            <option value="">10</option>
-            <option value="">11</option>
-            <option value="">12</option>
+            <option value="" v-for="month in months">{{ month }}</option>
           </select>
           <select name="" id="birthdayDay" v-model="registerForm.birthdayDay">
             <option value="" selected disabled>日</option>
-            <option value="">1</option>
-            <option value="">2</option>
-            <option value="">3</option>
-            <option value="">4</option>
-            <option value="">5</option>
-            <option value="">6</option>
-            <option value="">7</option>
-            <option value="">8</option>
-            <option value="">9</option>
-            <option value="">10</option>
-            <option value="">11</option>
-            <option value="">12</option>
-            <option value="">13</option>
-            <option value="">14</option>
-            <option value="">15</option>
-            <option value="">16</option>
-            <option value="">17</option>
-            <option value="">18</option>
-            <option value="">19</option>
-            <option value="">20</option>
-            <option value="">21</option>
-            <option value="">22</option>
-            <option value="">23</option>
-            <option value="">24</option>
-            <option value="">25</option>
-            <option value="">26</option>
-            <option value="">27</option>
-            <option value="">28</option>
-            <option value="">29</option>
-            <option value="">30</option>
-            <option value="">31</option>
+            <option value="" v-for="day in days">{{ day }}</option>
           </select>
         </div>
         <div>
@@ -390,7 +340,7 @@ const handleLogin = async () => {
 
         <div class="password">
           <input
-            type="text"
+            type="password"
             placeholder="密碼"
             v-model="loginForm.password"
             required
@@ -418,76 +368,47 @@ const handleLogin = async () => {
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
-  margin: 0;
+  @apply m-0;
 }
 
 .border {
-  border-top: 1px solid #eeeeee;
-  border-left: 1px solid #eeeeee;
-  border-right: 1px solid #eeeeee;
+  @apply border-t border-l border-r border-gray-200 border-solid border-b-0;
 }
 
 /* 非活躍狀態才加下邊框 */
 .inactive-tab {
-  border-bottom: 1px solid #eeeeee;
+  @apply border-b border-solid  border-gray-200;
 }
 .borderTop {
-  border-top: 1px solid #eeeeee;
-  padding-top: 20px;
+  @apply border-t border-solid  border-gray-200 pt-5;
 }
 .informationInput {
-  padding: 20px;
-  display: grid;
-  grid-template-columns: 1fr;
+  @apply p-5 grid grid-cols-1;
 }
 .informationInput input[type="text"],
 .informationInput input[type="number"],
-.informationInput input[type="tel"],
+.informationInput input[type="password"],
 .informationInput select {
-  margin-bottom: 20px;
-  height: 42px;
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid #eeeeee;
-  padding-left: 15px;
+  @apply mb-5 h-[42px] w-full box-border border border-solid border-gray-200 pl-4;
 }
 .informationInput input[type="text"]:focus,
 .informationInput input[type="number"]:focus,
 .informationInput select:focus,
-.informationInput input[type="tel"]:focus {
-  border: 1px solid #eeeeee;
-  outline: none;
+.informationInput input[type="password"]:focus {
+  @apply border border-solid border-black;
 }
 .password {
-  position: relative;
-  margin-bottom: 10px;
+  @apply relative mb-3;
 }
 .password::after {
   content: "至少8個字元";
-  position: absolute;
-  color: rgb(150, 150, 150);
-  left: 0;
-  top: 45px;
-  font-size: 12px;
+  @apply absolute left-0 top-[45px] text-gray-500 text-xs;
 }
 .join {
-  width: 100%;
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #bfbfc2;
-  border: 0;
-  border-radius: 5px;
-  color: white;
-  font-weight: 1000;
-  font-size: 14px;
-  cursor: auto;
-}
-.join:hover {
-  background-color: #323335;
+  @apply w-full mt-5 p-2.5 bg-gray-400 border-0 rounded-lg text-white font-extrabold text-sm cursor-default;
 }
 
 .agreeCheck:checked ~ .join {
-  background-color: #000000;
-  cursor: pointer;
+  @apply bg-black cursor-pointer;
 }
 </style>

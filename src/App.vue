@@ -1,20 +1,19 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
-import NavBar from "./components/NavBar.vue";
-import Footer from "./components/Footer.vue";
+import { RouterLink, RouterView } from "vue-router"
+import NavBar from "./components/NavBar.vue"
+import Footer from "./components/Footer.vue"
 </script>
 
 <template>
-	<header>
-		<NavBar />
-		<nav>
-			<RouterLink to="/about">About</RouterLink>
+  <header>
+    <NavBar />
+    <!-- <nav>
+      <RouterLink to="/about">About</RouterLink>
       |
-			<RouterLink to="/">Home</RouterLink>
-			|
-			<RouterLink to="/reviews">Reviews</RouterLink>
+      <RouterLink to="/">Home</RouterLink>
       |
-      <!-- COMPANY -->
+      <RouterLink to="/reviews">Reviews</RouterLink>
+      |
       <RouterLink to="/about">關於品牌</RouterLink>
       |
       <RouterLink to="/store-info">門市資訊</RouterLink>
@@ -24,7 +23,7 @@ import Footer from "./components/Footer.vue";
       <RouterLink to="/cooperation">異業合作</RouterLink>
       |
       <RouterLink to="/franchising">海外經銷</RouterLink>
-      |<!-- SERVICE -->
+      |
       <RouterLink to="/how-to-buy">如何購買</RouterLink>
       |
       <RouterLink to="/packaging">商品包裝</RouterLink>
@@ -42,7 +41,7 @@ import Footer from "./components/Footer.vue";
       <RouterLink to="/products/35">products-detail</RouterLink>
       |
       <RouterLink to="/sharedcartlist">sharedCart</RouterLink>
-    </nav>
+    </nav> -->
   </header>
   <RouterView />
   <el-backtop :right="50" :bottom="100" />
@@ -50,9 +49,7 @@ import Footer from "./components/Footer.vue";
 </template>
 
 <style scoped>
-
-:deep(.el-icon){
-  color:#000;
+:deep(.el-icon) {
+  color: #000;
 }
-
 </style>
