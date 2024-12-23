@@ -48,8 +48,9 @@ watch(
 </script>
 
 <template>
+	<h2 class="px-6 pt-6 text-xl font-semibold">搜尋頁面為：{{ keyword }}</h2>
 	<div class="container mx-auto px-4 py-8">
-		<div class="product-list grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+		<div class="product-list grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
 			<ProductItem
 				v-for="product in products"
 				:key="product.id"
@@ -58,20 +59,27 @@ watch(
 				:price="product.sale_price"
 				:originalPrice="product.original_price"
 				:frontImg="product.image_path"
+				class="h-full"
 			/>
 		</div>
 	</div>
 </template>
 
 <style scoped>
+.product-list {
+	display: grid;
+	gap: 2rem;
+}
+
 .productContainer {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	height: 100%;
 	width: 100%;
-	aspect-ratio: 1 / 1;
 	overflow: hidden;
 	position: relative;
+	box-sizing: border-box;
 }
 
 .productContainer img {
