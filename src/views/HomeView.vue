@@ -41,6 +41,7 @@ onMounted(async () => {
         <ProductItem
           v-for="(item, index) in productList"
           :key="item.id"
+          :id="item.id"
           :title="item.title"
           :price="item.price"
           :originalPrice="item.originalPrice"
