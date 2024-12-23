@@ -185,17 +185,14 @@ watch(
       <i class="fa-solid fa-share-nodes link"></i>
     </div>
 
-    <thead>
-      <div class="tittles">
-        <div class="tittle">商品資料</div>
-        <div class="tittle">優惠</div>
-        <div class="tittle">單件價格</div>
-        <div class="tittle">數量</div>
-        <div class="tittle">小計</div>
-      </div>
-    </thead>
+    <div class="tittles">
+      <div class="tittle">商品資料</div>
+      <div class="tittle">優惠</div>
+      <div class="tittle">單件價格</div>
+      <div class="tittle">數量</div>
+      <div class="tittle">小計</div>
+    </div>
 
-    <!-- <tbody> -->
     <div class="prInfo flex justify-between" style="width: 1160px" v-for="item in products" :key="item.product_id">
       <div class="prdetail introduce flex justify-between">
         <img :src="item.image_path" />
@@ -229,7 +226,7 @@ watch(
       <i class="fa-solid fa-xmark pr-8" @click="deleteProduct(item.product_id)"></i>
     </div>
   </div>
-  <!-- </tbody> -->
+
   <!-- 優惠切版 -->
   <!-- <div  class="sideBorder p-5 ">
     <h5 class="p-5">已享用之優惠</h5>
