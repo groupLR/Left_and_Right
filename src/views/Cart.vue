@@ -17,6 +17,7 @@ const products = ref([]) // 儲存後端返回的商品資料
 const isSharedCart = ref(false) // 是不是共享購物車（用cart/後面有沒有帶 groupId 判斷 )
 const sharedCartName = ref("") // 共享購物車名稱
 const sharedCartMembers = ref([]) // 共享購物車成員
+const userId = localStorage.getItem("UID")
 
 // computed
 const itemCount = computed(() => {
@@ -30,8 +31,14 @@ const itemPrice = computed(() => {
 // method
 // 獲取購物車商品
 const fetchCartItems = async () => {
+  console.log("userId", userId)
+
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`)
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`, {
+      headers: {
+        userId,
+      },
+    })
     products.value = response.data // 將 API 返回的資料存入 products
     console.log("資料獲取成功:", products.value)
   } catch (error) {
@@ -54,13 +61,19 @@ const addProduct = async (newProduct) => {
 // 刪除商品
 const deleteProduct = async (id) => {
   axios
-    .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`)
+    .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
+      headers: {
+        userId,
+      },
+    })
     .then(() => {
       products.value = products.value.filter((product) => product.id !== id) // 從列表中移除
     })
     .catch((error) => {
       console.error("刪除商品失敗:", error)
     })
+
+  await initializeCartPage()
 }
 
 // 更新商品
@@ -72,10 +85,18 @@ const updateQuantity = async (item) => {
   }
 
   try {
-    const response = await axios.put(`${import.meta.env.VITE_API_URL}/cart/update-quantity`, {
-      product_id: item.product_id,
-      quantity: item.quantity,
-    })
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_URL}/cart/update-quantity`,
+      {
+        product_id: item.product_id,
+        quantity: item.quantity,
+      },
+      {
+        headers: {
+          userId,
+        },
+      }
+    )
 
     if (response.data.success) {
       // 更新成功，可以選擇提示用戶或其他操作
@@ -198,7 +219,7 @@ watch(
     <!-- <tbody> -->
     <div class="prInfo flex justify-between" style="width: 1160px" v-for="item in products" :key="item.product_id">
       <div class="prdetail introduce flex justify-between">
-        <img :src="item.image_path" />
+        <img class="aspect-square" :src="item.image_path" />
         <!-- <img src=""> -->
 
         <div class="">
