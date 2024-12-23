@@ -596,14 +596,14 @@ const openList19 = () => {
     </div>
   </article>
   <div class="hidden items">
-    <a href="#">耳環 / Earrings</a>
-    <a href="#">1111 新品 / NEW ARRIVAL</a>
-    <a href="#">耳夾 / Earclip</a>
-    <a href="#">戒指 / Rings</a>
-    <a href="#">手鍊 / Bracelets</a>
-    <a href="#">項鍊 / Necklaces</a>
-    <a href="#">聯名系列</a>
-    <a href="#">門市資訊</a>
+    <RouterLink to="/categories/31">耳環 / Earrings</RouterLink>
+    <RouterLink to="/categories/28">1111 新品 / NEW ARRIVAL</RouterLink>
+    <RouterLink to="/categories/32">耳夾 / Earclip</RouterLink>
+    <RouterLink to="/categories/33">戒指 / Rings</RouterLink>
+    <RouterLink to="/categories/34">手鍊 / Bracelets</RouterLink>
+    <RouterLink to="/categories/35">項鍊 / Necklaces</RouterLink>
+    <RouterLink to="/categories/26">聯名系列</RouterLink>
+    <RouterLink to="/store-info">門市資訊</RouterLink>
   </div>
 </template>
 
