@@ -169,6 +169,14 @@ const router = createRouter({
         requireAuth: true,
       },
     },
+    {
+      path: "/Debit",
+      name: "Debit",
+      component: () => import("../views/Debit.vue"),
+      meta: {
+        requireAuth: true,
+      },
+    },
   ],
 })
 
