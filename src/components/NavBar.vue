@@ -260,7 +260,7 @@ const openList19 = () => {
 
   <!-- side bar -->
   <article
-    class="fixed top-0 z-10 w-[234px] h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white peer-checked:translate-x-0 lg:translate-x-0 lg:top-5 lg:z-0"
+    class="fixed top-0 z-10 w-[234px] h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white peer-checked:translate-x-0 lg:top-5 lg:z-0"
   >
     <li class="listItems"><a href="#">Kurt Wu 插畫家聯名</a></li>
     <li class="listItems"><a href="#">KOL / Ivy郁欣聯名</a></li>
