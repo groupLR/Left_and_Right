@@ -118,7 +118,7 @@
 
   <!-- <div class="ml-10 mr-10 cart mt-100 cards ">
   
-  <h3 class="h-10  quarter" >超值加價購 (往左滑)</h3>
+  <h3 class="h-10 quarter" >超值加價購 (往左滑)</h3>
   
   <div class="flex justify-start p-2 card sideBorder w-76">
       <img src="https://fakeimg.pl/150x150/200">
@@ -365,7 +365,7 @@ watch(
 // API Methods
 const fetchCartItems = async () => {
   try {
-    const response = await axios.get('http://localhost:3300/cart/cartQuery');
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`);
     products.value = response.data;
     console.log('資料獲取成功:', products.value);
   } catch (error) {
@@ -373,19 +373,19 @@ const fetchCartItems = async () => {
   }
 };
 
-const fetchSharedCartItems = async (groupId) => {
-  try {
-    const response = await axios.get(`http://localhost:3300/sharedCartItem/${groupId}`);
-    products.value = response.data;
-    console.log('獲得共享購物車資料');
-  } catch (error) {
-    console.error('Error fetching shared cart items:', error);
-  }
-};
+// const fetchSharedCartItems = async (groupId) => {
+//   try {
+//     const response = await axios.get(`http://localhost:3300/sharedCartItem/${groupId}`);
+//     products.value = response.data;
+//     console.log('獲得共享購物車資料');
+//   } catch (error) {
+//     console.error('Error fetching shared cart items:', error);
+//   }
+// };
 
 const addProduct = async (newProduct) => {
   axios
-    .post('http://localhost:3300/cart/cartInsert', newProduct)
+    .post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, newProduct)
     .then((response) => {
       products.value.push(response.data);
     })
@@ -396,7 +396,7 @@ const addProduct = async (newProduct) => {
 
 const deleteProduct = async(id) => {
   axios
-    .delete(`http://localhost:3300/cart/cartDelete/${id}`)
+    .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`)
     .then(() => {
       products.value = products.value.filter((product) => product.id !== id);
     })
@@ -412,10 +412,11 @@ const updateQuantity = async (item) => {
     return;
   }
   try {
-    const response = await axios.put('http://localhost:3300/cart/update-quantity', {
+    const response = await axios.put(`${import.meta.env.VITE_API_URL}/cart/update-quantity`, {
       product_id: item.product_id,
       quantity: item.quantity,
-    });
+    })
+;
     if (response.data.success) {
       console.log('數量更新成功');
     } else {
