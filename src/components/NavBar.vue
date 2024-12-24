@@ -211,21 +211,29 @@ const openList19 = () => {
       <li class="hidden mx-3 text-black cursor-pointer xl:block hover:text-gray-500">
         <font-awesome-icon :icon="['fas', 'comment']" />
       </li>
+
+      <!-- 使用者登入  -->
       <RouterLink :to="isLoggedIn ? '/users/edit' : '/users/sign-in'">
         <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
           <font-awesome-icon :icon="['fas', 'user']" />
         </li>
       </RouterLink>
+
+      <!-- 購物車 -->
       <RouterLink to="/Cart">
         <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
           <font-awesome-icon :icon="['fas', 'bag-shopping']" />
         </li>
       </RouterLink>
+
+      <!-- 共享購物車 -->
       <RouterLink to="/sharedcartlist">
         <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
           <i class="fa-brands fa-shopify text-lg"></i>
         </li>
       </RouterLink>
+
+      <!-- 漢堡選單 -->
       <li class="relative w-16 h-16 list-none">
         <div>
           <label for="bars"
@@ -235,6 +243,7 @@ const openList19 = () => {
       </li>
     </ul>
   </div>
+  <!-- 搜尋框 -->
   <div v-show="isVisible" class="w-full py-4 pl-4 pr-3 z-100 xl:hidden">
     <button type="submit" @click="goToSearch" class="py-px px-1.5">
       <i class="fa fa-search ::before"></i>
@@ -248,7 +257,11 @@ const openList19 = () => {
       class="w-4/5 border-b border-black focus-visible:outline-none"
     />
   </div>
-  <article class="fixed top-0 z-10 w-3/4 h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white peer-checked:translate-x-0">
+
+  <!-- side bar -->
+  <article
+    class="fixed top-0 z-10 w-[234px] h-screen overflow-auto transition-all duration-500 -translate-x-full bg-white peer-checked:translate-x-0 lg:top-5 lg:z-0"
+  >
     <li class="listItems"><a href="#">Kurt Wu 插畫家聯名</a></li>
     <li class="listItems"><a href="#">KOL / Ivy郁欣聯名</a></li>
     <li class="listItems"><a href="#">飾品設計師大賽/by.Lab</a></li>
@@ -596,14 +609,14 @@ const openList19 = () => {
     </div>
   </article>
   <div class="hidden items">
-    <a href="#">耳環 / Earrings</a>
-    <a href="#">1111 新品 / NEW ARRIVAL</a>
-    <a href="#">耳夾 / Earclip</a>
-    <a href="#">戒指 / Rings</a>
-    <a href="#">手鍊 / Bracelets</a>
-    <a href="#">項鍊 / Necklaces</a>
-    <a href="#">聯名系列</a>
-    <a href="#">門市資訊</a>
+    <RouterLink to="/categories/31">耳環 / Earrings</RouterLink>
+    <RouterLink to="/categories/28">1111 新品 / NEW ARRIVAL</RouterLink>
+    <RouterLink to="/categories/32">耳夾 / Earclip</RouterLink>
+    <RouterLink to="/categories/33">戒指 / Rings</RouterLink>
+    <RouterLink to="/categories/34">手鍊 / Bracelets</RouterLink>
+    <RouterLink to="/categories/35">項鍊 / Necklaces</RouterLink>
+    <RouterLink to="/categories/26">聯名系列</RouterLink>
+    <RouterLink to="/store-info">門市資訊</RouterLink>
   </div>
 </template>
 
