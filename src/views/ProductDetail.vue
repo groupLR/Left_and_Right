@@ -2,12 +2,17 @@
 import { onMounted, ref, watch, computed } from "vue"
 import axios from "axios"
 import { useRoute } from "vue-router"
+import { ElMessage } from "element-plus"
 import Swiper from "swiper/bundle"
 import "swiper/css/bundle"
 import { Pagination, Navigation, Scrollbar } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/pagination"
 import "swiper/css/navigation"
+import { storeToRefs } from "pinia"
+import { useCartStore } from "@/stores/cart"
+const CartStore = useCartStore()
+const {} = storeToRefs(CartStore)
 
 Swiper.use([Pagination, Navigation, Scrollbar])
 
@@ -60,6 +65,7 @@ onMounted(() => {
 const profile = ref("")
 const mainImgs = ref([])
 const desImgs = ref([])
+const productId = ref(0)
 const getImageUrl = (imagePath) => {
   if (!imagePath || typeof imagePath !== "string") return ""
   const cleanedPath = imagePath.startsWith("./") ? imagePath.slice(1) : imagePath
@@ -85,6 +91,7 @@ const fetchProductDetail = async (product_id = 35) => {
       imgPath: getImageUrl(img.image_path),
       imgText: img.alt_text,
     }))
+    productId.value = response.data.profile.product_id
   } catch (err) {
     console.error("獲取商品詳情失敗:", err)
   } finally {
@@ -179,6 +186,14 @@ const heartColor = computed(() => ({
 const toggleHeart = () => {
   isSubscribe.value = !isSubscribe.value
 }
+
+// 加入購物車
+const handleAddToCart = async () => {
+  console.log(productId.value)
+
+  await CartStore.addProduct(productId.value)
+  ElMessage.success("新增成功")
+}
 </script>
 
 <template>
@@ -255,7 +270,7 @@ const toggleHeart = () => {
           </div>
         </div>
         <div class="grid grid-cols-2 gap-5 my-5">
-          <button class="bg-black text-gray-50 border border-black rounded-lg text-lg p-1">加入購物車</button>
+          <button @click="handleAddToCart" class="bg-black text-gray-50 border border-black rounded-lg text-lg p-1">加入購物車</button>
           <button class="bg-black text-gray-50 border border-black rounded-lg text-lg p-1">
             <i class="fa-brands fa-shopify ml-4 text-xl"></i>
             加入共享購物車

@@ -17,6 +17,7 @@ const products = ref([]) // 儲存後端返回的商品資料
 const isSharedCart = ref(false) // 是不是共享購物車（用cart/後面有沒有帶 groupId 判斷 )
 const sharedCartName = ref("") // 共享購物車名稱
 const sharedCartMembers = ref([]) // 共享購物車成員
+const userId = localStorage.getItem("UID")
 
 // computed
 const itemCount = computed(() => {
@@ -30,8 +31,14 @@ const itemPrice = computed(() => {
 // method
 // 獲取購物車商品
 const fetchCartItems = async () => {
+  console.log("userId", userId)
+
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`)
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`, {
+      headers: {
+        userId,
+      },
+    })
     products.value = response.data // 將 API 返回的資料存入 products
     console.log("資料獲取成功:", products.value)
   } catch (error) {
@@ -54,13 +61,19 @@ const addProduct = async (newProduct) => {
 // 刪除商品
 const deleteProduct = async (id) => {
   axios
-    .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`)
+    .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
+      headers: {
+        userId,
+      },
+    })
     .then(() => {
       products.value = products.value.filter((product) => product.id !== id) // 從列表中移除
     })
     .catch((error) => {
       console.error("刪除商品失敗:", error)
     })
+
+  await initializeCartPage()
 }
 
 // 更新商品
@@ -72,10 +85,18 @@ const updateQuantity = async (item) => {
   }
 
   try {
-    const response = await axios.put(`${import.meta.env.VITE_API_URL}/cart/update-quantity`, {
-      product_id: item.product_id,
-      quantity: item.quantity,
-    })
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_URL}/cart/update-quantity`,
+      {
+        product_id: item.product_id,
+        quantity: item.quantity,
+      },
+      {
+        headers: {
+          userId,
+        },
+      }
+    )
 
     if (response.data.success) {
       // 更新成功，可以選擇提示用戶或其他操作
@@ -148,7 +169,7 @@ watch(
 )
 </script>
 <template>
-  <section class="mx-10 mt-5" v-if="isSharedCart">
+  <section class="w-[1160px] mx-auto my-5" v-if="isSharedCart">
     <div class="flex justify-between">
       <h1 class="text-2xl font-bold">共享購物車</h1>
       <div>
@@ -172,50 +193,46 @@ watch(
     <span>購物車</span>
     <span>填寫資料</span>
   </div>
-  <div v-if="products.length == 0" class="cart mt-100 ml-10 mr-10">
+  <div v-if="products.length == 0" class="cart mx-auto">
     <div class="flex quarter justify-start" style="position: relative">
-      <h3 class="cartitems h-10 quarter ml-2">購物車({{ itemCount }}件)</h3>
+      <h3 class="cartitems h-10 quarter ml-4">購物車({{ itemCount }}件)</h3>
       <i class="fa-solid fa-share-nodes link"></i>
     </div>
     <el-empty description="購物車還是空的" />
   </div>
-  <div v-else class="cart mt-100 ml-10 mr-10">
+  <div v-else class="cart mx-auto">
     <div class="flex quarter justify-start" style="position: relative">
-      <h3 class="cartitems h-10 quarter mr-2">購物車({{ itemCount }}件)</h3>
+      <h3 class="cartitems h-10 quarter ml-4">購物車({{ itemCount }}件)</h3>
       <i class="fa-solid fa-share-nodes link"></i>
     </div>
 
-    <thead>
-      <div class="tittles">
-        <div class="tittle">商品資料</div>
-        <div class="tittle">優惠</div>
-        <div class="tittle">單件價格</div>
-        <div class="tittle">數量</div>
-        <div class="tittle">小計</div>
-      </div>
-    </thead>
+    <div class="tittles pl-4">
+      <div class="tittle">商品圖片</div>
+      <div class="tittle">商品名稱</div>
+      <!-- <div class="tittle">優惠</div> -->
+      <div class="tittle">單件價格</div>
+      <div class="tittle">數量</div>
+      <div class="tittle">小計</div>
+    </div>
 
-    <!-- <tbody> -->
     <div class="prInfo flex justify-between" style="width: 1160px" v-for="item in products" :key="item.product_id">
-      <div class="prdetail introduce flex justify-between">
-        <img :src="item.image_path" />
+      <div class="prdetail introduce flex justify-between max-w-[200px]">
+        <img class="aspect-square" :src="item.image_path" />
         <!-- <img src=""> -->
-
-        <div class="">
-          {{ item.product_name }}
-        </div>
       </div>
-      <div class="prdetail"></div>
+      <div class="max-w-[200px]">
+        {{ item.product_name }}
+      </div>
+      <!-- <div class="prdetail"></div> -->
       <div class="prdetail">
         {{ item.sale_price }}
       </div>
       <div class="prdetail flex justify-between">
-        <!--           
-              <span class="input-group-btn">
-                  <button type="button">
-                      <i class="fa fa-minus"></i>
-                  </button>
-              </span> -->
+        <!-- <span class="input-group-btn">
+          <button type="button">
+            <i class="fa fa-minus"></i>
+          </button>
+        </span> -->
         <input type="number" v-model.number="item.quantity" min="1" class="input input-bordered" style="height: 20px" @change="updateQuantity(item)" />
 
         <!-- <span class="input-group-btn">
@@ -229,7 +246,7 @@ watch(
       <i class="fa-solid fa-xmark pr-8" @click="deleteProduct(item.product_id)"></i>
     </div>
   </div>
-  <!-- </tbody> -->
+
   <!-- 優惠切版 -->
   <!-- <div  class="sideBorder p-5 ">
     <h5 class="p-5">已享用之優惠</h5>
@@ -281,8 +298,8 @@ watch(
 </div>-->
 
   <div class="laptop cellphone">
-    <div class="cart w-full mt-100 ml-10 mr-10">
-      <h3 class="h-10 quarter">選擇送貨及付款方式</h3>
+    <div class="cart w-full mx-auto">
+      <h3 class="h-10 quarter p-4">選擇送貨及付款方式</h3>
 
       <div class="option m-4">
         <label for="">送貨地點 </label>
@@ -337,18 +354,20 @@ watch(
       </div>
 
       <br />
-      <span
-        >取貨通知：<br />- 訂單到達超商七日內，每日皆會傳送取貨簡訊，並於第五日時撥打語音電話通知取貨哦！<br />
-        - 現貨訂單狀態更改「已確認」後，2-3天寄出。 (不包含假日及國定假日)<br />
-        <br />- 本公司產品享7天鑑賞期，30天保固維修<br />
-        - 免付費電話：0800 000 004<br />- 預購與現貨一併出貨
-      </span>
+      <div class="p-4">
+        <span
+          >取貨通知：<br />- 訂單到達超商七日內，每日皆會傳送取貨簡訊，並於第五日時撥打語音電話通知取貨哦！<br />
+          - 現貨訂單狀態更改「已確認」後，2-3天寄出。 (不包含假日及國定假日)<br />
+          <br />- 本公司產品享7天鑑賞期，30天保固維修<br />
+          - 免付費電話：0800 000 004<br />- 預購與現貨一併出貨
+        </span>
+      </div>
     </div>
   </div>
 
-  <div class="cart mt-100 ml-10 mr-10 w-105">
-    <h3 class="h-10 quarter">訂單資訊</h3>
-    <div>
+  <div class="cart mx-auto w-105">
+    <h3 class="h-10 quarter pl-4">訂單資訊</h3>
+    <div class="p-4">
       <div class="flex justify-between p-2">
         <div>小計:</div>
         <div>
