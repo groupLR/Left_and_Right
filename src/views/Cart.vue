@@ -31,6 +31,8 @@ const itemPrice = computed(() => {
 // method
 // 獲取購物車商品
 const fetchCartItems = async () => {
+  console.log("userId", userId)
+
   try {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`, {
       headers: {
@@ -38,6 +40,7 @@ const fetchCartItems = async () => {
       },
     })
     products.value = response.data // 將 API 返回的資料存入 products
+    console.log("資料獲取成功:", products.value)
   } catch (error) {
     console.error("獲取資料失敗:", error)
   }
