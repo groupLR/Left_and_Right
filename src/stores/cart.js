@@ -3,17 +3,18 @@ import axios from "axios"
 
 export const useCartStore = defineStore("cart", () => {
   // 新增商品到購物車 API
-  const addProduct = async (productId, quantity = 1) => {
+  const addProduct = async (productId) => {
     try {
       const userId = localStorage.getItem("UID")
       const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, {
         user_id: userId,
         product_id: productId,
-        quantity,
+        quantity: 1,
       })
       return data
     } catch (err) {
       console.log(err)
+
       return err
     }
   }

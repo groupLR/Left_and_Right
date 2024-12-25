@@ -43,7 +43,7 @@ const handleConfirm = () => {
     {{ buttonText }}
   </el-button>
 
-  <el-dialog v-model="dialogVisible" :title="title" width="80%" center class="max-w-[500px]">
+  <el-dialog v-model="dialogVisible" :title="title" width="80%" center>
     <span>{{ content }}</span>
     <template #footer>
       <div class="dialog-footer">
