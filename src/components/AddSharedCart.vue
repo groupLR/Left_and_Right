@@ -17,6 +17,9 @@ const form = reactive({
 onMounted(async () => {
   await SharedCartStore.getAllUserEmail()
 })
+
+const emits = defineEmits(["createdSharedCart"])
+
 const createSharedCart = async () => {
   const JWT = localStorage.getItem("TwT")
   const { email: userEmail, userId } = jwtDecode(JWT)
@@ -40,6 +43,8 @@ const createSharedCart = async () => {
   try {
     await SharedCartStore.creatSharedCart(form.name, userId, form.email)
     dialogFormVisible.value = false
+    // 這裡是為了讓 在商品詳情創建共享購物車後 重新 fetch 一次資料
+    emits("createdSharedCart")
     ElMessage.success("添加成功")
     await SharedCartStore.fetchSharedCartList(userId)
   } catch (err) {

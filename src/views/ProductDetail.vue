@@ -16,6 +16,7 @@ const SharedCartStore = useSharedCartStore()
 const CartStore = useCartStore()
 const { sharedCartList } = storeToRefs(SharedCartStore)
 Swiper.use([Pagination, Navigation, Scrollbar])
+import AddSharedCart from "@/components/AddSharedCart.vue"
 
 const swiperInstance = ref(null)
 const route = useRoute()
@@ -228,26 +229,48 @@ const handleConfirm = async () => {
     ElMessage.error("加入共享購物車失敗")
   }
 }
+// 創建共享購物車後重新取得列表
+const refreshSharedCartList = async () => {
+  await SharedCartStore.fetchSharedCartList(userId)
+  sharedCartNames.value = sharedCartList.value.map((cart) => ({
+    id: cart.id,
+    name: cart.name || `您與 ${cart.member[0]} 與其他 ${cart.member.length - 1} 人共享的購物車`,
+  }))
+  dialogToggle.value = true
+}
 </script>
 
 <template>
   <section>
     <!-- 共享購物車選擇對話框 -->
-    <el-dialog v-model="dialogToggle" title="選擇共享購物車" width="30%">
-      <el-checkbox-group v-model="selectedCarts">
-        <div v-for="cart in sharedCartNames" :key="cart.id" class="cart-item">
-          <el-checkbox :value="cart.id" :label="cart.name">
-            {{ cart.name }}
-          </el-checkbox>
-        </div>
-      </el-checkbox-group>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogToggle = false">取消</el-button>
-          <el-button type="primary" @click="handleConfirm">確認</el-button>
-        </span>
-      </template>
-    </el-dialog>
+    <div v-if="sharedCartList.length === 0">
+      <el-dialog v-model="dialogToggle" title="您還沒有共享購物車" width="30%">
+        <AddSharedCart @createdSharedCart="refreshSharedCartList" />
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogToggle = false">取消</el-button>
+          </span>
+        </template>
+      </el-dialog>
+    </div>
+    <div v-else>
+      <el-dialog v-model="dialogToggle" title="選擇共享購物車" width="30%">
+        <el-checkbox-group v-model="selectedCarts">
+          <div v-for="cart in sharedCartNames" :key="cart.id" class="cart-item">
+            <el-checkbox :value="cart.id" :label="cart.name">
+              {{ cart.name }}
+            </el-checkbox>
+          </div>
+        </el-checkbox-group>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogToggle = false">取消</el-button>
+            <el-button type="primary" @click="handleConfirm">確認</el-button>
+          </span>
+        </template>
+      </el-dialog>
+    </div>
+
     <div class="loading bg-lightBlue-300 my-8 max-w-full">
       <div class="profile">
         <!-- 輪播圖 -->
