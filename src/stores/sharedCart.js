@@ -97,6 +97,20 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
     }
   }
 
+  // 將商品新增到共享購物車
+  const addProductToSharedCart = async (groupId, productId, quantity = 1) => {
+    try {
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/sharedCart/addProduct/${groupId}`, {
+        productId,
+        quantity,
+      })
+      return data
+    } catch (err) {
+      console.error("添加商品到共享購物車失敗:", err)
+      throw err
+    }
+  }
+
   return {
     sharedCartList,
     fetchSharedCartList,
@@ -106,5 +120,6 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
     creatSharedCart,
     deleteSharedCart,
     addMemberToSharedCart,
+    addProductToSharedCart,
   }
 })
