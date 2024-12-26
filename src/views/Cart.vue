@@ -240,7 +240,7 @@ watch(
             <Warning content="您確定要刪除共享購物車嗎？" @confirm="deleteSharedCart" />
           </div>
         </div>
-        <div class="my-5 bg-white p-3 rounded-xl">
+        <div class="my-5 bg-yellow-50 p-5 rounded-xl">
           <h2 class="text-xl font-bold mb-2 text-orange-500">{{ sharedCartName }}</h2>
           <p class="font-bold">購朋友：</p>
           <p>{{ sharedCartMembers.join("、") }}</p>
