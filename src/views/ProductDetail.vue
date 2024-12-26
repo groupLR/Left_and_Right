@@ -298,8 +298,8 @@ const refreshSharedCartList = async () => {
         <div class="m-4 mt-5">
           <h1 class="text-[28px]">{{ title }}</h1>
           <div class="flex">
-            <h2 class="my-5 text-[20px] font-extrabold">NT${{ salePrice }}</h2>
-            <h2 class="ml-5 mt-6 text-s font-bold text-gray-400 line-through">NT${{ originalPrice }}</h2>
+            <h2 class="my-5 text-[20px] font-extrabold">NT${{ Number(salePrice).toLocaleString() }}</h2>
+            <h2 class="ml-5 mt-6 text-s font-bold text-gray-400 line-through">NT${{ Number(originalPrice).toLocaleString() }}</h2>
           </div>
           <div class="font-extralight text-[16px]">
             <p>全館任選兩件88折，優惠後特價 NT${{ Math.ceil(salePrice * 0.88) }}</p>
