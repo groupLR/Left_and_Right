@@ -125,6 +125,21 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
     }
   }
 
+  // 刪除共享購物車內的商品
+  const deleteProductInSharedCart = async (groupId, productId) => {
+    try {
+      const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/sharedCart/deleteProduct/${groupId}`, {
+        data: {
+          productId,
+        },
+      })
+      return data
+    } catch (err) {
+      console.log("刪除共享購物車商品失敗", err)
+      throw err
+    }
+  }
+
   return {
     sharedCartList,
     fetchSharedCartList,
@@ -136,5 +151,6 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
     addMemberToSharedCart,
     addProductToSharedCart,
     updateProductQtyToSharedCart,
+    deleteProductInSharedCart,
   }
 })

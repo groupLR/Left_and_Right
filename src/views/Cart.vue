@@ -123,7 +123,7 @@ const addProduct = async (newProduct) => {
     })
 }
 
-// 刪除商品
+// 刪除購物車商品的函式
 const deleteProduct = async (id) => {
   axios
     .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
@@ -137,8 +137,33 @@ const deleteProduct = async (id) => {
     .catch((error) => {
       console.error("刪除商品失敗:", error)
     })
+}
 
-  await initializeCartPage()
+// 刪除商品（判斷是否共享）
+const deleteProductFromCart = async (id) => {
+  if (isSharedCart.value) {
+    try {
+      await SharedCartStore.deleteProductInSharedCart(route.params.groupId, id)
+      ElMessage.success("刪除商品成功")
+      return initializeCartPage()
+    } catch (err) {
+      ElMessage.error({
+        message: "從共享購物車刪除商品失敗",
+        type: "error",
+      })
+      console.error("從共享購物車刪除商品失敗", err)
+    }
+  } else {
+    try {
+      await deleteProduct(id)
+    } catch (err) {
+      ElMessage.error({
+        message: "從購物車刪除商品失敗",
+        type: "error",
+      })
+      console.error("從購物車刪除商品失敗", err)
+    }
+  }
 }
 
 // 更新購物車商品數量的函式
@@ -171,14 +196,14 @@ const updateQuantity = async ({ id, quantity }) => {
   }
 }
 
-// 更新商品數量
+// 更新商品數量（判斷是否共享）
 const updateProductQty = async (payload) => {
   if (isSharedCart.value) {
     try {
       await SharedCartStore.updateProductQtyToSharedCart(route.params.groupId, payload.id, payload.quantity)
     } catch (err) {
       ElMessage.error({
-        message: "更新共享購物車商品數量失敗：" + (err.response?.data?.message || err.message),
+        message: "更新共享購物車商品數量失敗：",
         type: "error",
       })
       console.error("更新共享購物車數量失敗：", err)
@@ -297,7 +322,7 @@ watch(
               :imgPath="item.image_path"
               :quantity="item.quantity"
               @updateQuantity="updateProductQty"
-              @deleteProduct="deleteProduct"
+              @deleteProduct="deleteProductFromCart"
             />
           </section>
           <!-- 送貨及付款方式 -->

@@ -1,8 +1,6 @@
 <script setup>
 import { ref } from "vue"
-import axios from "axios"
-
-const userId = localStorage.getItem("UID")
+import { ElMessage } from "element-plus"
 
 const props = defineProps({
   id: {
@@ -37,6 +35,8 @@ const decrease = () => {
   if (counter.value > 1) {
     counter.value--
     emits("updateQuantity", { id: props.id, quantity: counter.value })
+  } else {
+    ElMessage.error("商品數量不得小於一")
   }
 }
 
