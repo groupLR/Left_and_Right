@@ -44,8 +44,8 @@ const handleAddToCart = async () => {
       </div>
       <div class="px-2.5 pt-2.5 pb-7 mb-6 text-center lg:relative lg:mb-0">
         <p class="mb-1 text-sm">{{ props.title }}</p>
-        <p class="text-base font-black">NT${{ props.price }}</p>
-        <p class="mb-1 text-base text-gray-500 line-through decoration-slate-400">NT${{ props.originalPrice }}</p>
+        <p class="text-base font-black">NT${{ props.price.toLocaleString() }}</p>
+        <p class="mb-1 text-base text-gray-500 line-through decoration-slate-400">NT${{ props.originalPrice.toLocaleString() }}</p>
         <button
           @click.prevent="handleAddToCart"
           class="cartButton absolute bottom-4 left-4 right-4 h-8 rounded bg-neutral-100 border-l-neutral-300 lg:bg-white lg:h-10 lg:left-8 lg:right-8 lg:top-[-50px] lg:hidden"

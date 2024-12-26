@@ -375,7 +375,7 @@ watch(
               <div class="flex flex-col gap-3">
                 <div class="flex justify-between">
                   <p>小計</p>
-                  <p>NT${{ itemPrice }}</p>
+                  <p>NT${{ itemPrice.toLocaleString() }}</p>
                 </div>
                 <div class="flex justify-between">
                   <p>折扣</p>
@@ -388,7 +388,7 @@ watch(
                 <hr />
                 <div class="flex justify-between">
                   <p>合計</p>
-                  <p class="font-bold text-orange-500">NT${{ itemPrice + 60 }}</p>
+                  <p class="font-bold text-orange-500">NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
                 </div>
               </div>
             </div>
@@ -399,7 +399,7 @@ watch(
     <!-- 前往結帳 -->
     <section class="fixed bottom-0 w-full bg-white shadow-2xl">
       <div class="flex gap-5 justify-end items-center m-5 max-w-[1365px]">
-        <p class="text-orange-500 font-bold">小計：NT${{ itemPrice }}</p>
+        <p class="text-orange-500 font-bold">合計：NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
         <button class="bg-black px-2 py-1 text-white rounded md:px-10" @click="goToNext">前往結帳</button>
       </div>
     </section>
