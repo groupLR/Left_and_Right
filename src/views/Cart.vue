@@ -132,7 +132,7 @@ const deleteProduct = async (id) => {
       },
     })
     .then(() => {
-      products.value = products.value.filter((product) => product.id !== id) // 從列表中移除
+      return initializeCartPage()
     })
     .catch((error) => {
       console.error("刪除商品失敗:", error)
@@ -141,7 +141,7 @@ const deleteProduct = async (id) => {
   await initializeCartPage()
 }
 
-// 更新商品
+// 更新購物車商品數量的函式
 const updateQuantity = async ({ id, quantity }) => {
   if (quantity < 1) {
     alert("數量不能小於 1")
@@ -159,7 +159,6 @@ const updateQuantity = async ({ id, quantity }) => {
         headers: { userId },
       }
     )
-
     if (response.data.success) {
       console.log("數量更新成功")
       await initializeCartPage() // 重新獲取購物車列表
@@ -169,6 +168,31 @@ const updateQuantity = async ({ id, quantity }) => {
   } catch (error) {
     console.error("更新數量時出錯", error)
     alert("更新數量時出錯，請稍後再試")
+  }
+}
+
+// 更新商品數量
+const updateProductQty = async (payload) => {
+  if (isSharedCart.value) {
+    try {
+      await SharedCartStore.updateProductQtyToSharedCart(route.params.groupId, payload.id, payload.quantity)
+    } catch (err) {
+      ElMessage.error({
+        message: "更新共享購物車商品數量失敗：" + (err.response?.data?.message || err.message),
+        type: "error",
+      })
+      console.error("更新共享購物車數量失敗：", err)
+    }
+  } else {
+    try {
+      await updateQuantity(payload)
+    } catch (err) {
+      ElMessage.error({
+        message: "更新購物車商品數量失敗：" + (err.response?.data?.message || err.message),
+        type: "error",
+      })
+      console.error("更新購物車數量失敗：", err)
+    }
   }
 }
 
@@ -272,7 +296,7 @@ watch(
               :salePrice="item.sale_price"
               :imgPath="item.image_path"
               :quantity="item.quantity"
-              @updateQuantity="updateQuantity"
+              @updateQuantity="updateProductQty"
               @deleteProduct="deleteProduct"
             />
           </section>
