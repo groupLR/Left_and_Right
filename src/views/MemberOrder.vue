@@ -1,5 +1,34 @@
+<script setup>
+import MemberNavbar from "../components/MemberNavbar.vue"
+import LogOut from "@/components/Logout.vue"
+import { RouterLink } from "vue-router"
+import axios from "axios"
+import { ref, onMounted } from "vue"
+const API_URL = import.meta.env.VITE_API_URL
+const orders = ref([])
+
+onMounted(async () => {
+	const userId = localStorage.getItem("UID")
+	if (!userId) {
+		console.error("未找到 UID")
+		return
+	}
+
+	try {
+		const response = await axios.get(`${API_URL}/order/${userId}`)
+		if (response.data.status === "Success") {
+			orders.value = response.data.data
+		} else {
+			console.error(response.data.message)
+		}
+	} catch (error) {
+		console.error("無法加載訂單資訊", error)
+	}
+})
+</script>
+
 <template>
-	<LogOut/>
+	<LogOut />
 	<MemberNavbar />
 	<div class="memberOrder">
 		<div class="orderContainer">
@@ -15,12 +44,15 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>20231024171032226</td>
+						<tr v-for="order in orders" :key="order.purchaseID">
+							<td>{{ order.pu_id }}</td>
 							<td>2023-10-25</td>
 							<td>NT$310</td>
 							<td>已完成<br />2023-10-27</td>
-							<td><button class="btn">查閱</button></td>
+							<td class="last">
+								<RouterLink :to="`/OrderDetails/${order.pu_id}`"> <button class="btn">查閱</button> </RouterLink>
+								<RouterLink :to="`/product_review_comments/${order.pu_id}`"> <button class="btn">評論</button></RouterLink>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -29,11 +61,6 @@
 		</div>
 	</div>
 </template>
-
-<script setup>
-import MemberNavbar from "../components/MemberNavbar.vue"
-import LogOut from "@/components/Logout.vue";
-</script>
 
 <style scoped>
 * {
@@ -67,6 +94,7 @@ import LogOut from "@/components/Logout.vue";
 	border-bottom: 1px solid #ddd;
 	border-left: none;
 	border-right: none;
+	vertical-align: middle;
 }
 .orderTable th:first-child,
 .orderTable td:first-child {
@@ -83,6 +111,7 @@ import LogOut from "@/components/Logout.vue";
 }
 
 .btn {
+	@apply my-[4px];
 	background-color: #000;
 	color: #fff;
 	padding: 5px 10px;
@@ -90,6 +119,8 @@ import LogOut from "@/components/Logout.vue";
 	border-radius: 5px;
 	cursor: pointer;
 	width: 100%;
+	flex-wrap: wrap;
+	display: block;
 }
 
 .note {
@@ -99,9 +130,20 @@ import LogOut from "@/components/Logout.vue";
 	text-align: center;
 }
 
-@media (width<=768px) {
+@media (max-width: 768px) {
 	.btn2 {
 		width: 80%;
+	}
+	.orderTable thead {
+		display: none;
+	}
+	.orderTable tbody td {
+		margin: 0 40px;
+		display: block;
+		border: 1px solid #ddd;
+	}
+	.last {
+		margin-bottom: 20px !important ;
 	}
 }
 </style>
