@@ -6,31 +6,14 @@
 					<nav class="messageNav p-[10px]">Bonny & Read 飾品</nav>
 					<div class="chatContent">
 						<ul>
-							<li
-								v-for="(message, index) in messages"
-								:key="index"
-								:class="message.isUser ? 'umsg' : 'smsg'"
-								class="message-item"
-							>
+							<li v-for="(message, index) in messages" :key="index" :class="message.isUser ? 'umsg' : 'smsg'" class="message-item">
 								{{ message.text }}
 							</li>
 						</ul>
 					</div>
-					<textarea
-						@keyup.enter="sendMessage"
-						placeholder="輸入訊息"
-						name=""
-						id="chatBox"
-						v-model="userInput"
-						class="input-field"
-					></textarea>
+					<textarea @keyup.enter="sendMessage" placeholder="輸入訊息" name="" id="chatBox" v-model="userInput" class="input-field"></textarea>
 					<div class="message-btn">
-						<button class="btn">
-							<font-awesome-icon
-								:icon="['fas', 'circle-plus']"
-								style="color: #fff; margin-right: 4px"
-							/>加入圖片
-						</button>
+						<button class="btn"><font-awesome-icon :icon="['fas', 'circle-plus']" style="color: #fff; margin-right: 4px" />加入圖片</button>
 						<button @click="sendMessage" class="btn">傳送</button>
 					</div>
 				</div>
@@ -62,9 +45,7 @@ const sendMessage = () => {
 	userInput.value = ""
 
 	// 合併訊息並排序
-	messages.value = [...userMsg.value, ...systemMsg.value].sort(
-		(a, b) => new Date(a.time) - new Date(b.time)
-	)
+	messages.value = [...userMsg.value, ...systemMsg.value].sort((a, b) => new Date(a.time) - new Date(b.time))
 
 	setTimeout(() => {
 		// 模擬系統回應
@@ -73,9 +54,7 @@ const sendMessage = () => {
 			isUser: false,
 			time: new Date(),
 		})
-		messages.value = [...userMsg.value, ...systemMsg.value].sort(
-			(a, b) => new Date(a.time) - new Date(b.time)
-		)
+		messages.value = [...userMsg.value, ...systemMsg.value].sort((a, b) => new Date(a.time) - new Date(b.time))
 	}, 1000)
 }
 </script>
@@ -124,7 +103,7 @@ const sendMessage = () => {
 
 .chatBox {
 	border: 1px #e2e8f0 solid;
-	width: 650px;
+	max-width: 650px;
 	margin: auto;
 	margin-bottom: 30px;
 	margin-top: 20px;
@@ -158,7 +137,7 @@ const sendMessage = () => {
 }
 
 #chatBox {
-	width: 630px;
+	width: 80%;
 	height: 100px;
 	border: 1px #e2e8f0 solid;
 	border-radius: 3px;
