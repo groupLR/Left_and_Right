@@ -123,7 +123,7 @@ const addProduct = async (newProduct) => {
     })
 }
 
-// 刪除商品
+// 刪除購物車商品的函式
 const deleteProduct = async (id) => {
   axios
     .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
@@ -132,16 +132,41 @@ const deleteProduct = async (id) => {
       },
     })
     .then(() => {
-      products.value = products.value.filter((product) => product.id !== id) // 從列表中移除
+      return initializeCartPage()
     })
     .catch((error) => {
       console.error("刪除商品失敗:", error)
     })
-
-  await initializeCartPage()
 }
 
-// 更新商品
+// 刪除商品（判斷是否共享）
+const deleteProductFromCart = async (id) => {
+  if (isSharedCart.value) {
+    try {
+      await SharedCartStore.deleteProductInSharedCart(route.params.groupId, id)
+      ElMessage.success("刪除商品成功")
+      return initializeCartPage()
+    } catch (err) {
+      ElMessage.error({
+        message: "從共享購物車刪除商品失敗",
+        type: "error",
+      })
+      console.error("從共享購物車刪除商品失敗", err)
+    }
+  } else {
+    try {
+      await deleteProduct(id)
+    } catch (err) {
+      ElMessage.error({
+        message: "從購物車刪除商品失敗",
+        type: "error",
+      })
+      console.error("從購物車刪除商品失敗", err)
+    }
+  }
+}
+
+// 更新購物車商品數量的函式
 const updateQuantity = async ({ id, quantity }) => {
   if (quantity < 1) {
     alert("數量不能小於 1")
@@ -159,7 +184,6 @@ const updateQuantity = async ({ id, quantity }) => {
         headers: { userId },
       }
     )
-
     if (response.data.success) {
       console.log("數量更新成功")
       await initializeCartPage() // 重新獲取購物車列表
@@ -169,6 +193,31 @@ const updateQuantity = async ({ id, quantity }) => {
   } catch (error) {
     console.error("更新數量時出錯", error)
     alert("更新數量時出錯，請稍後再試")
+  }
+}
+
+// 更新商品數量（判斷是否共享）
+const updateProductQty = async (payload) => {
+  if (isSharedCart.value) {
+    try {
+      await SharedCartStore.updateProductQtyToSharedCart(route.params.groupId, payload.id, payload.quantity)
+    } catch (err) {
+      ElMessage.error({
+        message: "更新共享購物車商品數量失敗：",
+        type: "error",
+      })
+      console.error("更新共享購物車數量失敗：", err)
+    }
+  } else {
+    try {
+      await updateQuantity(payload)
+    } catch (err) {
+      ElMessage.error({
+        message: "更新購物車商品數量失敗：" + (err.response?.data?.message || err.message),
+        type: "error",
+      })
+      console.error("更新購物車數量失敗：", err)
+    }
   }
 }
 
@@ -272,8 +321,8 @@ watch(
               :salePrice="item.sale_price"
               :imgPath="item.image_path"
               :quantity="item.quantity"
-              @updateQuantity="updateQuantity"
-              @deleteProduct="deleteProduct"
+              @updateQuantity="updateProductQty"
+              @deleteProduct="deleteProductFromCart"
             />
           </section>
           <!-- 送貨及付款方式 -->
@@ -351,7 +400,7 @@ watch(
               <div class="flex flex-col gap-3">
                 <div class="flex justify-between">
                   <p>小計</p>
-                  <p>NT${{ itemPrice }}</p>
+                  <p>NT${{ itemPrice.toLocaleString() }}</p>
                 </div>
                 <div class="flex justify-between">
                   <p>折扣</p>
@@ -364,7 +413,7 @@ watch(
                 <hr />
                 <div class="flex justify-between">
                   <p>合計</p>
-                  <p class="font-bold text-orange-500">NT${{ itemPrice + 60 }}</p>
+                  <p class="font-bold text-orange-500">NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
                 </div>
               </div>
             </div>
@@ -375,7 +424,7 @@ watch(
     <!-- 前往結帳 -->
     <section class="fixed bottom-0 w-full bg-white shadow-2xl">
       <div class="flex gap-5 justify-end items-center m-5 max-w-[1365px]">
-        <p class="text-orange-500 font-bold">小計：NT${{ itemPrice }}</p>
+        <p class="text-orange-500 font-bold">合計：NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
         <button class="bg-black px-2 py-1 text-white rounded md:px-10" @click="goToNext">前往結帳</button>
       </div>
     </section>

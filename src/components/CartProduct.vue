@@ -1,8 +1,6 @@
 <script setup>
 import { ref } from "vue"
-import axios from "axios"
-
-const userId = localStorage.getItem("UID")
+import { ElMessage } from "element-plus"
 
 const props = defineProps({
   id: {
@@ -37,6 +35,8 @@ const decrease = () => {
   if (counter.value > 1) {
     counter.value--
     emits("updateQuantity", { id: props.id, quantity: counter.value })
+  } else {
+    ElMessage.error("商品數量不得小於一")
   }
 }
 
@@ -59,8 +59,8 @@ const handleDelete = () => {
         </button>
       </div>
       <div class="flex gap-2 items-center">
-        <span class="font-black text-orange-500 text-sm md:text-base">NT${{ props.salePrice }}</span>
-        <span class="line-through text-gray-400 text-xs md:text-sm">NT${{ props.originalPrice }}</span>
+        <span class="font-black text-orange-500 text-sm md:text-base">NT${{ Number(props.salePrice).toLocaleString() }}</span>
+        <span class="line-through text-gray-400 text-xs md:text-sm">NT${{ Number(props.originalPrice).toLocaleString() }}</span>
       </div>
       <!-- 數量 -->
       <div class="flex justify-end md:justify-end">
