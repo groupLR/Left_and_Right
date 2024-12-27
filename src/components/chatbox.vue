@@ -1,27 +1,3 @@
-<template>
-	<body>
-		<section class="memberMessage">
-			<div class="messageBox text-center text-xl">
-				<div class="chatBox">
-					<nav class="messageNav p-[10px]">Bonny & Read 飾品</nav>
-					<div class="chatContent">
-						<ul>
-							<li v-for="(message, index) in messages" :key="index" :class="message.isUser ? 'umsg' : 'smsg'" class="message-item">
-								{{ message.text }}
-							</li>
-						</ul>
-					</div>
-					<textarea @keyup.enter="sendMessage" placeholder="輸入訊息" name="" id="chatBox" v-model="userInput" class="input-field"></textarea>
-					<div class="message-btn">
-						<button class="btn"><font-awesome-icon :icon="['fas', 'circle-plus']" style="color: #fff; margin-right: 4px" />加入圖片</button>
-						<button @click="sendMessage" class="btn">傳送</button>
-					</div>
-				</div>
-			</div>
-		</section>
-	</body>
-</template>
-
 <script setup>
 import { ref } from "vue"
 const userInput = ref("")
@@ -59,6 +35,28 @@ const sendMessage = () => {
 }
 </script>
 
+<template>
+	<section class="memberMessage">
+		<div class="messageBox text-center text-xl">
+			<div class="chatBox">
+				<nav class="messageNav p-[10px]">Bonny & Read 飾品</nav>
+				<div class="chatContent">
+					<ul>
+						<li v-for="(message, index) in messages" :key="index" :class="message.isUser ? 'umsg' : 'smsg'" class="message-item">
+							{{ message.text }}
+						</li>
+					</ul>
+				</div>
+				<textarea @keyup.enter="sendMessage" placeholder="輸入訊息" name="" id="chatBox" v-model="userInput" class="input-field"></textarea>
+				<div class="message-btn">
+					<button class="btn"><font-awesome-icon :icon="['fas', 'circle-plus']" style="color: #fff; margin-right: 4px" />加入圖片</button>
+					<button @click="sendMessage" class="btn">傳送</button>
+				</div>
+			</div>
+		</div>
+	</section>
+</template>
+
 <style scoped>
 .umsg {
 	text-align: right;
@@ -68,7 +66,7 @@ const sendMessage = () => {
 	text-align: left;
 }
 
-.chatContent ui {
+.chatContent ul {
 	display: flex;
 	flex-direction: column;
 	gap: 2px;
