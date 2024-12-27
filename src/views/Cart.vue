@@ -1,6 +1,8 @@
 <!-- 購物車頁面 -->
 <template>
-  <section class="mx-10 mt-5" v-if="isSharedCart">
+  <section class="bg-gray-100 pb-[150px]">
+    <section class="px-2 max-w-[1340px] mx-auto py-5 md:px-10">
+  <section class="bg-gray-100" v-if="isSharedCart">
     <div class="flex justify-between">
       <h1 class="text-2xl font-bold">共享購物車</h1>
       <div>
@@ -14,246 +16,174 @@
       <p>{{ sharedCartMembers.join("、") }}</p>
     </div>
   </section>
-  <div class="flex justify-center my-5">
-    <div class="flex items-center justify-center text-center stepOne">1</div>
-    <div class="h-0.5 mt-3 w-60 m-0 flex justify-center items-center text-center" style="background-color: #ddd5e4"></div>
-    <div class="flex items-center justify-center text-center stepTwo">2</div>
-  </div>
+  <section v-else>
+        <h1 class="my-5 text-2xl font-bold">購物車</h1>
+      </section>
 
-  <div class="flex justify-center gap-40 my-2 prNav">
-    <span>購物車</span>
-    <span>填寫資料</span>
-  </div>
-  <div v-if="products.length == 0" class="ml-10 mr-10 cart mt-100">
-    <div class="flex justify-start quarter" style="position: relative">
-      <h3 class="h-10 ml-2 cartitems quarter">購物車({{ itemCount }}件)</h3>
-      <i class="fa-solid fa-share-nodes link"></i>
-    </div>
-    <el-empty description="購物車還是空的" />
-  </div>
-  <div v-else class="ml-10 mr-10 cart mt-100">
-    <div class="flex justify-start quarter" style="position: relative">
-      <h3 class="h-10 mr-2 cartitems quarter">購物車({{ itemCount }}件)</h3>
-      <i class="fa-solid fa-share-nodes link"></i>
-    </div>
+      <!-- 步驟 -->
+      <section class="flex justify-center">
+        <el-steps style="min-width: 300px" :active="1" align-center class="md:w-[600px]">
+          <el-step title="購物" description="送貨與付款方式" />
+          <el-step title="結帳" description="付款與送貨地址" />
+        </el-steps>
+      </section>
+       <!-- 主要內容區 -->
+       <section class="flex flex-col mt-10 md:flex-row md:gap-5">
+        <section class="md:w-2/3">
+          <!-- 商品列表 -->
+          <section class="bg-white rounded-xl">
+            <CartProduct
+              v-for="item in products"
+              :key="item.id"
+              :id="item.product_id"
+              :name="item.product_name"
+              :originalPrice="item.original_price"
+              :salePrice="item.sale_price"
+              :imgPath="item.image_path"
+              :quantity="item.quantity"
+              @updateQuantity="updateQuantity"
+              @deleteProduct="deleteProduct"
+            />
+          </section>
+          <!-- 送貨及付款方式 -->
+          <section class="px-5 py-5 mt-5 bg-white rounded-xl">
+            <div class="flex items-center justify-between my-4">
+              <label class="mr-2 shrink-0">送貨地點</label>
+              <el-select
+                placement="bottom"
+                :fallback-placements="['bottom-start']"
+                v-model="selectedCountry"
+                placeholder="送貨地點"
+                size="default"
+                class="w-30"
+              >
+                <el-option v-for="item in countryList" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+            </div>
+            <!-- <div class="flex items-center justify-between my-4">
+              <label class="mr-2 shrink-0">送貨方式</label>
+              <el-select
+                placement="bottom"
+                :fallback-placements="['bottom-start']"
+                v-model="selectedDelivery"
+                placeholder="送貨地點"
+                size="default"
+                class="w-30"
+              >
+                <el-option v-for="option in deliveryOptions" :key="option.value" :label="option.label" :value="option.value" :disabled="option.disabled" />
+              </el-select>
+            </div> -->
+            <div class="flex items-center justify-between my-4">
+            <label class="mr-2 shrink-0">送貨方式</label>
+            <el-select
+              placement="bottom"
+              :fallback-placements="['bottom-start']"
+              v-model="selectedDelivery"
+              placeholder="送貨地點"
+              size="default"
+              class="w-30"
+            >
+              <el-option
+                v-for="option in deliveryOptions"
+                :key="option"
+                :label="option"
+                :value="option"
+                :disabled="false"
+              />
+            </el-select>
+            </div>
+            <!-- <div class="flex items-center justify-between my-4">
+              <label class="mr-2 shrink-0">付款方式</label>
+              <el-select
+                placement="bottom"
+                :fallback-placements="['bottom-start']"
+                v-model="selectedPayment"
+                placeholder="送貨地點"
+                size="default"
+                class="w-30"
+              >
+                <el-option v-for="option in paymentOptions" :key="option.value" :label="option.label" :value="option.value" :disabled="option.disabled" />
+              </el-select>
+            </div> -->
+            <div class="flex items-center justify-between my-4">
+            <label class="mr-2 shrink-0">付款方式</label>
+            <el-select
+              placement="bottom"
+              :fallback-placements="['bottom-start']"
+              v-model="selectedPayment"
+              placeholder="選擇付款方式"
+              size="default"
+              class="w-30"
+            >
+              <el-option
+                v-for="option in paymentOptions"
+                :key="option"
+                :label="option"
+                :value="option"
+              />
+            </el-select>
+            </div>
+            <div class="text-gray-500">
+              <p>取貨通知：</p>
+              <p>
+                - 訂單到達超商七日內，每日皆會傳送取貨簡訊，並於第五日時撥打語音電話通知取貨哦！<br />
+                - 現貨訂單狀態更改「已確認」後，2-3天寄出。 (不包含假日及國定假日)<br />
+                <br />- 本公司產品享7天鑑賞期，30天保固維修<br />
+                - 免付費電話：0800 000 004<br />- 預購與現貨一併出貨
+              </p>
+            </div>
+          </section>
+        </section>
+        <!-- 優惠和小計區塊 -->
+        <aside class="flex flex-col gap-5 mt-5 md:w-1/3 md:mt-0">
+          <!-- 優惠區塊 -->
+          <div class="sticky top-0">
+            <div class="p-5 bg-white rounded-xl">
+              <h2 class="text-xl font-bold">已享用之優惠</h2>
+              <!-- 之後串 API 了用這個 div 跑 v-for -->
+              <div class="flex flex-col items-start">
+                <p class="px-5 my-4 text-sm text-center bg-green-100 md:text-base">優惠促銷</p>
+                <p class="text-sm md:text-base">雙11優惠！全館 兩件85折/三件8折/四件75折！ - 全單 滿 2 件 即享 85 折 再買 1 件 省更多</p>
+                <div class="flex justify-end w-full">
+                  <p class="text-sm font-bold text-green-600 md:text-base">-NT$94</p>
+                </div>
+              </div>
+            </div>
 
-    <thead>
-      <div class="tittles">
-        <div class="tittle">商品資料</div>
-        <div class="tittle">優惠</div>
-        <div class="tittle">單件價格</div>
-        <div class="tittle">數量</div>
-        <div class="tittle">小計</div>
-      </div>
-    </thead>
-
-    <!-- <tbody> -->
-    <div class="flex justify-between prInfo" style="width: 1160px" v-for="item in products" :key="item.product_id">
-      <div class="flex justify-between prdetail introduce">
-        <img :src="item.image_path" />
-        <!-- <img src=""> -->
-
-        <div class="">
-          {{ item.product_name }}
-        </div>
-      </div>
-      <div class="prdetail"></div>
-      <div class="prdetail">
-        {{ item.sale_price }}
-      </div>
-      <div class="flex justify-between prdetail">
-        <!--           
-              <span class="input-group-btn">
-                  <button type="button">
-                      <i class="fa fa-minus"></i>
-                  </button>
-              </span> -->
-        <input type="number" v-model.number="item.quantity" min="1" class="input input-bordered" style="height: 20px" @change="updateQuantity(item)" />
-
-        <!-- <span class="input-group-btn">
-                  <button type="button" disabled>
-                      <i class="fa fa-plus"></i>
-                  </button>
-              </span>
-           -->
-      </div>
-      <div class="prdetail">{{ item.sale_price * item.quantity }}</div>
-      <i class="pr-8 fa-solid fa-xmark" @click="deleteProduct(item.product_id)"></i>
-    </div>
-  </div>
-  <!-- </tbody> -->
-  <!-- 優惠切版 -->
-  <!-- <div  class="p-5 sideBorder ">
-    <h5 class="p-5">已享用之優惠</h5>
-    <div class="flex justify-between"> 
-      
-      
-      <div class="tagGreen">優惠促銷</div>
-      <div class="description">	雙11優惠！全館 兩件85折/三件8折/四件75折！ - 全單 滿 2 件 即享 85 折 再買 1 件 省更多</div>
-      <div class="cutPrice">-NT$94</div>
-  </div>
-
- 
-</div>
-
- <div  class="p-5 sideBorder">
-    <div class="flex justify-between"> 
-      <h5 class="p-5">尚有更多精彩優惠等著你！目前未享用：
-    </h5>
-    <a href="https://www.bonnyread.com.tw/">繼續購物</a>
-  </div>
-   
-    <div class="flex justify-start"> 
-      <div class="tagGrey">優惠促銷</div>
-      <div class="description">	滿三件8折優惠!<span style="color: #D6EDD6;">再拿 1 件即享有8折</span> </div>
-  </div>
-
-  
-
- </div> -->
-
-  <!-- </div> -->
-
-  <!-- 超值加價購 -->
-
-  <!-- <div class="ml-10 mr-10 cart mt-100 cards ">
-  
-  <h3 class="h-10 quarter" >超值加價購 (往左滑)</h3>
-  
-  <div class="flex justify-start p-2 card sideBorder w-76">
-      <img src="https://fakeimg.pl/150x150/200">
-      <div class="ml-2 addpr w-38 h-38">
-      <p class="name">BONNY&READ 送禮萬用小卡  <br>/ Bonny&Read Gift Card</p>
-      <p class="pr">NT$30</p>
-      <button class="buttonBg">加入購物車</button>
-  </div> 
-
-  </div>
-
-</div>-->
-
-  <div class="laptop cellphone">
-    <div class="w-full ml-10 mr-10 cart mt-100">
-      <h3 class="h-10 quarter">選擇送貨及付款方式</h3>
-
-      <div class="m-4 option">
-        <label for="">送貨地點 </label>
-        <br>
-        <select
-      id="delivery-location"
-      class="sideBorder options message"
-      v-model="selectedLocation"
-      @change="updateLocation($event.target.value)"
-    >  
-      <option value="AU">澳大利亞</option>
-      <option value="BE">比利時</option>
-      <option value="CA">加拿大</option>
-      <option value="CN">中國</option>
-      <option value="FR">法國</option>
-      <option value="DE">德國</option>
-      <option value="HK">香港</option>
-      <option value="ID">印度尼西亞</option>
-      <option value="IT">意大利</option>
-      <option value="JP">日本</option>
-      <option value="KR">韓國</option>
-      <option value="MO">澳門</option>
-      <option value="MY">馬來西亞</option>
-      <option value="NL">荷蘭</option>
-      <option value="NZ" selected>新西蘭</option>
-      <option value="PW">帕勞</option>
-      <option value="PE">秘魯</option>
-      <option value="PH">菲律賓</option>
-      <option value="SG">新加坡</option>
-      <option value="TW">台灣</option>
-      <option value="TH">泰國</option>
-      <option value="GB">英國</option>
-      <option value="US">美國</option>
-      <option value="VN">越南</option> 
-        </select>
-      </div>
-      <div class="m-4 option">
-        <label for="">送貨方式</label>
-        <br />
-        <!-- 跟地點修改選項 -->
-        <select
-      id="shipping-method"
-      class="sideBorder options message"
-      v-model="selectedShippingMethod"
-      @change="updateShippingMethod($event.target.value)"
-    >                                             
-    <option
-        v-for="(method, index) in shippingMethods"
-        :key="index"
-        :value="method"
-      >
-        {{ method }}
-      </option>
-    </select>
-    </div>
-
-      <div class="m-4 option">
-        <label for="">付款方式</label>
-        <br>
-        <select
-        id="payment-method"
-        class="sideBorder options message"
-        v-model="checkoutStore.selectedPaymentMethod"
-        @change="updatePaymentMethod"
-      >
-        <option
-          v-for="method in checkoutStore.paymentMethods"
-          :key="method"
-          :value="method"
-        >
-          {{ method }}
-        </option>
-      </select>
-    </div>
-      <br />
-      <span
-        >取貨通知：<br />- 訂單到達超商七日內，每日皆會傳送取貨簡訊，並於第五日時撥打語音電話通知取貨哦！<br />
-        - 現貨訂單狀態更改「已確認」後，2-3天寄出。 (不包含假日及國定假日)<br />
-        <br />- 本公司產品享7天鑑賞期，30天保固維修<br />
-        - 免付費電話：0800 000 004<br />- 預購與現貨一併出貨
-      </span>
-    </div>
-  </div>
-
-  <div class="ml-10 mr-10 cart mt-100 w-105">
-    <h3 class="h-10 quarter">訂單資訊</h3>
-    <div>
-      <div class="flex justify-between p-2">
-        <div>小計:</div>
-        <div>
-          NT$
-          <span>{{ itemPrice }}</span>
-        </div>
-      </div>
-
-      <div class="flex justify-between p-2" style="color: #a58647">
-        <div>折扣:</div>
-        <div>-NT$0</div>
-      </div>
-
-      <div class="flex justify-between p-2 pb-5" style="color: #a58647">
-        <div>運費:</div>
-        <div>NT$60</div>
-      </div>
-      <div class="pb-5">
-        <!-- <a href="" style="color:#337AB7 ;" class="p-5">使用優惠代碼</a> -->
-      </div>
-
-      <hr />
-      <div class="flex justify-between p-2 font-bold">
-        <div>合計:</div>
-        <div>
-          NT$
-          <span>{{ itemPrice + 60 }}</span>
-        </div>
-      </div>
-        <!-- <button class="buttonBg flex justify-center w-[95%] mx-auto my-4 h-8 items-center p-4"  :disabled="products.length === 0"
-        @click="goToNext">前往結帳</button> -->
-        <RouterLink
+            <!-- 小計 -->
+            <div class="p-5 mt-5 bg-white rounded-xl">
+              <h2 class="mb-2 text-xl font-bold">訂單資訊</h2>
+              <h3 class="mb-4">商品項目：{{ itemCount }} 件</h3>
+              <div class="flex flex-col gap-3">
+                <div class="flex justify-between">
+                  <p>小計</p>
+                  <p>NT${{ itemPrice }}</p>
+                </div>
+                <div class="flex justify-between">
+                  <p>折扣</p>
+                  <p>-NT$94</p>
+                </div>
+                <div class="flex justify-between">
+                  <p>運費</p>
+                  <p>NT$60</p>
+                </div>
+                <hr />
+                <div class="flex justify-between">
+                  <p>合計</p>
+                  <p class="font-bold text-orange-500">NT${{ itemPrice + 60 }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </section>
+    <!-- 前往結帳 -->
+    <section class="fixed bottom-0 w-full bg-white shadow-2xl">
+      <div class="flex gap-5 justify-end items-center m-5 max-w-[1365px]">
+        <p class="font-bold text-orange-500">小計：NT${{ itemPrice }}</p>
+        <button class="px-2 py-1 text-white bg-black rounded md:px-10" @click="goToNext">前往結帳</button>
+        <!-- <RouterLink
          :to="{
            name: 'Debit',
            query: {
@@ -263,82 +193,308 @@
            },
          }"
           
-         class="buttonBg flex justify-center w-[95%] mx-auto my-4 h-8 items-center p-4" :disabled="products.length === 0"
+          class="px-2 py-1 text-white bg-black rounded md:px-10" :disabled="products.length === 0"
 >
   前往結帳
-</RouterLink>
-      <!-- 訂單獲得點數 -->
-      <!-- <div class="flex justify-between p-2 ">
-    <div>訂單獲得點數:</div>
-      <div class="" style="position: relative; transform: translateX(-180px);">
-      
-    <i class="fa-solid fa-circle-question note"></i>
-  </div>
-<div>+10點</div>
-
-  
-  </div> -->
-    </div>
-  </div>
+</RouterLink> -->
+      </div>
+    </section>
+  </section>
+ 
 </template>
 <script setup>
-import axios from 'axios';
-import { ref, computed, watch, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useCheckoutStore } from '../stores/payment';
+// import axios from 'axios';
+// import { ref, computed, watch, onMounted } from 'vue';
+// import { useRoute, useRouter } from 'vue-router';
+// import { useCheckoutStore } from '../stores/payment';
+// import { ElMessage } from "element-plus"
+// import { useSharedCartStore } from "@/stores/sharedCart"
+// import AddMember from "@/components/AddMember.vue"
+// import Warning from "@/components/Warning.vue"
+
+// const checkoutStore = useCheckoutStore();
+// const route = useRoute();
+// const router = useRouter();
+// const SharedCartStore = useSharedCartStore()
+// // State management from store
+// const selectedLocation = computed(() => checkoutStore.selectedLocation);
+// const selectedShippingMethod = computed(() => checkoutStore.selectedShippingMethod);
+// const paymentMethods = computed(() => checkoutStore.paymentMethods);
+// const deliveryOptions = computed(() => checkoutStore.deliveryOptions);
+// const shippingMethods = computed(() => deliveryOptions.value);
+// const selectedPaymentMethod = computed({
+//   get: () => checkoutStore.selectedPaymentMethod,
+//   set: (value) => checkoutStore.setSelectedPaymentMethod(value),
+// });
+
+// // Local state (data)
+// const products = ref([]);
+// const isSharedCart = ref(false) // 是不是共享購物車（用cart/後面有沒有帶groupId 判斷 ) 
+// const location = ref(route.query.location || 'TW');
+// const sharedCartName = ref("") // 共享購物車名稱
+// const sharedCartMembers = ref([]) // 共享購物車成員
+// // Update methods
+// const updateLocation = (newLocation) => {
+//   checkoutStore.setSelectedLocation(newLocation);
+//   onLocationChange();
+// };
+
+// const updateShippingMethod = (method) => {
+//   checkoutStore.setSelectedShippingMethod(method);
+// };
+
+// const updatePaymentMethod = (event) => {
+//   checkoutStore.setSelectedPaymentMethod(event.target.value);
+// };
+
+// // Handle location change
+// const onLocationChange = () => {
+//   checkoutStore.setSelectedShippingMethod(shippingMethods.value[0] || '');
+//   checkoutStore.setSelectedPaymentMethod(paymentMethods.value[0] || '');
+//   console.log(`送貨地點變更為: ${selectedLocation.value}`);
+// };
+
+// // Watchers
+// watch(selectedShippingMethod, (newMethod) => {
+//   if (!paymentMethods.value.includes(checkoutStore.selectedPaymentMethod)) {
+//     checkoutStore.setSelectedPaymentMethod(paymentMethods.value[0]);
+//   }
+// });
+
+// watch(selectedPaymentMethod, (newPaymentMethod) => {
+//   router.replace({
+//     query: { ...route.query, payment: newPaymentMethod },
+//   });
+// });
+
+// watch(
+//   () => route.query,
+//   (newQuery) => {
+//     if (newQuery.location) {
+//       checkoutStore.setSelectedLocation(newQuery.location);
+//     }
+//   },
+//   { immediate: true }
+// );
+// watch(
+//   () => route.params,
+//   async () => {
+//     await initializeCartPage()
+//   }
+// )
+
+// // API Methods
+// const fetchCartItems = async () => {
+//   try {
+//     const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`);
+//     products.value = response.data;
+//     console.log('資料獲取成功:', products.value);
+//   } catch (error) {
+//     console.error('獲取資料失敗:', error);
+//   }
+// };
+
+// // const fetchSharedCartItems = async (groupId) => {
+// //   try {
+// //     const response = await axios.get(`http://localhost:3300/sharedCartItem/${groupId}`);
+// //     products.value = response.data;
+// //     console.log('獲得共享購物車資料');
+// //   } catch (error) {
+// //     console.error('Error fetching shared cart items:', error);
+// //   }
+// // };
+
+// const addProduct = async (newProduct) => {
+//   axios
+//     .post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, newProduct)
+//     .then((response) => {
+//       products.value.push(response.data);
+//     })
+//     .catch((error) => {
+//       console.error('新增商品失敗:', error);
+//     });
+// };
+
+// const deleteProduct = async(id) => {
+//   axios
+//     .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`)
+//     .then(() => {
+//       products.value = products.value.filter((product) => product.id !== id);
+//     })
+//     .catch((error) => {
+//       console.error('刪除商品失敗:', error);
+//     });
+// };
+
+// const updateQuantity = async (item) => {
+//   if (item.quantity < 1) {
+//     alert('數量不能小於 1');
+//     item.quantity = 1;
+//     return;
+//   }
+//   try {
+//     const response = await axios.put(`${import.meta.env.VITE_API_URL}/cart/update-quantity`, {
+//       product_id: item.product_id,
+//       quantity: item.quantity,
+//     })
+// ;
+//     if (response.data.success) {
+//       console.log('數量更新成功');
+//     } else {
+//       alert(`更新失敗: ${response.data.message}`);
+//     }
+//   } catch (error) {
+//     console.error('更新數量時出錯', error);
+//     alert('更新數量時出錯，請稍後再試');
+//   }
+// };
+
+// const goToNext = () => {
+//   try {
+//     router.push('/Debit').catch((err) => {
+//       console.error('導航失敗:', err);
+//     });
+//   } catch (error) {
+//     console.error('錯誤發生:', error);
+//   }
+// };
+// // 刪除共享購物車
+// const deleteSharedCart = async () => {
+//   try {
+//     await SharedCartStore.deleteSharedCart(route.params.groupId)
+//     await SharedCartStore.fetchSharedCartList()
+//     const message = sharedCartName.value ? `刪除 ${sharedCartName.value} 成功` : "刪除共享購物車成功"
+//     ElMessage.success(message)
+//     // 導航到共享購物車列表
+//     router.push("/sharedcartlist")
+//   } catch (error) {
+//     console.error("刪除購物車失敗:", error)
+//     ElMessage.error("刪除購物車失敗，請稍後再試")
+//   }
+// }
+// // 新增好友後重新渲染共享購物車
+// const refreshSharedCart = async () => {
+//   const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
+//   products.value = data.productDataList
+//   sharedCartMembers.value = data.info.memberName
+// }
+
+
+// const initializeCartPage = async () => {
+//   // 檢查路由是否包含 groupId 參數，有就抓共享購物車，沒有就抓自己的購物車
+//   if ("groupId" in route.params) {
+//     isSharedCart.value = true
+//     const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
+//     products.value = data.productDataList || []
+//     sharedCartName.value = data.info.cartName || ""
+//     sharedCartMembers.value = data.info.memberName || []
+//   } else {
+//     isSharedCart.value = false
+//     await fetchCartItems()
+//   }
+// }
+
+// // Computed properties
+// const itemCount = computed(() => {
+//   return products.value.filter((item) => item.quantity > 0).length
+// })
+
+
+// const itemPrice = computed(() => {
+//   return products.value.reduce((total, item) => total + item.original_price * item.quantity, 0)
+// })
+
+
+// // Lifecycle hooks
+// onMounted(async () => {
+//   // 初始化頁面
+//   await initializeCartPage();
+
+//   // 檢查路由參數並執行相應的操作
+//   if ('groupId' in route.params) {
+//     isSharedCart.value = true;
+//     await fetchSharedCartItems(route.params.groupId);
+//   } else {
+//     await fetchCartItems();
+//   }
+// });
+
+
+// // Initialize options
+// checkoutStore.setSelectedShippingMethod('貨到付款-黑貓宅配/滿499免運');
+// onLocationChange();
+import axios from "axios"
+import { useRoute, onBeforeRouteUpdate,useRouter } from "vue-router"
+import { onMounted, ref, computed, watch } from "vue"
 import { ElMessage } from "element-plus"
 import { useSharedCartStore } from "@/stores/sharedCart"
 import AddMember from "@/components/AddMember.vue"
 import Warning from "@/components/Warning.vue"
-
+import CartProduct from "@/components/CartProduct.vue"
+import { useCheckoutStore } from '../stores/payment';
+const route = useRoute()
+const router = useRouter()
 const checkoutStore = useCheckoutStore();
-const route = useRoute();
-const router = useRouter();
 const SharedCartStore = useSharedCartStore()
-// State management from store
 const selectedLocation = computed(() => checkoutStore.selectedLocation);
 const selectedShippingMethod = computed(() => checkoutStore.selectedShippingMethod);
 const paymentMethods = computed(() => checkoutStore.paymentMethods);
-const deliveryOptions = computed(() => checkoutStore.deliveryOptions);
+// const deliveryOptions = computed(() => checkoutStore.deliveryOptions);
+const deliveryOptions = computed(() => checkoutStore.deliveryOptions); // 根據選定位置計算可用送貨方式
 const shippingMethods = computed(() => deliveryOptions.value);
-const selectedPaymentMethod = computed({
-  get: () => checkoutStore.selectedPaymentMethod,
-  set: (value) => checkoutStore.setSelectedPaymentMethod(value),
-});
-
-// Local state (data)
-const products = ref([]);
-const isSharedCart = ref(false) // 是不是共享購物車（用cart/後面有沒有帶groupId 判斷 ) 
-const location = ref(route.query.location || 'TW');
-const sharedCartName = ref("") // 共享購物車名稱
-const sharedCartMembers = ref([]) // 共享購物車成員
-// Update methods
 const updateLocation = (newLocation) => {
-  checkoutStore.setSelectedLocation(newLocation);
-  onLocationChange();
+  checkoutStore.setSelectedLocation(newLocation); // 更新到 store
+  onLocationChange(); // 確保觸發相關更新邏輯
 };
-
+// 新增一個方法來更新 shipping method
 const updateShippingMethod = (method) => {
   checkoutStore.setSelectedShippingMethod(method);
 };
 
-const updatePaymentMethod = (event) => {
+// Initialize selected shipping method if needed
+checkoutStore.setSelectedShippingMethod('貨到付款-黑貓宅配/滿499免運'); // Example, adjust based on your logic
+
+const location = (route.query.location || 'TW'); // 初始化时同步
+// const paymentOptions = {
+//   TW: ['信用卡 (Visa / MasterCard / JCB / 銀聯卡)', '現金付款'],
+//   default: ['信用卡 (Visa / MasterCard / JCB / 銀聯卡)'],
+// };
+const paymentOptions = computed(() => checkoutStore.paymentMethods); // 根據配送方式計算可用付款方式
+// const paymentOptions = computed(() => {
+//   const options = checkoutStore.paymentMethods; // 從 Pinia 獲取計算屬性
+//   return options.includes(selectedPayment.value) ? options : [options[0]];
+// });
+const selectedPaymentMethod = computed({
+  get: () => checkoutStore.selectedPaymentMethod,
+  set: (value) => checkoutStore.setSelectedPaymentMethod(value)
+});
+;const updatePaymentMethod = (event) => {
   checkoutStore.setSelectedPaymentMethod(event.target.value);
 };
-
-// Handle location change
+// 當送貨地點改變時，更新送貨方式與付款方式
 const onLocationChange = () => {
+  // 使用 store 的 action 來設置 shipping method
   checkoutStore.setSelectedShippingMethod(shippingMethods.value[0] || '');
+  
+  // 使用 store 的 action 來設置 payment method
   checkoutStore.setSelectedPaymentMethod(paymentMethods.value[0] || '');
-  console.log(`送貨地點變更為: ${selectedLocation.value}`);
+  
+  // console.log(送貨地點變更為: ${selectedLocation.value});
 };
+// 監控 selectedShippingMethod 的變化動態更新 selectedPaymentMethod
+// watch(selectedShippingMethod, (newMethod) => {
+//   // selectedPaymentMethod.value = paymentMethods.value[0] || '';
+//   if (!paymentMethods.value.includes(checkoutStore.selectedPaymentMethod)) {
+//     checkoutStore.setSelectedPaymentMethod(paymentMethods.value[0]);}
+// });
 
-// Watchers
-watch(selectedShippingMethod, (newMethod) => {
-  if (!paymentMethods.value.includes(checkoutStore.selectedPaymentMethod)) {
-    checkoutStore.setSelectedPaymentMethod(paymentMethods.value[0]);
-  }
-});
+// 初始化選項
+onLocationChange();
+
+// 防護 route.query 為 undefined 的情況
+if (route.query && route.query.location) {
+  location.value = route.query.location;
+}
 
 watch(selectedPaymentMethod, (newPaymentMethod) => {
   router.replace({
@@ -346,97 +502,186 @@ watch(selectedPaymentMethod, (newPaymentMethod) => {
   });
 });
 
-watch(
-  () => route.query,
-  (newQuery) => {
-    if (newQuery.location) {
-      checkoutStore.setSelectedLocation(newQuery.location);
-    }
-  },
-  { immediate: true }
-);
-watch(
-  () => route.params,
-  async () => {
-    await initializeCartPage()
+// 監聽路由查詢參數的變化
+watch(() => route.query, (newQuery) => {
+  if (newQuery.location) {
+    checkoutStore.setSelectedLocation(newQuery.location)
   }
-)
+}, { immediate: true })
 
-// API Methods
+watch(selectedShippingMethod, (newValue) => {
+  console.log('Shipping Method Changed:', newValue);
+});
+
+
+// data
+const products = ref([]) // 儲存後端返回的商品資料
+const isSharedCart = ref(false) // 是不是共享購物車（用cart/後面有沒有帶 groupId 判斷 )
+const sharedCartName = ref("") // 共享購物車名稱
+const sharedCartMembers = ref([]) // 共享購物車成員
+const userId = localStorage.getItem("UID")
+// 送貨表單
+const selectedCountry = ref("TW")
+const countryList = [
+  { value: "AU", label: "澳大利亞" },
+  { value: "BE", label: "比利時" },
+  { value: "CA", label: "加拿大" },
+  { value: "CN", label: "中國" },
+  { value: "FR", label: "法國" },
+  { value: "DE", label: "德國" },
+  { value: "HK", label: "香港" },
+  { value: "ID", label: "印度尼西亞" },
+  { value: "IT", label: "意大利" },
+  { value: "JP", label: "日本" },
+  { value: "KR", label: "韓國" },
+  { value: "MO", label: "澳門" },
+  { value: "MY", label: "馬來西亞" },
+  { value: "NL", label: "荷蘭" },
+  { value: "NZ", label: "新西蘭" },
+  { value: "PW", label: "帕勞" },
+  { value: "PE", label: "秘魯" },
+  { value: "PH", label: "菲律賓" },
+  { value: "SG", label: "新加坡" },
+  { value: "TW", label: "台灣" },
+  { value: "TH", label: "泰國" },
+  { value: "GB", label: "英國" },
+  { value: "US", label: "美國" },
+  { value: "VN", label: "越南" },
+]
+const selectedDelivery = ref(checkoutStore.selectedShippingMethod); // 使用 Pinia 管理的 selectedShippingMethod
+//const selectedDelivery = ref("home-delivery")
+// const deliveryOptions = [
+//   {
+//     value: "overseas-ems",
+//     label: "海外運送 (3-7天到貨，採EMS寄送)",
+//     disabled: false,
+//   },
+//   {
+//     value: "overseas-dhl",
+//     label: "海外運送 (3-7天到貨，DHL運送)",
+//     disabled: false,
+//   },
+//   {
+//     value: "7-11",
+//     label: "7-11",
+//   },
+//   {
+//     value: "home-delivery",
+//     label: "宅配到府",
+//   },
+// ]
+const selectedPayment = ref(checkoutStore.selectedPaymentMethod); // 使用 Pinia 的 selectedPaymentMethod
+// const selectedPayment = ref("credit-card")
+// const paymentOptions = [
+//   {
+//     value: "cash-on-delivery",
+//     label: "貨到付款",
+//   },
+//   {
+//     value: "credit-card",
+//     label: "信用卡 (Visa / MasterCard / JCB / 銀聯卡)",
+//   },
+//   {
+//     value: "dbs-card",
+//     label: "↳ 刷星展卡滿 3,000 送 100 刷卡金",
+//     disabled: true,
+//   },
+// ]
+
+// computed
+const itemCount = computed(() => {
+  return products.value.filter((item) => item.quantity > 0).length
+})
+
+const itemPrice = computed(() => {
+  return products.value.reduce((total, item) => total + item.original_price * item.quantity, 0)
+})
+
+// method
+// 獲取購物車商品
 const fetchCartItems = async () => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`);
-    products.value = response.data;
-    console.log('資料獲取成功:', products.value);
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`, {
+      headers: {
+        userId,
+      },
+    })
+    products.value = response.data // 將 API 返回的資料存入 products
   } catch (error) {
-    console.error('獲取資料失敗:', error);
+    console.error("獲取資料失敗:", error)
   }
-};
+}
 
-// const fetchSharedCartItems = async (groupId) => {
-//   try {
-//     const response = await axios.get(`http://localhost:3300/sharedCartItem/${groupId}`);
-//     products.value = response.data;
-//     console.log('獲得共享購物車資料');
-//   } catch (error) {
-//     console.error('Error fetching shared cart items:', error);
-//   }
-// };
-
+// 新增購物車商品
 const addProduct = async (newProduct) => {
   axios
     .post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, newProduct)
     .then((response) => {
-      products.value.push(response.data);
+      products.value.push(response.data) // 新增成功後直接更新列表
     })
     .catch((error) => {
-      console.error('新增商品失敗:', error);
-    });
-};
+      console.error("新增商品失敗:", error)
+    })
+}
 
-const deleteProduct = async(id) => {
+// 刪除商品
+const deleteProduct = async (id) => {
   axios
-    .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`)
+    .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
+      headers: {
+        userId,
+      },
+    })
     .then(() => {
-      products.value = products.value.filter((product) => product.id !== id);
+      products.value = products.value.filter((product) => product.id !== id) // 從列表中移除
     })
     .catch((error) => {
-      console.error('刪除商品失敗:', error);
-    });
-};
-
-const updateQuantity = async (item) => {
-  if (item.quantity < 1) {
-    alert('數量不能小於 1');
-    item.quantity = 1;
-    return;
-  }
-  try {
-    const response = await axios.put(`${import.meta.env.VITE_API_URL}/cart/update-quantity`, {
-      product_id: item.product_id,
-      quantity: item.quantity,
+      console.error("刪除商品失敗:", error)
     })
-;
+
+  await initializeCartPage()
+}
+
+// 更新商品
+const updateQuantity = async ({ id, quantity }) => {
+  if (quantity < 1) {
+    alert("數量不能小於 1")
+    return
+  }
+
+  try {
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_URL}/cart/update-quantity`,
+      {
+        product_id: id,
+        quantity,
+      },
+      {
+        headers: { userId },
+      }
+    )
+
     if (response.data.success) {
-      console.log('數量更新成功');
+      console.log("數量更新成功")
+      await initializeCartPage() // 重新獲取購物車列表
     } else {
-      alert(`更新失敗: ${response.data.message}`);
+      alert("更新失敗：" + response.data.message)
     }
   } catch (error) {
-    console.error('更新數量時出錯', error);
-    alert('更新數量時出錯，請稍後再試');
+    console.error("更新數量時出錯", error)
+    alert("更新數量時出錯，請稍後再試")
   }
-};
+}
 
-const goToNext = () => {
+// 前往結帳
+const goToNext = async () => {
   try {
-    router.push('/Debit').catch((err) => {
-      console.error('導航失敗:', err);
-    });
-  } catch (error) {
-    console.error('錯誤發生:', error);
+    await router.push("/Debit")
+  } catch (err) {
+    console.error("導航失敗:", err)
   }
-};
+}
+
 // 刪除共享購物車
 const deleteSharedCart = async () => {
   try {
@@ -458,7 +703,6 @@ const refreshSharedCart = async () => {
   sharedCartMembers.value = data.info.memberName
 }
 
-
 const initializeCartPage = async () => {
   // 檢查路由是否包含 groupId 參數，有就抓共享購物車，沒有就抓自己的購物車
   if ("groupId" in route.params) {
@@ -472,37 +716,56 @@ const initializeCartPage = async () => {
     await fetchCartItems()
   }
 }
-
-// Computed properties
-const itemCount = computed(() => {
-  return products.value.filter((item) => item.quantity > 0).length
-})
-
-
-const itemPrice = computed(() => {
-  return products.value.reduce((total, item) => total + item.original_price * item.quantity, 0)
-})
-
-
-// Lifecycle hooks
+// 初始化購物車頁面
+// const initializeCartPage = async () => {
+//   if (isSharedCart.value) {
+//     const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId);
+//     products.value = data.productDataList || [];
+//   } else {
+//     await fetchCartItems(); // 僅在購物車需要更新時重新抓取數據
+//   }
+// };
+// onMounted
 onMounted(async () => {
-  // 初始化頁面
-  await initializeCartPage();
+  await initializeCartPage()
+})
 
-  // 檢查路由參數並執行相應的操作
-  if ('groupId' in route.params) {
-    isSharedCart.value = true;
-    await fetchSharedCartItems(route.params.groupId);
-  } else {
-    await fetchCartItems();
+// 避免不必要的數據重置
+// onMounted(async () => {
+//   if (!products.value.length) {
+//     await initializeCartPage(); // 僅在數據為空時初始化
+//   }
+// });
+
+// 初始設定
+onMounted(() => {
+  checkoutStore.initializeShippingMethod(); // 確保有默認的送貨方式
+});
+// 初始化付款方式
+onMounted(() => {
+  if (!paymentOptions.value.includes(selectedPayment.value)) {
+    selectedPayment.value = paymentOptions.value[0];
   }
 });
+// watch
+watch(
+  () => route.params,
+  async () => {
+    await initializeCartPage()
+  }
+)
+// 同步 selectedDelivery 與 Pinia 狀態
+watch(selectedDelivery, (newMethod) => {
+  checkoutStore.setSelectedShippingMethod(newMethod);
+});
 
-
-// Initialize options
-checkoutStore.setSelectedShippingMethod('貨到付款-黑貓宅配/滿499免運');
-onLocationChange();
-
+// 當送貨方式變更時，自動更新付款方式
+watch(() => checkoutStore.selectedShippingMethod, () => {
+  // 更新默認付款方式為當前配送方式可用的第一個選項
+  if (!paymentOptions.value.includes(selectedPayment.value)) {
+    selectedPayment.value = paymentOptions.value[0];
+  }
+});
 </script>
 
 <style scoped>
@@ -577,188 +840,11 @@ onLocationChange();
   border-radius: 2%;
 }
 
-.sideBorder {
-  border: 1px solid #f6f6f6;
+:deep(.el-step__description.is-finish) {
+  @apply text-orange-500;
 }
 
-.cards {
-  height: 380px;
-}
-
-.link:hover::after {
-  content: "複製購物車商品給朋友";
-  color: white;
-  background-color: black;
-  padding: 5px;
-  border-radius: 3px;
-  position: absolute;
-  /* 調整位置 */
-  top: -20px;
-
-  height: 30px;
-  display: flex;
-  justify-content: start;
-
-  padding: 5px;
-  padding-bottom: 10px;
-}
-
-.buttonBg {
-  background-color: black;
-  color: #f8f6f6;
-  border-radius: 5px;
-  /* padding: 5px 10px; */
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.wid {
-  width: 565px;
-}
-
-.center {
-  text-align: center;
-}
-
-.time {
-  background-color: #e5dfcd;
-  border-radius: 5px;
-}
-
-.stepOne {
-  color: #ffffff;
-  background-color: #c1c1c1;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-}
-
-.stepTwo {
-  color: #ffffff;
-  background-color: #ddd5e4;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-}
-
-.message {
-  width: 500px;
-  margin: 10px;
-  padding: 5px;
-  border: 1px solid #555353;
-  border-radius: 5px;
-}
-
-.note:hover::after {
-  content: "若該訂單有退貨單, 將會排除退貨商品與金額計算可獲得的點數。";
-  color: white;
-  background-color: black;
-  padding: 5px;
-  border-radius: 3px;
-  position: absolute;
-  /* 調整位置*/
-  bottom: -60px;
-  right: 0px;
-  /* right: 20px; */
-  width: 200px;
-  height: 60px;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 5px;
-  padding-bottom: 10px;
-}
-
-.birthday:hover::after {
-  content: "你須達一定年齡才能於網站購物";
-  color: black;
-  background-color: whitesmoke;
-  padding: 5px;
-  border-radius: 3px;
-  position: absolute;
-  /* 調整位置*/
-  top: -20px;
-  right: 200px;
-  /* right: 20px; */
-  width: 200px;
-  height: 40px;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 5px;
-  /* padding-bottom: 10px; */
-}
-
-.lock:hover::after {
-  content: "所有交易均安全,並已加密";
-  color: white;
-  background-color: black;
-  padding: 5px;
-  border-radius: 3px;
-  position: absolute;
-  /* 調整位置*/
-  top: -20px;
-  right: 50px;
-  /* right: 20px; */
-  width: 200px;
-  height: 30px;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 5px;
-  /* padding-bottom: 10px; */
-}
-
-.name-quote:hover::after {
-  content: "姓和名請用一個分號分隔開";
-  color: white;
-  background-color: black;
-  padding: 5px;
-  border-radius: 3px;
-  position: absolute;
-  /* 調整位置*/
-  top: -20px;
-  right: 50px;
-  /* right: 20px; */
-  width: 200px;
-  height: 40px;
-  display: flex;
-  flex-wrap: nowrap;
-  padding: 5px;
-  /* padding-bottom: 10px; */
-}
-
-.security:hover::after {
-  content: "您卡片顯示的末三碼";
-  color: white;
-  background-color: black;
-  padding: 5px;
-  border-radius: 3px;
-  position: absolute;
-  /* 調整位置*/
-  top: -20px;
-  right: 50px;
-  /* right: 20px; */
-  width: 200px;
-  height: 30px;
-  display: flex;
-  flex-wrap: nowrap;
-  padding: 5px;
-  /* padding-bottom: 10px; */
-}
-
-@media screen and (max-width: 767px) {
-  /* 手機板切換成直向模式 */
-  .cellphone {
-    display: block;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  /* 網頁板切換成橫向模式 */
-  .laptop {
-    display: flex;
-    justify-content: center;
-  }
+:deep(.el-step__head.is-finish) {
+  @apply text-orange-500 border-orange-500;
 }
 </style>

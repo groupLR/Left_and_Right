@@ -13,25 +13,50 @@ export const useProductStore = defineStore("products", () => {
   // 預設商品列表
   const productList = ref([])
   // 商品列表標題處理
+  // const fetchProductList = async (categoryId = 1, sortBy, pageSize = 12, pageNum = 1) => {
+  //   try {
+  //     const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/categories${categoryId ? `/${categoryId}` : ""}`, {
+  //       params: {
+  //         sortBy,
+  //         pageSize,
+  //         pageNum,
+  //       },
+  //     })
+  //     productList.value = data.products || []
+  //     categoryTitle.value = data.categoryName
+  //     totalProductCount.value = data.totalProduct
+  //     // 處理聯名
+  //     coBrandingTitle.value = data.categoryName
+  //   } catch (error) {
+  //     console.error("Error fetching products:", error)
+  //   }
+  // }
   const fetchProductList = async (categoryId = 1, sortBy, pageSize = 12, pageNum = 1) => {
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3300'
+    
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/categories${categoryId ? `/${categoryId}` : ""}`, {
+      const response = await axios.get(`${baseUrl}/categories/${categoryId}`, {
         params: {
           sortBy,
           pageSize,
           pageNum,
-        },
+        }
       })
-      productList.value = data.products || []
-      categoryTitle.value = data.categoryName
-      totalProductCount.value = data.totalProduct
-      // 處理聯名
-      coBrandingTitle.value = data.categoryName
-    } catch (error) {
-      console.error("Error fetching products:", error)
+      
+      const { data } = response
+    if (data && typeof data === 'object') {
+      // 處理圖片路徑
+      productList.value = (data.products || []).map(product => ({
+        ...product,
+        frontImg: `${baseUrl}${product.frontImg.startsWith('/') ? product.frontImg : `/${product.frontImg}`}`,
+        backImg: `${baseUrl}${product.backImg.startsWith('/') ? product.backImg : `/${product.backImg}`}`
+      }))
+      // ...其他代碼保持不變
     }
+  } catch (error) {
+    console.error('Error details:', error)
   }
-
+}
   // 下拉
   const pageValue = ref("")
   const sortValue = ref("")

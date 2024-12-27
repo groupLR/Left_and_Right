@@ -9,6 +9,8 @@ const { coBrandingTitle, productList, coBrandingCurrentPage, coBrandingPageSize,
 
 onMounted(async () => {
   await ProductStore.fetchProductList(26, null, coBrandingPageSize.value, coBrandingCurrentPage.value)
+  // await ProductStore.fetchProductList(26, null, 4, 1)
+  console.log(import.meta.env.VITE_API_URL)
 })
 </script>
 
@@ -17,7 +19,7 @@ onMounted(async () => {
     <Carousel />
     <!-- 影片 -->
     <section class="px-4 w-full my-0 mx-auto md:w-[750px] lg:w-[970px] xl:w-[1170px]">
-      <div class="p-4 w-full">
+      <div class="w-full p-4">
         <iframe
           class="w-full aspect-video"
           src="https://www.youtube-nocookie.com/embed/APEujcFMCxs?loop=1&playlist=APEujcFMCxs&rel=1"
@@ -35,7 +37,7 @@ onMounted(async () => {
     <!-- 聯名產品 -->
     <section class="px-4 mx-auto md:w-[750px] lg:w-[970px] xl:w-[1170px]">
       <div class="p-4">
-        <h2 class="coBrandingTitle mb-7 pt-3 pb-6 text-2xl text-center tracking-wide relative">{{ coBrandingTitle }}</h2>
+        <h2 class="relative pt-3 pb-6 text-2xl tracking-wide text-center coBrandingTitle mb-7">{{ coBrandingTitle }}</h2>
       </div>
       <div class="flex flex-wrap">
         <ProductItem
@@ -53,7 +55,7 @@ onMounted(async () => {
       <!-- 分頁 -->
       <div class="flex justify-center pb-4 mb-7">
         <vue-awesome-paginate
-          class="text-gray-500 text-sm"
+          class="text-sm text-gray-500"
           :total-items="totalProductCount"
           :items-per-page="coBrandingPageSize"
           :max-pages-shown="3"

@@ -33,12 +33,12 @@ export const useCheckoutStore = defineStore('payment', {
         PE: ['海外運送(3-7天到貨，EMS寄送)'],
         PH: ['海外運送(3-7天到貨，EMS寄送)'],
         SG: ['亞洲區-海外運送 (3-7天到貨，順豐)', '亞洲區-海外運送 (21-35天到貨，普通國際郵寄)'],
-        TW: ['貨到付款-黑貓宅配/滿499免運', '貨到付款-郵局宅配', '全台門市取貨付款', '黑貓宅配', '郵局宅配'],
+        TW: ['貨到付款-黑貓宅配/滿499免運', '貨到付款-郵局宅配', '黑貓宅配', '郵局宅配'],
         TH: ['亞洲區-海外運送 (3-7天到貨，順豐)', '亞洲區-海外運送 (21-35天到貨，普通國際郵寄)'],
         GB: ['海外運送(3-7天到貨，EMS寄送)'],
         US: ['海外運送(3-7天到貨，EMS寄送)'],
         VN: ['亞洲區-海外運送 (3-7天到貨，順豐)', '亞洲區-海外運送 (21-35天到貨，普通國際郵寄)'],
-        default: ['貨到付款-黑貓宅配/滿499免運', '貨到付款-郵局宅配', '全台門市取貨付款', '黑貓宅配', '郵局宅配'],
+        default: ['貨到付款-黑貓宅配/滿499免運', '貨到付款-郵局宅配', '黑貓宅配', '郵局宅配'],
       };
       return deliveryOptions[state.selectedLocation] || deliveryOptions.default;
     },
@@ -48,7 +48,6 @@ export const useCheckoutStore = defineStore('payment', {
       const paymentOptionsMap = {
         '貨到付款-黑貓宅配/滿499免運': ['現金付款', '信用卡 (Visa / MasterCard / JCB / 銀聯卡)'],
         '貨到付款-郵局宅配': ['現金付款', '信用卡 (Visa / MasterCard / JCB / 銀聯卡)'],
-        '全台門市取貨付款': ['現金付款', '信用卡 (Visa / MasterCard / JCB / 銀聯卡)'],
         '黑貓宅配': ['信用卡 (Visa / MasterCard / JCB / 銀聯卡)'],
         '郵局宅配': ['信用卡 (Visa / MasterCard / JCB / 銀聯卡)'],
       };
@@ -60,7 +59,6 @@ export const useCheckoutStore = defineStore('payment', {
         const cashOnlyMethods = [
           '貨到付款-黑貓宅配/滿499免運',
           '貨到付款-郵局宅配',
-          '全台門市取貨付款',
         ];
         const creditCardOnlyMethods = [
           '黑貓宅配',
@@ -84,7 +82,7 @@ export const useCheckoutStore = defineStore('payment', {
 
     // Default payment method is credit card, with '全台門市取貨付款'
     defaultPaymentMethod: (state) => {
-      return ['信用卡 (Visa / MasterCard / JCB / 銀聯卡)', '全台門市取貨付款'];
+      return ['信用卡 (Visa / MasterCard / JCB / 銀聯卡)',];
     },
 
     // Check if the selected country is an Asian country

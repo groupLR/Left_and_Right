@@ -21,12 +21,12 @@ watch(
 
 <template>
   <section class="px-4 py-3">
-    <div class="headerContainer px-1 mb-2 md:flex items-center">
+    <div class="items-center px-1 mb-2 headerContainer md:flex">
       <h1 class="py-5 text-xl">{{ categoryTitle }}</h1>
       <!-- 排序 -->
-      <div class="selectContainer flex">
-        <div class="pageSelectItem flex items-center relative mr-3 flex-1">
-          <i class="fa-solid fa-arrow-up-short-wide absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+      <div class="flex selectContainer">
+        <div class="relative flex items-center flex-1 mr-3 pageSelectItem">
+          <i class="absolute text-gray-500 transform -translate-y-1/2 fa-solid fa-arrow-up-short-wide left-3 top-1/2"></i>
           <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="sortValue" placeholder="商品排序" size="large" class="pl-10">
             <el-option
               v-for="item in sortOptions"
@@ -39,8 +39,8 @@ watch(
         </div>
         <!-- 每頁資料筆數 -->
 
-        <div class="pageSelectItem flex items-center relative flex-1">
-          <i class="fa-solid fa-bars fa-rotate-90 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+        <div class="relative flex items-center flex-1 pageSelectItem">
+          <i class="absolute text-gray-500 transform -translate-y-1/2 fa-solid fa-bars fa-rotate-90 left-3 top-1/2"></i>
           <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="pageValue" placeholder="每頁顯示 12 個" size="large" class="pl-10">
             <el-option
               class="selectOption"
@@ -73,7 +73,7 @@ watch(
     <!-- 分頁 -->
     <div class="flex justify-center md:relative md:mb-12">
       <vue-awesome-paginate
-        class="md:absolute md:right-0 text-gray-500 text-sm"
+        class="text-sm text-gray-500 md:absolute md:right-0"
         :total-items="totalProductCount"
         :items-per-page="pageSize"
         :max-pages-shown="5"
