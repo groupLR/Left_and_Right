@@ -1,17 +1,25 @@
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, watch } from "vue"
 import axios from "axios"
 
 const API_URL = import.meta.env.VITE_API_URL
-const productId = 55 //先寫死
 const reviews = ref([])
-
+const props = defineProps({
+  productId: {
+    type: [Number],
+    required: true,
+  },
+})
 const formatTimestamp = (timestamp) => {
   const date = new Date(timestamp * 1000)
   return date.toLocaleString()
 }
 
-onMounted(async () => {
+// 獲取評論
+const fetchReviews = async (productId) => {
+  if (!productId || productId === "0") {
+    return
+  }
   try {
     const response = await axios.get(`${API_URL}/comment/reviews/${productId}`)
     if (response.data.status === "Success") {
@@ -22,7 +30,18 @@ onMounted(async () => {
   } catch (error) {
     console.error("API 請求錯誤:", error.message)
   }
+}
+
+onMounted(() => {
+  fetchReviews(props.productId)
 })
+
+watch(
+  () => props.productId,
+  (newProductId) => {
+    fetchReviews(newProductId)
+  }
+)
 </script>
 <template>
   <div class="flex space-x-6 p-6">
@@ -64,12 +83,12 @@ onMounted(async () => {
     </div>
 
     <!-- 下拉選單 -->
-    <div class="flex-shrink-0">
+    <!-- <div class="flex-shrink-0">
       <label for="source" class="block text-gray-700 font-medium mb-2">評價來源</label>
       <select id="source" class="w-48 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
         <option>評價來源：此店</option>
       </select>
-    </div>
+    </div> -->
   </div>
 
   <!-- 顧客評價列表 -->
@@ -83,7 +102,7 @@ onMounted(async () => {
         <p class="text-sm text-gray-500">
           {{ formatTimestamp(review.comment_time) }}
         </p>
-        <p class="text-yellow-500"><el-rate v-model="review.sku" :max="5" disabled></el-rate></p>
+        <p><el-rate :model-value="review.sku" :max="5" :void-color="'#ffffff'" disabled></el-rate></p>
         <p class="text-gray-700 mt-2">
           {{ review.comment }}
         </p>

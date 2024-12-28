@@ -12,6 +12,7 @@ import "swiper/css/navigation"
 import { storeToRefs } from "pinia"
 import { useCartStore } from "@/stores/cart"
 import { useSharedCartStore } from "@/stores/sharedCart"
+import Reviews from "@/components/Reviews.vue"
 const SharedCartStore = useSharedCartStore()
 const CartStore = useCartStore()
 const { sharedCartList } = storeToRefs(SharedCartStore)
@@ -238,6 +239,13 @@ const refreshSharedCartList = async () => {
   }))
   dialogToggle.value = true
 }
+//評論頁
+const props = defineProps({
+  productId: {
+    type: Number,
+    required: true,
+  },
+})
 </script>
 
 <template>
@@ -386,6 +394,7 @@ const refreshSharedCartList = async () => {
           <div class="navbar">
             <div id="navbarProductDescription">商品描述</div>
             <div id="navbarRate">顧客評價</div>
+            <!-- <Reviews :product-id="productId" /> -->
           </div>
           <div>
             <div class="descriptionTitle mx-10 my-auto flex justify-center relative">
