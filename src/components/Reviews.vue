@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted, watch } from "vue"
+import { ref, onMounted, watch, computed } from "vue"
 import axios from "axios"
 
 const API_URL = import.meta.env.VITE_API_URL
 const reviews = ref([])
+
 const props = defineProps({
   productId: {
     type: [Number],
@@ -24,6 +25,7 @@ const fetchReviews = async (productId) => {
     const response = await axios.get(`${API_URL}/comment/reviews/${productId}`)
     if (response.data.status === "Success") {
       reviews.value = response.data.data
+      calculateRatingDistribution(reviews.value)
     } else {
       console.error("無法獲取評論資料:", response.data.message)
     }
@@ -31,7 +33,38 @@ const fetchReviews = async (productId) => {
     console.error("API 請求錯誤:", error.message)
   }
 }
-
+//進度條相關
+const ratingDistribution = ref({
+  5: 0,
+  4: 0,
+  3: 0,
+  2: 0,
+  1: 0,
+})
+//計算各評論占總評論比例
+const calculateRatingDistribution = (reviews) => {
+  //把打回來的review.sku值丟進去distribution這裡
+  const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
+  reviews.forEach((review) => {
+    if (review.sku >= 1 && review.sku <= 5) {
+      distribution[review.sku] += 1
+    }
+  })
+  //計算各星評價除以總評價數是占幾成，算完後丟回去ratingDistribution再拿去前端算長度
+  const total = reviews.length
+  for (let key in distribution) {
+    distribution[key] = total > 0 ? (distribution[key] / total) * 100 : 0
+  }
+  ratingDistribution.value = distribution
+}
+//計算這個商品評論平均幾顆星，無條件進位
+const averageRating = computed(() => {
+  if (reviews.value.length === 0) return 0
+  const totalScore = reviews.value.reduce((sum, review) => {
+    return sum + (review.sku || 0)
+  }, 0)
+  return Math.ceil(totalScore / reviews.value.length)
+})
 onMounted(() => {
   fetchReviews(props.productId)
 })
@@ -49,36 +82,36 @@ watch(
     <div class="flex-1">
       <!-- 標題與總評價 -->
       <div class="flex items-center">
-        <div class="flex text-yellow-500 text-2xl">★★★★☆</div>
-        <span class="text-gray-500 ml-2">(102 個評價)</span>
+        <el-rate :model-value="averageRating" :max="5" disabled class="text-yellow-500 text-2xl"></el-rate>
+        <span class="text-gray-500 ml-2">{{ reviews.length }} 個評價</span>
       </div>
 
       <!-- 評價分佈進度條 -->
       <div class="mt-4">
         <!-- 進度條1 -->
-        <div class="flex items-center mb-2">
-          <span class="text-gray-700 w-10">5 分</span>
+        <div v-for="score in [5, 4, 3]" :key="score" class="flex items-center mb-2">
+          <span class="text-gray-700 w-10">{{ score }} 分</span>
           <div class="flex-1 bg-gray-200 rounded h-3 mx-2">
-            <div class="bg-yellow-500 h-3 rounded" style="width: 92%"></div>
+            <div class="bg-yellow-500 h-3 rounded" :style="{ width: `${ratingDistribution[score]}%` }"></div>
           </div>
-          <span class="text-gray-700">92%</span>
+          <span class="text-gray-700">{{ Math.round(ratingDistribution[score]) }}%</span>
         </div>
         <!-- 進度條2 -->
-        <div class="flex items-center mb-2">
+        <!-- <div class="flex items-center mb-2">
           <span class="text-gray-700 w-10">4 分</span>
           <div class="flex-1 bg-gray-200 rounded h-3 mx-2">
             <div class="bg-yellow-500 h-3 rounded" style="width: 6%"></div>
           </div>
           <span class="text-gray-700">6%</span>
-        </div>
+        </div> -->
         <!-- 進度條3 -->
-        <div class="flex items-center">
+        <!-- <div class="flex items-center">
           <span class="text-gray-700 w-10">3 分</span>
           <div class="flex-1 bg-gray-200 rounded h-3 mx-2">
             <div class="bg-yellow-500 h-3 rounded" style="width: 1%"></div>
           </div>
           <span class="text-gray-700">1%</span>
-        </div>
+        </div> -->
       </div>
     </div>
 
