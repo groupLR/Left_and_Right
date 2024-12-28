@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import { ElMessage } from "element-plus"
 
 const props = defineProps({
@@ -44,6 +44,14 @@ const decrease = () => {
 const handleDelete = () => {
   emits("deleteProduct", props.id)
 }
+
+// 監聽
+watch(
+  () => props.quantity,
+  (newQuantity) => {
+    counter.value = newQuantity
+  }
+)
 </script>
 <template>
   <div class="flex p-4 md:p-5 border-b-2">

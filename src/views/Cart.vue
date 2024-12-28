@@ -1,15 +1,15 @@
-<!-- 購物車頁面 -->
 <script setup>
 import axios from "axios"
 import { useRoute, useRouter } from "vue-router"
-import { onMounted, ref, computed, watch } from "vue"
+import { onMounted, ref, computed, watch, onUnmounted } from "vue"
 import { ElMessage } from "element-plus"
 import { useSharedCartStore } from "@/stores/sharedCart"
 import AddMember from "@/components/AddMember.vue"
 import Warning from "@/components/Warning.vue"
 import CartProduct from "@/components/CartProduct.vue"
-const SharedCartStore = useSharedCartStore()
+import { webSocketService } from "@/websocket/websocket.js"
 
+const SharedCartStore = useSharedCartStore()
 const route = useRoute()
 const router = useRouter()
 
@@ -144,6 +144,11 @@ const deleteProductFromCart = async (id) => {
   if (isSharedCart.value) {
     try {
       await SharedCartStore.deleteProductInSharedCart(route.params.groupId, id)
+      // 發送 WebSocket 刪除訊息
+      webSocketService.sendMessage("cartDelete", {
+        groupId: route.params.groupId,
+        itemId: id,
+      })
       ElMessage.success("刪除商品成功")
       return initializeCartPage()
     } catch (err) {
@@ -201,6 +206,12 @@ const updateProductQty = async (payload) => {
   if (isSharedCart.value) {
     try {
       await SharedCartStore.updateProductQtyToSharedCart(route.params.groupId, payload.id, payload.quantity)
+      // 發送 WebSocket 更新訊息
+      webSocketService.sendMessage("cartUpdate", {
+        groupId: route.params.groupId,
+        itemId: payload.id,
+        quantity: payload.quantity,
+      })
     } catch (err) {
       ElMessage.error({
         message: "更新共享購物車商品數量失敗：",
@@ -255,10 +266,14 @@ const initializeCartPage = async () => {
   // 檢查路由是否包含 groupId 參數，有就抓共享購物車，沒有就抓自己的購物車
   if ("groupId" in route.params) {
     isSharedCart.value = true
-    const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
-    products.value = data.productDataList || []
-    sharedCartName.value = data.info.cartName || ""
-    sharedCartMembers.value = data.info.memberName || []
+    try {
+      const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
+      products.value = data.productDataList || []
+      sharedCartName.value = data.info.cartName || ""
+      sharedCartMembers.value = data.info.memberName || []
+    } catch (error) {
+      console.error("初始化共享購物車時出錯:", error)
+    }
   } else {
     isSharedCart.value = false
     await fetchCartItems()
@@ -268,6 +283,23 @@ const initializeCartPage = async () => {
 // onMounted
 onMounted(async () => {
   await initializeCartPage()
+  // 連接 WebSocket
+  webSocketService.connect()
+
+  // 設定訊息處理函式
+  webSocketService.onMessage("cartUpdate", async ({ data }) => {
+    // 確保只處理相同購物車的訊息
+    if (data.groupId === route.params.groupId) {
+      await initializeCartPage()
+    }
+  })
+
+  webSocketService.onMessage("cartDelete", async ({ data }) => {
+    // 確保只處理相同購物車的訊息
+    if (data.groupId === route.params.groupId) {
+      await initializeCartPage()
+    }
+  })
 })
 
 // watch
@@ -277,6 +309,11 @@ watch(
     await initializeCartPage()
   }
 )
+
+// onUnmounted
+onUnmounted(() => {
+  webSocketService.disconnect()
+})
 </script>
 <template>
   <section class="bg-gray-100 pb-[150px]">
@@ -314,7 +351,7 @@ watch(
           <section class="bg-white rounded-xl">
             <CartProduct
               v-for="item in products"
-              :key="item.id"
+              :key="item.product_id"
               :id="item.product_id"
               :name="item.product_name"
               :originalPrice="item.original_price"
