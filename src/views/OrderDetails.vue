@@ -106,7 +106,7 @@ onMounted(async () => {
             </div>
           </div>
           <div class="addCartAgain" @click="pagetoggle">
-            <font-awesome-icon class="add-cart-up" :icon="['fas', 'chevron-up']" /><button class="btn">
+            <font-awesome-icon class="addCartUp" :icon="['fas', 'chevron-up']" /><button class="btn">
               <font-awesome-icon :icon="['fas', 'cart-shopping']" />再次加入購物車
             </button>
           </div>
@@ -362,7 +362,7 @@ hr {
   align-items: center;
 }
 
-.add-cart-up {
+.addCartUp {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -543,7 +543,7 @@ hr {
     top: auto;
     box-sizing: border-box;
   }
-  .add-cart-up {
+  .addCartUp {
     display: block;
     width: 100%;
     margin: 10px 0;
