@@ -125,7 +125,7 @@ watch(
   </div>
 
   <!-- 顧客評價列表 -->
-  <div class="customer-reviews mt-6 p-6">
+  <div class="mt-6 p-6">
     <div class="flex border-t pt-4" v-for="review in reviews" :key="review.comment_time">
       <div class="w-10 h-10 rounded-full overflow-hidden">
         <img src="https://i.imgur.com/AR0bXqA.jpeg" alt="User" class="w-full h-full object-cover" />

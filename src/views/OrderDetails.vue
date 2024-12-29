@@ -54,46 +54,46 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="orders-main">
-    <div class="panel-header">
+  <div class="ordersMain">
+    <div class="panelHeader">
       <h3>合計:NT{{ totalPrice }}</h3>
       <div @click="pagetoggle" class="Cart">
         <span>購物車({{ productCount }}件)</span><font-awesome-icon class="cartSwitch" :icon="['fas', currentPage ? 'chevron-up' : 'chevron-down']" />
       </div>
     </div>
-    <div class="panel-body">
+    <div class="panelBody">
       <transition name="slide-height">
         <div v-show="currentPage">
           <div class="order-detail">
-            <div class="orders-title">
-              <div class="orders-title-name">商品資料</div>
-              <div class="orders-title-coupon">優惠</div>
-              <div class="orders-title-price">價格</div>
-              <div class="orders-title-quantity">數量</div>
-              <div class="orders-title-total">小計</div>
+            <div class="ordersTitle">
+              <div class="ordersTitleName">商品資料</div>
+              <div class="ordersTitleCoupon">優惠</div>
+              <div class="ordersTitlePrice">價格</div>
+              <div class="ordersTitleQuantity">數量</div>
+              <div class="ordersTitleTotal">小計</div>
             </div>
-            <div v-for="product in productInfo" :key="product.product_id" class="items-card">
-              <div class="items-name">
+            <div v-for="product in productInfo" :key="product.product_id" class="itemsCard">
+              <div class="itemsName">
                 <img :src="getImageUrl(product.image_path.image_path)" alt="商品圖片" />
                 {{ product.product_name }}
                 <p>Silver / 銀色</p>
                 <p>內圍直徑 1.7cm (#12)</p>
               </div>
-              <div class="items-coupon"></div>
-              <div class="items-price">NT${{ product.sale_price }}</div>
-              <div class="items-quantity"><span>數量:</span>{{ product.quantity }}</div>
-              <div class="items-total">
+              <div class="itemsCoupon"></div>
+              <div class="itemsPrice">NT${{ product.sale_price }}</div>
+              <div class="itemsQuantity"><span>數量:</span>{{ product.quantity }}</div>
+              <div class="itemsTotal">
                 {{ product.sale_price * product.quantity }}
               </div>
             </div>
-            <div class="coupon-used">
+            <div class="couponUsed">
               <h5>已使用之優惠</h5>
               <span class="coupon-type">優惠促銷</span>
               <p>限時全館$350免運</p>
             </div>
           </div>
-          <div class="orders-total">
-            <div class="orders-total-card">
+          <div class="ordersTotal">
+            <div class="ordersTotalCard">
               <div class="subtotal">
                 小計:<span>{{ totalPrice }}</span>
               </div>
@@ -102,10 +102,10 @@ onMounted(async () => {
                 合計:<span>{{ totalPrice }}</span>
               </div>
               <hr />
-              <div class="get-point">訂單完成後獲得點數<span>+12點</span></div>
+              <div class="getPoint">訂單完成後獲得點數<span>+12點</span></div>
             </div>
           </div>
-          <div class="add-cart-again" @click="pagetoggle">
+          <div class="addCartAgain" @click="pagetoggle">
             <font-awesome-icon class="add-cart-up" :icon="['fas', 'chevron-up']" /><button class="btn">
               <font-awesome-icon :icon="['fas', 'cart-shopping']" />再次加入購物車
             </button>
@@ -114,8 +114,8 @@ onMounted(async () => {
       </transition>
     </div>
     <transition name="slide">
-      <div class="other-imformation">
-        <div class="order-imformation">
+      <div class="otherImformation">
+        <div class="orderImformation">
           <h4>訂單資訊</h4>
           <ul>
             <li>訂單號碼:{{ purchaseID }}</li>
@@ -124,7 +124,7 @@ onMounted(async () => {
             <li>訂單狀態:</li>
           </ul>
         </div>
-        <div class="custom-imformation">
+        <div class="customImformation">
           <h4>顧客資訊</h4>
           <ul>
             <li>名字: {{ customerInfo.cuName }}</li>
@@ -133,7 +133,7 @@ onMounted(async () => {
             <li>生日: 1990/01/01</li>
           </ul>
         </div>
-        <div class="delivery-imformation">
+        <div class="deliveryImformation">
           <h4>送貨資訊</h4>
           <ul>
             <li>送貨方式</li>
@@ -147,7 +147,7 @@ onMounted(async () => {
           </ul>
         </div>
 
-        <div class="payment-imformation">
+        <div class="paymentImformation">
           <h4>付款資訊</h4>
           <ul>
             <li>付款方式</li>
@@ -162,18 +162,18 @@ onMounted(async () => {
         </div>
       </div>
     </transition>
-    <div class="order-status-notify">
+    <div class="orderStatusNotify">
       <h4>訂單狀態通知</h4>
-      <button class="social-btn line">
+      <button class="socialBtn line">
         <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" alt="LINE" />
         傳送到 LINE
       </button>
-      <button class="social-btn messenger">
+      <button class="socialBtn messenger">
         <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg" alt="Messenger" />
         傳送到 Messenger
       </button>
     </div>
-    <div class="order-chat">
+    <div class="orderChat">
       <h4>賣家和顧客訂單通訊</h4>
       <ChatBox />
     </div>
@@ -206,13 +206,13 @@ h4 {
   font-weight: 600;
 }
 
-.orders-main {
+.ordersMain {
   box-sizing: border-box;
   max-width: 1400px;
   padding: 25px 40px 25px 40px;
   margin: auto;
 }
-.panel-header {
+.panelHeader {
   position: relative;
   overflow: hidden;
   text-align: center;
@@ -221,12 +221,12 @@ h4 {
   border: 1px solid #ddd;
   height: auto;
 }
-.panel-body {
+.panelBody {
   position: relative;
   overflow: hidden;
 }
 
-.panel-header h3 {
+.panelHeader h3 {
   line-height: 25px;
   font-size: 20px;
   font-weight: 600;
@@ -239,70 +239,70 @@ h4 {
   padding: 0;
   margin: 0;
 }
-.orders-title,
-.items-card {
+.ordersTitle,
+.itemsCard {
   display: flex;
   padding: 15px 0;
   border: 1px solid #ddd;
   border-top: none;
 }
 
-.orders-title-name,
-.items-name {
+.ordersTitleName,
+.itemsName {
   width: 33%;
   padding-left: 15px;
   padding-right: 15px;
 }
-.orders-title-coupon,
-.items-coupon {
+.ordersTitleCoupon,
+.itemsCoupon {
   width: 16%;
   padding-left: 15px;
   padding-right: 15px;
 }
-.orders-title-price,
-.items-price {
+.ordersTitlePrice,
+.itemsPrice {
   text-align: center;
   width: 16%;
   padding-left: 15px;
   padding-right: 15px;
 }
-.orders-title-quantity,
-.items-quantity {
+.ordersTitleQuantity,
+.itemsQuantity {
   text-align: center;
   width: 16%;
   padding-left: 15px;
   padding-right: 15px;
 }
-.orders-title-total,
-.items-total {
+.ordersTitleTotal,
+.itemsTotal {
   text-align: end;
   width: 16%;
   padding-left: 15px;
   padding-right: 15px;
 }
-.items-name img {
+.itemsName img {
   height: 150px;
   width: 150px;
   object-fit: cover;
   float: left;
 }
-.items-name p {
+.itemsName p {
   color: #777777;
   font-size: 13px;
   padding: 0;
   margin: 0;
 }
-.coupon-used {
+.couponUsed {
   padding: 30px;
   border: 1px solid #ddd;
   border-top: none;
   padding-top: 10px;
 }
-.coupon-used h5 {
+.couponUsed h5 {
   font-size: 14px;
   margin: 10px 0;
 }
-.coupon-used span {
+.couponUsed span {
   display: inline-block;
   width: 140px;
   padding: 5px;
@@ -311,16 +311,16 @@ h4 {
   background-color: #e8f8e8;
   text-align: center;
 }
-.coupon-used p {
+.couponUsed p {
   display: inline;
   padding: 5px 15px;
   line-height: 20px;
 }
-.orders-total {
+.ordersTotal {
   border: 1px solid #ddd;
   border-top: none;
 }
-.orders-total-card {
+.ordersTotalCard {
   justify-self: end;
   width: 40%;
   padding: 15px;
@@ -328,7 +328,7 @@ h4 {
 .subtotal,
 .delivery,
 .total,
-.get-point {
+.getPoint {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
@@ -336,7 +336,7 @@ h4 {
 .subtotal span,
 .delivery span,
 .total span,
-.get-point span {
+.getPoint span {
   text-align: right;
 }
 hr {
@@ -349,7 +349,7 @@ hr {
   font-weight: 600;
 }
 
-.add-cart-again {
+.addCartAgain {
   padding: 10px;
   border: 1px solid #ddd;
   border-top: none;
@@ -371,7 +371,7 @@ hr {
   align-self: center;
 }
 
-.add-cart-again .btn {
+.addCartAgain .btn {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -387,17 +387,17 @@ hr {
 .fa-cart-shopping {
   color: #fff !important;
 }
-.other-imformation {
+.otherImformation {
   margin-top: 30px;
   padding: 15px;
   border: 1px solid #ddd;
   display: flex;
   flex-wrap: wrap;
 }
-.order-imformation,
-.delivery-imformation,
-.custom-imformation,
-.payment-imformation {
+.orderImformation,
+.deliveryImformation,
+.customImformation,
+.paymentImformation {
   box-sizing: border-box;
   width: 50%;
   padding: 0 15px;
@@ -405,10 +405,10 @@ hr {
   margin-bottom: 15px;
 }
 
-.order-imformation ul,
-.delivery-imformation ul,
-.custom-imformation ul,
-.payment-imformation ul {
+.orderImformation ul,
+.deliveryImformation ul,
+.customImformation ul,
+.paymentImformation ul {
   list-style: none !important;
   padding: 0;
   margin: 0;
@@ -420,7 +420,7 @@ hr {
   gap: 10px;
 }
 
-.social-btn {
+.socialBtn {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -437,45 +437,45 @@ hr {
   margin: 12px 0px;
 }
 
-.social-btn img {
+.socialBtn img {
   width: 20px;
   height: 20px;
 }
 
-.social-btn.line {
+.socialBtn.line {
   color: #00c300;
 }
 
-.social-btn.line img {
+.socialBtn.line img {
   width: 24px;
   height: 24px;
 }
 
-.social-btn.messenger {
+.socialBtn.messenger {
   color: #0078ff;
 }
 
-.social-btn.messenger img {
+.socialBtn.messenger img {
   width: 24px;
   height: 24px;
 }
 
-.social-btn:hover {
+.socialBtn:hover {
   background-color: #f5f5f5;
 }
-.order-status-notify {
+.orderStatusNotify {
   border: 1px solid #ddd;
   border-top: 1px solid #fff;
   padding: 0 15px;
 }
-.order-chat h4 {
+.orderChat h4 {
   padding: 10px 15px;
   margin: 0;
   border: 1px solid #ddd;
   border-top: 1px solid #fff;
   border-bottom: 1px solid #fff;
 }
-.items-quantity span {
+.itemsQuantity span {
   display: none;
 }
 
@@ -483,52 +483,52 @@ hr {
   margin-left: 10px;
 }
 @media (max-width: 768px) {
-  .panel-header {
+  .panelHeader {
     display: flex;
     justify-content: space-between;
   }
   .Cart span {
     display: none;
   }
-  .orders-title {
+  .ordersTitle {
     display: none;
   }
-  .items-card {
+  .itemsCard {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
   }
-  .items-coupon {
+  .itemsCoupon {
     display: none;
   }
-  .items-name,
-  .items-price,
-  .items-quantity,
-  .items-total {
+  .itemsName,
+  .itemsPrice,
+  .itemsQuantity,
+  .itemsTotal {
     max-width: 50%;
     box-sizing: border-box;
     flex: 0 0 50%;
   }
-  .items-price {
+  .itemsPrice {
     display: flex;
     align-self: center;
     justify-content: end;
   }
-  .items-quantity {
+  .itemsQuantity {
     display: flex;
     justify-content: start;
   }
-  .items-quantity span {
+  .itemsQuantity span {
     display: inline;
   }
-  .coupon-used p {
+  .couponUsed p {
     display: block;
     padding-left: 0;
   }
-  .orders-total-card {
+  .ordersTotalCard {
     width: 100%;
   }
-  .add-cart-again {
+  .addCartAgain {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -536,7 +536,7 @@ hr {
     gap: 20px;
     height: auto;
   }
-  .add-cart-again .btn {
+  .addCartAgain .btn {
     position: static;
     width: 100%;
     right: auto;
@@ -548,23 +548,23 @@ hr {
     width: 100%;
     margin: 10px 0;
   }
-  .other-imformation {
+  .otherImformation {
     padding: 0;
   }
-  .order-imformation,
-  .delivery-imformation,
-  .custom-imformation,
-  .payment-imformation {
+  .orderImformation,
+  .deliveryImformation,
+  .customImformation,
+  .paymentImformation {
     box-sizing: border-box;
     width: 100%;
     border-top: #ddd 1px solid;
     padding: 10px 15px;
     margin: 0;
   }
-  .order-imformation {
+  .orderImformation {
     border-top: none;
   }
-  .order-chat h4 {
+  .orderChat h4 {
     padding-left: 15px;
   }
 }

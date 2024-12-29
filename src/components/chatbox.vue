@@ -21,7 +21,7 @@ const sendMessage = () => {
   userInput.value = ""
 
   // 合併訊息並排序
-  messages.value = [...userMsg.value, ...systemMsg.value].sort((msg1, msg2) => new Date(msg1.time) - new Date(msg2.time))
+  messages.value = [...userMsg.value, ...systemMsg.value].sort((msgBefore, msgAfter) => new Date(msgBefore.time) - new Date(msgAfter.time))
 
   setTimeout(() => {
     // 模擬系統回應
@@ -30,7 +30,7 @@ const sendMessage = () => {
       isUser: false,
       time: new Date(),
     })
-    messages.value = [...userMsg.value, ...systemMsg.value].sort((msg1, msg2) => new Date(msg1.time) - new Date(msg2.time))
+    messages.value = [...userMsg.value, ...systemMsg.value].sort((msgBefore, msgAfter) => new Date(msgBefore.time) - new Date(msgAfter.time))
   }, 1000)
 }
 </script>
@@ -48,7 +48,7 @@ const sendMessage = () => {
           </ul>
         </div>
         <textarea @keyup.enter="sendMessage" placeholder="輸入訊息" name="" id="chatBox" v-model="userInput" class="input-field"></textarea>
-        <div class="message-btn">
+        <div class="messageBtn">
           <button class="btn"><font-awesome-icon :icon="['fas', 'circle-plus']" style="color: #fff; margin-right: 4px" />加入圖片</button>
           <button @click="sendMessage" class="btn">傳送</button>
         </div>
@@ -111,7 +111,7 @@ const sendMessage = () => {
   min-height: 200px;
 }
 
-.message-btn {
+.messageBtn {
   display: flex;
   justify-content: space-between;
   align-items: center;
