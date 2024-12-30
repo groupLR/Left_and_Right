@@ -49,7 +49,6 @@ const sendMessage = () => {
         </div>
         <textarea @keyup.enter="sendMessage" placeholder="輸入訊息" name="" id="chatBox" v-model="userInput" class="input-field"></textarea>
         <div class="messageBtn">
-          <button class="btn"><font-awesome-icon :icon="['fas', 'circle-plus']" style="color: #fff; margin-right: 4px" />加入圖片</button>
           <button @click="sendMessage" class="btn">傳送</button>
         </div>
       </div>
@@ -113,7 +112,7 @@ const sendMessage = () => {
 
 .messageBtn {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100%;
 }
