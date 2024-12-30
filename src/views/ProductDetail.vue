@@ -1,7 +1,7 @@
 <script setup>
 import axios from "axios"
 import Swiper from "swiper/bundle"
-import { onMounted, ref, watch, computed } from "vue"
+import { onMounted, ref, watch, computed, onUnmounted } from "vue"
 import { useRoute } from "vue-router"
 import { ElMessage } from "element-plus"
 import "swiper/css/bundle"
@@ -24,7 +24,7 @@ const route = useRoute()
 const userId = localStorage.getItem("UID")
 const API_URL = import.meta.env.VITE_API_URL
 
-//輪播圖
+// onMounted
 onMounted(() => {
   const initializeSwiper = () => {
     swiperInstance.value = new Swiper(".swiper", {
@@ -65,6 +65,11 @@ onMounted(() => {
   //   }
   //   if (img.complete) img.onload()
   // })
+})
+
+// onUnmounted
+onUnmounted(() => {
+  webSocketService.disconnect()
 })
 
 //獲取產品資料
