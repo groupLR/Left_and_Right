@@ -287,17 +287,29 @@ onMounted(async () => {
   webSocketService.connect()
 
   // 設定訊息處理函式
+  // 數量更新
   webSocketService.onMessage("cartUpdate", async ({ data }) => {
+    console.log(data)
+
     // 確保只處理相同購物車的訊息
     if (data.groupId === route.params.groupId) {
       await initializeCartPage()
     }
   })
-
+  // 刪除商品
   webSocketService.onMessage("cartDelete", async ({ data }) => {
-    // 確保只處理相同購物車的訊息
     if (data.groupId === route.params.groupId) {
       await initializeCartPage()
+    }
+  })
+  // 新增商品
+  webSocketService.onMessage("addProduct", async ({ data }) => {
+    if (data.groupId === route.params.groupId) {
+      try {
+        await initializeCartPage()
+      } catch (error) {}
+    } else {
+      console.log("groupId 不符合")
     }
   })
 })

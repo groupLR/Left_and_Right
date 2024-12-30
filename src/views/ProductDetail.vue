@@ -17,6 +17,7 @@ const CartStore = useCartStore()
 const { sharedCartList } = storeToRefs(SharedCartStore)
 Swiper.use([Pagination, Navigation, Scrollbar])
 import AddSharedCart from "@/components/AddSharedCart.vue"
+import { webSocketService } from "@/websocket/websocket.js"
 
 const swiperInstance = ref(null)
 const route = useRoute()
@@ -45,6 +46,9 @@ onMounted(() => {
         el: ".swiper-scrollbar",
       },
     })
+
+    // 設定 WebSocket
+    webSocketService.connect()
   }
 
   initializeSwiper()
@@ -210,7 +214,7 @@ const showDialog = async () => {
   selectedCarts.value = []
 }
 
-// 處理確認按鈕點擊
+// 處理確認加入共享購物車按鈕點擊
 const handleConfirm = async () => {
   if (selectedCarts.value.length === 0) {
     ElMessage.warning("請至少選擇一個購物車")
@@ -219,7 +223,19 @@ const handleConfirm = async () => {
 
   try {
     // 使用 Promise.all 等待所有操作完成
-    await Promise.all(selectedCarts.value.map((cartId) => SharedCartStore.addProductToSharedCart(cartId, productId.value, counter.value)))
+    await Promise.all(
+      selectedCarts.value.map(async (cartId) => {
+        // 先加入購物車
+        await SharedCartStore.addProductToSharedCart(cartId, productId.value, counter.value)
+
+        // API 成功後發送 WebSocket 消息
+        return webSocketService.sendMessage("addProduct", {
+          groupId: cartId,
+          itemId: Number(productId.value),
+          quantity: counter.value,
+        })
+      })
+    )
 
     // 所有操作完成後才關閉對話框和顯示成功訊息
     dialogToggle.value = false
@@ -229,6 +245,7 @@ const handleConfirm = async () => {
     ElMessage.error("加入共享購物車失敗")
   }
 }
+
 // 創建共享購物車後重新取得列表
 const refreshSharedCartList = async () => {
   await SharedCartStore.fetchSharedCartList(userId)
