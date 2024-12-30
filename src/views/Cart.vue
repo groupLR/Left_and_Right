@@ -1,8 +1,9 @@
 <script setup>
 import axios from "axios"
+import vueDanmaku from "vue3-danmaku"
 import { useRoute, useRouter } from "vue-router"
 import { onMounted, ref, computed, watch, onUnmounted } from "vue"
-import { ElMessage } from "element-plus"
+import { ElMessage, emitChangeFn } from "element-plus"
 import { useSharedCartStore } from "@/stores/sharedCart"
 import AddMember from "@/components/AddMember.vue"
 import Warning from "@/components/Warning.vue"
@@ -19,6 +20,9 @@ const isSharedCart = ref(false) // 是不是共享購物車（用cart/後面有�
 const sharedCartName = ref("") // 共享購物車名稱
 const sharedCartMembers = ref([]) // 共享購物車成員
 const userId = localStorage.getItem("UID")
+const userName = ref("")
+const danmus = ref([])
+
 // 送貨表單
 const selectedCountry = ref("TW")
 const countryList = [
@@ -97,6 +101,26 @@ const itemPrice = computed(() => {
 })
 
 // method
+// 獲取使用者本人名稱
+const fetchuserName = async () => {
+  try {
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/users/singleUserData`, {
+      params: {
+        userId,
+      },
+    })
+    userName.value = data.username
+  } catch (err) {
+    console.error("獲取使用者資料失敗", err)
+  }
+}
+
+// 加彈幕
+const addDanmu = (message) => {
+  // 創建一個新陣列，包含所有現有彈幕和新彈幕，不然只用 push 更新陣列的話會因為套件的特性會只顯示第一條
+  danmus.value = [...danmus.value, message]
+}
+
 // 獲取購物車商品
 const fetchCartItems = async () => {
   try {
@@ -140,14 +164,16 @@ const deleteProduct = async (id) => {
 }
 
 // 刪除商品（判斷是否共享）
-const deleteProductFromCart = async (id) => {
+const deleteProductFromCart = async (payload) => {
   if (isSharedCart.value) {
     try {
-      await SharedCartStore.deleteProductInSharedCart(route.params.groupId, id)
+      await SharedCartStore.deleteProductInSharedCart(route.params.groupId, payload.id)
       // 發送 WebSocket 刪除訊息
       webSocketService.sendMessage("cartDelete", {
+        userName: userName.value,
         groupId: route.params.groupId,
-        itemId: id,
+        itemId: payload.id,
+        itemName: payload.name,
       })
       ElMessage.success("刪除商品成功")
       return initializeCartPage()
@@ -208,9 +234,11 @@ const updateProductQty = async (payload) => {
       await SharedCartStore.updateProductQtyToSharedCart(route.params.groupId, payload.id, payload.quantity)
       // 發送 WebSocket 更新訊息
       webSocketService.sendMessage("cartUpdate", {
+        userName: userName.value,
         groupId: route.params.groupId,
         itemId: payload.id,
         quantity: payload.quantity,
+        itemName: payload.name,
       })
     } catch (err) {
       ElMessage.error({
@@ -283,16 +311,16 @@ const initializeCartPage = async () => {
 // onMounted
 onMounted(async () => {
   await initializeCartPage()
+  await fetchuserName()
   // 連接 WebSocket
   webSocketService.connect()
 
-  // 設定訊息處理函式
+  // 設定 WebSocket 訊息處理函式
   // 數量更新
   webSocketService.onMessage("cartUpdate", async ({ data }) => {
-    console.log(data)
-
     // 確保只處理相同購物車的訊息
     if (data.groupId === route.params.groupId) {
+      addDanmu(`${data.userName} 更新 ${data.itemName}數量為 ${data.quantity}`)
       await initializeCartPage()
     }
   })
@@ -300,6 +328,7 @@ onMounted(async () => {
   webSocketService.onMessage("cartDelete", async ({ data }) => {
     if (data.groupId === route.params.groupId) {
       await initializeCartPage()
+      addDanmu(`${data.userName} 刪除了 ${data.itemName}`)
     }
   })
   // 新增商品
@@ -307,6 +336,7 @@ onMounted(async () => {
     if (data.groupId === route.params.groupId) {
       try {
         await initializeCartPage()
+        addDanmu(`${data.userName} 新增了 ${data.itemName} 進入共享購物車`)
       } catch (error) {}
     } else {
       console.log("groupId 不符合")
@@ -328,6 +358,9 @@ onUnmounted(() => {
 })
 </script>
 <template>
+  <div class="fixed top-5 left-0 right-0 z-[100]">
+    <vue-danmaku v-if="isSharedCart" v-model:danmus="danmus" :speeds="100" :channels="3" class="h-[100px] w-full" />
+  </div>
   <section class="bg-gray-100 pb-[150px]">
     <section class="px-2 max-w-[1340px] mx-auto py-5 md:px-10">
       <section class="bg-gray-100" v-if="isSharedCart">
@@ -491,5 +524,9 @@ onUnmounted(() => {
 
 :deep(.el-step__head.is-finish) {
   @apply text-orange-500 border-orange-500;
+}
+
+:deep(.vue-danmaku) {
+  pointer-events: none;
 }
 </style>

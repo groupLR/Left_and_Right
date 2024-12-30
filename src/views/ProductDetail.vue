@@ -23,10 +23,11 @@ const swiperInstance = ref(null)
 const route = useRoute()
 const userId = localStorage.getItem("UID")
 const API_URL = import.meta.env.VITE_API_URL
+const userName = ref("")
 
 // onMounted
-onMounted(() => {
-  const initializeSwiper = () => {
+onMounted(async () => {
+  const initializeSwiper = async () => {
     swiperInstance.value = new Swiper(".swiper", {
       modules: [Pagination, Navigation, Scrollbar],
       speed: 400,
@@ -49,6 +50,8 @@ onMounted(() => {
 
     // 設定 WebSocket
     webSocketService.connect()
+    // 取得使用者名稱
+    await fetchuserName()
   }
 
   initializeSwiper()
@@ -198,6 +201,20 @@ const toggleHeart = () => {
   isSubscribe.value = !isSubscribe.value
 }
 
+// 獲取使用者本人名稱
+const fetchuserName = async () => {
+  try {
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/users/singleUserData`, {
+      params: {
+        userId,
+      },
+    })
+    userName.value = data.username
+  } catch (err) {
+    console.error("獲取使用者資料失敗", err)
+  }
+}
+
 // 加入購物車
 const handleAddToCart = async () => {
   await CartStore.addProduct(productId.value, counter.value)
@@ -238,6 +255,8 @@ const handleConfirm = async () => {
           groupId: cartId,
           itemId: Number(productId.value),
           quantity: counter.value,
+          itemName: profile.value.product_name,
+          userName: userName.value,
         })
       })
     )
@@ -276,7 +295,7 @@ const refreshSharedCartList = async () => {
       </el-dialog>
     </div>
     <div v-else>
-      <el-dialog v-model="dialogToggle" title="選擇共享購物車" width="30%">
+      <el-dialog v-model="dialogToggle" title="選擇共享購物車">
         <el-checkbox-group v-model="selectedCarts">
           <div v-for="cart in sharedCartNames" :key="cart.id" class="cart-item">
             <el-checkbox :value="cart.id" :label="cart.name">
@@ -435,6 +454,10 @@ const refreshSharedCartList = async () => {
   </section>
 </template>
 <style scoped>
+:deep(.el-dialog) {
+  @apply w-[90%] md:w-[50%];
+}
+
 .loading {
   animation-duration: 1s;
   animation-iteration-count: 1;
