@@ -1,207 +1,3 @@
-<!-- 購物車頁面 -->
-<template>
-  <section class="bg-gray-100 pb-[150px]">
-    <section class="px-2 max-w-[1340px] mx-auto py-5 md:px-10">
-  <section class="bg-gray-100" v-if="isSharedCart">
-    <div class="flex justify-between">
-      <h1 class="text-2xl font-bold">共享購物車</h1>
-      <div>
-        <AddMember :groupId="route.params.groupId" :members="sharedCartMembers" @memberAdded="refreshSharedCart" />
-        <Warning content="您確定要刪除共享購物車嗎？" @confirm="deleteSharedCart" />
-      </div>
-    </div>
-    <div class="p-3 my-5 bg-gray-100 border-2 border-solid rounded">
-      <h2 class="mb-2 text-xl font-bold text-cyan-900">{{ sharedCartName }}</h2>
-      <p class="font-bold">購朋友：</p>
-      <p>{{ sharedCartMembers.join("、") }}</p>
-    </div>
-  </section>
-  <section v-else>
-        <h1 class="my-5 text-2xl font-bold">購物車</h1>
-      </section>
-
-      <!-- 步驟 -->
-      <section class="flex justify-center">
-        <el-steps style="min-width: 300px" :active="1" align-center class="md:w-[600px]">
-          <el-step title="購物" description="送貨與付款方式" />
-          <el-step title="結帳" description="付款與送貨地址" />
-        </el-steps>
-      </section>
-       <!-- 主要內容區 -->
-       <section class="flex flex-col mt-10 md:flex-row md:gap-5">
-        <section class="md:w-2/3">
-          <!-- 商品列表 -->
-          <section class="bg-white rounded-xl">
-            <CartProduct
-              v-for="item in products"
-              :key="item.id"
-              :id="item.product_id"
-              :name="item.product_name"
-              :originalPrice="item.original_price"
-              :salePrice="item.sale_price"
-              :imgPath="item.image_path"
-              :quantity="item.quantity"
-              @updateQuantity="updateQuantity"
-              @deleteProduct="deleteProduct"
-            />
-          </section>
-          <!-- 送貨及付款方式 -->
-          <section class="px-5 py-5 mt-5 bg-white rounded-xl">
-            <div class="flex items-center justify-between my-4">
-              <label class="mr-2 shrink-0">送貨地點</label>
-              <el-select
-                placement="bottom"
-                :fallback-placements="['bottom-start']"
-                v-model="selectedCountry"
-                placeholder="送貨地點"
-                size="default"
-                class="w-30"
-              >
-                <el-option v-for="item in countryList" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </div>
-            <!-- <div class="flex items-center justify-between my-4">
-              <label class="mr-2 shrink-0">送貨方式</label>
-              <el-select
-                placement="bottom"
-                :fallback-placements="['bottom-start']"
-                v-model="selectedDelivery"
-                placeholder="送貨地點"
-                size="default"
-                class="w-30"
-              >
-                <el-option v-for="option in deliveryOptions" :key="option.value" :label="option.label" :value="option.value" :disabled="option.disabled" />
-              </el-select>
-            </div> -->
-            <div class="flex items-center justify-between my-4">
-            <label class="mr-2 shrink-0">送貨方式</label>
-            <el-select
-              placement="bottom"
-              :fallback-placements="['bottom-start']"
-              v-model="selectedDelivery"
-              placeholder="送貨地點"
-              size="default"
-              class="w-30"
-            >
-              <el-option
-                v-for="option in deliveryOptions"
-                :key="option"
-                :label="option"
-                :value="option"
-                :disabled="false"
-              />
-            </el-select>
-            </div>
-            <!-- <div class="flex items-center justify-between my-4">
-              <label class="mr-2 shrink-0">付款方式</label>
-              <el-select
-                placement="bottom"
-                :fallback-placements="['bottom-start']"
-                v-model="selectedPayment"
-                placeholder="送貨地點"
-                size="default"
-                class="w-30"
-              >
-                <el-option v-for="option in paymentOptions" :key="option.value" :label="option.label" :value="option.value" :disabled="option.disabled" />
-              </el-select>
-            </div> -->
-            <div class="flex items-center justify-between my-4">
-            <label class="mr-2 shrink-0">付款方式</label>
-            <el-select
-              placement="bottom"
-              :fallback-placements="['bottom-start']"
-              v-model="selectedPayment"
-              placeholder="選擇付款方式"
-              size="default"
-              class="w-30"
-            >
-              <el-option
-                v-for="option in paymentOptions"
-                :key="option"
-                :label="option"
-                :value="option"
-              />
-            </el-select>
-            </div>
-            <div class="text-gray-500">
-              <p>取貨通知：</p>
-              <p>
-                - 訂單到達超商七日內，每日皆會傳送取貨簡訊，並於第五日時撥打語音電話通知取貨哦！<br />
-                - 現貨訂單狀態更改「已確認」後，2-3天寄出。 (不包含假日及國定假日)<br />
-                <br />- 本公司產品享7天鑑賞期，30天保固維修<br />
-                - 免付費電話：0800 000 004<br />- 預購與現貨一併出貨
-              </p>
-            </div>
-          </section>
-        </section>
-        <!-- 優惠和小計區塊 -->
-        <aside class="flex flex-col gap-5 mt-5 md:w-1/3 md:mt-0">
-          <!-- 優惠區塊 -->
-          <div class="sticky top-0">
-            <div class="p-5 bg-white rounded-xl">
-              <h2 class="text-xl font-bold">已享用之優惠</h2>
-              <!-- 之後串 API 了用這個 div 跑 v-for -->
-              <div class="flex flex-col items-start">
-                <p class="px-5 my-4 text-sm text-center bg-green-100 md:text-base">優惠促銷</p>
-                <p class="text-sm md:text-base">雙11優惠！全館 兩件85折/三件8折/四件75折！ - 全單 滿 2 件 即享 85 折 再買 1 件 省更多</p>
-                <div class="flex justify-end w-full">
-                  <p class="text-sm font-bold text-green-600 md:text-base">-NT$94</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- 小計 -->
-            <div class="p-5 mt-5 bg-white rounded-xl">
-              <h2 class="mb-2 text-xl font-bold">訂單資訊</h2>
-              <h3 class="mb-4">商品項目：{{ itemCount }} 件</h3>
-              <div class="flex flex-col gap-3">
-                <div class="flex justify-between">
-                  <p>小計</p>
-                  <p>NT${{ itemPrice }}</p>
-                </div>
-                <div class="flex justify-between">
-                  <p>折扣</p>
-                  <p>-NT$94</p>
-                </div>
-                <div class="flex justify-between">
-                  <p>運費</p>
-                  <p>NT$60</p>
-                </div>
-                <hr />
-                <div class="flex justify-between">
-                  <p>合計</p>
-                  <p class="font-bold text-orange-500">NT${{ itemPrice + 60 }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </aside>
-      </section>
-    </section>
-    <!-- 前往結帳 -->
-    <section class="fixed bottom-0 w-full bg-white shadow-2xl">
-      <div class="flex gap-5 justify-end items-center m-5 max-w-[1365px]">
-        <p class="font-bold text-orange-500">小計：NT${{ itemPrice }}</p>
-        <button class="px-2 py-1 text-white bg-black rounded md:px-10" @click="goToNext">前往結帳</button>
-        <!-- <RouterLink
-         :to="{
-           name: 'Debit',
-           query: {
-             location: selectedLocation,
-             shipping: selectedShippingMethod,
-             payment: selectedPaymentMethod,
-           },
-         }"
-          
-          class="px-2 py-1 text-white bg-black rounded md:px-10" :disabled="products.length === 0"
->
-  前往結帳
-</RouterLink> -->
-      </div>
-    </section>
-  </section>
- 
-</template>
 <script setup>
 // import axios from 'axios';
 // import { ref, computed, watch, onMounted } from 'vue';
@@ -624,7 +420,7 @@ const addProduct = async (newProduct) => {
     })
 }
 
-// 刪除商品
+// 刪除購物車商品的函式
 const deleteProduct = async (id) => {
   axios
     .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
@@ -633,16 +429,41 @@ const deleteProduct = async (id) => {
       },
     })
     .then(() => {
-      products.value = products.value.filter((product) => product.id !== id) // 從列表中移除
+      return initializeCartPage()
     })
     .catch((error) => {
       console.error("刪除商品失敗:", error)
     })
-
-  await initializeCartPage()
 }
 
-// 更新商品
+// 刪除商品（判斷是否共享）
+const deleteProductFromCart = async (id) => {
+  if (isSharedCart.value) {
+    try {
+      await SharedCartStore.deleteProductInSharedCart(route.params.groupId, id)
+      ElMessage.success("刪除商品成功")
+      return initializeCartPage()
+    } catch (err) {
+      ElMessage.error({
+        message: "從共享購物車刪除商品失敗",
+        type: "error",
+      })
+      console.error("從共享購物車刪除商品失敗", err)
+    }
+  } else {
+    try {
+      await deleteProduct(id)
+    } catch (err) {
+      ElMessage.error({
+        message: "從購物車刪除商品失敗",
+        type: "error",
+      })
+      console.error("從購物車刪除商品失敗", err)
+    }
+  }
+}
+
+// 更新購物車商品數量的函式
 const updateQuantity = async ({ id, quantity }) => {
   if (quantity < 1) {
     alert("數量不能小於 1")
@@ -660,7 +481,6 @@ const updateQuantity = async ({ id, quantity }) => {
         headers: { userId },
       }
     )
-
     if (response.data.success) {
       console.log("數量更新成功")
       await initializeCartPage() // 重新獲取購物車列表
@@ -670,6 +490,31 @@ const updateQuantity = async ({ id, quantity }) => {
   } catch (error) {
     console.error("更新數量時出錯", error)
     alert("更新數量時出錯，請稍後再試")
+  }
+}
+
+// 更新商品數量（判斷是否共享）
+const updateProductQty = async (payload) => {
+  if (isSharedCart.value) {
+    try {
+      await SharedCartStore.updateProductQtyToSharedCart(route.params.groupId, payload.id, payload.quantity)
+    } catch (err) {
+      ElMessage.error({
+        message: "更新共享購物車商品數量失敗：",
+        type: "error",
+      })
+      console.error("更新共享購物車數量失敗：", err)
+    }
+  } else {
+    try {
+      await updateQuantity(payload)
+    } catch (err) {
+      ElMessage.error({
+        message: "更新購物車商品數量失敗：" + (err.response?.data?.message || err.message),
+        type: "error",
+      })
+      console.error("更新購物車數量失敗：", err)
+    }
   }
 }
 
@@ -767,78 +612,215 @@ watch(() => checkoutStore.selectedShippingMethod, () => {
   }
 });
 </script>
+<!-- 購物車頁面 -->
+<template>
+  <section class="bg-gray-100 pb-[150px]">
+    <section class="px-2 max-w-[1340px] mx-auto py-5 md:px-10">
+  <section class="bg-gray-100" v-if="isSharedCart">
+    <div class="flex justify-between">
+      <h1 class="text-2xl font-bold">共享購物車</h1>
+      <div>
+        <AddMember :groupId="route.params.groupId" :members="sharedCartMembers" @memberAdded="refreshSharedCart" />
+        <Warning content="您確定要刪除共享購物車嗎？" @confirm="deleteSharedCart" />
+      </div>
+    </div>
+    <div class="p-3 my-5 bg-gray-100 border-2 border-solid rounded">
+      <h2 class="mb-2 text-xl font-bold text-cyan-900">{{ sharedCartName }}</h2>
+      <p class="font-bold">購朋友：</p>
+      <p>{{ sharedCartMembers.join("、") }}</p>
+    </div>
+  </section>
+  <section v-else>
+        <h1 class="my-5 text-2xl font-bold">購物車</h1>
+      </section>
 
+      <!-- 步驟 -->
+      <section class="flex justify-center">
+        <el-steps style="min-width: 300px" :active="1" align-center class="md:w-[600px]">
+          <el-step title="購物" description="送貨與付款方式" />
+          <el-step title="結帳" description="付款與送貨地址" />
+        </el-steps>
+      </section>
+       <!-- 主要內容區 -->
+       <section class="flex flex-col mt-10 md:flex-row md:gap-5">
+        <section class="md:w-2/3">
+          <!-- 商品列表 -->
+          <section class="bg-white rounded-xl">
+            <CartProduct
+              v-for="item in products"
+              :key="item.id"
+              :id="item.product_id"
+              :name="item.product_name"
+              :originalPrice="item.original_price"
+              :salePrice="item.sale_price"
+              :imgPath="item.image_path"
+              :quantity="item.quantity"
+              @updateQuantity="updateProductQty"
+              @deleteProduct="deleteProductFromCart"
+            />
+          </section>
+          <!-- 送貨及付款方式 -->
+          <section class="px-5 py-5 mt-5 bg-white rounded-xl">
+            <div class="flex items-center justify-between my-4">
+              <label class="mr-2 shrink-0">送貨地點</label>
+              <el-select
+                placement="bottom"
+                :fallback-placements="['bottom-start']"
+                v-model="selectedCountry"
+                placeholder="送貨地點"
+                size="default"
+                class="w-30"
+              >
+                <el-option v-for="item in countryList" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+            </div>
+            <!-- <div class="flex items-center justify-between my-4">
+              <label class="mr-2 shrink-0">送貨方式</label>
+              <el-select
+                placement="bottom"
+                :fallback-placements="['bottom-start']"
+                v-model="selectedDelivery"
+                placeholder="送貨地點"
+                size="default"
+                class="w-30"
+              >
+                <el-option v-for="option in deliveryOptions" :key="option.value" :label="option.label" :value="option.value" :disabled="option.disabled" />
+              </el-select>
+            </div> -->
+            <div class="flex items-center justify-between my-4">
+            <label class="mr-2 shrink-0">送貨方式</label>
+            <el-select
+              placement="bottom"
+              :fallback-placements="['bottom-start']"
+              v-model="selectedDelivery"
+              placeholder="送貨地點"
+              size="default"
+              class="w-30"
+            >
+              <el-option
+                v-for="option in deliveryOptions"
+                :key="option"
+                :label="option"
+                :value="option"
+                :disabled="false"
+              />
+            </el-select>
+            </div>
+            <!-- <div class="flex items-center justify-between my-4">
+              <label class="mr-2 shrink-0">付款方式</label>
+              <el-select
+                placement="bottom"
+                :fallback-placements="['bottom-start']"
+                v-model="selectedPayment"
+                placeholder="送貨地點"
+                size="default"
+                class="w-30"
+              >
+                <el-option v-for="option in paymentOptions" :key="option.value" :label="option.label" :value="option.value" :disabled="option.disabled" />
+              </el-select>
+            </div> -->
+            <div class="flex items-center justify-between my-4">
+            <label class="mr-2 shrink-0">付款方式</label>
+            <el-select
+              placement="bottom"
+              :fallback-placements="['bottom-start']"
+              v-model="selectedPayment"
+              placeholder="選擇付款方式"
+              size="default"
+              class="w-30"
+            >
+              <el-option
+                v-for="option in paymentOptions"
+                :key="option"
+                :label="option"
+                :value="option"
+              />
+            </el-select>
+            </div>
+            <div class="text-gray-500">
+              <p>取貨通知：</p>
+              <p>
+                - 訂單到達超商七日內，每日皆會傳送取貨簡訊，並於第五日時撥打語音電話通知取貨哦！<br />
+                - 現貨訂單狀態更改「已確認」後，2-3天寄出。 (不包含假日及國定假日)<br />
+                <br />- 本公司產品享7天鑑賞期，30天保固維修<br />
+                - 免付費電話：0800 000 004<br />- 預購與現貨一併出貨
+              </p>
+            </div>
+          </section>
+        </section>
+        <!-- 優惠和小計區塊 -->
+        <aside class="flex flex-col gap-5 mt-5 md:w-1/3 md:mt-0">
+          <!-- 優惠區塊 -->
+          <div class="sticky top-0">
+            <div class="p-5 bg-white rounded-xl">
+              <h2 class="text-xl font-bold">已享用之優惠</h2>
+              <!-- 之後串 API 了用這個 div 跑 v-for -->
+              <div class="flex flex-col items-start">
+                <p class="px-5 my-4 text-sm text-center bg-green-100 md:text-base">優惠促銷</p>
+                <p class="text-sm md:text-base">雙11優惠！全館 兩件85折/三件8折/四件75折！ - 全單 滿 2 件 即享 85 折 再買 1 件 省更多</p>
+                <div class="flex justify-end w-full">
+                  <p class="text-sm font-bold text-green-600 md:text-base">-NT$94</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 小計 -->
+            <div class="p-5 mt-5 bg-white rounded-xl">
+              <h2 class="mb-2 text-xl font-bold">訂單資訊</h2>
+              <h3 class="mb-4">商品項目：{{ itemCount }} 件</h3>
+              <div class="flex flex-col gap-3">
+                <div class="flex justify-between">
+                  <p>小計</p>
+                  <p>NT${{ itemPrice.toLocaleString() }}</p>
+                </div>
+                <div class="flex justify-between">
+                  <p>折扣</p>
+                  <p>-NT$94</p>
+                </div>
+                <div class="flex justify-between">
+                  <p>運費</p>
+                  <p>NT$60</p>
+                </div>
+                <hr />
+                <div class="flex justify-between">
+                  <p>合計</p>
+                  <p class="font-bold text-orange-500">NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </section>
+    <!-- 前往結帳 -->
+    <section class="fixed bottom-0 w-full bg-white shadow-2xl">
+      <div class="flex gap-5 justify-end items-center m-5 max-w-[1365px]">
+        <p class="font-bold text-orange-500">合計：NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
+        <!-- <button class="px-2 py-1 text-white bg-black rounded md:px-10" @click="goToNext">前往結帳</button> -->
+        <RouterLink
+         :to="{
+           name: 'Debit',
+           query: {
+             location: selectedLocation,
+             shipping: selectedShippingMethod,
+             payment: selectedPaymentMethod,
+           },
+         }"
+          
+          class="px-2 py-1 text-white bg-black rounded md:px-10" :disabled="products.length === 0"
+>
+  前往結帳
+</RouterLink>
+      </div>
+    </section>
+  </section>
+ 
+</template>
 <style scoped>
-.cart {
-  max-width: 1160px;
-  height: auto;
-  border: 1px solid#f6f6f6;
-  margin-bottom: 50px;
+:deep(.el-step__title.is-finish) {
+  @apply text-orange-500 font-bold;
 }
 
-.quarter {
-  background-color: #f6f6f6;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.tittles {
-  width: 1160px;
-  height: 50px;
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid #f6f6f6;
-}
-
-.tittle {
-  width: 150px;
-  height: 20px;
-  color: #333333;
-  display: flex;
-  margin: 5px;
-  padding: 5px;
-}
-
-.prInfo {
-  gap: 20px;
-}
-
-.prdetail {
-  width: 150px;
-  height: 180px;
-  /* margin: 5px; */
-  padding: 5px;
-  justify-content: center;
-}
-
-.introduce {
-  width: 300px;
-}
-
-.tagGreen {
-  background-color: #e8f8e8;
-  width: 150px;
-  height: 21px;
-  display: flex;
-  justify-content: center;
-}
-
-.tagGrey {
-  background-color: #f6f6f6;
-  width: 150px;
-  height: 21px;
-  display: flex;
-  justify-content: center;
-}
-
-.options {
-  width: 450px;
-  border-color: 1px solid #9c9c9cd8;
-  border-radius: 2%;
-}
 
 :deep(.el-step__description.is-finish) {
   @apply text-orange-500;
