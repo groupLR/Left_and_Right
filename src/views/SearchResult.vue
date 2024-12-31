@@ -49,26 +49,22 @@ watch(
 </script>
 
 <template>
-  <section class="px-4 flex max-w-[1340px] mx-auto justify-center">
-    <Sidebar />
-    <div>
-      <h2 class="px-6 pt-4 text-xl font-semibold">搜尋頁面為：{{ keyword }}</h2>
-      <div class="container mx-auto px-4 py-8">
-        <div class="product-list grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <ProductItem
-            v-for="product in products"
-            :key="product.id"
-            :id="product.product_id"
-            :title="product.product_name"
-            :price="product.sale_price"
-            :originalPrice="product.original_price"
-            :frontImg="product.image_path"
-            class="h-full"
-          />
-        </div>
-      </div>
+  <h2 class="px-6 pt-6 text-xl font-semibold">搜尋頁面為：{{ keyword }}</h2>
+  <div class="container mx-auto px-4 py-8">
+    <div class="product-list grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <ProductItem
+        v-for="product in products"
+        :key="product.id"
+        :id="product.id"
+        :title="product.product_name"
+        :price="product.sale_price"
+        :originalPrice="product.original_price"
+        :frontImg="product.front_image_path"
+        :backImg="product.back_image_path"
+        class="h-full"
+      />
     </div>
-  </section>
+  </div>
 </template>
 
 <style scoped>
