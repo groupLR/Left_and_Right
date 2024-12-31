@@ -1,10 +1,52 @@
 <script setup>
-import { ref } from "vue"
+import { ref, onMounted } from "vue"
 import axios from "axios"
+import { useExchangeRateStore } from "@/stores/exchangeRates"
+import { RouterLink } from "vue-router"
+import { useRouter } from "vue-router"
+import debounce from "lodash/debounce"
+import { storeToRefs } from "pinia"
+
+const exchangeRateStore = useExchangeRateStore()
+const { rates, selectedCurrency } = storeToRefs(exchangeRateStore)
+const searchKeyword = ref("")
+const isVisible = ref(false)
+const changeLanguageOpen = ref(false)
+const moneyOpen = ref(false)
+const router = useRouter()
 
 const isLoggedIn = ref(!!localStorage.getItem("UID"))
 const categories = ref([])
+const languages = ref(["繁體中文", "English"])
+const selectedLanguage = ref("繁體中文")
 const showSidebar = ref(false)
+
+// 搜尋
+const fetchSearchResults = async () => {
+  if (searchKeyword.value.trim() !== "") {
+    // 使用 router 導航並將關鍵字作為查詢參數
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/search?q=${encodeURIComponent(searchKeyword.value)}`)
+    router.push({
+      path: "/search",
+      query: { q: searchKeyword.value.trim() },
+    })
+  } else {
+    alert("請輸入搜尋內容")
+  }
+}
+// 將 fetchSearchResults 包裝成 debounce 函數
+const goToSearch = debounce(fetchSearchResults, 800)
+const inputShow = () => {
+  isVisible.value = !isVisible.value
+}
+
+// 開啟sidebar語言、幣種
+const openChangeLanguage = () => {
+  changeLanguageOpen.value = !changeLanguageOpen.value
+}
+const openMoney = () => {
+  moneyOpen.value = !moneyOpen.value
+}
 // 請求父項目
 const fetchCategories = async () => {
   try {
@@ -13,20 +55,24 @@ const fetchCategories = async () => {
       ...category,
       showChildren: false,
     }))
-    console.log(categories.value)
   } catch (error) {
     console.error("請求類別項目失敗：", error)
   }
 }
 
-const toggleChildren = (index) => {
-  categories.value[index].showChildren = !categories.value[index].showChildren
-}
-
 const toggleSidebar = () => {
   showSidebar.value = !showSidebar.value
+  changeLanguageOpen.value = false
+  moneyOpen.value = false
 }
-fetchCategories()
+
+onMounted(() => {
+  // 拿到類別
+  fetchCategories()
+  // 匯率設置
+  exchangeRateStore.initCurrency()
+  exchangeRateStore.getAllCurrency()
+})
 </script>
 
 <template>
@@ -48,34 +94,15 @@ fetchCategories()
         <ul class="flex items-center justify-end flex-1">
           <!-- 匯率 -->
           <li class="mx-3">
-            <select class="hidden text-black outline-none cursor-pointer xl:block hover:text-gray-500">
-              <option>$ HKD</option>
-              <option>P MOP</option>
-              <option>¥ CNY</option>
-              <option selected>$ TWD</option>
-              <option>$ USD</option>
-              <option>$ SGD</option>
-              <option>€ EUR</option>
-              <option>$ AUD</option>
-              <option>£ GBP</option>
-              <option>₱ PHP</option>
-              <option>RM MYR</option>
-              <option>฿ THB</option>
-              <option>د.إ AED</option>
-              <option>¥ JPY</option>
-              <option>$ BND</option>
-              <option>₩ KRW</option>
-              <option>Rp IDR</option>
-              <option>₫ VND</option>
-              <option>$ CAD</option>
+            <select class="hidden text-black outline-none cursor-pointer xl:block hover:text-gray-500" v-model="selectedCurrency">
+              <option :value="rate.currency" v-for="rate in rates" :key="rate.currency" class="hover:bg-cyan-700">{{ rate.currency }}</option>
             </select>
           </li>
           <li class="mx-3">
             <div class="hidden text-black cursor-pointer xl:block hover:text-gray-500">
               <font-awesome-icon class="globe-icon" :icon="['fas', 'globe']" />
-              <select class="text-black outline-none cursor-pointer hover:text-gray-500">
-                <option>English</option>
-                <option selected>繁體中文</option>
+              <select class="text-black outline-none cursor-pointer hover:text-gray-500" v-model="selectedLanguage">
+                <option v-for="language in languages" :value="language" :key="language" @click="selectedLanguage == language">{{ language }} @</option>
               </select>
             </div>
           </li>
@@ -142,11 +169,8 @@ fetchCategories()
     </div>
   </div>
 
-  <!-- 搜尋框 -->
-  <!-- <div v-show="isVisible" class="w-full py-4 pl-4 pr-3 z-100 xl:hidden">
-    <button type="submit" @click="goToSearch" class="py-px px-1.5">
-      <i class="fa fa-search ::before"></i>
-    </button>
+  <!-- 手機版搜尋輸入框 -->
+  <div v-show="isVisible" class="moveDown w-full mt-24 flex justify-center mx-auto z-100 animate-pulse duration-700 xl:hidden">
     <input
       type="search"
       v-model="searchKeyword"
@@ -155,117 +179,108 @@ fetchCategories()
       placeholder="ivy郁欣聯名"
       class="w-4/5 border-b border-black focus-visible:outline-none"
     />
-  </div> -->
+    <button type="submit" @click="goToSearch" class="py-px px-1.5 ml-1">
+      <i class="fa fa-search ::before"></i>
+    </button>
+  </div>
 
   <!-- sidebar -->
   <transition name="slide">
-    <aside class="w-[200px] h-screen fixed bg-white z-20 top-0 overflow-auto xl:hidden" v-if="showSidebar">
-      <ul class="relative">
-        <li class="sticky top-0 p-4 list-none bg-cyan-700 text-white opacity-100 z-30 h-[68px] text-lg">
-          <p class="leading-10">類別選擇</p>
-        </li>
+    <aside class="w-[210px] h-screen fixed bg-white z-20 top-0 overflow-auto xl:hidden" v-if="showSidebar">
+      <div>
+        <ul class="relative">
+          <li class="sticky top-0 p-4 list-none bg-cyan-700 text-white opacity-100 z-30 h-[68px] text-lg">
+            <p class="leading-10">類別選擇</p>
+          </li>
 
-        <li v-for="(category, index) in categories" :key="category.category_id" class="relative list-none">
-          <!-- 大項目 -->
-          <div class="flex items-center justify-between hover:cursor-pointer shadow-sm">
-            <!-- 類別名稱 -->
-            <RouterLink :to="`/categories/${category.category_id}`" class="p-4">{{ category.category_name }}</RouterLink>
-            <!-- 收合箭頭 -->
-            <i
-              v-if="category.children.length > 0"
-              class="fas fa-chevron-down w-3 h-3 text-black mr-4 transition-transform duration-300"
-              :class="{ 'rotate-180': category.showChildren }"
-              @click="toggleChildren(index)"
-            ></i>
-          </div>
+          <li v-for="(category, index) in categories" :key="category.category_id" class="relative list-none">
+            <!-- 大項目 -->
+            <div class="flex items-center justify-between hover:cursor-pointer shadow-sm">
+              <!-- 類別名稱 -->
+              <RouterLink :to="`/categories/${category.category_id}`" class="p-4 hover:font-bold">{{ category.category_name }}</RouterLink>
+              <!-- 收合箭頭 -->
+              <i
+                v-if="category.children.length > 0"
+                class="fas fa-chevron-down w-3 h-3 text-black mr-4 transition-transform duration-300"
+                :class="{ 'rotate-180': category.showChildren }"
+                @click="toggleChildren(index)"
+              ></i>
+            </div>
 
-          <!-- 小項目 -->
-          <div class="overflow-hidden transition-all duration-500" :class="{ 'h-0': !category.showChildren, 'h-auto': category.showChildren }">
-            <ul class="pl-1.5">
-              <li v-for="child in category.children" :key="child.categories_id" class="p-4">
-                <RouterLink :to="`/categories/${child.categories_id}`" class="text-gray-400 hover:text-black hover:cursor-pointer">{{
-                  child.category_name
-                }}</RouterLink>
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-      <!-- 帳戶這邊登入會員時會消失 -->
-      <ul v-if="isLoggedIn === false">
-        <h2 class="p-4 text-xl text-gray-300">帳戶</h2>
-        <li class="p-4">
-          <router-link to="/users/edit">會員登入</router-link>
-        </li>
-        <li class="p-4"><a href="#">新用戶註冊</a></li>
-      </ul>
-      <hr />
-      <ul>
-        <h2 class="p-4 text-xl text-gray-300">其他</h2>
-        <li class="p-4"><a href="#">BLOG</a></li>
-        <li class="p-4">
-          <RouterLink to="/store-info">尋找門市</RouterLink>
-        </li>
-        <li class="p-4">
-          <a href="#">聯絡我們</a>
-          <font-awesome-icon :icon="['fas', 'comment']" class="absolute right-1 top-5" />
-        </li>
+            <!-- 小項目 -->
+            <div class="overflow-hidden transition-all duration-500" :class="{ 'h-0': !category.showChildren, 'h-auto': category.showChildren }">
+              <ul class="pl-1.5">
+                <li v-for="child in category.children" :key="child.categories_id" class="p-4">
+                  <RouterLink :to="`/categories/${child.categories_id}`" class="text-gray-400 hover:text-black hover:cursor-pointer hover:font-bold">
+                    <div>{{ child.category_name }}</div></RouterLink
+                  >
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        <!-- 帳戶這邊登入會員時會消失 -->
+        <ul v-if="isLoggedIn === false">
+          <h2 class="p-4 text-xl text-gray-300">帳戶</h2>
+          <li class="p-4">
+            <router-link to="/users/edit">會員登入</router-link>
+          </li>
+          <li class="p-4"><a href="#">新用戶註冊</a></li>
+        </ul>
+        <hr />
+        <ul>
+          <h2 class="p-4 text-xl text-gray-300">其他</h2>
+          <li class="p-4"><a href="#">BLOG</a></li>
+          <li class="p-4">
+            <RouterLink to="/store-info">尋找門市</RouterLink>
+          </li>
+          <li class="p-4">
+            <a href="#">聯絡我們</a>
+            <font-awesome-icon :icon="['fas', 'comment']" class="absolute right-1 top-5" />
+          </li>
 
-        <li class="p-4 relative" @click="openChangeLanguage">
-          <span>繁體中文</span>
-          <font-awesome-icon class="absolute right-1 top-5" :icon="['fas', 'globe']" />
-        </li>
-        <li class="p-4" @click="openMoney">
-          <span>TWD</span>
-          <font-awesome-icon :icon="['fas', 'dollar-sign']" class="absolute right-1 top-5" />
-        </li>
-      </ul>
+          <li class="p-4 relative cursor-pointer" @click="openChangeLanguage">
+            <p>{{ selectedLanguage }}</p>
+            <font-awesome-icon class="absolute right-1 top-5" :icon="['fas', 'globe']" />
+          </li>
+          <li class="p-4 cursor-pointer" @click="openMoney">
+            <p>{{ selectedCurrency }}</p>
+            <font-awesome-icon :icon="['fas', 'dollar-sign']" class="absolute right-1 top-5" />
+          </li>
+        </ul>
+      </div>
+      <div
+        class="fixed w-[200px] top-0 z-30 h-screen px-4 overflow-auto transition-all duration-500 -translate-x-full bg-white"
+        :class="changeLanguageOpen ? 'translate-x-0' : '-translate-x-full'"
+      >
+        <ul>
+          <li @click="openChangeLanguage" class="py-3">
+            <font-awesome-icon :icon="['fas', 'chevron-left']" />
+            <span class="ml-2">語言</span>
+          </li>
+          <li v-for="language in languages" :key="language" :value="language" @click="selectedLanguage == language" class="py-3">{{ language }}</li>
+        </ul>
+      </div>
+
+      <div
+        class="fixed top-0 z-30 w-[200px] h-screen px-4 overflow-auto transition-all duration-500 -translate-x-full bg-white"
+        :class="moneyOpen ? 'translate-x-0' : '-translate-x-full'"
+      >
+        <ul>
+          <li @click="openMoney" class="py-3">
+            <font-awesome-icon :icon="['fas', 'chevron-left']" />
+            <span class="ml-2">貨幣</span>
+          </li>
+          <li v-for="rate in rates" :value="rate.currency" :key="rate.currency" @click="selectedCurrency = rate.currency" class="py-3">
+            {{ rate.symbol }} {{ rate.currency }}
+          </li>
+        </ul>
+      </div>
     </aside>
   </transition>
-  <div
-    class="fixed max-w-72 top-0 z-10 w-3/4 h-screen px-5 pt-4 pb-3 overflow-auto transition-all duration-500 -translate-x-full bg-white"
-    :class="changeLanguageOpen ? 'translate-x-0' : '-translate-x-full'"
-  >
-    <ul>
-      <li @click="openChangeLanguage">
-        <font-awesome-icon :icon="['fas', 'chevron-left']" />
-        <span class="py-3 ml-2">語言</span>
-      </li>
-      <li class="justify-center py-3">English</li>
-      <li class="justify-center py-3">繁體中文</li>
-    </ul>
-  </div>
 
-  <div
-    class="fixed top-0 max-w-72 z-10 w-3/4 h-screen px-5 pt-4 pb-3 overflow-auto transition-all duration-500 -translate-x-full bg-white"
-    :class="moneyOpen ? 'translate-x-0' : '-translate-x-full'"
-  >
-    <ul>
-      <font-awesome-icon :icon="['fas', 'chevron-left']" />
-      <span class="py-3 ml-2" @click="openMoney">貨幣</span>
-      <!-- <li v-for="currency in currencies">{{ currency }}</li> -->
-      <li class="justify-center py-3">$ HKD</li>
-      <li class="justify-center py-3">P MOP</li>
-      <li class="justify-center py-3">¥ CNY</li>
-      <li class="justify-center py-3" selected>$ TWD</li>
-      <li class="justify-center py-3">$ USD</li>
-      <li class="justify-center py-3">$ SGD</li>
-      <li class="justify-center py-3">€ EUR</li>
-      <li class="justify-center py-3">$ AUD</li>
-      <li class="justify-center py-3">£ GBP</li>
-      <li class="justify-center py-3">₱ PHP</li>
-      <li class="justify-center py-3">RM MYR</li>
-      <li class="justify-center py-3">฿ THB</li>
-      <li class="justify-center py-3">د.إ AED</li>
-      <li class="justify-center py-3">¥ JPY</li>
-      <li class="justify-center py-3">$ BND</li>
-      <li class="justify-center py-3">₩ KRW</li>
-      <li class="justify-center py-3">Rp IDR</li>
-      <li class="justify-center py-3">₫ VND</li>
-      <li class="justify-center py-3">$ CAD</li>
-    </ul>
-  </div>
-  <div class="w-full h-[68px] xl:h-32"></div>
+  <!-- 預留空間 -->
+  <div class="w-full h-[72px] xl:h-28" v-show="isVisible === false"></div>
 </template>
 
 <style scoped>
@@ -283,20 +298,19 @@ fetchCategories()
   transform: translateX(0);
   opacity: 1;
 }
-
-.a {
-  gap: 20px;
+@keyframes down {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
-
-.rotate-180 {
-  transform: scaleY(-1);
-}
-
-.cartSidebarSwitch {
-  position: absolute;
-  z-index: 1;
-  opacity: 0;
-  top: 0;
-  display: inline-block;
+.moveDown {
+  animation-name: down;
+  animation-duration: 700ms;
+  animation-iteration-count: 1;
 }
 </style>
