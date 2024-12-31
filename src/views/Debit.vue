@@ -3,11 +3,11 @@
   
 
   <!-- 優惠倒數 -->
-  <div class="center mb-2">
+  <div class="mb-2 center">
     <p class="m-1 mt-10" style="font-size: 24px;">結帳優惠倒數 </p>
       <div class="flex justify-center">
-       <div class="time m-1 px-5 py-1"><span class=" font-bold text-base">00</span>min</div>
-    <div class="time m-1 px-5 py-1"><span class=" font-bold text-base">00</span>sec</div>
+       <div class="px-5 py-1 m-1 time"><span class="text-base font-bold ">00</span>min</div>
+    <div class="px-5 py-1 m-1 time"><span class="text-base font-bold ">00</span>sec</div>
    </div> 
   </div>
   
@@ -15,18 +15,18 @@
 <!-- 結帳流程 -->
  <!-- 流程image -->
  <div class="flex justify-center mb-2">
-  <div class="stepOne flex justify-center items-center text-center">1</div>
+  <div class="flex items-center justify-center text-center stepOne">1</div>
   <div class="h-0.5  mt-3 w-60 m-0 flex justify-center items-center text-center " style=" background-color:#ddd5e4;">  </div>
-  <div  class="stepTwo flex justify-center items-center text-center">2</div>
+  <div  class="flex items-center justify-center text-center stepTwo">2</div>
  </div>
 
-  <div class="prNav flex justify-center gap-60 mb-2" >
+  <div class="flex justify-center mb-2 prNav gap-60" >
     <span> 購物車</span>
     <span> 填寫資料</span>
   </div>
   <!-- 商品總額及數量 -->
-<div class="m-10 cart mb-0">
-  <div class=" sideBorder center text-xl " style="width: 1160px;">
+<div class="m-10 mb-0 cart">
+  <div class="text-xl  sideBorder center" style="width: 1160px;">
     <h3 class="font-bold">
       合計: NT$
       <span>{{itemPrice+60}}</span>
@@ -47,8 +47,8 @@
   <!-- </thead> -->
 
     <!-- <tbody > -->
-  <div class="prInfo flex justify-between	 " style="width: 1160px;" v-for="item in products" :key="item.product_id">
-    <div class="prdetail  introduce flex justify-between"	 >
+  <div class="flex justify-between prInfo " style="width: 1160px;" v-for="item in products" :key="item.product_id">
+    <div class="flex justify-between prdetail introduce"	 >
       <img :src="item.image_path">
       <div class="">
         {{ item.product_name }}
@@ -60,14 +60,14 @@
     </div>
     <div class="prdetail">{{ item.quantity }}</div>
     <div class="prdetail">{{item.sale_price*item.quantity}}</div>
-    <i class="fa-solid fa-xmark pr-8" @click="deleteProduct(item.product_id)"></i>
+    <i class="pr-8 fa-solid fa-xmark" @click="deleteProduct(item.product_id)"></i>
   </div>
 </div>
 <!-- </tbody> -->
 
   </div>
 <!-- 優惠切版 -->
-  <!-- <div  class="cart sideBorder p-5 m-10 pb-0 mt-0 mb-0 pb-10 "  style="width: 1160px;">
+  <!-- <div  class="p-5 pb-0 pb-10 m-10 mt-0 mb-0 cart sideBorder "  style="width: 1160px;">
     <h5>已享用之優惠</h5>
     <div class="flex justify-between"> 
       <div class="tagGreen">優惠促銷</div>
@@ -75,9 +75,9 @@
       <div class="cutPrice">-NT$94</div> </div> 
   </div> -->
  
-   <div class="cart m-10 mt-0 ">
+   <div class="m-10 mt-0 cart ">
 
-  <div class=" mt-100 ml-70  w-80 h-90 pl-70" style="transform: translateX(800px);">
+  <div class=" mt-100 ml-70 w-80 h-90 pl-70" style="transform: translateX(800px);">
       <div>
         <div class="flex justify-between m-2">
         <div>小計:</div>
@@ -95,7 +95,7 @@
         <div >運費:</div>
         <div>NT$60</div>
       </div>
-       <div class="flex justify-between font-bold  m-2">
+       <div class="flex justify-between m-2 font-bold">
       <div>合計:</div>
       <div>NT$
         <span>{{ itemPrice+60 }}</span>
@@ -107,7 +107,7 @@
   
   
   
-    <div class="flex justify-between 	m-4">
+    <div class="flex justify-between m-4">
       <div>訂單獲得點數:</div>
       <div>+10點</div>
   
@@ -130,11 +130,11 @@
 <!-- 方塊表格 -->
  <div class="cellphone laptop">
 <!-- 左邊表格 -->
-  <div class="left  ">
+  <div class="left ">
     <form action="" id="customer_info">
   <div class="left">
-    <div class="cart mt-100 ml-10 mr-10 wid">
-      <h3 class="h-10 quarter p-2">顧客資料</h3>
+    <div class="ml-10 mr-10 cart mt-100 wid">
+      <h3 class="h-10 p-2 quarter">顧客資料</h3>
       
       <div class="m-2">
         <label>顧客名稱</label>
@@ -241,9 +241,9 @@
 <!-- 訂單備註表格 -->
 <form action="" id="note">
 
-  <div class="cart mt-100 ml-10 mr-10 wid">
-    <h3 class="  h-10 quarter" >訂單備註</h3>
-    <textarea name="" id=""  placeholder="有什麼想告訴賣家的嗎?" class="message h-20"></textarea>
+  <div class="ml-10 mr-10 cart mt-100 wid">
+    <h3 class="h-10  quarter" >訂單備註</h3>
+    <textarea name="" id=""  placeholder="有什麼想告訴賣家的嗎?" class="h-20 message"></textarea>
   
     </div>
 </form>
@@ -252,15 +252,15 @@
 <!-- 右邊表格 -->
 <div class="right ">
   <form action="" id="deliver_pro_info">
-    <div class="cart mt-100 ml-10 mr-10 wid">
-      <div class="flex justify-between quarter p-2">
+    <div class="ml-10 mr-10 cart mt-100 wid">
+      <div class="flex justify-between p-2 quarter">
         <h3 class="h-10 quarter">送貨資料</h3>
         <p>運費: NT$60</p>
       </div>
 
       <p class="m-2">選擇的送貨方式：{{ shippingMethod }}</p>
 
-      <div class="flex jusify-start mb-2 m-2"> 
+      <div class="flex m-2 mb-2 jusify-start"> 
         <label>
           <input
             type="checkbox"
@@ -284,7 +284,7 @@
         />
       </div>
 
-      <div class="mb-5 m-2">
+      <div class="m-2 mb-5">
         <label for="">收件人電話號碼</label>
         <br>
         <div class="flex items-center">
@@ -410,10 +410,10 @@
 </div>
 </div>
 <div>
-    <div v-if="checkoutStore.selectedPaymentMethod === '信用卡 (Visa / MasterCard / JCB / 銀聯卡)'" class="ml-10 mr-10 cart mt-100 wid ">
+    <div v-if="cartData && cartData.paymentMethod === '信用卡 (Visa / MasterCard / JCB / 銀聯卡)'" class="ml-10 mr-10 cart mt-100 wid ">
       <div class="flex justify-between quarter" >   
         <h3 class="h-10 quarter" >付款資料</h3>
-        <p>合計: <span>{{ itemPrice+60 }}</span></p>
+        <p>合計: <span>{{ cartData.items.reduce((total, item) => total + item.price, 0) + 60 }}</span></p>
     </div>
     <p class="m-2">已選擇的付款方式: 信用卡 ( Visa / MasterCard / JCB / 銀聯卡 )</p>
    <div class="relative m-2">
@@ -442,10 +442,10 @@
      </div>
      </div>
 
-    <div v-else-if="checkoutStore.selectedPaymentMethod === '現金付款'" class="ml-10 mr-10 cart mt-100 wid">
+    <div v-else-if="cartData && cartData.paymentMethod === '現金付款'" class="ml-10 mr-10 cart mt-100 wid">
       <div class="flex justify-between quarter">   
         <h3 class="h-10 quarter">付款資料</h3>
-        <p>合計: NT$2,558</p>
+        <p>合計:NT${{ cartData.items.reduce((total, item) => total + item.price, 0) + 60 }}</p>
       </div>
       <p class="m-2">已選擇的付款方式: 貨到付現</p>
     </div>
@@ -482,8 +482,8 @@
   <a href="" style="color:#337AB7 ;" >服務條款</a>及
   <a href="" style="color:#337AB7 ;" >隱私權政策</a>
 </div>
-<div class="flex align-end justify-end sideBorder cart p-2">
- <button class="buttonBg flex justify-center w-80 " @click="submitOrder">提交訂單</button>
+<div class="flex justify-end p-2 align-end sideBorder cart">
+ <button class="flex justify-center buttonBg w-80 " @click="submitOrder">提交訂單</button>
   </div>
 </div>
 
@@ -521,7 +521,15 @@ const fetchCartItems = async () => {
 
 // 在組件加載時調用 fetchCartItems
 onMounted(fetchCartItems);
+const cartData = ref(null);
 
+
+onMounted(() => {
+  const savedData = localStorage.getItem('cartData');
+  if (savedData) {
+    cartData.value = JSON.parse(savedData);
+  }
+});
 // 顧客資料
 const customerData = reactive({
   name: "",
