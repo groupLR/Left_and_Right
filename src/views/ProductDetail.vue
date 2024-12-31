@@ -351,7 +351,7 @@ const props = defineProps({
       </el-dialog>
     </div>
     <div v-else>
-      <el-dialog v-model="dialogToggle" title="選擇共享購物車" width="30%">
+      <el-dialog v-model="dialogToggle" title="選擇共享購物車">
         <el-checkbox-group v-model="selectedCarts">
           <div v-for="cart in sharedCartNames" :key="cart.id" class="cart-item">
             <el-checkbox :value="cart.id" :label="cart.name">
@@ -368,7 +368,7 @@ const props = defineProps({
       </el-dialog>
     </div>
 
-    <div class="loading bg-lightBlue-300 my-8 max-w-full">
+    <div class="loading bg-lightBlue-300 my-4 max-w-full">
       <div class="profile">
         <!-- 輪播圖 -->
         <div class="swiper">
@@ -395,13 +395,23 @@ const props = defineProps({
         <div class="m-4 mt-5">
           <h1 class="text-[28px]">{{ title }}</h1>
           <div class="flex">
-            <h2 class="my-5 text-[20px] font-extrabold">NT${{ Number(salePrice).toLocaleString() }}</h2>
-            <h2 class="ml-5 mt-6 text-s font-bold text-gray-400 line-through">NT${{ Number(originalPrice).toLocaleString() }}</h2>
+            <h2 class="my-5 text-[20px] font-extrabold">
+              {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice)).toLocaleString() }}
+            </h2>
+            <h2 class="ml-5 mt-6 text-s font-bold text-gray-400 line-through">
+              {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(originalPrice)).toLocaleString() }}
+            </h2>
           </div>
           <div class="font-extralight text-[16px]">
-            <p>全館任選兩件88折，優惠後特價 NT${{ Math.ceil(salePrice * 0.88) }}</p>
-            <p>全館任選三件85折，優惠後特價 NT${{ Math.ceil(salePrice * 0.85) }}</p>
-            <p>全館任選四件82折，優惠後特價 NT${{ Math.ceil(salePrice * 0.82) }}</p>
+            <p>
+              全館任選兩件88折，優惠後特價 {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.88).toLocaleString() }}
+            </p>
+            <p>
+              全館任選三件85折，優惠後特價 {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.85).toLocaleString() }}
+            </p>
+            <p>
+              全館任選四件82折，優惠後特價 {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.82).toLocaleString() }}
+            </p>
           </div>
           <div class="my-[5px] mb-5 flex text-center">
             <p class="text-[14px] text-[#FFC500] pt-[1px]">
@@ -491,7 +501,7 @@ const props = defineProps({
             <div class="descriptionTitle mx-10 my-auto flex justify-center relative">
               <h3 class="text-2xl tracking-widest mt-5">商品描述</h3>
             </div>
-            <div class="flex m-auto justify-center my-3">
+            <div class="flex m-auto justify-center my-10">
               <p v-html="description" class="px-[5px] text-sm"></p>
             </div>
             <div class="descriptionTitle mx-10 my-auto flex justify-center relative">
