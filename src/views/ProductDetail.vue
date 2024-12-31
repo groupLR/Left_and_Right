@@ -297,7 +297,7 @@ const refreshSharedCartList = async () => {
     <div v-else>
       <el-dialog v-model="dialogToggle" title="選擇共享購物車">
         <el-checkbox-group v-model="selectedCarts">
-          <div v-for="cart in sharedCartNames" :key="cart.id" class="cart-item">
+          <div v-for="cart in sharedCartNames" :key="cart.id">
             <el-checkbox :value="cart.id" :label="cart.name">
               {{ cart.name }}
             </el-checkbox>

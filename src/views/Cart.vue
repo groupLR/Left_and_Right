@@ -22,6 +22,9 @@ const sharedCartMembers = ref([]) // 共享購物車成員
 const userId = localStorage.getItem("UID")
 const userName = ref("")
 const danmus = ref([])
+const copyDialogToggle = ref(false)
+const selectMemberDialogToggle = ref(false)
+const selectedMembers = ref([])
 
 // 送貨表單
 const selectedCountry = ref("TW")
@@ -101,6 +104,23 @@ const itemPrice = computed(() => {
 })
 
 // method
+
+// 複製路徑
+const copyPath = async () => {
+  await navigator.clipboard.writeText(`${import.meta.env.VITE_API_URL}${router.currentRoute.value.fullPath}`)
+  ElMessage.success("網址複製成功")
+}
+
+// 發送 Email 選擇框
+const sendEmail = async () => {
+  selectMemberDialogToggle.value = true
+}
+
+// 確認發送 Emai l
+const handleConfirm = async () => {
+  console.log(selectedMembers)
+}
+
 // 獲取使用者本人名稱
 const fetchuserName = async () => {
   try {
@@ -358,6 +378,33 @@ onUnmounted(() => {
 })
 </script>
 <template>
+  <div>
+    <el-dialog class="w-[90%] md:[30%]" v-model="copyDialogToggle" title="請選擇分享方式">
+      <div class="flex flex-col items-center">
+        <button class="bg-[#0f4662] text-white w-[50%] p-2 m-2 rounded" @click="sendEmail">透過 Email 邀請</button>
+        <button class="border-2 w-[50%] p-2 m-2 rounded" @click="copyPath">複製網址</button>
+      </div>
+    </el-dialog>
+  </div>
+  <div>
+    <el-dialog v-model="selectMemberDialogToggle" title="選擇要發 Email 給哪個購朋友">
+      <el-scrollbar height="200px">
+        <el-checkbox-group v-model="selectedMembers">
+          <div v-for="(member, index) in sharedCartMembers" :key="index">
+            <el-checkbox :value="member" :label="member">
+              {{ member }}
+            </el-checkbox>
+          </div>
+        </el-checkbox-group>
+      </el-scrollbar>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="selectMemberDialogToggle = false">取消</el-button>
+          <el-button type="primary" @click="handleConfirm">確認</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
   <div class="fixed top-10 w-full z-[100] pointer-events-none">
     <vue-danmaku v-if="isSharedCart" v-model:danmus="danmus" :speeds="100" :channels="5" class="h-[100px] w-full" />
   </div>
@@ -367,7 +414,7 @@ onUnmounted(() => {
         <div class="flex justify-between items-center">
           <div class="flex gap-4 items-center">
             <h1 class="text-2xl font-bold">共享購物車</h1>
-            <button>
+            <button @click="copyDialogToggle = true">
               <i class="fa-solid fa-arrow-up-right-from-square align-center"></i>
             </button>
           </div>

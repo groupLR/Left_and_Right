@@ -9,7 +9,6 @@ const { coBrandingTitle, productList, coBrandingCurrentPage, coBrandingPageSize,
 
 onMounted(async () => {
   await ProductStore.fetchProductList(26, null, coBrandingPageSize.value, coBrandingCurrentPage.value)
-  console.log(import.meta.env.VITE_API_URL)
 })
 </script>
 
