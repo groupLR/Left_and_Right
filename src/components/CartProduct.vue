@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from "vue"
 import { ElMessage } from "element-plus"
+import { useExchangeRateStore } from "@/stores/exchangeRates"
+const ExchangeRateStore = useExchangeRateStore()
+const { currentRate } = storeToRefs(ExchangeRateStore)
 
 const props = defineProps({
   id: {
@@ -21,6 +24,9 @@ const props = defineProps({
   quantity: {
     type: Number,
   },
+})
+const getCurrencySymbol = computed(() => {
+  return currentRate.value.symbol || "NT"
 })
 
 const emits = defineEmits(["updateQuantity", "deleteProduct"])
@@ -59,8 +65,12 @@ const handleDelete = () => {
         </button>
       </div>
       <div class="flex gap-2 items-center">
-        <span class="font-black text-orange-500 text-sm md:text-base">NT${{ Number(props.salePrice).toLocaleString() }}</span>
-        <span class="line-through text-gray-400 text-xs md:text-sm">NT${{ Number(props.originalPrice).toLocaleString() }}</span>
+        <span class="font-black text-orange-500 text-sm md:text-base"
+          >{{ getCurrencySymbol }} {{ ExchangeRateStore.calConvertedPrice(Number(props.salePrice)).toLocaleString() }}</span
+        >
+        <span class="line-through text-gray-400 text-xs md:text-sm"
+          >{{ getCurrencySymbol }} {{ ExchangeRateStore.calConvertedPrice(Number(props.originalPrice)).toLocaleString() }}</span
+        >
       </div>
       <!-- 數量 -->
       <div class="flex justify-end md:justify-end">
