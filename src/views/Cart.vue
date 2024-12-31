@@ -358,8 +358,8 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <div class="fixed top-5 left-0 right-0 z-[100]">
-    <vue-danmaku v-if="isSharedCart" v-model:danmus="danmus" :speeds="100" :channels="3" class="h-[100px] w-full" />
+  <div class="fixed top-5 w-full z-[100]">
+    <vue-danmaku v-if="isSharedCart" v-model:danmus="danmus" :speeds="100" :channels="5" class="h-[100px] w-full" />
   </div>
   <section class="bg-gray-100 pb-[150px]">
     <section class="px-2 max-w-[1340px] mx-auto py-5 md:px-10">
