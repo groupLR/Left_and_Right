@@ -143,8 +143,8 @@ const submitComment = async () => {
 	float: left;
 }
 .commodityImg img {
-	height: 100%;
-	width: 100%;
+	max-width: 195px;
+	aspect-ratio: 1 / 1;
 	object-fit: cover;
 }
 .commodityImformation {

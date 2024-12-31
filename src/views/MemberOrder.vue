@@ -27,11 +27,25 @@ onMounted(async () => {
 				const totalQuantity = productInfo.reduce((sum, product) => sum + product.quantity, 0)
 				const totalPrice = productInfo.reduce((sum, product) => sum + product.sale_price * product.quantity, 0)
 
+				const reviewPromises = productInfo.map(async (product) => {
+					try {
+						const reviewResponse = await axios.get(`${API_URL}/comment/reviews/${product.product_id}`)
+						return reviewResponse.data.status === "Success" // 若有評論返回 true
+					} catch {
+						return false // 若無評論或出錯返回 false
+					}
+				})
+
+				// 如果所有商品都有評論，則該訂單已評論
+				const reviewStatuses = await Promise.all(reviewPromises)
+				const isReviewed = reviewStatuses.every((status) => status)
+
 				return {
 					...order,
 					productName: productInfo[0]?.product_name || "無商品名稱",
 					totalQuantity,
 					totalPrice,
+					isReviewed,
 				}
 			})
 
@@ -66,12 +80,12 @@ onMounted(async () => {
 						<tbody>
 							<tr v-for="order in orders" :key="order.purchaseID">
 								<td class="w-1/5">{{ order.pu_id }}</td>
-								<td class="w-2/5">{{ order.productName }}</td>
+								<td class="w-2/5">{{ order.productName }}...</td>
 								<td class="w-1/5">NT${{ order.totalPrice }}</td>
 								<td class="w-1/5">已完成</td>
 								<td class="w-1/5 last">
 									<RouterLink :to="`/OrderDetails/${order.pu_id}`"> <button class="btn">查閱</button> </RouterLink>
-									<RouterLink :to="`/product_review_comments/${order.pu_id}`"> <button class="btn">評論</button></RouterLink>
+									<RouterLink :to="`/product_review_comments/${order.pu_id}`"> <button :disabled="order.isReviewed" class="btn">評論</button></RouterLink>
 								</td>
 							</tr>
 						</tbody>
@@ -155,6 +169,13 @@ onMounted(async () => {
 	font-size: 14px;
 	margin-top: 10px;
 	text-align: center;
+}
+
+.btn:disabled {
+	background-color: #ccc;
+	color: #666;
+	cursor: default;
+	border: 1px solid #ccc;
 }
 
 @media (max-width: 768px) {
