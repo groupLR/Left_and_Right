@@ -358,14 +358,19 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <div class="fixed top-10 w-full z-[100]">
+  <div class="fixed top-10 w-full z-[100] pointer-events-none">
     <vue-danmaku v-if="isSharedCart" v-model:danmus="danmus" :speeds="100" :channels="5" class="h-[100px] w-full" />
   </div>
   <section class="bg-gray-100 pb-[150px]">
     <section class="px-2 max-w-[1340px] mx-auto py-5 md:px-10">
-      <section class="bg-gray-100" v-if="isSharedCart">
+      <section class="bg-gray-100 mt-5" v-if="isSharedCart">
         <div class="flex justify-between items-center">
-          <h1 class="text-2xl font-bold mt-5">共享購物車</h1>
+          <div class="flex gap-4 items-center">
+            <h1 class="text-2xl font-bold">共享購物車</h1>
+            <button>
+              <i class="fa-solid fa-arrow-up-right-from-square align-center"></i>
+            </button>
+          </div>
           <div>
             <AddMember :groupId="route.params.groupId" :members="sharedCartMembers" @memberAdded="refreshSharedCart" />
             <Warning content="您確定要刪除共享購物車嗎？" @confirm="deleteSharedCart" />
@@ -532,9 +537,5 @@ button:disabled {
 
 :deep(.el-step__head.is-finish) {
   @apply text-orange-500 border-orange-500;
-}
-
-:deep(.vue-danmaku) {
-  pointer-events: none;
 }
 </style>
