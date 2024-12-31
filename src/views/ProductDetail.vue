@@ -13,7 +13,6 @@ import { storeToRefs } from "pinia"
 import { useCartStore } from "@/stores/cart"
 import { useSharedCartStore } from "@/stores/sharedCart"
 import { useExchangeRateStore } from "@/stores/exchangeRates"
-import AddSharedCart from "@/components/AddSharedCart.vue"
 import Reviews from "@/components/Reviews.vue"
 const SharedCartStore = useSharedCartStore()
 const CartStore = useCartStore()
