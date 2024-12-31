@@ -20,7 +20,22 @@ onMounted(async () => {
 	try {
 		const response = await axios.get(`${API_URL}/order/${userId}`)
 		if (response.data.status === "Success") {
-			orders.value = response.data.data
+			const orderPromises = response.data.data.map(async (order) => {
+				const details = await axios.get(`${API_URL}/order/details/${order.pu_id}`)
+				const { productInfo } = details.data
+				// 計算總數和總價
+				const totalQuantity = productInfo.reduce((sum, product) => sum + product.quantity, 0)
+				const totalPrice = productInfo.reduce((sum, product) => sum + product.sale_price * product.quantity, 0)
+
+				return {
+					...order,
+					productName: productInfo[0]?.product_name || "無商品名稱",
+					totalQuantity,
+					totalPrice,
+				}
+			})
+
+			orders.value = await Promise.all(orderPromises)
 		}
 		if (orders.value.length === 0) {
 			hasOrders.value = false
@@ -38,30 +53,29 @@ onMounted(async () => {
 		<div v-if="hasOrders">
 			<div class="orderContainer">
 				<div class="orderDetails">
-					<table class="orderTable">
+					<table class="orderTable table-fixed">
 						<thead>
 							<tr>
-								<td>訂單號碼</td>
-								<td>訂單日期</td>
-								<td>合計</td>
-								<td>訂單狀態</td>
-								<td></td>
+								<td class="w-1/5">訂單號碼</td>
+								<td class="w-2/5">訂單商品</td>
+								<td class="w-1/5">合計</td>
+								<td class="w-1/5">訂單狀態</td>
+								<td class="w-1/5"></td>
 							</tr>
 						</thead>
 						<tbody>
 							<tr v-for="order in orders" :key="order.purchaseID">
-								<td>{{ order.pu_id }}</td>
-								<td>2023-10-25</td>
-								<td>NT$310</td>
-								<td>已完成<br />2023-10-27</td>
-								<td class="last">
+								<td class="w-1/5">{{ order.pu_id }}</td>
+								<td class="w-2/5">{{ order.productName }}</td>
+								<td class="w-1/5">NT${{ order.totalPrice }}</td>
+								<td class="w-1/5">已完成</td>
+								<td class="w-1/5 last">
 									<RouterLink :to="`/OrderDetails/${order.pu_id}`"> <button class="btn">查閱</button> </RouterLink>
 									<RouterLink :to="`/product_review_comments/${order.pu_id}`"> <button class="btn">評論</button></RouterLink>
 								</td>
 							</tr>
 						</tbody>
 					</table>
-					<p class="note">僅顯示 2 年內訂單</p>
 				</div>
 			</div>
 		</div>
@@ -118,16 +132,22 @@ onMounted(async () => {
 }
 
 .btn {
-	@apply my-[4px];
-	background-color: #000;
+	display: inline-block; /* 設為行內區塊 */
+	margin: 0 10px;
+	background-color: #0f4662;
 	color: #fff;
 	padding: 5px 10px;
-	border: none;
+	border: 1px solid #0f4662;
 	border-radius: 5px;
 	cursor: pointer;
-	width: 100%;
-	flex-wrap: wrap;
-	display: block;
+	width: calc(50% - 20px);
+	flex-grow: 0;
+}
+.btn:hover {
+	background-color: #7994a0;
+	color: #fff;
+	border: #000000 1px solid;
+	width: calc(50% - 20px);
 }
 
 .note {

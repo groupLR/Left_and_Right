@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue"
 import { useRouter, useRoute } from "vue-router"
 import axios from "axios"
+import { ElMessage } from "element-plus"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -41,7 +42,7 @@ onMounted(async () => {
 const submitComment = async () => {
 	const checkComments = products.value.filter((product) => !product.commentText)
 	if (checkComments.length > 0) {
-		alert("所有商品評論完才能送出喔")
+		ElMessage.warning("所有商品評論完才能送出喔")
 		return
 	}
 
@@ -64,32 +65,19 @@ const submitComment = async () => {
 		if (allSuccess) {
 			console.log(products.value)
 
-			alert("所有評論已成功發佈！")
+			ElMessage.success("評論已成功發佈！")
 			// 清空所有商品的評論輸入框
 			products.value.forEach((product) => (product.commentText = ""))
 			router.push("/MemberOrder") // 跳轉到會員訂單頁
-		} else {
-			alert("部分評論發佈失敗，請稍後再試！")
 		}
 	} catch (err) {
 		console.error("提交評論錯誤:", err.message)
-		alert("提交評論時發生錯誤，請稍後再試！")
+		ElMessage.error("提交評論時發生錯誤，請稍後再試！")
 	}
 }
 </script>
 <template>
 	<div class="reviewMain mx-auto">
-		<!-- 左邊那塊待評價列表 -->
-		<!-- <div class="awaitingComment w-1/4">
-			<div class="awaitingCommentTitle border py-[10px] pl-[15px] font-semibold text-[18px]">
-				<h4>待評價訂單</h4>
-			</div>
-			<div class="orderNumbers text-[14px]">
-				<h5 class="my-[10px]">訂單編號</h5>
-				<p class="pb-[10px]">{{ purchaseID }}</p>
-			</div>
-		</div> -->
-		<!-- 評價頁面本體 -->
 		<div class="givingComment w-full pb-[15px]">
 			<div class="awaitingCommentTitle border py-[10px] pl-[15px] font-semibold text-[18px]">
 				<h4>給予評價</h4>
@@ -168,18 +156,22 @@ textarea {
 	border-radius: 3px;
 }
 .postBtn {
-	background-color: #000;
+	background-color: #0f4662;
 	color: #fff;
 	padding: 6px 12px;
-	border: none;
+	border: #000000 1px solid;
 	border-radius: 10px;
 	cursor: pointer;
-	width: 28px;
+	width: 40px;
 	height: 20px;
 	box-sizing: content-box;
 	font-size: 14px;
 }
-
+.postBtn:hover {
+	background-color: #7994a0;
+	color: #fff;
+	border: #000000 1px solid;
+}
 @media (max-width: 768px) {
 	.reviewMain {
 		display: flex;
