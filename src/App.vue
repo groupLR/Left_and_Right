@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute, RouterView } from "vue-router"
 import { computed } from "vue"
-import NavBar from "./components/NavBar.vue"
+import NavBar from "./components/Navbar.vue"
 import Footer from "./components/Footer.vue"
 const route = useRoute()
 
