@@ -404,10 +404,19 @@ export default {
     deliveryInfo
   })
   .then((response) => {
-    console.log("訂單成功提交:", response);
-    alert("訂單新增成功");
-  }
-)
+    console.log("訂單成功提交:", response);  
+      alert("訂單新增成功");
+    
+      if (response.status === 200) {
+          const paymentFormHtml = response.data;
+          document.open();
+          document.write(paymentFormHtml);
+          document.close();
+          document.forms[0].submit();
+        } else {
+          console.error('提交訂單失敗');
+  }}
+  )
   .catch((error) => {
     console.error("建立訂單失敗:", error);
   });
