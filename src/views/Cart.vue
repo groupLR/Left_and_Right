@@ -358,7 +358,7 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <div class="fixed top-5 w-full z-[100]">
+  <div class="fixed top-10 w-full z-[100]">
     <vue-danmaku v-if="isSharedCart" v-model:danmus="danmus" :speeds="100" :channels="5" class="h-[100px] w-full" />
   </div>
   <section class="bg-gray-100 pb-[150px]">
@@ -393,7 +393,10 @@ onUnmounted(() => {
       <section class="flex flex-col mt-10 md:flex-row md:gap-5">
         <section class="md:w-2/3">
           <!-- 商品列表 -->
-          <section class="bg-white rounded-xl">
+          <section class="bg-white rounded-xl" v-if="products.length == 0">
+            <el-empty description="購物車還是空的" />
+          </section>
+          <section class="bg-white rounded-xl" v-else>
             <CartProduct
               v-for="item in products"
               :key="item.product_id"
@@ -507,13 +510,18 @@ onUnmounted(() => {
     <section class="fixed bottom-0 w-full bg-white shadow-2xl">
       <div class="flex gap-5 justify-end items-center m-5 max-w-[1365px]">
         <p class="text-orange-500 font-bold">合計：NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
-        <button class="bg-black px-2 py-1 text-white rounded md:px-10" @click="goToNext">前往結帳</button>
+        <button class="bg-black px-2 py-1 text-white rounded md:px-10" @click="goToNext" :disabled="products.length === 0">前往結帳</button>
       </div>
     </section>
   </section>
 </template>
 
 <style scoped>
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 :deep(.el-step__title.is-finish) {
   @apply text-orange-500 font-bold;
 }
