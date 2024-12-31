@@ -1,44 +1,3 @@
-<template>
-	<body>
-		<section class="memberMessage">
-			<div class="messageBox text-center text-xl">
-				<div class="chatBox">
-					<nav class="messageNav p-[10px]">Bonny & Read 飾品</nav>
-					<div class="chatContent">
-						<ul>
-							<li
-								v-for="(message, index) in messages"
-								:key="index"
-								:class="message.isUser ? 'umsg' : 'smsg'"
-								class="message-item"
-							>
-								{{ message.text }}
-							</li>
-						</ul>
-					</div>
-					<textarea
-						@keyup.enter="sendMessage"
-						placeholder="輸入訊息"
-						name=""
-						id="chatBox"
-						v-model="userInput"
-						class="input-field"
-					></textarea>
-					<div class="message-btn">
-						<button class="btn">
-							<font-awesome-icon
-								:icon="['fas', 'circle-plus']"
-								style="color: #fff; margin-right: 4px"
-							/>加入圖片
-						</button>
-						<button @click="sendMessage" class="btn">傳送</button>
-					</div>
-				</div>
-			</div>
-		</section>
-	</body>
-</template>
-
 <script setup>
 import { ref } from "vue"
 const userInput = ref("")
@@ -62,9 +21,7 @@ const sendMessage = () => {
 	userInput.value = ""
 
 	// 合併訊息並排序
-	messages.value = [...userMsg.value, ...systemMsg.value].sort(
-		(a, b) => new Date(a.time) - new Date(b.time)
-	)
+	messages.value = [...userMsg.value, ...systemMsg.value].sort((msgBefore, msgAfter) => new Date(msgBefore.time) - new Date(msgAfter.time))
 
 	setTimeout(() => {
 		// 模擬系統回應
@@ -73,12 +30,31 @@ const sendMessage = () => {
 			isUser: false,
 			time: new Date(),
 		})
-		messages.value = [...userMsg.value, ...systemMsg.value].sort(
-			(a, b) => new Date(a.time) - new Date(b.time)
-		)
+		messages.value = [...userMsg.value, ...systemMsg.value].sort((msgBefore, msgAfter) => new Date(msgBefore.time) - new Date(msgAfter.time))
 	}, 1000)
 }
 </script>
+
+<template>
+	<section class="memberMessage">
+		<div class="messageBox text-center text-xl">
+			<div class="chatBox">
+				<nav class="messageNav p-[10px]">Bonny & Read 飾品</nav>
+				<div class="chatContent">
+					<ul>
+						<li v-for="(message, index) in messages" :key="index" :class="message.isUser ? 'umsg' : 'smsg'" class="message-item">
+							{{ message.text }}
+						</li>
+					</ul>
+				</div>
+				<textarea @keyup.enter="sendMessage" placeholder="輸入訊息" name="" id="chatBox" v-model="userInput" class="input-field"></textarea>
+				<div class="messageBtn">
+					<button @click="sendMessage" class="btn">傳送</button>
+				</div>
+			</div>
+		</div>
+	</section>
+</template>
 
 <style scoped>
 .umsg {
@@ -89,7 +65,7 @@ const sendMessage = () => {
 	text-align: left;
 }
 
-.chatContent ui {
+.chatContent ul {
 	display: flex;
 	flex-direction: column;
 	gap: 2px;
@@ -124,7 +100,7 @@ const sendMessage = () => {
 
 .chatBox {
 	border: 1px #e2e8f0 solid;
-	width: 650px;
+	max-width: 650px;
 	margin: auto;
 	margin-bottom: 30px;
 	margin-top: 20px;
@@ -134,9 +110,9 @@ const sendMessage = () => {
 	min-height: 200px;
 }
 
-.message-btn {
+.messageBtn {
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
 	align-items: center;
 	width: 100%;
 }
@@ -146,9 +122,10 @@ const sendMessage = () => {
 	margin: 10px;
 	width: 100px;
 	height: 32px;
-	background-color: #5b5b5b;
+	background-color: #0f4662;
 	color: #fff;
 	border-radius: 8px;
+	border: #000000 1px solid;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -156,9 +133,14 @@ const sendMessage = () => {
 	font-size: 14px;
 	font-weight: bold;
 }
+.btn:hover {
+	background-color: #7994a0;
+	color: #fff;
+	border: #000000 1px solid;
+}
 
 #chatBox {
-	width: 630px;
+	width: 80%;
 	height: 100px;
 	border: 1px #e2e8f0 solid;
 	border-radius: 3px;
