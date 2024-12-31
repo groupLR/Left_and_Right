@@ -1,7 +1,8 @@
 <script setup>
-import { ref, watch } from "vue"
+import { ref, watch, computed } from "vue"
 import { ElMessage } from "element-plus"
 import { useExchangeRateStore } from "@/stores/exchangeRates"
+import { storeToRefs } from "pinia"
 const ExchangeRateStore = useExchangeRateStore()
 const { currentRate } = storeToRefs(ExchangeRateStore)
 

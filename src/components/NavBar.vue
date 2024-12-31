@@ -284,14 +284,19 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  /* background-color: rgba(0, 0, 0, 0.5); */
-  z-index: 997;
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+.slide-enter-to,
+.slide-leave {
+  transform: translateX(0);
+  opacity: 1;
 }
 @keyframes down {
   0% {
@@ -307,15 +312,5 @@ onMounted(() => {
   animation-name: down;
   animation-duration: 700ms;
   animation-iteration-count: 1;
-}
-
-@media screen and (min-width: 1200px) {
-  .items {
-    padding: 20px;
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex: 1;
-  }
 }
 </style>
