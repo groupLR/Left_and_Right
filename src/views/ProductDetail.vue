@@ -1,7 +1,7 @@
 <script setup>
 import axios from "axios"
 import Swiper from "swiper/bundle"
-import { onMounted, ref, watch, computed } from "vue"
+import { onMounted, ref, watch, computed, onUnmounted } from "vue"
 import { useRoute } from "vue-router"
 import { ElMessage } from "element-plus"
 import "swiper/css/bundle"
@@ -18,15 +18,17 @@ const CartStore = useCartStore()
 const { sharedCartList } = storeToRefs(SharedCartStore)
 Swiper.use([Pagination, Navigation, Scrollbar])
 import AddSharedCart from "@/components/AddSharedCart.vue"
+import { webSocketService } from "@/websocket/websocket.js"
 
 const swiperInstance = ref(null)
 const route = useRoute()
 const userId = localStorage.getItem("UID")
 const API_URL = import.meta.env.VITE_API_URL
+const userName = ref("")
 
-//輪播圖
-onMounted(() => {
-  const initializeSwiper = () => {
+// onMounted
+onMounted(async () => {
+  const initializeSwiper = async () => {
     swiperInstance.value = new Swiper(".swiper", {
       modules: [Pagination, Navigation, Scrollbar],
       speed: 400,
@@ -46,6 +48,11 @@ onMounted(() => {
         el: ".swiper-scrollbar",
       },
     })
+
+    // 設定 WebSocket
+    webSocketService.connect()
+    // 取得使用者名稱
+    await fetchuserName()
   }
 
   initializeSwiper()
@@ -62,6 +69,11 @@ onMounted(() => {
   //   }
   //   if (img.complete) img.onload()
   // })
+})
+
+// onUnmounted
+onUnmounted(() => {
+  webSocketService.disconnect()
 })
 
 //獲取產品資料
@@ -190,6 +202,20 @@ const toggleHeart = () => {
   isSubscribe.value = !isSubscribe.value
 }
 
+// 獲取使用者本人名稱
+const fetchuserName = async () => {
+  try {
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/users/singleUserData`, {
+      params: {
+        userId,
+      },
+    })
+    userName.value = data.username
+  } catch (err) {
+    console.error("獲取使用者資料失敗", err)
+  }
+}
+
 // 加入購物車
 const handleAddToCart = async () => {
   await CartStore.addProduct(productId.value, counter.value)
@@ -211,7 +237,7 @@ const showDialog = async () => {
   selectedCarts.value = []
 }
 
-// 處理確認按鈕點擊
+// 處理確認加入共享購物車按鈕點擊
 const handleConfirm = async () => {
   if (selectedCarts.value.length === 0) {
     ElMessage.warning("請至少選擇一個購物車")
@@ -220,7 +246,21 @@ const handleConfirm = async () => {
 
   try {
     // 使用 Promise.all 等待所有操作完成
-    await Promise.all(selectedCarts.value.map((cartId) => SharedCartStore.addProductToSharedCart(cartId, productId.value, counter.value)))
+    await Promise.all(
+      selectedCarts.value.map(async (cartId) => {
+        // 先加入購物車
+        await SharedCartStore.addProductToSharedCart(cartId, productId.value, counter.value)
+
+        // API 成功後發送 WebSocket 消息
+        return webSocketService.sendMessage("addProduct", {
+          groupId: cartId,
+          itemId: Number(productId.value),
+          quantity: counter.value,
+          itemName: profile.value.product_name,
+          userName: userName.value,
+        })
+      })
+    )
 
     // 所有操作完成後才關閉對話框和顯示成功訊息
     dialogToggle.value = false
@@ -230,6 +270,7 @@ const handleConfirm = async () => {
     ElMessage.error("加入共享購物車失敗")
   }
 }
+
 // 創建共享購物車後重新取得列表
 const refreshSharedCartList = async () => {
   await SharedCartStore.fetchSharedCartList(userId)
@@ -262,7 +303,7 @@ const props = defineProps({
       </el-dialog>
     </div>
     <div v-else>
-      <el-dialog v-model="dialogToggle" title="選擇共享購物車" width="30%">
+      <el-dialog v-model="dialogToggle" title="選擇共享購物車">
         <el-checkbox-group v-model="selectedCarts">
           <div v-for="cart in sharedCartNames" :key="cart.id" class="cart-item">
             <el-checkbox :value="cart.id" :label="cart.name">
@@ -422,6 +463,10 @@ const props = defineProps({
   </section>
 </template>
 <style scoped>
+:deep(.el-dialog) {
+  @apply w-[90%] md:w-[50%];
+}
+
 .loading {
   animation-duration: 1s;
   animation-iteration-count: 1;

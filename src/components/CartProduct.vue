@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import { ElMessage } from "element-plus"
 
 const props = defineProps({
@@ -28,13 +28,13 @@ const emits = defineEmits(["updateQuantity", "deleteProduct"])
 const counter = ref(props.quantity)
 const increase = () => {
   counter.value++
-  emits("updateQuantity", { id: props.id, quantity: counter.value })
+  emits("updateQuantity", { id: props.id, quantity: counter.value, name: props.name })
 }
 
 const decrease = () => {
   if (counter.value > 1) {
     counter.value--
-    emits("updateQuantity", { id: props.id, quantity: counter.value })
+    emits("updateQuantity", { id: props.id, quantity: counter.value, name: props.name })
   } else {
     ElMessage.error("商品數量不得小於一")
   }
@@ -42,8 +42,16 @@ const decrease = () => {
 
 // 刪除商品 - 只發送事件到父元件
 const handleDelete = () => {
-  emits("deleteProduct", props.id)
+  emits("deleteProduct", { id: props.id, name: props.name })
 }
+
+// 監聽
+watch(
+  () => props.quantity,
+  (newQuantity) => {
+    counter.value = newQuantity
+  }
+)
 </script>
 <template>
   <div class="flex p-4 md:p-5 border-b-2">
