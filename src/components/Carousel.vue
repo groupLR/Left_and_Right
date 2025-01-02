@@ -7,37 +7,37 @@ const desktopImages = [
   {
     src: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/66e24fe32e9304001c6fc359/2160x.webp?source_format=jpg",
     alt: "1",
-    link: "https://www.bonnyread.com.tw/categories/newarrival",
+    link: "#",
   },
   {
     src: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/674d128e4f2b3c000bdca832/1296x.webp?source_format=jpg",
     alt: "2",
-    link: "https://www.bonnyread.com.tw/categories/newarrival",
+    link: "#",
   },
   {
     src: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/673f048e44c47b000f63e93a/1296x.webp?source_format=jpg",
     alt: "3",
-    link: "https://www.bonnyread.com.tw/categories/newarrival",
+    link: "#",
   },
   {
     src: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/673f04b505469b0010df659c/1296x.webp?source_format=jpg",
     alt: "4",
-    link: "https://www.bonnyread.com.tw/categories/bylab?srsltid=AfmBOorWoiWjHBXcr-5TirOigjL2R38VXfpPC5FY9ujD3YwRuBcugSY_",
+    link: "#",
   },
   {
     src: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/671ef9390df46d000c4acbfe/2160x.webp?source_format=jpg",
     alt: "5",
-    link: "https://www.bonnyread.com.tw/categories/joelinsta",
+    link: "#",
   },
   {
     src: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/6720aaeced31c40011b4d890/2160x.webp?source_format=jpg",
     alt: "6",
-    link: "https://www.bonnyread.com.tw/categories/large-size",
+    link: "#",
   },
   {
     src: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/66e24fe32e9304001c6fc359/2160x.webp?source_format=jpg",
     alt: "7",
-    link: "https://www.bonnyread.com.tw/categories/karat-gold",
+    link: "#",
   },
 ]
 
@@ -46,27 +46,27 @@ const mobileImages = [
   {
     src: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/674d12933d25930010e1a834/900x.webp?source_format=jpg",
     alt: "mobile-1",
-    link: "https://www.bonnyread.com.tw/categories/newarrival",
+    link: "#",
   },
   {
     src: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/6729d9283a3f4d000cc91974/720x.webp?source_format=jpg",
     alt: "mobile-2",
-    link: "https://www.bonnyread.com.tw/categories/bylab",
+    link: "#",
   },
   {
     src: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/671ef943d74a35000cdbb83d/720x.webp?source_format=jpg",
     alt: "mobile-3",
-    link: "https://www.bonnyread.com.tw/categories/joelinsta",
+    link: "#",
   },
   {
     src: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/6720aaf3a07a0a000e9a9f0b/720x.webp?source_format=jpg",
     alt: "mobile-4",
-    link: "https://www.bonnyread.com.tw/categories/large-size",
+    link: "#",
   },
   {
     src: "https://shoplineimg.com/53eb2bccb32b41ef6e000007/66e2500ee80cf10022625217/720x.webp?source_format=jpg",
     alt: "mobile-5",
-    link: "https://www.bonnyread.com.tw/categories/karat-gold",
+    link: "#",
   },
 ]
 

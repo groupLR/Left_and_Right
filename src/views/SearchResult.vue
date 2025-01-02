@@ -3,7 +3,7 @@ import { ref, onMounted, watch, computed } from "vue"
 import { useRoute } from "vue-router"
 import { debounce } from "lodash"
 import ProductItem from "@/components/ProductItem.vue"
-// import Sidebar from "@/components/Sidebar.vue"
+import Sidebar from "@/components/Sidebar.vue"
 
 // 獲取當前路由
 const route = useRoute()
@@ -49,22 +49,28 @@ watch(
 </script>
 
 <template>
-  <h2 class="px-6 pt-6 text-xl font-semibold">搜尋頁面為：{{ keyword }}</h2>
-  <div class="container mx-auto px-4 py-8">
-    <div class="product-list grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <ProductItem
-        v-for="product in products"
-        :key="product.id"
-        :id="product.id"
-        :title="product.product_name"
-        :price="product.sale_price"
-        :originalPrice="product.original_price"
-        :frontImg="product.front_image_path"
-        :backImg="product.back_image_path"
-        class="h-full"
-      />
+  <section class="flex max-w-[1340px] justify-center mx-auto">
+    <Sidebar />
+
+    <div class="px-1 mb-2">
+      <h1 class="px-6 pt-4 text-xl font-medium">搜尋頁面為：{{ keyword }}</h1>
+      <div class="container mx-auto px-4 py-5">
+        <div class="product-list grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ProductItem
+            v-for="product in products"
+            :key="product.product_id"
+            :id="product.product_id"
+            :title="product.product_name"
+            :price="product.sale_price"
+            :originalPrice="product.original_price"
+            :frontImg="product.front_image_path"
+            :backImg="product.back_image_path"
+            class="h-full"
+          />
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <style scoped>
