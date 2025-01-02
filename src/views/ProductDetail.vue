@@ -1,7 +1,7 @@
 <script setup>
 import axios from "axios"
 import Swiper from "swiper/bundle"
-import { onMounted, ref, watch, computed } from "vue"
+import { onMounted, ref, watch, computed, onUnmounted } from "vue"
 import { useRoute } from "vue-router"
 import { ElMessage } from "element-plus"
 import "swiper/css/bundle"
@@ -12,20 +12,26 @@ import "swiper/css/navigation"
 import { storeToRefs } from "pinia"
 import { useCartStore } from "@/stores/cart"
 import { useSharedCartStore } from "@/stores/sharedCart"
+import { useExchangeRateStore } from "@/stores/exchangeRates"
+import Reviews from "@/components/Reviews.vue"
 const SharedCartStore = useSharedCartStore()
 const CartStore = useCartStore()
+const ExchangeRateStore = useExchangeRateStore()
 const { sharedCartList } = storeToRefs(SharedCartStore)
+const { currentRate } = storeToRefs(ExchangeRateStore)
 Swiper.use([Pagination, Navigation, Scrollbar])
 import AddSharedCart from "@/components/AddSharedCart.vue"
+import { webSocketService } from "@/websocket/websocket.js"
 
 const swiperInstance = ref(null)
 const route = useRoute()
 const userId = localStorage.getItem("UID")
 const API_URL = import.meta.env.VITE_API_URL
+const userName = ref("")
 
-//輪播圖
-onMounted(() => {
-  const initializeSwiper = () => {
+// onMounted
+onMounted(async () => {
+  const initializeSwiper = async () => {
     swiperInstance.value = new Swiper(".swiper", {
       modules: [Pagination, Navigation, Scrollbar],
       speed: 400,
@@ -45,6 +51,11 @@ onMounted(() => {
         el: ".swiper-scrollbar",
       },
     })
+
+    // 設定 WebSocket
+    webSocketService.connect()
+    // 取得使用者名稱
+    await fetchuserName()
   }
 
   initializeSwiper()
@@ -61,6 +72,11 @@ onMounted(() => {
   //   }
   //   if (img.complete) img.onload()
   // })
+})
+
+// onUnmounted
+onUnmounted(() => {
+  webSocketService.disconnect()
 })
 
 //獲取產品資料
@@ -189,6 +205,20 @@ const toggleHeart = () => {
   isSubscribe.value = !isSubscribe.value
 }
 
+// 獲取使用者本人名稱
+const fetchuserName = async () => {
+  try {
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/users/singleUserData`, {
+      params: {
+        userId,
+      },
+    })
+    userName.value = data.username
+  } catch (err) {
+    console.error("獲取使用者資料失敗", err)
+  }
+}
+
 // 加入購物車
 const handleAddToCart = async () => {
   await CartStore.addProduct(productId.value, counter.value)
@@ -210,7 +240,7 @@ const showDialog = async () => {
   selectedCarts.value = []
 }
 
-// 處理確認按鈕點擊
+// 處理確認加入共享購物車按鈕點擊
 const handleConfirm = async () => {
   if (selectedCarts.value.length === 0) {
     ElMessage.warning("請至少選擇一個購物車")
@@ -219,7 +249,21 @@ const handleConfirm = async () => {
 
   try {
     // 使用 Promise.all 等待所有操作完成
-    await Promise.all(selectedCarts.value.map((cartId) => SharedCartStore.addProductToSharedCart(cartId, productId.value, counter.value)))
+    await Promise.all(
+      selectedCarts.value.map(async (cartId) => {
+        // 先加入購物車
+        await SharedCartStore.addProductToSharedCart(cartId, productId.value, counter.value)
+
+        // API 成功後發送 WebSocket 消息
+        return webSocketService.sendMessage("addProduct", {
+          groupId: cartId,
+          itemId: Number(productId.value),
+          quantity: counter.value,
+          itemName: profile.value.product_name,
+          userName: userName.value,
+        })
+      })
+    )
 
     // 所有操作完成後才關閉對話框和顯示成功訊息
     dialogToggle.value = false
@@ -229,6 +273,7 @@ const handleConfirm = async () => {
     ElMessage.error("加入共享購物車失敗")
   }
 }
+
 // 創建共享購物車後重新取得列表
 const refreshSharedCartList = async () => {
   await SharedCartStore.fetchSharedCartList(userId)
@@ -238,6 +283,13 @@ const refreshSharedCartList = async () => {
   }))
   dialogToggle.value = true
 }
+//評論頁
+const props = defineProps({
+  productId: {
+    type: Number,
+    required: true,
+  },
+})
 </script>
 
 <template>
@@ -254,7 +306,7 @@ const refreshSharedCartList = async () => {
       </el-dialog>
     </div>
     <div v-else>
-      <el-dialog v-model="dialogToggle" title="選擇共享購物車" width="30%">
+      <el-dialog v-model="dialogToggle" title="選擇共享購物車">
         <el-checkbox-group v-model="selectedCarts">
           <div v-for="cart in sharedCartNames" :key="cart.id" class="cart-item">
             <el-checkbox :value="cart.id" :label="cart.name">
@@ -271,7 +323,7 @@ const refreshSharedCartList = async () => {
       </el-dialog>
     </div>
 
-    <div class="max-w-full my-8 loading bg-lightBlue-300">
+    <div class="max-w-full my-4 loading bg-lightBlue-300">
       <div class="profile">
         <!-- 輪播圖 -->
         <div class="swiper">
@@ -298,13 +350,23 @@ const refreshSharedCartList = async () => {
         <div class="m-4 mt-5">
           <h1 class="text-[28px]">{{ title }}</h1>
           <div class="flex">
-            <h2 class="my-5 text-[20px] font-extrabold">NT${{ Number(salePrice).toLocaleString() }}</h2>
-            <h2 class="ml-5 mt-6 text-s font-bold text-gray-400 line-through">NT${{ Number(originalPrice).toLocaleString() }}</h2>
+            <h2 class="my-5 text-[20px] font-extrabold">
+              {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice)).toLocaleString() }}
+            </h2>
+            <h2 class="mt-6 ml-5 font-bold text-gray-400 line-through text-s">
+              {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(originalPrice)).toLocaleString() }}
+            </h2>
           </div>
           <div class="font-extralight text-[16px]">
-            <p>全館任選兩件88折，優惠後特價 NT${{ Math.ceil(salePrice * 0.88) }}</p>
-            <p>全館任選三件85折，優惠後特價 NT${{ Math.ceil(salePrice * 0.85) }}</p>
-            <p>全館任選四件82折，優惠後特價 NT${{ Math.ceil(salePrice * 0.82) }}</p>
+            <p>
+              全館任選兩件88折，優惠後特價 {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.88).toLocaleString() }}
+            </p>
+            <p>
+              全館任選三件85折，優惠後特價 {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.85).toLocaleString() }}
+            </p>
+            <p>
+              全館任選四件82折，優惠後特價 {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.82).toLocaleString() }}
+            </p>
           </div>
           <div class="my-[5px] mb-5 flex text-center">
             <p class="text-[14px] text-[#FFC500] pt-[1px]">
@@ -386,12 +448,13 @@ const refreshSharedCartList = async () => {
           <div class="navbar">
             <div id="navbarProductDescription">商品描述</div>
             <div id="navbarRate">顧客評價</div>
+            <!-- <Reviews :product-id="productId" /> -->
           </div>
           <div>
             <div class="relative flex justify-center mx-10 my-auto descriptionTitle">
               <h3 class="mt-5 text-2xl tracking-widest">商品描述</h3>
             </div>
-            <div class="flex justify-center m-auto my-3">
+            <div class="flex justify-center m-auto my-10">
               <p v-html="description" class="px-[5px] text-sm"></p>
             </div>
             <div class="relative flex justify-center mx-10 my-auto descriptionTitle">
@@ -413,6 +476,10 @@ const refreshSharedCartList = async () => {
   </section>
 </template>
 <style scoped>
+:deep(.el-dialog) {
+  @apply w-[90%] md:w-[50%];
+}
+
 .loading {
   animation-duration: 1s;
   animation-iteration-count: 1;
