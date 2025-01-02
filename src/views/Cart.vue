@@ -3,7 +3,7 @@ import axios from "axios"
 import vueDanmaku from "vue3-danmaku"
 import { useRoute, useRouter } from "vue-router"
 import { onMounted, ref, computed, watch, onUnmounted } from "vue"
-import { ElMessage, emitChangeFn } from "element-plus"
+import { ElMessage } from "element-plus"
 import { useSharedCartStore } from "@/stores/sharedCart"
 import AddMember from "@/components/AddMember.vue"
 import Warning from "@/components/Warning.vue"
@@ -25,6 +25,8 @@ const danmus = ref([])
 const copyDialogToggle = ref(false)
 const selectMemberDialogToggle = ref(false)
 const selectedMembers = ref([])
+// 購物車完整路徑(共享購物車複製網址、發 Email 用)
+const fullUrl = window.location.origin + router.currentRoute.value.fullPath
 
 // 送貨表單
 const selectedCountry = ref("TW")
@@ -107,7 +109,7 @@ const itemPrice = computed(() => {
 
 // 複製路徑
 const copyPath = async () => {
-  await navigator.clipboard.writeText(`${import.meta.env.VITE_API_URL}${router.currentRoute.value.fullPath}`)
+  await navigator.clipboard.writeText(`${fullUrl}`)
   ElMessage.success("網址複製成功")
 }
 
@@ -116,9 +118,18 @@ const sendEmail = async () => {
   selectMemberDialogToggle.value = true
 }
 
-// 確認發送 Emai l
+// 確認發送 Email
 const handleConfirm = async () => {
-  console.log(selectedMembers)
+  try {
+    await SharedCartStore.sendMail(fullUrl, selectedMembers.value, userName.value)
+    ElMessage.success("邀請發送成功")
+    selectedMembers.value = []
+    selectMemberDialogToggle.value = false
+    copyDialogToggle.value = false
+  } catch (err) {
+    console.error("送信失敗", err)
+    ElMessage.error("送信失敗，請稍候再試")
+  }
 }
 
 // 獲取使用者本人名稱
