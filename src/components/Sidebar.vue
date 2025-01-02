@@ -23,13 +23,15 @@ const toggleChildren = (index) => {
 fetchCategories()
 </script>
 <template>
-  <aside class="w-56 h-screen bg-white overflow-y-auto scrollbar-hide">
+  <aside class="hidden w-56 h-screen bg-white overflow-y-auto scrollbar-hide xl:block">
     <ul class="relative">
       <li v-for="(category, index) in categories" :key="category.category_id" class="relative list-none">
         <!-- 大項目 -->
-        <div class="flex items-center justify-between hover:cursor-pointer shadow-sm">
+        <div class="flex items-center justify-between hover:cursor-pointer shadow-sm hover:font-bold">
           <!-- 類別名稱 -->
-          <RouterLink :to="`/categories/${category.category_id}`" class="p-4">{{ category.category_name }}</RouterLink>
+          <RouterLink :to="`/categories/${category.category_id}`" class="p-4" :class="{ ' font-bold': category.showChildren }">{{
+            category.category_name
+          }}</RouterLink>
           <!-- 收合箭頭 -->
           <i
             v-if="category.children.length > 0"
@@ -42,10 +44,8 @@ fetchCategories()
         <!-- 小項目 -->
         <div class="overflow-hidden transition-all duration-500" :class="{ 'h-0': !category.showChildren, 'h-auto': category.showChildren }">
           <ul class="pl-1.5">
-            <li v-for="child in category.children" :key="child.categories_id" class="p-4">
-              <RouterLink :to="`/categories/${child.categories_id}`" class="text-gray-400 hover:text-black hover:cursor-pointer">{{
-                child.category_name
-              }}</RouterLink>
+            <li v-for="child in category.children" :key="child.categories_id" class="p-4 hover:font-bold text-gray-400 hover:text-black hover:cursor-pointer">
+              <RouterLink :to="`/categories/${child.categories_id}`">{{ child.category_name }}</RouterLink>
             </li>
           </ul>
         </div>
