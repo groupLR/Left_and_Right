@@ -23,7 +23,7 @@ watch(
 
 <template>
   <section class="px-4 flex max-w-[1340px] mx-auto justify-center">
-    <Sidebar class="hidden w-1/6 lg:block" />
+    <Sidebar />
     <div class="flex-1">
       <div class="headerContainer px-1 mb-2 md:flex items-center">
         <h1 class="py-5 text-xl">{{ categoryTitle }}</h1>
