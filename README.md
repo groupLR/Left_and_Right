@@ -23,8 +23,8 @@
 Clone the repository:
 
 ```sh
-git clone https://github.com/33test/clone-bonny.git
-cd clone-bonny
+git clone https://github.com/groupLR/Left_and_Right.git
+cd Left_and_Right
 ```
 
 ### Install Dependencies
@@ -34,6 +34,8 @@ npm install
 ```
 
 ### Development
+
+Before you get started, setup your .env with .env.example
 
 To start a development server with hot-reload:
 
