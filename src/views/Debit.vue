@@ -29,7 +29,7 @@ const formData = ref({
   customer: {
     name: "",
     phone: "",
-    gender: "m",
+    gender: "",
   },
   orderNote: "",
   delivery: {
@@ -64,6 +64,22 @@ const isFormValid = computed(() => {
 })
 
 // methods
+// 獲取使用者本人名稱、電話
+const fetchuserInfo = async () => {
+  try {
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/users/singleUserData`, {
+      params: {
+        userId,
+      },
+    })
+    formData.value.customer.name = data.username
+    formData.value.customer.phone = data.phone
+    formData.value.customer.gender = data.gender
+  } catch (err) {
+    console.error("獲取使用者資料失敗", err)
+  }
+}
+// 取得購物車商品
 const fetchCartItems = async () => {
   try {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`, {
@@ -166,6 +182,7 @@ const initializeCartPage = async () => {
 
 onMounted(async () => {
   await initializeCartPage()
+  await fetchuserInfo()
 })
 </script>
 
@@ -218,15 +235,15 @@ onMounted(async () => {
           <form id="customer_info" class="bg-white rounded-xl p-5 mb-5">
             <h3 class="text-xl font-bold mb-4">顧客資料</h3>
             <div class="mb-4">
-              <label class="block mb-2">顧客名稱</label>
+              <label class="block mb-2">顧客名稱<span class="text-red-500 ml-1">*</span></label>
               <input type="text" v-model="formData.customer.name" class="w-full border rounded-md p-2" />
             </div>
             <div class="mb-4">
-              <label class="block mb-2">電話號碼</label>
+              <label class="block mb-2">電話號碼<span class="text-red-500 ml-1">*</span></label>
               <input type="text" v-model="formData.customer.phone" class="w-full border rounded-md p-2" />
             </div>
             <div class="mb-4">
-              <label class="block mb-2">性別(選填)</label>
+              <label class="block mb-2">性別<span class="text-red-500 ml-1">*</span></label>
               <select v-model="formData.customer.gender" class="w-full border rounded-md p-2">
                 <option value="m">男</option>
                 <option value="f">女</option>
@@ -256,13 +273,13 @@ onMounted(async () => {
             </div>
 
             <div class="mb-4">
-              <label class="block mb-2">收件人名稱</label>
+              <label class="block mb-2">收件人名稱<span class="text-red-500 ml-1">*</span></label>
               <input type="text" v-model="formData.delivery.recipientName" class="w-full border rounded-md p-2" />
               <span class="text-sm text-gray-500">請填入收件人真實姓名，以確保順利收件</span>
             </div>
 
             <div class="mb-4">
-              <label class="block mb-2">收件人電話號碼</label>
+              <label class="block mb-2">收件人電話號碼<span class="text-red-500 ml-1">*</span></label>
               <input type="text" v-model="formData.delivery.recipientPhone" class="w-full border rounded-md p-2" />
             </div>
 
@@ -270,11 +287,11 @@ onMounted(async () => {
 
             <div class="mb-4">
               <p class="font-bold mb-2">送貨地點: {{ selectedCountry }}</p>
-              <input type="text" v-model="formData.delivery.address" placeholder="地址" class="w-full border rounded-md p-2 mb-2" />
-              <input type="text" v-model="formData.delivery.city" placeholder="城市/市鎮" class="w-full border rounded-md p-2 mb-2" />
+              <input type="text" v-model="formData.delivery.address" placeholder="地址(必填)" class="w-full border rounded-md p-2 mb-2" />
+              <input type="text" v-model="formData.delivery.city" placeholder="城市/市鎮(必填)" class="w-full border rounded-md p-2 mb-2" />
               <div class="flex gap-2">
-                <input type="text" v-model="formData.delivery.postalCode" placeholder="郵政區號" class="w-1/2 border rounded-md p-2" />
-                <input type="text" v-model="formData.delivery.region" placeholder="地區/洲/省份" class="w-1/2 border rounded-md p-2" />
+                <input type="text" v-model="formData.delivery.postalCode" placeholder="郵政區號(必填)" class="w-1/2 border rounded-md p-2" />
+                <input type="text" v-model="formData.delivery.region" placeholder="地區/洲/省份(必填)" class="w-1/2 border rounded-md p-2" />
               </div>
             </div>
           </form>

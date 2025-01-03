@@ -476,7 +476,7 @@ onUnmounted(() => {
         <!-- 優惠和小計區塊 -->
         <aside class="md:w-1/3 flex flex-col gap-5 mt-5 md:mt-0">
           <!-- 優惠區塊 -->
-          <div class="sticky top-0">
+          <div class="sticky top-[112px]">
             <div class="bg-white p-5 rounded-xl">
               <h2 class="text-xl font-bold">已享用之優惠</h2>
               <!-- 之後串 API 了用這個 div 跑 v-for -->
