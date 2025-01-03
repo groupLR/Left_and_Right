@@ -22,425 +22,508 @@ const userId = localStorage.getItem("UID")
 // 送貨表單
 const selectedCountry = ref("TW")
 const countryList = [
-  { value: "AU", label: "澳大利亞" },
-  { value: "BE", label: "比利時" },
-  { value: "CA", label: "加拿大" },
-  { value: "CN", label: "中國" },
-  { value: "FR", label: "法國" },
-  { value: "DE", label: "德國" },
-  { value: "HK", label: "香港" },
-  { value: "ID", label: "印度尼西亞" },
-  { value: "IT", label: "意大利" },
-  { value: "JP", label: "日本" },
-  { value: "KR", label: "韓國" },
-  { value: "MO", label: "澳門" },
-  { value: "MY", label: "馬來西亞" },
-  { value: "NL", label: "荷蘭" },
-  { value: "NZ", label: "新西蘭" },
-  { value: "PW", label: "帕勞" },
-  { value: "PE", label: "秘魯" },
-  { value: "PH", label: "菲律賓" },
-  { value: "SG", label: "新加坡" },
-  { value: "TW", label: "台灣" },
-  { value: "TH", label: "泰國" },
-  { value: "GB", label: "英國" },
-  { value: "US", label: "美國" },
-  { value: "VN", label: "越南" },
+	{ value: "AU", label: "澳大利亞" },
+	{ value: "BE", label: "比利時" },
+	{ value: "CA", label: "加拿大" },
+	{ value: "CN", label: "中國" },
+	{ value: "FR", label: "法國" },
+	{ value: "DE", label: "德國" },
+	{ value: "HK", label: "香港" },
+	{ value: "ID", label: "印度尼西亞" },
+	{ value: "IT", label: "意大利" },
+	{ value: "JP", label: "日本" },
+	{ value: "KR", label: "韓國" },
+	{ value: "MO", label: "澳門" },
+	{ value: "MY", label: "馬來西亞" },
+	{ value: "NL", label: "荷蘭" },
+	{ value: "NZ", label: "新西蘭" },
+	{ value: "PW", label: "帕勞" },
+	{ value: "PE", label: "秘魯" },
+	{ value: "PH", label: "菲律賓" },
+	{ value: "SG", label: "新加坡" },
+	{ value: "TW", label: "台灣" },
+	{ value: "TH", label: "泰國" },
+	{ value: "GB", label: "英國" },
+	{ value: "US", label: "美國" },
+	{ value: "VN", label: "越南" },
 ]
 
 const selectedDelivery = ref("home-delivery")
 const deliveryOptions = [
-  {
-    value: "overseas-ems",
-    label: "海外運送 (3-7天到貨，採EMS寄送)",
-    disabled: false,
-  },
-  {
-    value: "overseas-dhl",
-    label: "海外運送 (3-7天到貨，DHL運送)",
-    disabled: false,
-  },
-  {
-    value: "7-11",
-    label: "7-11",
-  },
-  {
-    value: "home-delivery",
-    label: "宅配到府",
-  },
+	{
+		value: "overseas-ems",
+		label: "海外運送 (3-7天到貨，採EMS寄送)",
+		disabled: false,
+	},
+	{
+		value: "overseas-dhl",
+		label: "海外運送 (3-7天到貨，DHL運送)",
+		disabled: false,
+	},
+	{
+		value: "7-11",
+		label: "7-11",
+	},
+	{
+		value: "home-delivery",
+		label: "宅配到府",
+	},
 ]
 
 const selectedPayment = ref("credit-card")
 const paymentOptions = [
-  {
-    value: "cash-on-delivery",
-    label: "貨到付款",
-  },
-  {
-    value: "credit-card",
-    label: "信用卡 (Visa / MasterCard / JCB / 銀聯卡)",
-  },
-  {
-    value: "dbs-card",
-    label: "↳ 刷星展卡滿 3,000 送 100 刷卡金",
-    disabled: true,
-  },
+	{
+		value: "cash-on-delivery",
+		label: "貨到付款",
+	},
+	{
+		value: "credit-card",
+		label: "信用卡 (Visa / MasterCard / JCB / 銀聯卡)",
+	},
+	{
+		value: "dbs-card",
+		label: "↳ 刷星展卡滿 3,000 送 100 刷卡金",
+		disabled: true,
+	},
 ]
 
 // computed
 const itemCount = computed(() => {
-  return products.value.filter((item) => item.quantity > 0).length
+	return products.value.filter((item) => item.quantity > 0).length
 })
 
 const itemPrice = computed(() => {
-  return products.value.reduce((total, item) => total + item.original_price * item.quantity, 0)
+	return products.value.reduce((total, item) => total + item.original_price * item.quantity, 0)
 })
 
 // method
 // 獲取購物車商品
 const fetchCartItems = async () => {
-  try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`, {
-      headers: {
-        userId,
-      },
-    })
-    products.value = response.data // 將 API 返回的資料存入 products
-  } catch (error) {
-    console.error("獲取資料失敗:", error)
-  }
+	try {
+		const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`, {
+			headers: {
+				userId,
+			},
+		})
+		products.value = response.data // 將 API 返回的資料存入 products
+	} catch (error) {
+		console.error("獲取資料失敗:", error)
+	}
 }
 
 // 新增購物車商品
 const addProduct = async (newProduct) => {
-  axios
-    .post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, newProduct)
-    .then((response) => {
-      products.value.push(response.data) // 新增成功後直接更新列表
-    })
-    .catch((error) => {
-      console.error("新增商品失敗:", error)
-    })
+	axios
+		.post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, newProduct)
+		.then((response) => {
+			products.value.push(response.data) // 新增成功後直接更新列表
+		})
+		.catch((error) => {
+			console.error("新增商品失敗:", error)
+		})
 }
 
 // 刪除購物車商品的函式
 const deleteProduct = async (id) => {
-  axios
-    .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
-      headers: {
-        userId,
-      },
-    })
-    .then(() => {
-      return initializeCartPage()
-    })
-    .catch((error) => {
-      console.error("刪除商品失敗:", error)
-    })
+	axios
+		.delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
+			headers: {
+				userId,
+			},
+		})
+		.then(() => {
+			return initializeCartPage()
+		})
+		.catch((error) => {
+			console.error("刪除商品失敗:", error)
+		})
 }
 
 // 刪除商品（判斷是否共享）
 const deleteProductFromCart = async (id) => {
-  if (isSharedCart.value) {
-    try {
-      await SharedCartStore.deleteProductInSharedCart(route.params.groupId, id)
-      ElMessage.success("刪除商品成功")
-      return initializeCartPage()
-    } catch (err) {
-      ElMessage.error({
-        message: "從共享購物車刪除商品失敗",
-        type: "error",
-      })
-      console.error("從共享購物車刪除商品失敗", err)
-    }
-  } else {
-    try {
-      await deleteProduct(id)
-    } catch (err) {
-      ElMessage.error({
-        message: "從購物車刪除商品失敗",
-        type: "error",
-      })
-      console.error("從購物車刪除商品失敗", err)
-    }
-  }
+	if (isSharedCart.value) {
+		try {
+			await SharedCartStore.deleteProductInSharedCart(route.params.groupId, id)
+			ElMessage.success("刪除商品成功")
+			return initializeCartPage()
+		} catch (err) {
+			ElMessage.error({
+				message: "從共享購物車刪除商品失敗",
+				type: "error",
+			})
+			console.error("從共享購物車刪除商品失敗", err)
+		}
+	} else {
+		try {
+			await deleteProduct(id)
+		} catch (err) {
+			ElMessage.error({
+				message: "從購物車刪除商品失敗",
+				type: "error",
+			})
+			console.error("從購物車刪除商品失敗", err)
+		}
+	}
 }
 
 // 更新購物車商品數量的函式
 const updateQuantity = async ({ id, quantity }) => {
-  if (quantity < 1) {
-    alert("數量不能小於 1")
-    return
-  }
+	if (quantity < 1) {
+		alert("數量不能小於 1")
+		return
+	}
 
-  try {
-    const response = await axios.put(
-      `${import.meta.env.VITE_API_URL}/cart/update-quantity`,
-      {
-        product_id: id,
-        quantity,
-      },
-      {
-        headers: { userId },
-      }
-    )
-    if (response.data.success) {
-      console.log("數量更新成功")
-      await initializeCartPage() // 重新獲取購物車列表
-    } else {
-      alert("更新失敗：" + response.data.message)
-    }
-  } catch (error) {
-    console.error("更新數量時出錯", error)
-    alert("更新數量時出錯，請稍後再試")
-  }
+	try {
+		const response = await axios.put(
+			`${import.meta.env.VITE_API_URL}/cart/update-quantity`,
+			{
+				product_id: id,
+				quantity,
+			},
+			{
+				headers: { userId },
+			}
+		)
+		if (response.data.success) {
+			console.log("數量更新成功")
+			await initializeCartPage() // 重新獲取購物車列表
+		} else {
+			alert("更新失敗：" + response.data.message)
+		}
+	} catch (error) {
+		console.error("更新數量時出錯", error)
+		alert("更新數量時出錯，請稍後再試")
+	}
 }
 
 // 更新商品數量（判斷是否共享）
 const updateProductQty = async (payload) => {
-  if (isSharedCart.value) {
-    try {
-      await SharedCartStore.updateProductQtyToSharedCart(route.params.groupId, payload.id, payload.quantity)
-    } catch (err) {
-      ElMessage.error({
-        message: "更新共享購物車商品數量失敗：",
-        type: "error",
-      })
-      console.error("更新共享購物車數量失敗：", err)
-    }
-  } else {
-    try {
-      await updateQuantity(payload)
-    } catch (err) {
-      ElMessage.error({
-        message: "更新購物車商品數量失敗：" + (err.response?.data?.message || err.message),
-        type: "error",
-      })
-      console.error("更新購物車數量失敗：", err)
-    }
-  }
+	if (isSharedCart.value) {
+		try {
+			await SharedCartStore.updateProductQtyToSharedCart(route.params.groupId, payload.id, payload.quantity)
+		} catch (err) {
+			ElMessage.error({
+				message: "更新共享購物車商品數量失敗：",
+				type: "error",
+			})
+			console.error("更新共享購物車數量失敗：", err)
+		}
+	} else {
+		try {
+			await updateQuantity(payload)
+		} catch (err) {
+			ElMessage.error({
+				message: "更新購物車商品數量失敗：" + (err.response?.data?.message || err.message),
+				type: "error",
+			})
+			console.error("更新購物車數量失敗：", err)
+		}
+	}
 }
 
 // 前往結帳
 const goToNext = async () => {
-  try {
-    await router.push("/Debit")
-  } catch (err) {
-    console.error("導航失敗:", err)
-  }
+	try {
+		await router.push("/Debit")
+	} catch (err) {
+		console.error("導航失敗:", err)
+	}
 }
 
 // 刪除共享購物車
 const deleteSharedCart = async () => {
-  try {
-    await SharedCartStore.deleteSharedCart(route.params.groupId)
-    await SharedCartStore.fetchSharedCartList()
-    const message = sharedCartName.value ? `刪除 ${sharedCartName.value} 成功` : "刪除共享購物車成功"
-    ElMessage.success(message)
-    // 導航到共享購物車列表
-    router.push("/sharedcartlist")
-  } catch (error) {
-    console.error("刪除購物車失敗:", error)
-    ElMessage.error("刪除購物車失敗，請稍後再試")
-  }
+	try {
+		await SharedCartStore.deleteSharedCart(route.params.groupId)
+		await SharedCartStore.fetchSharedCartList()
+		const message = sharedCartName.value ? `刪除 ${sharedCartName.value} 成功` : "刪除共享購物車成功"
+		ElMessage.success(message)
+		// 導航到共享購物車列表
+		router.push("/sharedcartlist")
+	} catch (error) {
+		console.error("刪除購物車失敗:", error)
+		ElMessage.error("刪除購物車失敗，請稍後再試")
+	}
 }
 // 新增好友後重新渲染共享購物車
 const refreshSharedCart = async () => {
-  const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
-  products.value = data.productDataList
-  sharedCartMembers.value = data.info.memberName
+	const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
+	products.value = data.productDataList
+	sharedCartMembers.value = data.info.memberName
 }
 
 const initializeCartPage = async () => {
-  // 檢查路由是否包含 groupId 參數，有就抓共享購物車，沒有就抓自己的購物車
-  if ("groupId" in route.params) {
-    isSharedCart.value = true
-    const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
-    products.value = data.productDataList || []
-    sharedCartName.value = data.info.cartName || ""
-    sharedCartMembers.value = data.info.memberName || []
-  } else {
-    isSharedCart.value = false
-    await fetchCartItems()
-  }
+	// 檢查路由是否包含 groupId 參數，有就抓共享購物車，沒有就抓自己的購物車
+	if ("groupId" in route.params) {
+		isSharedCart.value = true
+		const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
+		products.value = data.productDataList || []
+		sharedCartName.value = data.info.cartName || ""
+		sharedCartMembers.value = data.info.memberName || []
+	} else {
+		isSharedCart.value = false
+		await fetchCartItems()
+	}
 }
 
 // onMounted
 onMounted(async () => {
-  await initializeCartPage()
+	await initializeCartPage()
 })
 
 // watch
 watch(
-  () => route.params,
-  async () => {
-    await initializeCartPage()
-  }
+	() => route.params,
+	async () => {
+		await initializeCartPage()
+	}
 )
+// 優惠券
+
+// 儲存優惠券
+const coupons = ref([])
+// 加載狀態
+const loading = ref(true)
+// 錯誤訊息
+const error = ref(null)
+// 運費
+const shippingFee = 60
+
+// 預設商品金額
+const available = "available"
+
+// 獲取有效優惠券
+const validCoupon = computed(() => {
+	if (loading.value || error.value) return null // 加載中或錯誤時不篩選
+
+	const availableCoupons = coupons.value.filter((coupon) => coupon.status === "available" && itemPrice.value >= coupon.min_spend)
+	console.log("可用優惠券:", availableCoupons) // 印出可用的優惠券
+
+	// 檢查可用優惠券的長度
+	if (availableCoupons.length > 0) {
+		availableCoupons.sort((a, b) => b.discount_amount - a.discount_amount)
+		return availableCoupons[0] // 透過排序優惠較高的價格後，返回第一個有效優惠券
+	}
+	return null // 如果沒有有效優惠券，返回 null
+})
+
+// 計算合計金額
+const totalAmount = computed(() => {
+	if (loading.value) return "計算中..." // 加載中
+	if (error.value) return "發生錯誤，無法計算金額" // 發生錯誤
+
+	const discount = validCoupon.value ? validCoupon.value.discount_amount : 0
+	const totalPrice = Math.max(0, itemPrice.value - discount)
+	return totalPrice + shippingFee
+})
+
+// 獲取優惠券資料
+const uid = localStorage.getItem("UID")
+
+const fetchCoupons = async () => {
+	if (!uid) {
+		// console.error("UID 不存在於 localStorage")
+		error.value = "UID 不存在於 localStorage"
+		loading.value = false
+		return
+	}
+
+	try {
+		const response = await fetch(`${import.meta.env.VITE_API_URL}/coupon/user/${uid}`)
+		if (!response.ok) {
+			throw new Error(`伺服器返回錯誤狀態: ${response.status}`)
+		}
+		const data = await response.json()
+		coupons.value = data // 更新數據到 coupons
+	} catch (err) {
+		console.error("獲取優惠券失敗:", err.message)
+		error.value = err.message // 儲存錯誤訊息
+	} finally {
+		loading.value = false // 結束加載狀態
+	}
+}
+
+// 在組件掛載時獲取優惠券資料
+fetchCoupons()
+
+// console.log("UID in localStorage:", localStorage.getItem("UID"))
 </script>
 <template>
-  <section class="bg-gray-100 pb-[150px]">
-    <section class="px-2 max-w-[1340px] mx-auto py-5 md:px-10">
-      <section class="bg-gray-100" v-if="isSharedCart">
-        <div class="flex justify-between items-center">
-          <h1 class="text-2xl font-bold mt-5">共享購物車</h1>
-          <div>
-            <AddMember :groupId="route.params.groupId" :members="sharedCartMembers" @memberAdded="refreshSharedCart" />
-            <Warning content="您確定要刪除共享購物車嗎？" @confirm="deleteSharedCart" />
-          </div>
-        </div>
-        <div class="my-5 bg-yellow-50 p-5 rounded-xl">
-          <h2 class="text-xl font-bold mb-2 text-orange-500">{{ sharedCartName }}</h2>
-          <p class="font-bold">購朋友：</p>
-          <p>{{ sharedCartMembers.join("、") }}</p>
-        </div>
-      </section>
-      <section v-else>
-        <h1 class="text-2xl font-bold my-5">購物車</h1>
-      </section>
+	<section class="bg-gray-100 pb-[150px]">
+		<section class="px-2 max-w-[1340px] mx-auto py-5 md:px-10">
+			<section class="bg-gray-100" v-if="isSharedCart">
+				<div class="flex justify-between items-center">
+					<h1 class="text-2xl font-bold mt-5">共享購物車</h1>
+					<div>
+						<AddMember :groupId="route.params.groupId" :members="sharedCartMembers" @memberAdded="refreshSharedCart" />
+						<Warning content="您確定要刪除共享購物車嗎？" @confirm="deleteSharedCart" />
+					</div>
+				</div>
+				<div class="my-5 bg-yellow-50 p-5 rounded-xl">
+					<h2 class="text-xl font-bold mb-2 text-orange-500">{{ sharedCartName }}</h2>
+					<p class="font-bold">購朋友：</p>
+					<p>{{ sharedCartMembers.join("、") }}</p>
+				</div>
+			</section>
+			<section v-else>
+				<h1 class="text-2xl font-bold my-5">購物車</h1>
+			</section>
 
-      <!-- 步驟 -->
-      <section class="flex justify-center">
-        <el-steps style="min-width: 300px" :active="1" align-center class="md:w-[600px]">
-          <el-step title="購物" description="送貨與付款方式" />
-          <el-step title="結帳" description="付款與送貨地址" />
-        </el-steps>
-      </section>
+			<!-- 步驟 -->
+			<section class="flex justify-center">
+				<el-steps style="min-width: 300px" :active="1" align-center class="md:w-[600px]">
+					<el-step title="購物" description="送貨與付款方式" />
+					<el-step title="結帳" description="付款與送貨地址" />
+				</el-steps>
+			</section>
 
-      <!-- 主要內容區 -->
-      <section class="flex flex-col mt-10 md:flex-row md:gap-5">
-        <section class="md:w-2/3">
-          <!-- 商品列表 -->
-          <section class="bg-white rounded-xl">
-            <CartProduct
-              v-for="item in products"
-              :key="item.id"
-              :id="item.product_id"
-              :name="item.product_name"
-              :originalPrice="item.original_price"
-              :salePrice="item.sale_price"
-              :imgPath="item.image_path"
-              :quantity="item.quantity"
-              @updateQuantity="updateProductQty"
-              @deleteProduct="deleteProductFromCart"
-            />
-          </section>
-          <!-- 送貨及付款方式 -->
-          <section class="bg-white rounded-xl px-5 py-5 mt-5">
-            <div class="flex justify-between items-center my-4">
-              <label class="shrink-0 mr-2">送貨地點</label>
-              <el-select
-                placement="bottom"
-                :fallback-placements="['bottom-start']"
-                v-model="selectedCountry"
-                placeholder="送貨地點"
-                size="default"
-                class="w-30"
-              >
-                <el-option v-for="item in countryList" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </div>
-            <div class="flex justify-between items-center my-4">
-              <label class="shrink-0 mr-2">送貨方式</label>
-              <el-select
-                placement="bottom"
-                :fallback-placements="['bottom-start']"
-                v-model="selectedDelivery"
-                placeholder="送貨地點"
-                size="default"
-                class="w-30"
-              >
-                <el-option v-for="option in deliveryOptions" :key="option.value" :label="option.label" :value="option.value" :disabled="option.disabled" />
-              </el-select>
-            </div>
-            <div class="flex justify-between items-center my-4">
-              <label class="shrink-0 mr-2">付款方式</label>
-              <el-select
-                placement="bottom"
-                :fallback-placements="['bottom-start']"
-                v-model="selectedPayment"
-                placeholder="送貨地點"
-                size="default"
-                class="w-30"
-              >
-                <el-option v-for="option in paymentOptions" :key="option.value" :label="option.label" :value="option.value" :disabled="option.disabled" />
-              </el-select>
-            </div>
-            <div class="text-gray-500">
-              <p>取貨通知：</p>
-              <p>
-                - 訂單到達超商七日內，每日皆會傳送取貨簡訊，並於第五日時撥打語音電話通知取貨哦！<br />
-                - 現貨訂單狀態更改「已確認」後，2-3天寄出。 (不包含假日及國定假日)<br />
-                <br />- 本公司產品享7天鑑賞期，30天保固維修<br />
-                - 免付費電話：0800 000 004<br />- 預購與現貨一併出貨
-              </p>
-            </div>
-          </section>
-        </section>
-        <!-- 優惠和小計區塊 -->
-        <aside class="md:w-1/3 flex flex-col gap-5 mt-5 md:mt-0">
-          <!-- 優惠區塊 -->
-          <div class="sticky top-0">
-            <div class="bg-white p-5 rounded-xl">
-              <h2 class="text-xl font-bold">已享用之優惠</h2>
-              <!-- 之後串 API 了用這個 div 跑 v-for -->
-              <div class="flex items-start flex-col">
-                <p class="my-4 px-5 bg-green-100 text-center text-sm md:text-base">優惠促銷</p>
-                <p class="text-sm md:text-base">雙11優惠！全館 兩件85折/三件8折/四件75折！ - 全單 滿 2 件 即享 85 折 再買 1 件 省更多</p>
-                <div class="w-full flex justify-end">
-                  <p class="text-sm md:text-base text-green-600 font-bold">-NT$94</p>
-                </div>
-              </div>
-            </div>
+			<!-- 主要內容區 -->
+			<section class="flex flex-col mt-10 md:flex-row md:gap-5">
+				<section class="md:w-2/3">
+					<!-- 商品列表 -->
+					<section class="bg-white rounded-xl">
+						<CartProduct
+							v-for="item in products"
+							:key="item.id"
+							:id="item.product_id"
+							:name="item.product_name"
+							:originalPrice="item.original_price"
+							:salePrice="item.sale_price"
+							:imgPath="item.image_path"
+							:quantity="item.quantity"
+							@updateQuantity="updateProductQty"
+							@deleteProduct="deleteProductFromCart"
+						/>
+					</section>
+					<!-- 送貨及付款方式 -->
+					<section class="bg-white rounded-xl px-5 py-5 mt-5">
+						<div class="flex justify-between items-center my-4">
+							<label class="shrink-0 mr-2">送貨地點</label>
+							<el-select
+								placement="bottom"
+								:fallback-placements="['bottom-start']"
+								v-model="selectedCountry"
+								placeholder="送貨地點"
+								size="default"
+								class="w-30"
+							>
+								<el-option v-for="item in countryList" :key="item.value" :label="item.label" :value="item.value" />
+							</el-select>
+						</div>
+						<div class="flex justify-between items-center my-4">
+							<label class="shrink-0 mr-2">送貨方式</label>
+							<el-select
+								placement="bottom"
+								:fallback-placements="['bottom-start']"
+								v-model="selectedDelivery"
+								placeholder="送貨地點"
+								size="default"
+								class="w-30"
+							>
+								<el-option v-for="option in deliveryOptions" :key="option.value" :label="option.label" :value="option.value" :disabled="option.disabled" />
+							</el-select>
+						</div>
+						<div class="flex justify-between items-center my-4">
+							<label class="shrink-0 mr-2">付款方式</label>
+							<el-select
+								placement="bottom"
+								:fallback-placements="['bottom-start']"
+								v-model="selectedPayment"
+								placeholder="送貨地點"
+								size="default"
+								class="w-30"
+							>
+								<el-option v-for="option in paymentOptions" :key="option.value" :label="option.label" :value="option.value" :disabled="option.disabled" />
+							</el-select>
+						</div>
+						<div class="text-gray-500">
+							<p>取貨通知：</p>
+							<p>
+								- 訂單到達超商七日內，每日皆會傳送取貨簡訊，並於第五日時撥打語音電話通知取貨哦！
+								<br />
+								- 現貨訂單狀態更改「已確認」後，2-3天寄出。 (不包含假日及國定假日)
+								<br />
+								<br />
+								- 本公司產品享7天鑑賞期，30天保固維修
+								<br />
+								- 免付費電話：0800 000 004
+								<br />
+								- 預購與現貨一併出貨
+							</p>
+						</div>
+					</section>
+				</section>
+				<!-- 優惠和小計區塊 -->
+				<aside class="md:w-1/3 flex flex-col gap-5 mt-5 md:mt-0">
+					<!-- 優惠區塊 -->
+					<div class="sticky top-0">
+						<div class="bg-white p-5 rounded-xl">
+							<h2 class="text-xl font-bold">已享用之優惠</h2>
+							<!-- 加載中提示 -->
+							<div v-if="loading" class="text-gray-500 text-center">載入中...</div>
 
-            <!-- 小計 -->
-            <div class="bg-white p-5 rounded-xl mt-5">
-              <h2 class="text-xl font-bold mb-2">訂單資訊</h2>
-              <h3 class="mb-4">商品項目：{{ itemCount }} 件</h3>
-              <div class="flex flex-col gap-3">
-                <div class="flex justify-between">
-                  <p>小計</p>
-                  <p>NT${{ itemPrice.toLocaleString() }}</p>
-                </div>
-                <div class="flex justify-between">
-                  <p>折扣</p>
-                  <p>-NT$94</p>
-                </div>
-                <div class="flex justify-between">
-                  <p>運費</p>
-                  <p>NT$60</p>
-                </div>
-                <hr />
-                <div class="flex justify-between">
-                  <p>合計</p>
-                  <p class="font-bold text-orange-500">NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </aside>
-      </section>
-    </section>
-    <!-- 前往結帳 -->
-    <section class="fixed bottom-0 w-full bg-white shadow-2xl">
-      <div class="flex gap-5 justify-end items-center m-5 max-w-[1365px]">
-        <p class="text-orange-500 font-bold">合計：NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
-        <button class="bg-black px-2 py-1 text-white rounded md:px-10" @click="goToNext">前往結帳</button>
-      </div>
-    </section>
-  </section>
+							<!-- 錯誤提示 -->
+							<div v-if="error" class="text-red-500 text-center">{{ error }}</div>
+
+							<!-- 無可用優惠券 -->
+							<!-- <div v-if="!loading && coupons.status !== available" class="text-gray-500 text-center">沒有可用的優惠券</div> -->
+							<!-- 之後串 API 了用這個 div 跑 v-for -->
+							<div v-if="validCoupon" class="flex items-start flex-col">
+								<p class="my-4 px-5 bg-green-100 text-center text-sm md:text-base">優惠促銷</p>
+								<p class="text-sm md:text-base">{{ validCoupon.name }} - 滿 {{ validCoupon.min_spend }} 元可用</p>
+								<div class="w-full flex justify-end">
+									<p class="text-sm md:text-base text-green-600 font-bold">-NT$ {{ validCoupon.discount_amount }}</p>
+								</div>
+							</div>
+						</div>
+
+						<!-- 小計 -->
+						<div class="bg-white p-5 rounded-xl mt-5">
+							<h2 class="text-xl font-bold mb-2">訂單資訊</h2>
+							<h3 class="mb-4">商品項目：{{ itemCount }} 件</h3>
+							<div class="flex flex-col gap-3">
+								<div class="flex justify-between">
+									<p>小計</p>
+									<p>NT${{ itemPrice.toLocaleString() }}</p>
+								</div>
+								<div v-if="validCoupon" class="flex justify-between">
+									<p>折扣</p>
+									<p>-NT$ {{ validCoupon.discount_amount }}</p>
+								</div>
+								<div class="flex justify-between">
+									<p>運費</p>
+									<p>NT$ {{ shippingFee }}</p>
+								</div>
+								<hr />
+								<div class="flex justify-between">
+									<p>合計</p>
+									<p class="font-bold text-orange-500">NT$ {{ totalAmount }}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</aside>
+			</section>
+		</section>
+		<!-- 前往結帳 -->
+		<section class="fixed bottom-0 w-full bg-white shadow-2xl">
+			<div class="flex gap-5 justify-end items-center m-5 max-w-[1365px]">
+				<p class="text-orange-500 font-bold">合計：$ {{ totalAmount }}</p>
+				<button class="bg-black px-2 py-1 text-white rounded md:px-10" @click="goToNext">前往結帳</button>
+			</div>
+		</section>
+	</section>
 </template>
 
 <style scoped>
 :deep(.el-step__title.is-finish) {
-  @apply text-orange-500 font-bold;
+	@apply text-orange-500 font-bold;
 }
 
 :deep(.el-step__description.is-finish) {
-  @apply text-orange-500;
+	@apply text-orange-500;
 }
 
 :deep(.el-step__head.is-finish) {
-  @apply text-orange-500 border-orange-500;
+	@apply text-orange-500 border-orange-500;
 }
 </style>
