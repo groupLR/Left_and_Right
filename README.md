@@ -23,7 +23,7 @@
 Clone the repository:
 
 ```sh
-git clone https://github.com/33test/clone-bonny.git
+git clone https://github.com/groupLR/Left_and_Right.git
 cd clone-bonny
 ```
 
