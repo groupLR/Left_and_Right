@@ -35,6 +35,8 @@ npm install
 
 ### Development
 
+Before you get started, setup your .env with .envexample
+
 To start a development server with hot-reload:
 
 ```sh
