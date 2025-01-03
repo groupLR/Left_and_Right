@@ -129,16 +129,34 @@ const submitOrder = async () => {
   }
 
   try {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/debit/orderInsert`, {
-      customerInfo: customer,
-      orderNote,
-      deliveryInfo: delivery,
-      isSharedCart: isSharedCart.value,
-      groupId: route.params.groupId,
-    })
+    const { data } = await axios.post(
+      `${import.meta.env.VITE_API_URL}/debit/orderInsert`,
+      {
+        customerInfo: customer,
+        deliveryInfo: delivery,
+        orderNote,
+        DeliverySite: selectedCountry,
+        DeliveryWay: selectedDelivery,
+        payWay: selectedPayment,
+        isSharedCart: isSharedCart.value,
+        groupId: route.params.groupId,
+      },
+      {
+        headers: {
+          userId,
+        },
+      }
+    )
 
-    ElMessage.success("訂單新增成功")
-    router.push("/MemberOrder")
+    // 處理綠界支付表單
+    if (data) {
+      document.open()
+      document.write(data)
+      document.close()
+      document.forms[0].submit()
+    }
+
+    return data
   } catch (error) {
     console.error("建立訂單失敗:", error)
     ElMessage.error("建立訂單失敗")
@@ -183,6 +201,7 @@ const initializeCartPage = async () => {
 onMounted(async () => {
   await initializeCartPage()
   await fetchuserInfo()
+  window.scrollTo(0, 0)
 })
 </script>
 
@@ -291,7 +310,7 @@ onMounted(async () => {
               <input type="text" v-model="formData.delivery.city" placeholder="城市/市鎮(必填)" class="w-full border rounded-md p-2 mb-2" />
               <div class="flex gap-2">
                 <input type="text" v-model="formData.delivery.postalCode" placeholder="郵政區號(必填)" class="w-1/2 border rounded-md p-2" />
-                <input type="text" v-model="formData.delivery.region" placeholder="地區/洲/省份(必填)" class="w-1/2 border rounded-md p-2" />
+                <input type="text" v-model="formData.delivery.region" placeholder="地區/洲/省份(必填) " class="w-1/2 border rounded-md p-2" />
               </div>
             </div>
           </form>

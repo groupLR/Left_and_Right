@@ -68,6 +68,10 @@ export const useCartStore = defineStore("cart", () => {
       value: "home-delivery",
       label: "宅配到府",
     },
+    {
+      value: "store-delivery",
+      label: "到店取貨",
+    },
   ])
 
   // 新增商品到購物車 API
