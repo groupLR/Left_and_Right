@@ -3,10 +3,16 @@ import { ref } from "vue"
 export const useUsersInformation = () => {
   const UID = localStorage.getItem("UID") // 從 localStorage 獲取用戶 ID
   const information = ref({}) // 用於儲存用戶資訊
+  const memberErrors = ref({}) // 用於儲存錯誤訊息
+  const deliverErrors = ref({})
 
   // 抓取用戶資訊
   const fetchInformation = async () => {
+    memberErrors.value = {}
+    deliverErrors.value = {}
     try {
+      memberErrors.value = {}
+      deliverErrors.value = {}
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/memberInformation?uid=${UID}`
       )
@@ -25,13 +31,16 @@ export const useUsersInformation = () => {
       }
     } catch (error) {
       console.error("請求失敗：", error)
-      alert("抓取用戶資料失敗。")
     }
   }
 
   // 更新用戶資訊
   const updateInformation = async (information) => {
-    console.log("要傳送的 information:", information)
+    //檢查輸入是否正確
+    if (!information.username || information.username.trim() === "") {
+      alert("使用者名稱不可為空")
+      return // 阻止請求發送
+    }
     try {
       const bodyData = {
         uid: UID,
@@ -54,11 +63,10 @@ export const useUsersInformation = () => {
         }
       )
       if (!res.ok) throw new Error("更新用戶資料失敗")
-      alert("資料已成功更新！") // 成功提示
       await fetchInformation() // 更新後重新抓取資料，確保畫面與資料庫同步
     } catch (error) {
       console.error("更新失敗：", error)
-      alert("更新用戶資料失敗，請稍後再試。")
+      alert("更新用戶資料失敗。")
     }
   }
 
@@ -72,7 +80,6 @@ export const useUsersInformation = () => {
 export const selected = async () => {
   const selectedValue = ref("") // 綁定的選中值
   const selectedText = ref("") // 選中選項的顯示文字
-
   const onChange = (event) => {
     selectedText.value = event.target.options[event.target.selectedIndex].text
     selectedValue.value = event.target.value // 更新 selectedValue
@@ -84,8 +91,40 @@ export const selected = async () => {
     onChange,
   }
 }
+
+// 驗證輸入資訊
+export const validateInformation = (event) => {
+  const memberErrors = {}
+  if (!event.username || event.username.trim() === "") {
+    memberErrors.username = "使用者名稱不可為空"
+  }
+  if (
+    !event.email ||
+    !/^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/.test(
+      event.email
+    )
+  ) {
+    memberErrors.email = "請輸入有效的電子郵件"
+  }
+  if (event.phone && !/^\d{10}$/.test(event.phone)) {
+    memberErrors.phone = "電話號碼必須為 10 位數字"
+  }
+  if (event.mobile_phone && !/^\d{10}$/.test(event.mobile_phone)) {
+    memberErrors.mobile_phone = "手機號碼必須為 10 位數字"
+  }
+  if (event.birthday) {
+    const today = new Date() // 取得今天的日期
+    const inputDate = new Date(event.birthday)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(event.birthday)) {
+      memberErrors.birthday = "請輸入有效的生日"
+    } else if (inputDate > today) {
+      memberErrors.birthday = "請輸入有效的生日"
+    }
+  }
+  return memberErrors // 回傳錯誤
+}
+
 export const onlyNum = () => {
-  // 不需要重新創建 information，可以使用父組件的 information
   const validateNumber = (event) => {
     const value = event.target.value
     // 使用正則表達式替換非數字字符

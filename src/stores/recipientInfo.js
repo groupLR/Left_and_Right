@@ -2,7 +2,6 @@ import { ref } from "vue"
 
 export const useDeliverInfo = () => {
   const UID = localStorage.getItem("UID")
-  console.log(UID)
   const deliverInfo = ref({})
   const fetchDeliverInfo = async () => {
     try {
@@ -17,7 +16,6 @@ export const useDeliverInfo = () => {
     }
   }
   const updateDeliverInfo = async (deliverInfo) => {
-    console.log("要傳送的 deliverInfo:", deliverInfo)
     try {
       const bodyData = {
         uid: UID,
@@ -27,7 +25,6 @@ export const useDeliverInfo = () => {
         country: deliverInfo.country,
         city: deliverInfo.city,
         region: deliverInfo.region,
-        address: deliverInfo.address,
       }
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/updateDeliverInfo`,
@@ -40,11 +37,9 @@ export const useDeliverInfo = () => {
         }
       )
       if (!res.ok) throw new Error("更新配送資料失敗")
-      alert("資料已成功更新！")
       await fetchDeliverInfo()
     } catch (error) {
       console.error("更新失敗：", error)
-      alert("更新配送資料失敗，請稍後再試。")
     }
   }
   return {
@@ -52,4 +47,15 @@ export const useDeliverInfo = () => {
     fetchDeliverInfo,
     updateDeliverInfo,
   }
+}
+
+export const validateRecipient = (event) => {
+  const deliverErrors = {}
+  if (event.phone && !/^\d{10}$/.test(event.phone)) {
+    deliverErrors.phone = "電話號碼必須為 10 位數字"
+  }
+  if (event.recipient_phone && !/^\d{10}$/.test(event.recipient_phone)) {
+    deliverErrors.recipient_phone = "手機號碼必須為 10 位數字"
+  }
+  return deliverErrors // 回傳錯誤
 }
