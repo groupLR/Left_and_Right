@@ -3,7 +3,7 @@ import axios from "axios"
 import vueDanmaku from "vue3-danmaku"
 import { useRoute, useRouter } from "vue-router"
 import { onMounted, ref, computed, watch, onUnmounted } from "vue"
-import { ElMessage, emitChangeFn } from "element-plus"
+import { ElMessage } from "element-plus"
 import { useSharedCartStore } from "@/stores/sharedCart"
 import AddMember from "@/components/AddMember.vue"
 import Warning from "@/components/Warning.vue"
@@ -25,6 +25,11 @@ const sharedCartMembers = ref([]) // 共享購物車成員
 const userId = localStorage.getItem("UID")
 const userName = ref("")
 const danmus = ref([])
+const copyDialogToggle = ref(false)
+const selectMemberDialogToggle = ref(false)
+const selectedMembers = ref([])
+// 購物車完整路徑(共享購物車複製網址、發 Email 用)
+const fullUrl = window.location.origin + router.currentRoute.value.fullPath
 
 // 送貨表單
 const selectedCountry = ref("TW")
@@ -103,6 +108,32 @@ const itemPrice = computed(() => {
 })
 
 // method
+
+// 複製路徑
+const copyPath = async () => {
+  await navigator.clipboard.writeText(`${fullUrl}`)
+  ElMessage.success("網址複製成功")
+}
+
+// 發送 Email 選擇框
+const sendEmail = async () => {
+  selectMemberDialogToggle.value = true
+}
+
+// 確認發送 Email
+const handleConfirm = async () => {
+  try {
+    await SharedCartStore.sendMail(fullUrl, selectedMembers.value, userName.value)
+    ElMessage.success("邀請發送成功")
+    selectedMembers.value = []
+    selectMemberDialogToggle.value = false
+    copyDialogToggle.value = false
+  } catch (err) {
+    console.error("送信失敗", err)
+    ElMessage.error("送信失敗，請稍候再試")
+  }
+}
+
 // 獲取使用者本人名稱
 const fetchuserName = async () => {
   try {
@@ -167,7 +198,7 @@ const deleteProductFromCart = async (payload) => {
     }
   } else {
     try {
-      await deleteProduct(id)
+      await deleteProduct(payload.id)
     } catch (err) {
       ElMessage.error({
         message: "從購物車刪除商品失敗",
@@ -324,6 +355,33 @@ onUnmounted(() => {
 })
 </script>
 <template>
+  <div>
+    <el-dialog class="w-[90%] md:[30%]" v-model="copyDialogToggle" title="請選擇分享方式">
+      <div class="flex flex-col items-center">
+        <button class="bg-[#0f4662] text-white w-[50%] p-2 m-2 rounded" @click="sendEmail">透過 Email 邀請</button>
+        <button class="border-2 w-[50%] p-2 m-2 rounded" @click="copyPath">複製網址</button>
+      </div>
+    </el-dialog>
+  </div>
+  <div>
+    <el-dialog v-model="selectMemberDialogToggle" title="選擇要發 Email 給哪個購朋友">
+      <el-scrollbar height="200px">
+        <el-checkbox-group v-model="selectedMembers">
+          <div v-for="(member, index) in sharedCartMembers" :key="index">
+            <el-checkbox :value="member" :label="member">
+              {{ member }}
+            </el-checkbox>
+          </div>
+        </el-checkbox-group>
+      </el-scrollbar>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="selectMemberDialogToggle = false">取消</el-button>
+          <el-button type="primary" @click="handleConfirm">確認</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
   <div class="fixed top-10 w-full z-[100] pointer-events-none">
     <vue-danmaku v-if="isSharedCart" v-model:danmus="danmus" :speeds="100" :channels="5" class="h-[100px] w-full" />
   </div>
@@ -333,7 +391,7 @@ onUnmounted(() => {
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
             <h1 class="text-2xl font-bold">共享購物車</h1>
-            <button>
+            <button @click="copyDialogToggle = true">
               <i class="fa-solid fa-arrow-up-right-from-square align-center"></i>
             </button>
           </div>
