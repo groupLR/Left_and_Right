@@ -56,6 +56,8 @@ onMounted(async () => {
     webSocketService.connect()
     // 取得使用者名稱
     await fetchuserName()
+    // 取得願望清單狀態
+    fetchWishlist()
   }
 
   initializeSwiper()
@@ -84,6 +86,7 @@ const profile = ref("")
 const mainImgs = ref([])
 const desImgs = ref([])
 const productId = ref(0)
+
 const getImageUrl = (imagePath) => {
   if (!imagePath || typeof imagePath !== "string") return ""
   const cleanedPath = imagePath.startsWith("./") ? imagePath.slice(1) : imagePath
@@ -283,6 +286,48 @@ const refreshSharedCartList = async () => {
   }))
   dialogToggle.value = true
 }
+//追蹤清單
+const wishlist = ref([])
+//檢查這個商品是不是已經在願望清單裡ㄌ
+const fetchWishlist = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/wishlist/${userId}`)
+    wishlist.value = response.data.data // API 回傳的 `data` 陣列
+  } catch (error) {
+    console.error("無法取得願望清單：", error.response || error.message)
+    wishlist.value = []
+  }
+}
+const isInWishlist = computed(() => {
+  return wishlist.value.some((item) => item.wishlists_products_id === Number(productId.value))
+})
+//加入刪除願望清單ㄉ方法
+const toggleWishlist = async () => {
+  if (isInWishlist.value) {
+    try {
+      const wishlistItem = wishlist.value.find((item) => item.wishlists_products_id === Number(productId.value))
+      if (!wishlistItem) return
+      await axios.delete(`${API_URL}/wishlist/delete/${wishlistItem.id}`)
+      wishlist.value = wishlist.value.filter((item) => item.id !== wishlistItem.id)
+      ElMessage.success("已從願望清單移除")
+    } catch (error) {
+      console.error("無法移除商品：", error.response || error.message)
+      ElMessage.error("移除失敗")
+    }
+  } else {
+    try {
+      const response = await axios.post(`${API_URL}/wishlist`, {
+        wishlists_members_id: userId,
+        wishlists_products_id: Number(productId.value),
+      })
+      wishlist.value.push(response.data.data)
+      ElMessage.success("已加入願望清單")
+    } catch (error) {
+      console.error("無法加入商品：", error.response || error.message)
+      ElMessage.error("加入失敗")
+    }
+  }
+}
 //評論頁
 const props = defineProps({
   productId: {
@@ -308,7 +353,7 @@ const props = defineProps({
     <div v-else>
       <el-dialog v-model="dialogToggle" title="選擇共享購物車">
         <el-checkbox-group v-model="selectedCarts">
-          <div v-for="cart in sharedCartNames" :key="cart.id" class="cart-item">
+          <div v-for="cart in sharedCartNames" :key="cart.id">
             <el-checkbox :value="cart.id" :label="cart.name">
               {{ cart.name }}
             </el-checkbox>
@@ -413,7 +458,9 @@ const props = defineProps({
             </button>
           </div>
           <div class="mx-auto my-5 flex justify-center text-sm hover:cursor-pointer">
-            <p :class="{ active: isSubscribe }" @click="toggleHeart" :style="heartColor"><i class="fa-regular fa-heart mr-1"></i>加入追蹤清單</p>
+            <p :class="{ active: isSubscribe }" @click="toggleWishlist">
+              <i :class="isInWishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>加入追蹤清單
+            </p>
           </div>
           <div class="promotionalContainer relative mx-5 mt-5">
             <p class="mx-[7px] text-sm pl-[10px]">
