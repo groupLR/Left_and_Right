@@ -4,6 +4,14 @@ import axios from "axios"
 import MemberNavbar from "../components/MemberNavbar.vue"
 import MemberEmpty from "../components/MemberEmpty.vue"
 import LogOut from "@/components/Logout.vue"
+import { ElMessage } from "element-plus"
+import { storeToRefs } from "pinia"
+import { useCartStore } from "@/stores/cart"
+import { useSharedCartStore } from "@/stores/sharedCart"
+const SharedCartStore = useSharedCartStore()
+const CartStore = useCartStore()
+const { sharedCartList } = storeToRefs(SharedCartStore)
+import AddSharedCart from "@/components/AddSharedCart.vue"
 
 const API_URL = import.meta.env.VITE_API_URL
 const userId = localStorage.getItem("UID")
@@ -36,9 +44,98 @@ const removeItem = async (id) => {
     console.error("刪除失敗", error)
   }
 }
+
+// 加入購物車
+const handleAddToCart = async (productId) => {
+  await CartStore.addProduct(productId, 1)
+  ElMessage.success("新增成功")
+}
+
+// 共享購物車相關
+const selectedCarts = ref([])
+const dialogToggle = ref(false)
+const sharedCartNames = ref([])
+const seletedProduct = ref(null)
+
+// 顯示共享購物車列表
+const showDialog = async (productId) => {
+  dialogToggle.value = true
+  await SharedCartStore.fetchSharedCartList(userId)
+  sharedCartNames.value = sharedCartList.value.map((cart) => ({
+    id: cart.id,
+    name: cart.name || `您與 ${cart.member[0]} 與其他 ${cart.member.length - 1} 人共享的購物車`,
+  }))
+  selectedCarts.value = []
+  seletedProduct.value = productId
+}
+
+// 處理確認加入共享購物車按鈕點擊
+const handleConfirm = async () => {
+  if (selectedCarts.value.length === 0) {
+    ElMessage.warning("請至少選擇一個購物車")
+    return
+  }
+
+  try {
+    // 使用 Promise.all 等待所有操作完成
+    await Promise.all(
+      selectedCarts.value.map(async (cartId) => {
+        // 先加入購物車
+        console.log(seletedProduct.value)
+
+        await SharedCartStore.addProductToSharedCart(cartId, seletedProduct.value, 1)
+      })
+    )
+
+    // 所有操作完成後才關閉對話框和顯示成功訊息
+    dialogToggle.value = false
+    ElMessage.success(`成功把商品加入 ${selectedCarts.value.length} 個共享購物車`)
+  } catch (error) {
+    console.error("加入共享購物車失敗:", error)
+    ElMessage.error("加入共享購物車失敗")
+  }
+}
+
+// 創建共享購物車後重新取得列表
+const refreshSharedCartList = async () => {
+  await SharedCartStore.fetchSharedCartList(userId)
+  sharedCartNames.value = sharedCartList.value.map((cart) => ({
+    id: cart.id,
+    name: cart.name || `您與 ${cart.member[0]} 與其他 ${cart.member.length - 1} 人共享的購物車`,
+  }))
+  dialogToggle.value = true
+}
 </script>
 
 <template>
+  <!-- 共享購物車選擇對話框 -->
+  <div v-if="sharedCartList.length === 0">
+    <el-dialog v-model="dialogToggle" title="您還沒有共享購物車" width="30%">
+      <AddSharedCart @createdSharedCart="refreshSharedCartList" />
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogToggle = false">取消</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
+  <div v-else>
+    <el-dialog v-model="dialogToggle" title="選擇共享購物車">
+      <el-checkbox-group v-model="selectedCarts">
+        <div v-for="cart in sharedCartNames" :key="cart.id">
+          <el-checkbox :value="cart.id" :label="cart.name">
+            {{ cart.name }}
+          </el-checkbox>
+        </div>
+      </el-checkbox-group>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogToggle = false">取消</el-button>
+          <el-button type="primary" @click="handleConfirm">確認</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
   <LogOut />
   <MemberNavbar />
   <div class="wishlistMain mx-auto p-10">
@@ -87,10 +184,8 @@ const removeItem = async (id) => {
           <p class="salePrice">NT${{ item.products.sale_price }}</p>
         </div>
         <div class="commodityStatus col-span-2 px-[15px] text-[12px]">
-          <button class="btn" v-if="item.products.status == 1">加入購物車</button>
-          <button class="btn mt-[10px]" v-if="item.products.status == 1">
-            <font-awesome-icon style="color: aliceblue" class="shoppingBag h-[16px] w-[16px] mr-[2px]" :icon="['fas', 'bag-shopping']" />立即結帳
-          </button>
+          <button class="btn" v-if="item.products.status == 1" @click="handleAddToCart(item.wishlists_products_id)">加入購物車</button>
+          <button class="btn mt-[10px]" v-if="item.products.status == 1" @click="showDialog(item.wishlists_products_id)">加入共享購物車</button>
           <p v-else>無法購買</p>
         </div>
         <div class="commodityDelete col-span-1 px-[15px]">
