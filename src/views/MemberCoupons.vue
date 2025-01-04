@@ -38,6 +38,7 @@ import LogOut from "@/components/Logout.vue"
 const userId = localStorage.getItem("UID")
 import { ref, onMounted } from "vue"
 import { ElMessage } from "element-plus"
+import axios from "axios"
 // 儲存優惠券
 const coupons = ref([])
 const couponCode = ref("")
@@ -46,7 +47,7 @@ const couponCode = ref("")
 const submitCoupon = async () => {
 	try {
 		// 先通過優惠券代碼查詢對應的優惠券 ID
-		const fetchIdResponse = await fetch(`${import.meta.env.VITE_API_URL}/coupon/code-to-id`, {
+		const fetchIdResponse = await axios.post(`${import.meta.env.VITE_API_URL}/coupon/code-to-id`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -107,7 +108,7 @@ const fetchCoupons = async () => {
 //領取優惠券
 const claimed = async (couponId) => {
 	try {
-		const response = await fetch(`${import.meta.env.VITE_API_URL}/coupon/${couponId}/claim`, {
+		const response = await axios.post(`${import.meta.env.VITE_API_URL}/coupon/${couponId}/claim`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -197,7 +198,7 @@ onMounted(() => {
 	z-index: 0;
 }
 .couponCodeBtn {
-	cursor: pointer !important;
+	cursor: pointer;
 	background-color: #fff;
 	padding: 5px 16px 5px 16px;
 	border-radius: 10px;

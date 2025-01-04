@@ -281,8 +281,7 @@ watch(
 
 // 儲存優惠券
 const coupons = ref([])
-// 加載狀態
-const loading = ref(true)
+
 // 錯誤訊息
 const error = ref(null)
 // 運費
@@ -293,14 +292,9 @@ const available = "available"
 
 // 獲取有效優惠券
 const validCoupon = computed(() => {
-	if (loading.value || error.value) return null // 加載中或錯誤時不篩選
-
-	const availableCoupons = coupons.value.filter((coupon) => coupon.status === "available" && itemPrice.value >= coupon.min_spend)
-	console.log("可用優惠券:", availableCoupons) // 印出可用的優惠券
-
-	// 檢查可用優惠券的長度
+	const availableCoupons = coupons.value.filter((coupon) => coupon.status === available)
 	if (availableCoupons.length > 0) {
-		availableCoupons.sort((a, b) => b.discount_amount - a.discount_amount)
+		availableCoupons.sort((a, b) => b.available - a.available)
 		return availableCoupons[0] // 透過排序優惠較高的價格後，返回第一個有效優惠券
 	}
 	return null // 如果沒有有效優惠券，返回 null
@@ -308,7 +302,6 @@ const validCoupon = computed(() => {
 
 // 計算合計金額
 const totalAmount = computed(() => {
-	if (loading.value) return "計算中..." // 加載中
 	if (error.value) return "發生錯誤，無法計算金額" // 發生錯誤
 
 	const discount = validCoupon.value ? validCoupon.value.discount_amount : 0
@@ -321,31 +314,21 @@ const uid = localStorage.getItem("UID")
 
 const fetchCoupons = async () => {
 	if (!uid) {
-		// console.error("UID 不存在於 localStorage")
 		error.value = "UID 不存在於 localStorage"
-		loading.value = false
 		return
 	}
 
 	try {
-		const response = await fetch(`${import.meta.env.VITE_API_URL}/coupon/user/${uid}`)
-		if (!response.ok) {
-			throw new Error(`伺服器返回錯誤狀態: ${response.status}`)
-		}
-		const data = await response.json()
-		coupons.value = data // 更新數據到 coupons
+		const response = await axios.get(`${import.meta.env.VITE_API_URL}/coupon/user/${uid}`)
+		coupons.value = response.data
 	} catch (err) {
 		console.error("獲取優惠券失敗:", err.message)
 		error.value = err.message // 儲存錯誤訊息
-	} finally {
-		loading.value = false // 結束加載狀態
 	}
 }
 
 // 在組件掛載時獲取優惠券資料
 fetchCoupons()
-
-// console.log("UID in localStorage:", localStorage.getItem("UID"))
 </script>
 <template>
 	<section class="bg-gray-100 pb-[150px]">
@@ -458,15 +441,11 @@ fetchCoupons()
 					<div class="sticky top-0">
 						<div class="bg-white p-5 rounded-xl">
 							<h2 class="text-xl font-bold">已享用之優惠</h2>
-							<!-- 加載中提示 -->
-							<div v-if="loading" class="text-gray-500 text-center">載入中...</div>
-
 							<!-- 錯誤提示 -->
 							<div v-if="error" class="text-red-500 text-center">{{ error }}</div>
 
 							<!-- 無可用優惠券 -->
-							<!-- <div v-if="!loading && coupons.status !== available" class="text-gray-500 text-center">沒有可用的優惠券</div> -->
-							<!-- 之後串 API 了用這個 div 跑 v-for -->
+
 							<div v-if="validCoupon" class="flex items-start flex-col">
 								<p class="my-4 px-5 bg-green-100 text-center text-sm md:text-base">優惠促銷</p>
 								<p class="text-sm md:text-base">{{ validCoupon.name }} - 滿 {{ validCoupon.min_spend }} 元可用</p>
