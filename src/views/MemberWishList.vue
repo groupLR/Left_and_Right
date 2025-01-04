@@ -35,11 +35,9 @@ onMounted(async () => {
   }
 })
 const removeItem = async (id) => {
-  console.log(`刪除項目 ID: ${id}`)
   try {
     await axios.delete(`${API_URL}/wishlist/delete/${id}`)
     wishlists.value = wishlists.value.filter((item) => item.id !== id)
-    console.log(`刪除成功: ${id}`)
   } catch (error) {
     console.error("刪除失敗", error)
   }
@@ -81,8 +79,6 @@ const handleConfirm = async () => {
     await Promise.all(
       selectedCarts.value.map(async (cartId) => {
         // 先加入購物車
-        console.log(seletedProduct.value)
-
         await SharedCartStore.addProductToSharedCart(cartId, seletedProduct.value, 1)
       })
     )
