@@ -138,11 +138,6 @@ const router = createRouter({
       },
     },
     {
-      path: "/OrderDetails",
-      name: "OrderDetails",
-      component: () => import("../views/OrderDetails.vue"),
-    },
-    {
       path: "/products/:productId",
       name: "products-detail(連後端)",
       component: () => import("../views/ProductDetail.vue"),
@@ -176,6 +171,26 @@ const router = createRouter({
       meta: {
         requireAuth: true,
       },
+    },
+    {
+      path: "/Debit/:groupId",
+      name: "SharedCartDebit/Group",
+      component: () => import("../views/Debit.vue"),
+      meta: {
+        requireAuth: true,
+      },
+    },
+    {
+      path: "/OrderDetails/:pu_id",
+      name: "OrderDetails",
+      component: () => import("../views/OrderDetails.vue"),
+      props: true,
+    },
+    {
+      path: "/product_review_comments/:pu_id",
+      name: "product_review_comments",
+      component: () => import("../views/product_review_comments.vue"),
+      props: true,
     },
   ],
 })

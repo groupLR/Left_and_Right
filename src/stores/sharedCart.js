@@ -114,7 +114,7 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
   // 更新購物車內的商品數量
   const updateProductQtyToSharedCart = async (groupId, productId, totalQty) => {
     try {
-      const { data } = axios.put(`${import.meta.env.VITE_API_URL}/sharedCart/updateProductQty/${groupId}`, {
+      const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/sharedCart/updateProductQty/${groupId}`, {
         productId,
         totalQty,
       })
@@ -140,6 +140,20 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
     }
   }
 
+  const sendMail = async (fullUrl, sendTo, sentBy) => {
+    try {
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/sendMail`, {
+        fullUrl,
+        sendTo,
+        sentBy,
+      })
+      return data
+    } catch (err) {
+      console.log("發 Mail 失敗", err)
+      throw err
+    }
+  }
+
   return {
     sharedCartList,
     fetchSharedCartList,
@@ -152,5 +166,6 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
     addProductToSharedCart,
     updateProductQtyToSharedCart,
     deleteProductInSharedCart,
+    sendMail,
   }
 })
