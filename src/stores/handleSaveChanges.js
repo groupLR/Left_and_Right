@@ -10,7 +10,6 @@ export const handleSaveChanges = (information, deliverInfo) => {
     updateInformation(information)
     // 更新送貨資訊
     updateDeliverInfo(deliverInfo)
-    console.log("資料更新成功")
   } catch (error) {
     console.error("更新資料時發生錯誤：", error)
   }

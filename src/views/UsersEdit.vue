@@ -182,24 +182,6 @@ const cancelChanges = () => {
             <h2 class="font-extrabold">
               <i class="fa-solid fa-circle-user pr-2.5"></i>送貨與付款資料
             </h2>
-            <div class="cellphone">
-              <label for="">聯絡電話(選填)</label>
-              <select>
-                <option value="" selected class="text-xs">+886</option>
-              </select>
-              <input
-                type="text"
-                v-model="deliverInfo.phone"
-                @input="validateNumber"
-                maxlength="10"
-                :placeholder="deliverInfo.phone === null ? '未填寫' : ''"
-                @blur="validateDeliverField('phone')"
-                :class="{ 'is-invalid': deliverErrors.phone }"
-              />
-              <p v-if="deliverErrors.phone" class="error">
-                {{ deliverErrors.phone }}
-              </p>
-            </div>
             <div class="address">
               <p>儲存的地址(選填)</p>
               <div class="addressRightArea">
@@ -288,12 +270,6 @@ const cancelChanges = () => {
                 </ul>
               </div>
             </div>
-            <!-- <div class="creditCard">
-              <p>信用卡</p>
-              <div class="creditCardRightArea">
-                <p class="text-blue-600">新增信用卡</p>
-              </div>
-            </div> -->
           </div>
           <div class="btnArea">
             <button @click="cancelChanges">取消</button>

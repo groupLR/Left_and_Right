@@ -1,3 +1,5 @@
+import axios from "axios"
+import { ElMessage } from "element-plus"
 import { ref } from "vue"
 
 export const useUsersInformation = () => {
@@ -11,24 +13,19 @@ export const useUsersInformation = () => {
     memberErrors.value = {}
     deliverErrors.value = {}
     try {
-      memberErrors.value = {}
-      deliverErrors.value = {}
-      const res = await fetch(
+      const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/memberInformation?uid=${UID}`
       )
-      if (!res.ok) throw new Error("無法獲取用戶資料")
-      const data = await res.json()
+      const data = res.data // Axios 的結果直接是資料
       information.value = data
+
+      // 格式化日期和轉換數字為字符串
       if (data.birthday) {
         const date = new Date(data.birthday)
-        data.birthday = date.toISOString().split("T")[0] // 轉換為 yyyy-MM-dd 格式
+        data.birthday = date.toISOString().split("T")[0]
       }
-      if (data.phone) {
-        data.phone = data.phone.toString()
-      }
-      if (data.mobile_phone) {
-        data.mobile_phone = data.mobile_phone.toString()
-      }
+      if (data.phone) data.phone = data.phone.toString()
+      if (data.mobile_phone) data.mobile_phone = data.mobile_phone.toString()
     } catch (error) {
       console.error("請求失敗：", error)
     }
@@ -36,10 +33,9 @@ export const useUsersInformation = () => {
 
   // 更新用戶資訊
   const updateInformation = async (information) => {
-    //檢查輸入是否正確
     if (!information.username || information.username.trim() === "") {
-      alert("使用者名稱不可為空")
-      return // 阻止請求發送
+      ElMessage("使用者名稱不可為空")
+      return
     }
     try {
       const bodyData = {
@@ -52,21 +48,15 @@ export const useUsersInformation = () => {
         from_store: information.from_store,
         introduced_by: information.introduced_by,
       }
-      const res = await fetch(
+      const res = await axios.put(
         `${import.meta.env.VITE_API_URL}/updateInformation`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(bodyData), // 傳送 UID 和更新的資料
-        }
+        bodyData // 將資料作為第二個參數傳遞
       )
-      if (!res.ok) throw new Error("更新用戶資料失敗")
-      await fetchInformation() // 更新後重新抓取資料，確保畫面與資料庫同步
+      if (res.status !== 200) throw new Error("更新用戶資料失敗")
+      await fetchInformation() // 更新成功後重新抓取資料
     } catch (error) {
       console.error("更新失敗：", error)
-      alert("更新用戶資料失敗。")
+      ElMessage.error("更新用戶資料失敗")
     }
   }
 
