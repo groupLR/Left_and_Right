@@ -132,62 +132,63 @@ const refreshSharedCartList = async () => {
       </template>
     </el-dialog>
   </div>
-  <LogOut />
   <MemberNavbar />
-  <div class="wishlistMain mx-auto p-10">
+  <div class="wishlistMain mx-auto">
     <MemberEmpty v-if="wishlists.length === 0" />
-    <div v-else>
-      <div class="wishlistTitle grid grid-cols-12 items-center border-b pb-2 text-[12px] font-semibold">
-        <div class="col-span-2 px-[15px]">
-          <p>商品圖</p>
+    <div v-else class="lg:px-10">
+      <div class="wishlistMain mx-auto p-10">
+        <div class="wishlistTitle grid grid-cols-12 items-center border-b pb-2 text-[12px] font-semibold">
+          <div class="col-span-2 px-[15px]">
+            <p>商品圖</p>
+          </div>
+          <div class="col-span-4 px-[15px]">
+            <p>商品資訊</p>
+          </div>
+          <div class="col-span-3 px-[15px]">
+            <p>價格</p>
+          </div>
+          <div class="col-span-2 px-[15px]">
+            <p>狀態</p>
+          </div>
+          <div class="col-span-1 px-[15px]">
+            <p>刪除</p>
+          </div>
         </div>
-        <div class="col-span-4 px-[15px]">
-          <p>商品資訊</p>
-        </div>
-        <div class="col-span-3 px-[15px]">
-          <p>價格</p>
-        </div>
-        <div class="col-span-2 px-[15px]">
-          <p>狀態</p>
-        </div>
-        <div class="col-span-1 px-[15px]">
-          <p>刪除</p>
-        </div>
-      </div>
-      <div
-        v-for="item in wishlists"
-        :key="item.id"
-        class="commodityList grid grid-cols-12 items-center border-b py-[15px] mx-[-10px] bg-white hover:bg-[#F5F5F5]"
-      >
-        <div class="commodityImg col-span-2 px-[15px]">
-          <router-link :to="{ name: 'products-detail(連後端)', params: { productId: item.products.product_id } }">
-            <img
-              v-if="item.products.product_images.length > 0"
-              :src="getImageUrl(item.products.product_images[0].image_path)"
-              :alt="item.products.product_images[0].alt_text || '商品圖片'"
-              class="aspect-square object-cover"
-            />
-          </router-link>
-        </div>
-        <div class="commodityName col-span-4 px-[15px]">
-          <p>{{ item.products.product_name }}</p>
-          <p class="shape">
-            {{ item.products.product_specs[0].spec_value }}
-          </p>
-        </div>
-        <div class="commodityPrice col-span-3 px-[15px] text-[12px]">
-          <p class="originalPrice">NT${{ item.products.original_price }}</p>
-          <p class="salePrice">NT${{ item.products.sale_price }}</p>
-        </div>
-        <div class="commodityStatus col-span-2 px-[15px] text-[12px]">
-          <button class="btn" v-if="item.products.status == 1" @click="handleAddToCart(item.wishlists_products_id)">加入購物車</button>
-          <button class="btn mt-[10px]" v-if="item.products.status == 1" @click="showDialog(item.wishlists_products_id)">加入共享購物車</button>
-          <p v-else>無法購買</p>
-        </div>
-        <div class="commodityDelete col-span-1 px-[15px]">
-          <p>
-            <font-awesome-icon :icon="['fas', 'trash']" class="cursor-pointer" @click="removeItem(item.id)" />
-          </p>
+        <div
+          v-for="item in wishlists"
+          :key="item.id"
+          class="commodityList grid grid-cols-12 items-center border-b py-[15px] mx-[-10px] bg-white hover:bg-[#F5F5F5]"
+        >
+          <div class="commodityImg col-span-2 px-[15px]">
+            <router-link :to="{ name: 'products-detail(連後端)', params: { productId: item.products.product_id } }">
+              <img
+                v-if="item.products.product_images.length > 0"
+                :src="getImageUrl(item.products.product_images[0].image_path)"
+                :alt="item.products.product_images[0].alt_text || '商品圖片'"
+                class="aspect-square object-cover"
+              />
+            </router-link>
+          </div>
+          <div class="commodityName col-span-4 px-[15px]">
+            <p>{{ item.products.product_name }}</p>
+            <p class="shape">
+              {{ item.products.product_specs[0].spec_value }}
+            </p>
+          </div>
+          <div class="commodityPrice col-span-3 px-[15px] text-[12px]">
+            <p class="originalPrice">NT${{ item.products.original_price }}</p>
+            <p class="salePrice">NT${{ item.products.sale_price }}</p>
+          </div>
+          <div class="commodityStatus col-span-2 px-[15px] text-[12px]">
+            <button class="btn" v-if="item.products.status == 1" @click="handleAddToCart(item.wishlists_products_id)">加入購物車</button>
+            <button class="btn mt-[10px]" v-if="item.products.status == 1" @click="showDialog(item.wishlists_products_id)">加入共享購物車</button>
+            <p v-else>無法購買</p>
+          </div>
+          <div class="commodityDelete col-span-1 px-[15px]">
+            <p>
+              <font-awesome-icon :icon="['fas', 'trash']" class="cursor-pointer" @click="removeItem(item.id)" />
+            </p>
+          </div>
         </div>
       </div>
     </div>
