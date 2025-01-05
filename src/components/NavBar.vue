@@ -7,18 +7,14 @@ import { RouterLink } from "vue-router"
 import { useRouter } from "vue-router"
 import { storeToRefs } from "pinia"
 
+const router = useRouter()
 const exchangeRateStore = useExchangeRateStore()
 const { rates, selectedCurrency } = storeToRefs(exchangeRateStore)
 const searchKeyword = ref("")
 const isVisible = ref(false)
-const changeLanguageOpen = ref(false)
 const moneyOpen = ref(false)
-const router = useRouter()
-
 const isLoggedIn = ref(!!localStorage.getItem("UID"))
 const categories = ref([])
-const languages = ref(["繁體中文", "English"])
-const selectedLanguage = ref("繁體中文")
 const showSidebar = ref(false)
 
 // 搜尋
@@ -38,10 +34,7 @@ const inputShow = () => {
   isVisible.value = !isVisible.value
 }
 
-// 開啟sidebar語言、幣種
-const openChangeLanguage = () => {
-  changeLanguageOpen.value = !changeLanguageOpen.value
-}
+// 開啟sidebar幣種
 const openMoney = () => {
   moneyOpen.value = !moneyOpen.value
 }
@@ -98,14 +91,6 @@ onMounted(() => {
             <select class="hidden text-black outline-none cursor-pointer xl:block hover:text-gray-500" v-model="selectedCurrency">
               <option :value="rate.currency" v-for="rate in rates" :key="rate.currency">{{ rate.symbol }} {{ rate.currency }}</option>
             </select>
-          </li>
-          <li class="mx-3">
-            <div class="hidden text-black cursor-pointer xl:block hover:text-gray-500">
-              <font-awesome-icon class="globe-icon" :icon="['fas', 'globe']" />
-              <select class="text-black outline-none cursor-pointer hover:text-gray-500" v-model="selectedLanguage">
-                <option v-for="language in languages" :value="language" :key="language" @click="selectedLanguage == language">{{ language }}</option>
-              </select>
-            </div>
           </li>
           <!-- 搜尋框 -->
           <li class="mx-3 xl:hidden" @click="inputShow">
