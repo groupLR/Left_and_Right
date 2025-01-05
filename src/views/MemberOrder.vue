@@ -186,9 +186,10 @@ onMounted(async () => {
 		display: none;
 	}
 	.orderTable tbody td {
-		margin: 0 40px;
+		margin: auto;
 		display: block;
 		border: 1px solid #ddd;
+		width: 80%;
 	}
 	.last {
 		margin-bottom: 20px !important ;

@@ -89,7 +89,7 @@ const submitComment = async () => {
 					<div class="w-1/5 commodityImg px-[15px]">
 						<img :src="getImageUrl(product.image_paths[0])" alt="商品圖片" />
 					</div>
-					<div class="w-4/5">
+					<div class="w-4/5 commodityContent">
 						<div>
 							<h5 class="font-semibold text-[14px]">
 								{{ product.product_name }}
@@ -143,7 +143,8 @@ const submitComment = async () => {
 	float: left;
 }
 .commodityImg img {
-	max-width: 195px;
+	max-width:auto;
+	min-height:195px;
 	aspect-ratio: 1 / 1;
 	object-fit: cover;
 }
@@ -178,6 +179,26 @@ textarea {
 		flex-direction: column-reverse;
 		padding: 10px 15px;
 	}
+	.commodityImformation{
+		display: flex;
+		flex-direction: column;
+	}
+	.commodityImg{
+		width: 100%;
+		padding: 0;
+	}
+	.commodityImg img{
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		padding: 0;
+		margin: 0;
+	}
+	.commodityContent{
+		width: 100%;
+		padding: 15px;
+		padding-top: 0;
+	}
 	.awaitingComment {
 		width: 100%;
 		padding: 15px;
@@ -188,6 +209,7 @@ textarea {
 		padding: 15px;
 		padding-top: 0;
 	}
+
 }
 @media (max-width: 320px) {
 	.commodityImformation {

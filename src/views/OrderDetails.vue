@@ -74,10 +74,12 @@ onMounted(async () => {
 						</div>
 						<div v-for="product in productInfo" :key="product.product_id" class="itemsCard">
 							<div class="itemsName">
-								<img :src="getImageUrl(product.image_path.image_path)" alt="商品圖片" />
-								{{ product.product_name }}
-								<p>Silver / 銀色</p>
-								<p>內圍直徑 1.7cm (#12)</p>
+								<router-link :to="{ name: 'products-detail(連後端)', params: { productId: product.product_id } }">
+									<img :src="getImageUrl(product.image_path.image_path)" alt="商品圖片" />
+									{{ product.product_name }}
+									<p>Silver / 銀色</p>
+									<p>內圍直徑 1.7cm (#12)</p>
+								</router-link>
 							</div>
 							<div class="itemsCoupon"></div>
 							<div class="itemsPrice">NT${{ product.sale_price }}</div>
@@ -121,7 +123,7 @@ onMounted(async () => {
 					<ul>
 						<li>名字: {{ customerInfo.cuName }}</li>
 						<li>電話: {{ customerInfo.cuPhone }}</li>
-						<li>性別: {{ customerInfo.gender || "未提供" }}</li>
+						<li>性別: 	{{ customerInfo.gender === "o" ? "秘密" : customerInfo.gender === "f" ? "女" : customerInfo.gender === "m" ? "男" : "未知" }}</li>
 					</ul>
 				</div>
 				<div class="deliveryImformation">
@@ -322,6 +324,7 @@ hr {
 }
 
 .addCartAgain {
+	display: flex;
 	padding: 10px;
 	border: 1px solid #ddd;
 	border-top: none;
@@ -330,18 +333,10 @@ hr {
 	margin-bottom: 30px;
 	text-align: center;
 	justify-content: center;
-
 	align-items: center;
 }
 
-.addCartUp {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	font-size: 14px;
-	align-self: center;
-}
+
 
 .addCartAgain .btn {
 	position: absolute;
@@ -469,6 +464,10 @@ hr {
 		display: flex;
 		flex-wrap: wrap;
 		width: 100%;
+	}
+	.itemsCard img {
+		width: 100%;
+		height: auto;
 	}
 	.itemsCoupon {
 		display: none;
