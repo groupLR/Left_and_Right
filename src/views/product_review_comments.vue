@@ -23,12 +23,14 @@ onMounted(async () => {
 		const response = await axios.get(`${API_URL}/comment/info/${purchaseID}`)
 
 		if (response.data.status === "Success") {
+			// 會員資料不會變動，所以只需要取一次
 			user_id.value = response.data.user_id
 			username.value = response.data.username
+			// 下面這些是要給前端渲染的
 			products.value = response.data.data.map((product) => ({
 				...product,
 				commentText: "",
-				sku: 5,
+				sku: 5, // 預設評分5顆星
 			}))
 		} else {
 			console.error("無法獲取商品資訊:", response.data.message)
@@ -40,7 +42,7 @@ onMounted(async () => {
 
 // 提交評論
 const submitComment = async () => {
-	const checkComments = products.value.filter((product) => !product.commentText)
+	const checkComments = products.value.filter((product) => !product.commentText) // 判斷有沒有商品未被評價
 	if (checkComments.length > 0) {
 		ElMessage.warning("所有商品評論完才能送出喔")
 		return
@@ -63,11 +65,7 @@ const submitComment = async () => {
 		// 確認所有請求是否成功
 		const allSuccess = responses.every((response) => response.data.status === "Success")
 		if (allSuccess) {
-			console.log(products.value)
-
 			ElMessage.success("評論已成功發佈！")
-			// 清空所有商品的評論輸入框
-			products.value.forEach((product) => (product.commentText = ""))
 			router.push("/MemberOrder") // 跳轉到會員訂單頁
 		}
 	} catch (err) {

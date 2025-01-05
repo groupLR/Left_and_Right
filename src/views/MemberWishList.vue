@@ -34,6 +34,7 @@ onMounted(async () => {
     console.error("無法獲取願望清單資料：", error)
   }
 })
+// 刪除願望清單的方法
 const removeItem = async (id) => {
   try {
     await axios.delete(`${API_URL}/wishlist/delete/${id}`)

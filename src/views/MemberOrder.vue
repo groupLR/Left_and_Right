@@ -16,29 +16,20 @@ onMounted(async () => {
 		console.error("未找到 UID")
 		return
 	}
-
+	// 先根據 UID 抓他有哪些訂單
 	try {
 		const response = await axios.get(`${API_URL}/order/${userId}`)
 		if (response.data.status === "Success") {
+			// 再根據訂單號碼抓訂單詳細資訊
 			const orderPromises = response.data.data.map(async (order) => {
 				const details = await axios.get(`${API_URL}/order/details/${order.pu_id}`)
 				const { productInfo } = details.data
 				// 計算總數和總價
 				const totalQuantity = productInfo.reduce((sum, product) => sum + product.quantity, 0)
 				const totalPrice = productInfo.reduce((sum, product) => sum + product.sale_price * product.quantity, 0)
-
-				const reviewPromises = productInfo.map(async (product) => {
-					try {
-						const reviewResponse = await axios.get(`${API_URL}/comment/reviews/${product.product_id}`)
-						return reviewResponse.data.status === "Success" // 若有評論返回 true
-					} catch {
-						return false // 若無評論或出錯返回 false
-					}
-				})
-
-				// 如果所有商品都有評論，則該訂單已評論
-				const reviewStatuses = await Promise.all(reviewPromises)
-				const isReviewed = reviewStatuses.every((status) => status)
+				// 判斷這筆訂單是不是已經有評論了
+				const reviewStatusResponse = await axios.get(`${API_URL}/order/isReviewed/${order.pu_id}`);
+				const isReviewed = reviewStatusResponse.data.isReviewed; // 從 API 返回的值會是布林值
 
 				return {
 					...order,
@@ -52,7 +43,7 @@ onMounted(async () => {
 			orders.value = await Promise.all(orderPromises)
 		}
 		if (orders.value.length === 0) {
-			hasOrders.value = false
+			hasOrders.value = false // 如果沒訂單會顯示MemberEmpty頁面
 		}
 	} catch (error) {
 		hasOrders.value = false

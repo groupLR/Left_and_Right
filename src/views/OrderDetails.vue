@@ -25,13 +25,13 @@ const getImageUrl = (imagePath) => {
 	const cleanedPath = imagePath.startsWith("./") ? imagePath.slice(1) : imagePath
 	return `${API_URL}/${cleanedPath}`
 }
-//總價
+// 總價
 const totalPrice = computed(() => {
 	return productInfo.value.reduce((sum, product) => {
 		return sum + product.sale_price * product.quantity
 	}, 0)
 })
-//商品數
+// 商品數
 const productCount = computed(() => {
 	return productInfo.value.length
 })
