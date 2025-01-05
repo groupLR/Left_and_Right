@@ -294,7 +294,6 @@ const fetchWishlist = async () => {
     const response = await axios.get(`${API_URL}/wishlist/${userId}`)
     wishlist.value = response.data.data // API 回傳的 `data` 陣列
   } catch (error) {
-    console.error("無法取得願望清單：", error.response || error.message)
     wishlist.value = []
   }
 }
@@ -303,6 +302,11 @@ const isInWishlist = computed(() => {
 })
 //加入刪除願望清單ㄉ方法
 const toggleWishlist = async () => {
+  if (!userId) {
+    ElMessage.warning("請先登入以使用願望清單功能")
+    return
+  }
+  
   if (isInWishlist.value) {
     try {
       const wishlistItem = wishlist.value.find((item) => item.wishlists_products_id === Number(productId.value))

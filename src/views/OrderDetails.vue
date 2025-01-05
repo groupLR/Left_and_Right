@@ -43,8 +43,8 @@ onMounted(async () => {
 
 		// 直接將返回的資料綁定給 productInfo
 		productInfo.value = data.productInfo || []
-		orderInfo.value = data.orderInfo || {}
-		customerInfo.value = data.customerInfo || {}
+		orderInfo.value = data.orderInfo?.[0] || {}
+		customerInfo.value = data.customerInfo?.[0] || {}
 		deliveryInfo.value = data.deliveryInfo || {}
 		paymentInfo.value = data.paymentInfo || {}
 	} catch (error) {
@@ -113,9 +113,7 @@ onMounted(async () => {
 					<h4>訂單資訊</h4>
 					<ul>
 						<li>訂單號碼:{{ purchaseID }}</li>
-						<li>訂單電郵:</li>
-						<li>訂單日期:</li>
-						<li>訂單狀態:</li>
+						<li>訂單狀態: 已完成</li>
 					</ul>
 				</div>
 				<div class="customImformation">
@@ -124,19 +122,15 @@ onMounted(async () => {
 						<li>名字: {{ customerInfo.cuName }}</li>
 						<li>電話: {{ customerInfo.cuPhone }}</li>
 						<li>性別: {{ customerInfo.gender || "未提供" }}</li>
-						<li>生日: 1990/01/01</li>
 					</ul>
 				</div>
 				<div class="deliveryImformation">
 					<h4>送貨資訊</h4>
 					<ul>
-						<li>送貨方式</li>
-						<li>送貨狀態</li>
-						<li>7-11</li>
-						<li>7-11</li>
+						<li>送貨方式: {{ orderInfo.DeliveryWay }}</li>
+						<li>送貨狀態: 已完成</li>
 						<li>收件人名字: {{ deliveryInfo.acName }}</li>
 						<li>收件人電話: {{ deliveryInfo.acPhone }}</li>
-						<li>配送編號</li>
 						<li>配送地址: {{ deliveryInfo.addr }}</li>
 					</ul>
 				</div>
@@ -144,14 +138,9 @@ onMounted(async () => {
 				<div class="paymentImformation">
 					<h4>付款資訊</h4>
 					<ul>
-						<li>付款方式</li>
+						<li>付款方式: {{ orderInfo.payWay }}</li>
 						<li>卡片名稱: {{ paymentInfo?.cardName || "N/A" }}</li>
 						<li>有效日期: {{ paymentInfo?.efficentDate || "N/A" }}</li>
-						<li>付款狀態</li>
-						<li>付款指示</li>
-						<li>發票狀態</li>
-						<li>發票申請類型</li>
-						<li>發票載具類型</li>
 					</ul>
 				</div>
 			</div>
