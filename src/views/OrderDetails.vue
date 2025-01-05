@@ -85,23 +85,23 @@ onMounted(async () => {
 							<div class="itemsPrice">NT${{ product.sale_price }}</div>
 							<div class="itemsQuantity"><span>數量:</span>{{ product.quantity }}</div>
 							<div class="itemsTotal">
-								{{ product.sale_price * product.quantity }}
+								NT${{ product.sale_price * product.quantity }}
 							</div>
 						</div>
-						<div class="couponUsed">
+						<!-- <div class="couponUsed">
 							<h5>已使用之優惠</h5>
 							<span class="coupon-type">優惠促銷</span>
 							<p>限時全館$350免運</p>
-						</div>
+						</div> -->
 					</div>
 					<div class="ordersTotal">
 						<div class="ordersTotalCard">
 							<div class="subtotal">
-								小計:<span>{{ totalPrice }}</span>
+								小計:<span>NT${{ totalPrice }}</span>
 							</div>
 							<div class="delivery">運費:<span>免運</span></div>
 							<div class="total">
-								合計:<span>{{ totalPrice }}</span>
+								合計:<span>NT${{ totalPrice }}</span>
 							</div>
 						</div>
 					</div>
@@ -219,6 +219,7 @@ h4 {
 	padding: 15px 0;
 	border: 1px solid #ddd;
 	border-top: none;
+	justify-content: space-between
 }
 
 .ordersTitleName,

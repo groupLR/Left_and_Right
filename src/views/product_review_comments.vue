@@ -76,7 +76,7 @@ const submitComment = async () => {
 </script>
 <template>
 	<div class="reviewMain mx-auto">
-		<div class="givingComment w-full pb-[15px]">
+		<div class="givingComment w-full pb-[15px] mt-[30px]">
 			<div class="awaitingCommentTitle border py-[10px] pl-[15px] font-semibold text-[18px]">
 				<h4>給予評價</h4>
 			</div>
@@ -85,7 +85,9 @@ const submitComment = async () => {
 				<hr class="my-[20px]" />
 				<div class="mb-[20px] commodityImformation" v-for="product in products" :key="product.product_id">
 					<div class="w-1/5 commodityImg px-[15px]">
+						<router-link :to="{ name: 'products-detail(連後端)', params: { productId: product.product_id } }">
 						<img :src="getImageUrl(product.image_paths[0])" alt="商品圖片" />
+						</router-link>
 					</div>
 					<div class="w-4/5 commodityContent">
 						<div>
