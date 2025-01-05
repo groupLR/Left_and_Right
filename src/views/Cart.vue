@@ -3,13 +3,17 @@ import axios from "axios"
 import vueDanmaku from "vue3-danmaku"
 import { useRoute, useRouter } from "vue-router"
 import { onMounted, ref, computed, watch, onUnmounted } from "vue"
-import { ElMessage, emitChangeFn } from "element-plus"
+import { ElMessage } from "element-plus"
 import { useSharedCartStore } from "@/stores/sharedCart"
 import AddMember from "@/components/AddMember.vue"
 import Warning from "@/components/Warning.vue"
 import CartProduct from "@/components/CartProduct.vue"
 import { webSocketService } from "@/websocket/websocket.js"
+import { storeToRefs } from "pinia"
+import { useCartStore } from "@/stores/cart"
 
+const cartStore = useCartStore()
+const { countryList, paymentOptions, deliveryOptions } = storeToRefs(cartStore)
 const SharedCartStore = useSharedCartStore()
 const route = useRoute()
 const router = useRouter()
@@ -22,74 +26,16 @@ const sharedCartMembers = ref([]) // 共享購物車成員
 const userId = localStorage.getItem("UID")
 const userName = ref("")
 const danmus = ref([])
+const copyDialogToggle = ref(false)
+const selectMemberDialogToggle = ref(false)
+const selectedMembers = ref([])
+// 購物車完整路徑(共享購物車複製網址、發 Email 用)
+const fullUrl = window.location.origin + router.currentRoute.value.fullPath
 
 // 送貨表單
 const selectedCountry = ref("TW")
-const countryList = [
-  { value: "AU", label: "澳大利亞" },
-  { value: "BE", label: "比利時" },
-  { value: "CA", label: "加拿大" },
-  { value: "CN", label: "中國" },
-  { value: "FR", label: "法國" },
-  { value: "DE", label: "德國" },
-  { value: "HK", label: "香港" },
-  { value: "ID", label: "印度尼西亞" },
-  { value: "IT", label: "意大利" },
-  { value: "JP", label: "日本" },
-  { value: "KR", label: "韓國" },
-  { value: "MO", label: "澳門" },
-  { value: "MY", label: "馬來西亞" },
-  { value: "NL", label: "荷蘭" },
-  { value: "NZ", label: "新西蘭" },
-  { value: "PW", label: "帕勞" },
-  { value: "PE", label: "秘魯" },
-  { value: "PH", label: "菲律賓" },
-  { value: "SG", label: "新加坡" },
-  { value: "TW", label: "台灣" },
-  { value: "TH", label: "泰國" },
-  { value: "GB", label: "英國" },
-  { value: "US", label: "美國" },
-  { value: "VN", label: "越南" },
-]
-
 const selectedDelivery = ref("home-delivery")
-const deliveryOptions = [
-  {
-    value: "overseas-ems",
-    label: "海外運送 (3-7天到貨，採EMS寄送)",
-    disabled: false,
-  },
-  {
-    value: "overseas-dhl",
-    label: "海外運送 (3-7天到貨，DHL運送)",
-    disabled: false,
-  },
-  {
-    value: "7-11",
-    label: "7-11",
-  },
-  {
-    value: "home-delivery",
-    label: "宅配到府",
-  },
-]
-
 const selectedPayment = ref("credit-card")
-const paymentOptions = [
-  {
-    value: "cash-on-delivery",
-    label: "貨到付款",
-  },
-  {
-    value: "credit-card",
-    label: "信用卡 (Visa / MasterCard / JCB / 銀聯卡)",
-  },
-  {
-    value: "dbs-card",
-    label: "↳ 刷星展卡滿 3,000 送 100 刷卡金",
-    disabled: true,
-  },
-]
 
 // computed
 const itemCount = computed(() => {
@@ -101,6 +47,32 @@ const itemPrice = computed(() => {
 })
 
 // method
+
+// 複製路徑
+const copyPath = async () => {
+  await navigator.clipboard.writeText(`${fullUrl}`)
+  ElMessage.success("網址複製成功")
+}
+
+// 發送 Email 選擇框
+const sendEmail = async () => {
+  selectMemberDialogToggle.value = true
+}
+
+// 確認發送 Email
+const handleConfirm = async () => {
+  try {
+    await SharedCartStore.sendMail(fullUrl, selectedMembers.value, userName.value)
+    ElMessage.success("邀請發送成功")
+    selectedMembers.value = []
+    selectMemberDialogToggle.value = false
+    copyDialogToggle.value = false
+  } catch (err) {
+    console.error("送信失敗", err)
+    ElMessage.error("送信失敗，請稍候再試")
+  }
+}
+
 // 獲取使用者本人名稱
 const fetchuserName = async () => {
   try {
@@ -263,7 +235,14 @@ const updateProductQty = async (payload) => {
 // 前往結帳
 const goToNext = async () => {
   try {
-    await router.push("/Debit")
+    selectedCountry.value && localStorage.setItem("country", selectedCountry.value)
+    selectedDelivery.value && localStorage.setItem("delivery", selectedDelivery.value)
+    selectedPayment.value && localStorage.setItem("payment", selectedPayment.value)
+    if (isSharedCart.value) {
+      await router.push(`/Debit/${route.params.groupId}`)
+    } else {
+      await router.push("/Debit")
+    }
   } catch (err) {
     console.error("導航失敗:", err)
   }
@@ -358,6 +337,33 @@ onUnmounted(() => {
 })
 </script>
 <template>
+  <div>
+    <el-dialog class="w-[90%] md:[30%]" v-model="copyDialogToggle" title="請選擇分享方式">
+      <div class="flex flex-col items-center">
+        <button class="bg-[#0f4662] text-white w-[50%] p-2 m-2 rounded" @click="sendEmail">透過 Email 邀請</button>
+        <button class="border-2 w-[50%] p-2 m-2 rounded" @click="copyPath">複製網址</button>
+      </div>
+    </el-dialog>
+  </div>
+  <div>
+    <el-dialog v-model="selectMemberDialogToggle" title="選擇要發 Email 給哪個購朋友">
+      <el-scrollbar height="200px">
+        <el-checkbox-group v-model="selectedMembers">
+          <div v-for="(member, index) in sharedCartMembers" :key="index">
+            <el-checkbox :value="member" :label="member">
+              {{ member }}
+            </el-checkbox>
+          </div>
+        </el-checkbox-group>
+      </el-scrollbar>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="selectMemberDialogToggle = false">取消</el-button>
+          <el-button type="primary" @click="handleConfirm">確認</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
   <div class="fixed top-10 w-full z-[100] pointer-events-none">
     <vue-danmaku v-if="isSharedCart" v-model:danmus="danmus" :speeds="100" :channels="5" class="h-[100px] w-full" />
   </div>
@@ -367,7 +373,7 @@ onUnmounted(() => {
         <div class="flex justify-between items-center">
           <div class="flex gap-4 items-center">
             <h1 class="text-2xl font-bold">共享購物車</h1>
-            <button>
+            <button @click="copyDialogToggle = true">
               <i class="fa-solid fa-arrow-up-right-from-square align-center"></i>
             </button>
           </div>
@@ -389,8 +395,8 @@ onUnmounted(() => {
       <!-- 步驟 -->
       <section class="flex justify-center">
         <el-steps style="min-width: 300px" :active="1" align-center class="md:w-[600px]">
-          <el-step title="購物" description="送貨與付款方式" />
-          <el-step title="結帳" description="付款與送貨地址" />
+          <el-step title="購物車" />
+          <el-step title="結帳" />
         </el-steps>
       </section>
 
@@ -470,7 +476,7 @@ onUnmounted(() => {
         <!-- 優惠和小計區塊 -->
         <aside class="md:w-1/3 flex flex-col gap-5 mt-5 md:mt-0">
           <!-- 優惠區塊 -->
-          <div class="sticky top-0">
+          <div class="sticky top-[112px]">
             <div class="bg-white p-5 rounded-xl">
               <h2 class="text-xl font-bold">已享用之優惠</h2>
               <!-- 之後串 API 了用這個 div 跑 v-for -->
