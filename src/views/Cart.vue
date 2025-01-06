@@ -336,12 +336,11 @@ const fetchCoupons = async () => {
 	}
 }
 
-// 在組件掛載時獲取優惠券資料
-fetchCoupons()
 // onMounted
 onMounted(async () => {
 	await initializeCartPage()
 	await fetchuserName()
+	await fetchCoupons()
 	// 連接 WebSocket
 	webSocketService.connect()
 
