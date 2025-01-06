@@ -24,8 +24,9 @@ onMounted(async () => {
 
 		if (response.data.status === "Success") {
 			// 會員資料不會變動，所以只需要取一次
-			user_id.value = response.data.user_id
-			username.value = response.data.username
+			const { user_id, username } = response.data
+			user_id.value = user_id
+			username.value = username
 			// 下面這些是要給前端渲染的
 			products.value = response.data.data.map((product) => ({
 				...product,
