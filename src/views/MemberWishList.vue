@@ -34,6 +34,7 @@ onMounted(async () => {
     console.error("無法獲取願望清單資料：", error)
   }
 })
+// 刪除願望清單的方法
 const removeItem = async (id) => {
   try {
     await axios.delete(`${API_URL}/wishlist/delete/${id}`)
@@ -159,6 +160,9 @@ const refreshSharedCartList = async () => {
         :key="item.id"
         class="commodityList grid grid-cols-12 items-center border-b py-[15px] mx-[-10px] bg-white hover:bg-[#F5F5F5]"
       >
+        <div class="deleteIcon" @click="removeItem(item.id)">
+          <font-awesome-icon :icon="['fas', 'times']" />
+        </div>
         <div class="commodityImg col-span-2 px-[15px]">
           <router-link :to="{ name: 'products-detail(連後端)', params: { productId: item.products.product_id } }">
             <img
@@ -212,7 +216,7 @@ const refreshSharedCartList = async () => {
   border-bottom: 1px solid rgba(221, 221, 221, 0.5);
 }
 .btn {
-  width: 160px;
+  width: 90%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -225,6 +229,8 @@ const refreshSharedCartList = async () => {
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .btn:hover {
   background-color: #7994a0;
@@ -246,16 +252,26 @@ const refreshSharedCartList = async () => {
 .salePrice {
   font-size: 12px;
 }
-
+.deleteIcon{
+  display: none;
+}
 @media (max-width: 1024px) and (min-width: 769px) {
-  .btn {
-    display: none;
-  }
   .fa-cart-shopping {
     display: block !important;
   }
 }
 @media (max-width: 768px) {
+  .btn{
+    margin: 5px auto;
+  }
+  .deleteIcon{
+    display: block;
+    position: absolute;
+    top: 10px; 
+    right: 10px;
+    cursor: pointer; 
+  }
+  
   .wishlistMain {
     width: 100%;
   }
@@ -270,6 +286,7 @@ const refreshSharedCartList = async () => {
     padding: 0;
     border: 1px solid #ddd;
     padding-top: 15px;
+    position: relative;
   }
   .commodityList:nth-of-type(n + 2) {
     margin-top: 20px;
