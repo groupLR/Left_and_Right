@@ -1,37 +1,33 @@
 <script setup>
 import axios from "axios"
 import Swiper from "swiper/bundle"
-import Reviews from "@/components/Reviews.vue"
-import AddSharedCart from "@/components/AddSharedCart.vue"
-import "swiper/css/bundle"
-import "swiper/css"
-import "swiper/css/pagination"
-import "swiper/css/navigation"
 import { onMounted, ref, watch, computed, onUnmounted } from "vue"
 import { useRoute } from "vue-router"
 import { ElMessage } from "element-plus"
+import "swiper/css/bundle"
 import { Pagination, Navigation, Scrollbar } from "swiper/modules"
+import "swiper/css"
+import "swiper/css/pagination"
+import "swiper/css/navigation"
 import { storeToRefs } from "pinia"
 import { useCartStore } from "@/stores/cart"
 import { useSharedCartStore } from "@/stores/sharedCart"
 import { useExchangeRateStore } from "@/stores/exchangeRates"
-import { webSocketService } from "@/websocket/websocket.js"
+import Reviews from "@/components/Reviews.vue"
 const SharedCartStore = useSharedCartStore()
 const CartStore = useCartStore()
 const ExchangeRateStore = useExchangeRateStore()
 const { sharedCartList } = storeToRefs(SharedCartStore)
 const { currentRate } = storeToRefs(ExchangeRateStore)
 Swiper.use([Pagination, Navigation, Scrollbar])
+import AddSharedCart from "@/components/AddSharedCart.vue"
+import { webSocketService } from "@/websocket/websocket.js"
 
 const swiperInstance = ref(null)
 const route = useRoute()
 const userId = localStorage.getItem("UID")
 const API_URL = import.meta.env.VITE_API_URL
 const userName = ref("")
-const isDescription = ref(true)
-const isReview = ref(false)
-
-window.scrollTo(0, 0)
 
 // onMounted
 onMounted(async () => {
@@ -63,6 +59,19 @@ onMounted(async () => {
   }
 
   initializeSwiper()
+  // 確保所有圖片都載入後再初始化swiper
+  // const images = document.querySelectorAll(".swiper-slide img")
+  // let loadedCount = 0
+
+  // images.forEach((img) => {
+  //   img.onload = () => {
+  //     loadedCount++
+  //     if (loadedCount === images.length) {
+  //       initializeSwiper()
+  //     }
+  //   }
+  //   if (img.complete) img.onload()
+  // })
 })
 
 // onUnmounted
@@ -83,24 +92,20 @@ const getImageUrl = (imagePath) => {
 
 const isLoading = ref(true)
 
-const fetchProductDetail = async (product_id) => {
+const fetchProductDetail = async (product_id = 35) => {
   isLoading.value = true
-
   try {
     await new Promise((resolve) => setTimeout(resolve, 100))
 
-    const productProfile = await axios.get(`${API_URL}/products/profile/${product_id}`)
-    const productMainImgs = await axios.get(`${API_URL}/products/mainImgs/${product_id}`)
-    const productDesImgs = await axios.get(`${API_URL}/products/desImgs/${product_id}`)
-    const productSpecs = await axios.get(`${API_URL}/products/specs/${product_id}`)
-    profile.value = productProfile.data
-    mainImgs.value = productMainImgs.data.map((img, index) => ({
+    const response = await axios.get(`${API_URL}/products/${product_id}`)
+    profile.value = response.data.profile
+    mainImgs.value = response.data.mainImgs.map((img, index) => ({
       imgPath: getImageUrl(img.image_path),
       imgText: img.alt_text,
-      colorText: productSpecs.data[index]?.color_text || null,
-      colorSquare: productSpecs.data[index]?.color_square || null,
+      colorText: response.data.specs[index]?.color_text || null,
+      colorSquare: response.data.specs[index]?.color_square || null,
     }))
-    desImgs.value = productDesImgs.data.map((img) => ({
+    desImgs.value = response.data.desImgs.map((img) => ({
       imgPath: getImageUrl(img.image_path),
       imgText: img.alt_text,
     }))
@@ -167,6 +172,14 @@ const filterColor = computed(() => mainImgs.value.filter((color) => color.colorS
 const selectImage = (index) => {
   selectedIndex.value = index
 }
+
+// const scrollPosition = ref(0)
+// scrollUp() {
+//   this.scrollPosition = Math.max(this.scrollPosition - 100, 0);
+// },
+// scrollDown() {
+//   this.scrollPosition = Math.min(this.scrollPosition + 100, this.mainImgs.length * 100 - 400);
+// },
 
 //編輯購買數量
 const counter = ref(1)
@@ -270,16 +283,6 @@ const refreshSharedCartList = async () => {
   }))
   dialogToggle.value = true
 }
-
-// 切換描述、評論
-const toggleDescription = () => {
-  isDescription.value = true
-  isReview.value = false
-}
-const toggleReview = () => {
-  isDescription.value = false
-  isReview.value = true
-}
 //評論頁
 const props = defineProps({
   productId: {
@@ -333,15 +336,11 @@ const props = defineProps({
         </div>
         <div class="carousel">
           <div class="min-w-[120px] h-[400px] mr-5 pl-5">
-            <div
-              class="mb-[10px] cursor-pointer max-w-[72px] max-h-[72px]"
-              v-for="(image, index) in mainImgs"
-              :key="index"
-              @click="selectImage(index)"
-              :class="{ 'outline outline-2 outline-black': selectedIndex === index }"
-            >
+            <!-- <div class="nav-button up" @click="scrollUp">&uarr;</div> -->
+            <div class="mb-[10px] cursor-pointer max-w-[72px] max-h-[72px]" v-for="(image, index) in mainImgs" :key="index" @click="selectImage(index)">
               <img :src="image.imgPath" :alt="image.imgText" class="w-[72px] h-[72px] object-cover" />
             </div>
+            <!-- <div class="nav-button down" @click="scrollDown" >&darr;</div> -->
           </div>
           <div class="w-[415px] h-[415px] block">
             <img :src="selectedImage.imgPath" :alt="selectedImage.title" class="w-[415px] h-[415px] object-cover" />
@@ -369,7 +368,7 @@ const props = defineProps({
               全館任選四件82折，優惠後特價 {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.82).toLocaleString() }}
             </p>
           </div>
-          <!-- <div class="my-[5px] mb-5 flex text-center">
+          <div class="my-[5px] mb-5 flex text-center">
             <p class="text-[14px] text-[#FFC500] pt-[1px]">
               <font-awesome-icon :icon="['fas', 'star']" class="mr-1" /><font-awesome-icon :icon="['fas', 'star']" class="mr-1" /><font-awesome-icon
                 :icon="['fas', 'star']"
@@ -379,12 +378,12 @@ const props = defineProps({
             <p class="ml-5 text-gray-500">5 分</p>
             <p class="mx-2 text-[14px] pt-[0.8px]">|</p>
             <p class="rates">460個評價</p>
-          </div> -->
-          <div class="mt-5">
-            <p class="text-[14px] font-extralight" v-if="filterColor.length > 0">顏色 :{{ selectedImage.colorText }}</p>
+          </div>
+          <div class="colorChoose">
+            <p class="text-[14px] font-extralight">顏色 :{{ selectedImage.colorText }}</p>
             <div class="flex">
               <div v-for="(color, index) in filterColor" :key="color.title">
-                <input type="radio" name="my-10" class="colorCheckbox hidden" :id="`color-${index}`" :checked="index === 0" />
+                <input type="radio" name="colorChoose" class="colorCheckbox hidden" :id="`color-${index}`" :checked="index === 0" />
                 <div
                   class="colorBox m-[20px] ml-0 border border-[#eaeaea] bg-[#fcfcfc] w-[48px] h-[48px] flex cursor-pointer transition-all duration-100 ease-out"
                   @click="selectColor(index)"
@@ -398,7 +397,7 @@ const props = defineProps({
               </div>
             </div>
           </div>
-          <div class="mb-5">
+          <div class="my-5">
             <p class="text-[14px] font-extralight">數量</p>
             <div class="max-w-full w-full flex h-[40px] my-2.5">
               <button class="rounded-lg border border-gray-300 bg-gray-50 w-[45px] h-[40px] text-[20px]" @click="decrease">-</button>
@@ -438,26 +437,20 @@ const props = defineProps({
               <span>設計師大賽實體化 新品限時9折</span>
             </p>
           </div>
+          <!-- <div class="flex justify-center my-5">
+          <button class="border-none text-gray-500">收起內容<i class="fa-solid fa-angle-up"></i></button>
+        </div> -->
         </div>
       </div>
       <!-- 商品描述 -->
       <div class="descriptionProfile">
         <div class="p-5">
           <div class="navbar">
-            <div
-              id="navbarProductDescription"
-              @click="toggleDescription"
-              class="font-medium"
-              :class="{ 'text-black': isDescription, description: isDescription }"
-            >
-              商品描述
-            </div>
-            <div id="navbarRate" @click="toggleReview" class="font-medium" :class="{ 'text-black': isReview }">顧客評價</div>
+            <div id="navbarProductDescription">商品描述</div>
+            <div id="navbarRate">顧客評價</div>
+            <!-- <Reviews :product-id="productId" /> -->
           </div>
           <div>
-            <Reviews :product-id="productId" v-if="isReview" />
-          </div>
-          <div v-if="isDescription">
             <div class="descriptionTitle mx-10 my-auto flex justify-center relative">
               <h3 class="text-2xl tracking-widest mt-5">商品描述</h3>
             </div>
@@ -548,12 +541,6 @@ input::-webkit-inner-spin-button {
   content: " ";
   height: 100%;
   width: 3px;
-}
-.description::after {
-  @apply bg-black block absolute top-0;
-  content: "    ";
-  width: 40px;
-  height: 3px;
 }
 
 .descriptionTitle::after {

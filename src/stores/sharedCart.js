@@ -140,20 +140,6 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
     }
   }
 
-  const sendMail = async (fullUrl, sendTo, sentBy) => {
-    try {
-      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/sendMail`, {
-        fullUrl,
-        sendTo,
-        sentBy,
-      })
-      return data
-    } catch (err) {
-      console.log("發 Mail 失敗", err)
-      throw err
-    }
-  }
-
   return {
     sharedCartList,
     fetchSharedCartList,
@@ -166,6 +152,5 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
     addProductToSharedCart,
     updateProductQtyToSharedCart,
     deleteProductInSharedCart,
-    sendMail,
   }
 })
