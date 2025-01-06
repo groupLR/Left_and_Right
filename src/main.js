@@ -16,7 +16,7 @@ import VueAwesomePaginate from "vue-awesome-paginate"
 // import the necessary css file
 import "vue-awesome-paginate/dist/style.css"
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const isAuthenticated = !!localStorage.getItem("UID")
   if (to.meta.requireAuth) {
     if (isAuthenticated) {

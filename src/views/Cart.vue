@@ -109,25 +109,8 @@ const fetchCartItems = async () => {
       console.error("獲取資料失敗:", error)
     }
   } else {
-    console.log("沒登入")
-
     const storedCart = JSON.parse(localStorage.getItem("cart"))
     products.value = storedCart // 將 Json檔的資料存入 products
-  }
-}
-
-// 新增購物車商品
-const addProduct = async (newProduct) => {
-  if (userId) {
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, newProduct)
-      .then((response) => {
-        products.value.push(response.data) // 新增成功後直接更新列表
-      })
-      .catch((error) => {
-        console.error("新增商品失敗:", error)
-      })
-  } else {
   }
 }
 

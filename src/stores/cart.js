@@ -108,7 +108,7 @@ export const useCartStore = defineStore("cart", () => {
       try {
         const storedCart = JSON.parse(localStorage.getItem("cart")) || []
 
-        // 檢查購物車中是否已有該商品
+        // 檢查 localStorage 購物車中是否已有該商品
         const existingItem = storedCart.find((item) => item.product_id === productId)
         if (existingItem) {
           // 如果商品已存在，增加數量
@@ -119,14 +119,14 @@ export const useCartStore = defineStore("cart", () => {
             duration: 2000,
           })
         } else {
-          // 如果商品不存在，新增到購物車
+          // 如果商品不存在，新增到 localStorage 購物車
           storedCart.push({
             product_id: productId,
             quantity,
             product_name: name,
             image_path: image,
-            sale_price: salePrice,
-            original_price: originalPrice,
+            sale_price: salePrice.toString(),
+            original_price: originalPrice.toString(),
           })
           ElMessage({
             type: "success",
