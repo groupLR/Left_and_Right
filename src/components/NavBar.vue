@@ -1,31 +1,26 @@
 <script setup>
-import { ref, onMounted } from "vue"
 import axios from "axios"
+import debounce from "lodash/debounce"
+import { ref, onMounted } from "vue"
 import { useExchangeRateStore } from "@/stores/exchangeRates"
 import { RouterLink } from "vue-router"
 import { useRouter } from "vue-router"
-import debounce from "lodash/debounce"
 import { storeToRefs } from "pinia"
 
+const router = useRouter()
 const exchangeRateStore = useExchangeRateStore()
 const { rates, selectedCurrency } = storeToRefs(exchangeRateStore)
 const searchKeyword = ref("")
 const isVisible = ref(false)
-const changeLanguageOpen = ref(false)
 const moneyOpen = ref(false)
-const router = useRouter()
-
 const isLoggedIn = ref(!!localStorage.getItem("UID"))
 const categories = ref([])
-const languages = ref(["繁體中文", "English"])
-const selectedLanguage = ref("繁體中文")
 const showSidebar = ref(false)
 
 // 搜尋
 const fetchSearchResults = async () => {
   if (searchKeyword.value.trim() !== "") {
     // 使用 router 導航並將關鍵字作為查詢參數
-    // const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/search?q=${encodeURIComponent(searchKeyword.value)}`)
     router.push({
       path: "/search",
       query: { q: searchKeyword.value.trim() },
@@ -39,14 +34,11 @@ const inputShow = () => {
   isVisible.value = !isVisible.value
 }
 
-// 開啟sidebar語言、幣種
-const openChangeLanguage = () => {
-  changeLanguageOpen.value = !changeLanguageOpen.value
-}
+// 開啟sidebar幣種
 const openMoney = () => {
   moneyOpen.value = !moneyOpen.value
 }
-// 請求父項目
+// 請求大類別
 const fetchCategories = async () => {
   try {
     const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/sidebarCategory`)
@@ -100,14 +92,6 @@ onMounted(() => {
               <option :value="rate.currency" v-for="rate in rates" :key="rate.currency">{{ rate.symbol }} {{ rate.currency }}</option>
             </select>
           </li>
-          <li class="mx-3">
-            <div class="hidden text-black cursor-pointer xl:block hover:text-gray-500">
-              <font-awesome-icon class="globe-icon" :icon="['fas', 'globe']" />
-              <select class="text-black outline-none cursor-pointer hover:text-gray-500" v-model="selectedLanguage">
-                <option v-for="language in languages" :value="language" :key="language" @click="selectedLanguage == language">{{ language }}</option>
-              </select>
-            </div>
-          </li>
           <!-- 搜尋框 -->
           <li class="mx-3 xl:hidden" @click="inputShow">
             <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
@@ -127,10 +111,7 @@ onMounted(() => {
               <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
             </button>
           </li>
-          <!-- 客服 -->
-          <li class="hidden mx-3 text-black cursor-pointer xl:block hover:text-gray-500">
-            <font-awesome-icon :icon="['fas', 'comment']" />
-          </li>
+
           <!-- 使用者 -->
           <RouterLink :to="isLoggedIn ? '/users/edit' : '/users/sign-in'">
             <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
@@ -201,9 +182,9 @@ onMounted(() => {
             <!-- 大項目 -->
             <div class="flex items-center justify-between hover:cursor-pointer shadow-sm hover:font-bold">
               <!-- 類別名稱 -->
-              <RouterLink :to="`/categories/${category.category_id}`" class="p-4" :class="{ ' font-bold': category.showChildren }">{{
-                category.category_name
-              }}</RouterLink>
+              <RouterLink :to="`/categories/${category.category_id}`" class="p-4" :class="{ ' font-bold': category.showChildren }">
+                <div @click="toggleSidebar">{{ category.category_name }}</div>
+              </RouterLink>
               <!-- 收合箭頭 -->
               <i
                 v-if="category.children.length > 0"
@@ -218,8 +199,8 @@ onMounted(() => {
               <ul class="pl-1.5">
                 <li v-for="child in category.children" :key="child.categories_id" class="p-4">
                   <RouterLink :to="`/categories/${child.categories_id}`" class="text-gray-400 hover:text-black hover:cursor-pointer hover:font-bold">
-                    <div>{{ child.category_name }}</div></RouterLink
-                  >
+                    <div @click="toggleSidebar">{{ child.category_name }}</div>
+                  </RouterLink>
                 </li>
               </ul>
             </div>
