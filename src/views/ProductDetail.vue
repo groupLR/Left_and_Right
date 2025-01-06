@@ -61,7 +61,8 @@ onMounted(async () => {
     // 取得使用者名稱
     await fetchuserName()
   }
-
+  // 取得願望清單狀態
+  fetchWishlist()
   initializeSwiper()
 })
 
@@ -279,6 +280,7 @@ const toggleDescription = () => {
 const toggleReview = () => {
   isDescription.value = false
   isReview.value = true
+}
 //追蹤清單
 const wishlist = ref([])
 //檢查這個商品是不是已經在願望清單裡ㄌ
@@ -459,7 +461,9 @@ const props = defineProps({
             </button>
           </div>
           <div class="mx-auto my-5 flex justify-center text-sm hover:cursor-pointer">
-            <p :class="{ active: isSubscribe }" @click="toggleHeart" :style="heartColor"><i class="fa-regular fa-heart mr-1"></i>加入追蹤清單</p>
+            <p :class="{ active: isSubscribe }" @click="toggleWishlist">
+              <i :class="isInWishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>加入追蹤清單
+            </p>         
           </div>
           <div class="promotionalContainer relative mx-5 mt-5">
             <p class="mx-[7px] text-sm pl-[10px]">
