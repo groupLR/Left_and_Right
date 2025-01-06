@@ -13,15 +13,25 @@ export const useProductStore = defineStore("products", () => {
   // 預設商品列表
   const productList = ref([])
   // 商品列表標題處理
-  const fetchProductList = async (categoryId = 1, sortBy, pageSize = 12, pageNum = 1) => {
+  const fetchProductList = async (
+    categoryId = 1,
+    sortBy,
+    pageSize = 12,
+    pageNum = 1
+  ) => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/categories${categoryId ? `/${categoryId}` : ""}`, {
-        params: {
-          sortBy,
-          pageSize,
-          pageNum,
-        },
-      })
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/categories${
+          categoryId ? `/${categoryId}` : ""
+        }`,
+        {
+          params: {
+            sortBy,
+            pageSize,
+            pageNum,
+          },
+        }
+      )
       productList.value = data.products || []
       categoryTitle.value = data.categoryName
       totalProductCount.value = data.totalProduct
@@ -92,17 +102,32 @@ export const useProductStore = defineStore("products", () => {
   // pageSize 單頁筆數切換
   const handlePageSizeChange = (currentCategoryId, value) => {
     pageSize.value = Number(value.substring(8))
-    fetchProductList(currentCategoryId, sortValue.value, pageSize.value, currentPage.value)
+    fetchProductList(
+      currentCategoryId,
+      sortValue.value,
+      pageSize.value,
+      currentPage.value
+    )
   }
 
   // 分頁點擊處理函數
   const paginationOnClickHandler = (currentCategoryId, page, from) => {
     if (from === "home") {
       coBrandingCurrentPage.value = page
-      fetchProductList(currentCategoryId, sortValue.value, coBrandingPageSize.value, coBrandingCurrentPage.value)
+      fetchProductList(
+        currentCategoryId,
+        sortValue.value,
+        coBrandingPageSize.value,
+        coBrandingCurrentPage.value
+      )
     } else if (from === "list") {
       currentPage.value = page // 更新當前頁碼
-      fetchProductList(currentCategoryId, sortValue.value, pageSize.value, currentPage.value)
+      fetchProductList(
+        currentCategoryId,
+        sortValue.value,
+        pageSize.value,
+        currentPage.value
+      )
       scrollToTop()
     }
   }
