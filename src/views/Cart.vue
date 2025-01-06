@@ -2,12 +2,18 @@
 <script setup>
 import axios from "axios"
 import { useRoute, useRouter } from "vue-router"
-import { onMounted, ref, computed, watch } from "vue"
+import { onMounted, ref, computed, watch, onUnmounted } from "vue"
 import { ElMessage } from "element-plus"
 import { useSharedCartStore } from "@/stores/sharedCart"
 import AddMember from "@/components/AddMember.vue"
 import Warning from "@/components/Warning.vue"
 import CartProduct from "@/components/CartProduct.vue"
+import { webSocketService } from "@/websocket/websocket.js"
+import { storeToRefs } from "pinia"
+import { useCartStore } from "@/stores/cart"
+
+const cartStore = useCartStore()
+const { countryList, paymentOptions, deliveryOptions } = storeToRefs(cartStore)
 const SharedCartStore = useSharedCartStore()
 
 const route = useRoute()
@@ -19,73 +25,18 @@ const isSharedCart = ref(false) // 是不是共享購物車（用cart/後面有�
 const sharedCartName = ref("") // 共享購物車名稱
 const sharedCartMembers = ref([]) // 共享購物車成員
 const userId = localStorage.getItem("UID")
+const userName = ref("")
+const danmus = ref([])
+const copyDialogToggle = ref(false)
+const selectMemberDialogToggle = ref(false)
+const selectedMembers = ref([])
+// 購物車完整路徑(共享購物車複製網址、發 Email 用)
+const fullUrl = window.location.origin + router.currentRoute.value.fullPath
+
 // 送貨表單
 const selectedCountry = ref("TW")
-const countryList = [
-  { value: "AU", label: "澳大利亞" },
-  { value: "BE", label: "比利時" },
-  { value: "CA", label: "加拿大" },
-  { value: "CN", label: "中國" },
-  { value: "FR", label: "法國" },
-  { value: "DE", label: "德國" },
-  { value: "HK", label: "香港" },
-  { value: "ID", label: "印度尼西亞" },
-  { value: "IT", label: "意大利" },
-  { value: "JP", label: "日本" },
-  { value: "KR", label: "韓國" },
-  { value: "MO", label: "澳門" },
-  { value: "MY", label: "馬來西亞" },
-  { value: "NL", label: "荷蘭" },
-  { value: "NZ", label: "新西蘭" },
-  { value: "PW", label: "帕勞" },
-  { value: "PE", label: "秘魯" },
-  { value: "PH", label: "菲律賓" },
-  { value: "SG", label: "新加坡" },
-  { value: "TW", label: "台灣" },
-  { value: "TH", label: "泰國" },
-  { value: "GB", label: "英國" },
-  { value: "US", label: "美國" },
-  { value: "VN", label: "越南" },
-]
-
 const selectedDelivery = ref("home-delivery")
-const deliveryOptions = [
-  {
-    value: "overseas-ems",
-    label: "海外運送 (3-7天到貨，採EMS寄送)",
-    disabled: false,
-  },
-  {
-    value: "overseas-dhl",
-    label: "海外運送 (3-7天到貨，DHL運送)",
-    disabled: false,
-  },
-  {
-    value: "7-11",
-    label: "7-11",
-  },
-  {
-    value: "home-delivery",
-    label: "宅配到府",
-  },
-]
-
 const selectedPayment = ref("credit-card")
-const paymentOptions = [
-  {
-    value: "cash-on-delivery",
-    label: "貨到付款",
-  },
-  {
-    value: "credit-card",
-    label: "信用卡 (Visa / MasterCard / JCB / 銀聯卡)",
-  },
-  {
-    value: "dbs-card",
-    label: "↳ 刷星展卡滿 3,000 送 100 刷卡金",
-    disabled: true,
-  },
-]
 
 // computed
 const itemCount = computed(() => {
@@ -97,10 +48,56 @@ const itemPrice = computed(() => {
 })
 
 // method
+
+// 複製路徑
+const copyPath = async () => {
+  await navigator.clipboard.writeText(`${fullUrl}`)
+  ElMessage.success("網址複製成功")
+}
+
+// 發送 Email 選擇框
+const sendEmail = async () => {
+  selectMemberDialogToggle.value = true
+}
+
+// 確認發送 Email
+const handleConfirm = async () => {
+  try {
+    await SharedCartStore.sendMail(fullUrl, selectedMembers.value, userName.value)
+    ElMessage.success("邀請發送成功")
+    selectedMembers.value = []
+    selectMemberDialogToggle.value = false
+    copyDialogToggle.value = false
+  } catch (err) {
+    console.error("送信失敗", err)
+    ElMessage.error("送信失敗，請稍候再試")
+  }
+}
+
+// 獲取使用者本人名稱
+const fetchuserName = async () => {
+  try {
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/users/singleUserData`, {
+      params: {
+        userId,
+      },
+    })
+    userName.value = data.username
+  } catch (err) {
+    console.error("獲取使用者資料失敗", err)
+  }
+}
+
+// 加彈幕
+const addDanmu = (message) => {
+  // 創建一個新陣列，包含所有現有彈幕和新彈幕，不然只用 push 更新陣列的話會因為套件的特性會只顯示第一條
+  danmus.value = [...danmus.value, message]
+}
+
 // 獲取購物車商品
 const fetchCartItems = async () => {
-  if(userId){
-      try {
+  if (userId) {
+    try {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`, {
         headers: {
           userId,
@@ -110,55 +107,48 @@ const fetchCartItems = async () => {
     } catch (error) {
       console.error("獲取資料失敗:", error)
     }
-  }
-  else{
-    const storedCart = JSON.parse(localStorage.getItem("cart"));
+  } else {
+    const storedCart = JSON.parse(localStorage.getItem("cart"))
     products.value = storedCart // 將 Json檔的資料存入 products
   }
 }
-  
 
 // 新增購物車商品
 const addProduct = async (newProduct) => {
-  if(userId){
+  if (userId) {
     axios
-    .post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, newProduct)
-    .then((response) => {
-      products.value.push(response.data) // 新增成功後直接更新列表
-    })
-    .catch((error) => {
-      console.error("新增商品失敗:", error)
-    })
+      .post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, newProduct)
+      .then((response) => {
+        products.value.push(response.data) // 新增成功後直接更新列表
+      })
+      .catch((error) => {
+        console.error("新增商品失敗:", error)
+      })
+  } else {
   }
-  else{
-
-  }
-  
 }
 
 // 刪除購物車商品的函式
 const deleteProduct = async (id) => {
-  if(userId){ 
+  if (userId) {
     axios
-    .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
-      headers: {
-        userId,
-      },
-    })
-    .then(() => {
-      return initializeCartPage()
-    })
-    .catch((error) => {
-      console.error("刪除商品失敗:", error)
-    })}
-    else{
-      const storedCart = JSON.parse(localStorage.getItem("cart")) ||[]
+      .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
+        headers: {
+          userId,
+        },
+      })
+      .then(() => {
+        return initializeCartPage()
+      })
+      .catch((error) => {
+        console.error("刪除商品失敗:", error)
+      })
+  } else {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || []
     const updatedCart = storedCart.filter((item) => item.product_id !== id)
-      localStorage.setItem("cart", JSON.stringify(updatedCart))//存回localstorage
-      initializeCartPage()
-
-    }
- 
+    localStorage.setItem("cart", JSON.stringify(updatedCart)) //存回localstorage
+    initializeCartPage()
+  }
 }
 
 // 刪除商品（判斷是否共享）
@@ -177,7 +167,7 @@ const deleteProductFromCart = async (id) => {
     }
   } else {
     try {
-      await deleteProduct(id)
+      await deleteProduct(payload.id)
     } catch (err) {
       ElMessage.error({
         message: "從購物車刪除商品失敗",
@@ -194,7 +184,7 @@ const updateQuantity = async ({ id, quantity }) => {
     alert("數量不能小於 1")
     return
   }
-  if(userId){
+  if (userId) {
     try {
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/cart/update-quantity`,
@@ -216,20 +206,16 @@ const updateQuantity = async ({ id, quantity }) => {
       console.error("更新數量時出錯", error)
       alert("更新數量時出錯，請稍後再試")
     }
-}
-  else{
-
-    const storedCart=JSON.parse(localStorage.getItem("Cart"));
+  } else {
+    const storedCart = JSON.parse(localStorage.getItem("Cart"))
     //尋找欲修改商品
-    const existingItem = storedCart.find(
-          (item) => item.product_id === productId
-        )
-        if (existingItem) {
-          // 如果商品已存在，增加數量
-          existingItem.quantity += quantity
-        } 
-        localStorage.setItem("cart",JSON.stringfy(storedCart));
-        initializeCartPage();
+    const existingItem = storedCart.find((item) => item.product_id === productId)
+    if (existingItem) {
+      // 如果商品已存在，增加數量
+      existingItem.quantity += quantity
+    }
+    localStorage.setItem("cart", JSON.stringfy(storedCart))
+    initializeCartPage()
   }
 }
 
@@ -261,7 +247,14 @@ const updateProductQty = async (payload) => {
 // 前往結帳
 const goToNext = async () => {
   try {
-    await router.push("/Debit")
+    selectedCountry.value && localStorage.setItem("country", selectedCountry.value)
+    selectedDelivery.value && localStorage.setItem("delivery", selectedDelivery.value)
+    selectedPayment.value && localStorage.setItem("payment", selectedPayment.value)
+    if (isSharedCart.value) {
+      await router.push(`/Debit/${route.params.groupId}`)
+    } else {
+      await router.push("/Debit")
+    }
   } catch (err) {
     console.error("導航失敗:", err)
   }
@@ -316,11 +309,46 @@ watch(
 )
 </script>
 <template>
+  <div>
+    <el-dialog class="w-[90%] md:[30%]" v-model="copyDialogToggle" title="請選擇分享方式">
+      <div class="flex flex-col items-center">
+        <button class="bg-[#0f4662] text-white w-[50%] p-2 m-2 rounded" @click="sendEmail">透過 Email 邀請</button>
+        <button class="border-2 w-[50%] p-2 m-2 rounded" @click="copyPath">複製網址</button>
+      </div>
+    </el-dialog>
+  </div>
+  <div>
+    <el-dialog v-model="selectMemberDialogToggle" title="選擇要發 Email 給哪個購朋友">
+      <el-scrollbar height="200px">
+        <el-checkbox-group v-model="selectedMembers">
+          <div v-for="(member, index) in sharedCartMembers" :key="index">
+            <el-checkbox :value="member" :label="member">
+              {{ member }}
+            </el-checkbox>
+          </div>
+        </el-checkbox-group>
+      </el-scrollbar>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="selectMemberDialogToggle = false">取消</el-button>
+          <el-button type="primary" @click="handleConfirm">確認</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
+  <div class="fixed top-10 w-full z-[100] pointer-events-none">
+    <vue-danmaku v-if="isSharedCart" v-model:danmus="danmus" :speeds="100" :channels="5" class="h-[100px] w-full" />
+  </div>
   <section class="bg-gray-100 pb-[150px]">
     <section class="px-2 max-w-[1340px] mx-auto py-5 md:px-10">
       <section class="bg-gray-100" v-if="isSharedCart">
         <div class="flex justify-between items-center">
-          <h1 class="text-2xl font-bold mt-5">共享購物車</h1>
+          <div class="flex gap-4 items-center">
+            <h1 class="text-2xl font-bold">共享購物車</h1>
+            <button @click="copyDialogToggle = true">
+              <i class="fa-solid fa-arrow-up-right-from-square align-center"></i>
+            </button>
+          </div>
           <div>
             <AddMember :groupId="route.params.groupId" :members="sharedCartMembers" @memberAdded="refreshSharedCart" />
             <Warning content="您確定要刪除共享購物車嗎？" @confirm="deleteSharedCart" />
@@ -339,8 +367,8 @@ watch(
       <!-- 步驟 -->
       <section class="flex justify-center">
         <el-steps style="min-width: 300px" :active="1" align-center class="md:w-[600px]">
-          <el-step title="購物" description="送貨與付款方式" />
-          <el-step title="結帳" description="付款與送貨地址" />
+          <el-step title="購物車" />
+          <el-step title="結帳" />
         </el-steps>
       </section>
 
@@ -417,7 +445,7 @@ watch(
         <!-- 優惠和小計區塊 -->
         <aside class="md:w-1/3 flex flex-col gap-5 mt-5 md:mt-0">
           <!-- 優惠區塊 -->
-          <div class="sticky top-0">
+          <div class="sticky top-[112px]">
             <div class="bg-white p-5 rounded-xl">
               <h2 class="text-xl font-bold">已享用之優惠</h2>
               <!-- 之後串 API 了用這個 div 跑 v-for -->
