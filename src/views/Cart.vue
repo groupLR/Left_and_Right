@@ -15,6 +15,7 @@ import { useCartStore } from "@/stores/cart"
 const cartStore = useCartStore()
 const { countryList, paymentOptions, deliveryOptions } = storeToRefs(cartStore)
 const SharedCartStore = useSharedCartStore()
+
 const route = useRoute()
 const router = useRouter()
 
@@ -95,44 +96,59 @@ const addDanmu = (message) => {
 
 // 獲取購物車商品
 const fetchCartItems = async () => {
-  try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`, {
-      headers: {
-        userId,
-      },
-    })
-    products.value = response.data // 將 API 返回的資料存入 products
-  } catch (error) {
-    console.error("獲取資料失敗:", error)
+  if (userId) {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`, {
+        headers: {
+          userId,
+        },
+      })
+      products.value = response.data // 將 API 返回的資料存入 products
+    } catch (error) {
+      console.error("獲取資料失敗:", error)
+    }
+  } else {
+    const storedCart = JSON.parse(localStorage.getItem("cart"))
+    products.value = storedCart // 將 Json檔的資料存入 products
   }
 }
 
 // 新增購物車商品
 const addProduct = async (newProduct) => {
-  axios
-    .post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, newProduct)
-    .then((response) => {
-      products.value.push(response.data) // 新增成功後直接更新列表
-    })
-    .catch((error) => {
-      console.error("新增商品失敗:", error)
-    })
+  if (userId) {
+    axios
+      .post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, newProduct)
+      .then((response) => {
+        products.value.push(response.data) // 新增成功後直接更新列表
+      })
+      .catch((error) => {
+        console.error("新增商品失敗:", error)
+      })
+  } else {
+  }
 }
 
 // 刪除購物車商品的函式
 const deleteProduct = async (id) => {
-  axios
-    .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
-      headers: {
-        userId,
-      },
-    })
-    .then(() => {
-      return initializeCartPage()
-    })
-    .catch((error) => {
-      console.error("刪除商品失敗:", error)
-    })
+  if (userId) {
+    axios
+      .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
+        headers: {
+          userId,
+        },
+      })
+      .then(() => {
+        return initializeCartPage()
+      })
+      .catch((error) => {
+        console.error("刪除商品失敗:", error)
+      })
+  } else {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || []
+    const updatedCart = storedCart.filter((item) => item.product_id !== id)
+    localStorage.setItem("cart", JSON.stringify(updatedCart)) //存回localstorage
+    initializeCartPage()
+  }
 }
 
 // 刪除商品（判斷是否共享）
@@ -175,27 +191,38 @@ const updateQuantity = async ({ id, quantity }) => {
     alert("數量不能小於 1")
     return
   }
-
-  try {
-    const response = await axios.put(
-      `${import.meta.env.VITE_API_URL}/cart/update-quantity`,
-      {
-        product_id: id,
-        quantity,
-      },
-      {
-        headers: { userId },
+  if (userId) {
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/cart/update-quantity`,
+        {
+          product_id: id,
+          quantity,
+        },
+        {
+          headers: { userId },
+        }
+      )
+      if (response.data.success) {
+        console.log("數量更新成功")
+        await initializeCartPage() // 重新獲取購物車列表
+      } else {
+        alert("更新失敗：" + response.data.message)
       }
-    )
-    if (response.data.success) {
-      console.log("數量更新成功")
-      await initializeCartPage() // 重新獲取購物車列表
-    } else {
-      alert("更新失敗：" + response.data.message)
+    } catch (error) {
+      console.error("更新數量時出錯", error)
+      alert("更新數量時出錯，請稍後再試")
     }
-  } catch (error) {
-    console.error("更新數量時出錯", error)
-    alert("更新數量時出錯，請稍後再試")
+  } else {
+    const storedCart = JSON.parse(localStorage.getItem("Cart"))
+    //尋找欲修改商品
+    const existingItem = storedCart.find((item) => item.product_id === productId)
+    if (existingItem) {
+      // 如果商品已存在，增加數量
+      existingItem.quantity += quantity
+    }
+    localStorage.setItem("cart", JSON.stringfy(storedCart))
+    initializeCartPage()
   }
 }
 
