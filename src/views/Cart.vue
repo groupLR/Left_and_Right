@@ -1,16 +1,15 @@
+<!-- 購物車頁面 -->
 <script setup>
 import axios from "axios"
-import vueDanmaku from "vue3-danmaku"
 import { useRoute, useRouter } from "vue-router"
-import { onMounted, ref, computed, watch, onUnmounted } from "vue"
-import { ElMessage, emitChangeFn } from "element-plus"
+import { onMounted, ref, computed, watch } from "vue"
+import { ElMessage } from "element-plus"
 import { useSharedCartStore } from "@/stores/sharedCart"
 import AddMember from "@/components/AddMember.vue"
 import Warning from "@/components/Warning.vue"
 import CartProduct from "@/components/CartProduct.vue"
-import { webSocketService } from "@/websocket/websocket.js"
-
 const SharedCartStore = useSharedCartStore()
+
 const route = useRoute()
 const router = useRouter()
 
@@ -20,9 +19,6 @@ const isSharedCart = ref(false) // 是不是共享購物車（用cart/後面有�
 const sharedCartName = ref("") // 共享購物車名稱
 const sharedCartMembers = ref([]) // 共享購物車成員
 const userId = localStorage.getItem("UID")
-const userName = ref("")
-const danmus = ref([])
-
 // 送貨表單
 const selectedCountry = ref("TW")
 const countryList = [
@@ -101,43 +97,31 @@ const itemPrice = computed(() => {
 })
 
 // method
-// 獲取使用者本人名稱
-const fetchuserName = async () => {
-  try {
-    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/users/singleUserData`, {
-      params: {
-        userId,
-      },
-    })
-    userName.value = data.username
-  } catch (err) {
-    console.error("獲取使用者資料失敗", err)
-  }
-}
-
-// 加彈幕
-const addDanmu = (message) => {
-  // 創建一個新陣列，包含所有現有彈幕和新彈幕，不然只用 push 更新陣列的話會因為套件的特性會只顯示第一條
-  danmus.value = [...danmus.value, message]
-}
-
 // 獲取購物車商品
 const fetchCartItems = async () => {
-  try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`, {
-      headers: {
-        userId,
-      },
-    })
-    products.value = response.data // 將 API 返回的資料存入 products
-  } catch (error) {
-    console.error("獲取資料失敗:", error)
+  if(userId){
+      try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`, {
+        headers: {
+          userId,
+        },
+      })
+      products.value = response.data // 將 API 返回的資料存入 products
+    } catch (error) {
+      console.error("獲取資料失敗:", error)
+    }
+  }
+  else{
+    const storedCart = JSON.parse(localStorage.getItem("cart"));
+    products.value = storedCart // 將 Json檔的資料存入 products
   }
 }
+  
 
 // 新增購物車商品
 const addProduct = async (newProduct) => {
-  axios
+  if(userId){
+    axios
     .post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, newProduct)
     .then((response) => {
       products.value.push(response.data) // 新增成功後直接更新列表
@@ -145,11 +129,17 @@ const addProduct = async (newProduct) => {
     .catch((error) => {
       console.error("新增商品失敗:", error)
     })
+  }
+  else{
+
+  }
+  
 }
 
 // 刪除購物車商品的函式
 const deleteProduct = async (id) => {
-  axios
+  if(userId){ 
+    axios
     .delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
       headers: {
         userId,
@@ -160,21 +150,22 @@ const deleteProduct = async (id) => {
     })
     .catch((error) => {
       console.error("刪除商品失敗:", error)
-    })
+    })}
+    else{
+      const storedCart = JSON.parse(localStorage.getItem("cart")) ||[]
+    const updatedCart = storedCart.filter((item) => item.product_id !== id)
+      localStorage.setItem("cart", JSON.stringify(updatedCart))//存回localstorage
+      initializeCartPage()
+
+    }
+ 
 }
 
 // 刪除商品（判斷是否共享）
-const deleteProductFromCart = async (payload) => {
+const deleteProductFromCart = async (id) => {
   if (isSharedCart.value) {
     try {
-      await SharedCartStore.deleteProductInSharedCart(route.params.groupId, payload.id)
-      // 發送 WebSocket 刪除訊息
-      webSocketService.sendMessage("cartDelete", {
-        userName: userName.value,
-        groupId: route.params.groupId,
-        itemId: payload.id,
-        itemName: payload.name,
-      })
+      await SharedCartStore.deleteProductInSharedCart(route.params.groupId, id)
       ElMessage.success("刪除商品成功")
       return initializeCartPage()
     } catch (err) {
@@ -203,27 +194,42 @@ const updateQuantity = async ({ id, quantity }) => {
     alert("數量不能小於 1")
     return
   }
-
-  try {
-    const response = await axios.put(
-      `${import.meta.env.VITE_API_URL}/cart/update-quantity`,
-      {
-        product_id: id,
-        quantity,
-      },
-      {
-        headers: { userId },
+  if(userId){
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/cart/update-quantity`,
+        {
+          product_id: id,
+          quantity,
+        },
+        {
+          headers: { userId },
+        }
+      )
+      if (response.data.success) {
+        console.log("數量更新成功")
+        await initializeCartPage() // 重新獲取購物車列表
+      } else {
+        alert("更新失敗：" + response.data.message)
       }
-    )
-    if (response.data.success) {
-      console.log("數量更新成功")
-      await initializeCartPage() // 重新獲取購物車列表
-    } else {
-      alert("更新失敗：" + response.data.message)
+    } catch (error) {
+      console.error("更新數量時出錯", error)
+      alert("更新數量時出錯，請稍後再試")
     }
-  } catch (error) {
-    console.error("更新數量時出錯", error)
-    alert("更新數量時出錯，請稍後再試")
+}
+  else{
+
+    const storedCart=JSON.parse(localStorage.getItem("Cart"));
+    //尋找欲修改商品
+    const existingItem = storedCart.find(
+          (item) => item.product_id === productId
+        )
+        if (existingItem) {
+          // 如果商品已存在，增加數量
+          existingItem.quantity += quantity
+        } 
+        localStorage.setItem("cart",JSON.stringfy(storedCart));
+        initializeCartPage();
   }
 }
 
@@ -232,14 +238,6 @@ const updateProductQty = async (payload) => {
   if (isSharedCart.value) {
     try {
       await SharedCartStore.updateProductQtyToSharedCart(route.params.groupId, payload.id, payload.quantity)
-      // 發送 WebSocket 更新訊息
-      webSocketService.sendMessage("cartUpdate", {
-        userName: userName.value,
-        groupId: route.params.groupId,
-        itemId: payload.id,
-        quantity: payload.quantity,
-        itemName: payload.name,
-      })
     } catch (err) {
       ElMessage.error({
         message: "更新共享購物車商品數量失敗：",
@@ -294,14 +292,10 @@ const initializeCartPage = async () => {
   // 檢查路由是否包含 groupId 參數，有就抓共享購物車，沒有就抓自己的購物車
   if ("groupId" in route.params) {
     isSharedCart.value = true
-    try {
-      const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
-      products.value = data.productDataList || []
-      sharedCartName.value = data.info.cartName || ""
-      sharedCartMembers.value = data.info.memberName || []
-    } catch (error) {
-      console.error("初始化共享購物車時出錯:", error)
-    }
+    const data = await SharedCartStore.fetchSharedCartItems(route.params.groupId)
+    products.value = data.productDataList || []
+    sharedCartName.value = data.info.cartName || ""
+    sharedCartMembers.value = data.info.memberName || []
   } else {
     isSharedCart.value = false
     await fetchCartItems()
@@ -311,37 +305,6 @@ const initializeCartPage = async () => {
 // onMounted
 onMounted(async () => {
   await initializeCartPage()
-  await fetchuserName()
-  // 連接 WebSocket
-  webSocketService.connect()
-
-  // 設定 WebSocket 訊息處理函式
-  // 數量更新
-  webSocketService.onMessage("cartUpdate", async ({ data }) => {
-    // 確保只處理相同購物車的訊息
-    if (data.groupId === route.params.groupId) {
-      addDanmu(`${data.userName} 更新 ${data.itemName}數量為 ${data.quantity}`)
-      await initializeCartPage()
-    }
-  })
-  // 刪除商品
-  webSocketService.onMessage("cartDelete", async ({ data }) => {
-    if (data.groupId === route.params.groupId) {
-      await initializeCartPage()
-      addDanmu(`${data.userName} 刪除了 ${data.itemName}`)
-    }
-  })
-  // 新增商品
-  webSocketService.onMessage("addProduct", async ({ data }) => {
-    if (data.groupId === route.params.groupId) {
-      try {
-        await initializeCartPage()
-        addDanmu(`${data.userName} 新增了 ${data.itemName} 進入共享購物車`)
-      } catch (error) {}
-    } else {
-      console.log("groupId 不符合")
-    }
-  })
 })
 
 // watch
@@ -351,26 +314,13 @@ watch(
     await initializeCartPage()
   }
 )
-
-// onUnmounted
-onUnmounted(() => {
-  webSocketService.disconnect()
-})
 </script>
 <template>
-  <div class="fixed top-10 w-full z-[100] pointer-events-none">
-    <vue-danmaku v-if="isSharedCart" v-model:danmus="danmus" :speeds="100" :channels="5" class="h-[100px] w-full" />
-  </div>
   <section class="bg-gray-100 pb-[150px]">
     <section class="px-2 max-w-[1340px] mx-auto py-5 md:px-10">
-      <section class="bg-gray-100 mt-5" v-if="isSharedCart">
+      <section class="bg-gray-100" v-if="isSharedCart">
         <div class="flex justify-between items-center">
-          <div class="flex gap-4 items-center">
-            <h1 class="text-2xl font-bold">共享購物車</h1>
-            <button>
-              <i class="fa-solid fa-arrow-up-right-from-square align-center"></i>
-            </button>
-          </div>
+          <h1 class="text-2xl font-bold mt-5">共享購物車</h1>
           <div>
             <AddMember :groupId="route.params.groupId" :members="sharedCartMembers" @memberAdded="refreshSharedCart" />
             <Warning content="您確定要刪除共享購物車嗎？" @confirm="deleteSharedCart" />
@@ -398,13 +348,10 @@ onUnmounted(() => {
       <section class="flex flex-col mt-10 md:flex-row md:gap-5">
         <section class="md:w-2/3">
           <!-- 商品列表 -->
-          <section class="bg-white rounded-xl" v-if="products.length == 0">
-            <el-empty description="購物車還是空的" />
-          </section>
-          <section class="bg-white rounded-xl" v-else>
+          <section class="bg-white rounded-xl">
             <CartProduct
               v-for="item in products"
-              :key="item.product_id"
+              :key="item.id"
               :id="item.product_id"
               :name="item.product_name"
               :originalPrice="item.original_price"
@@ -515,18 +462,13 @@ onUnmounted(() => {
     <section class="fixed bottom-0 w-full bg-white shadow-2xl">
       <div class="flex gap-5 justify-end items-center m-5 max-w-[1365px]">
         <p class="text-orange-500 font-bold">合計：NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
-        <button class="bg-black px-2 py-1 text-white rounded md:px-10" @click="goToNext" :disabled="products.length === 0">前往結帳</button>
+        <button class="bg-black px-2 py-1 text-white rounded md:px-10" @click="goToNext">前往結帳</button>
       </div>
     </section>
   </section>
 </template>
 
 <style scoped>
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 :deep(.el-step__title.is-finish) {
   @apply text-orange-500 font-bold;
 }
