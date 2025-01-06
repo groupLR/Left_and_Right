@@ -38,7 +38,7 @@ const getCurrencySymbol = computed(() => {
 })
 
 const handleAddToCart = async () => {
-  await CartStore.addProduct(props.id)
+  await CartStore.addProduct(props.id, 1, props.title, props.frontImg, props.price, props.originalPrice)
   ElMessage.success("新增成功")
 }
 </script>

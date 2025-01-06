@@ -104,10 +104,13 @@ const fetchCartItems = async () => {
         },
       })
       products.value = response.data // 將 API 返回的資料存入 products
+      console.log(products.value)
     } catch (error) {
       console.error("獲取資料失敗:", error)
     }
   } else {
+    console.log("沒登入")
+
     const storedCart = JSON.parse(localStorage.getItem("cart"))
     products.value = storedCart // 將 Json檔的資料存入 products
   }
@@ -317,7 +320,9 @@ const initializeCartPage = async () => {
 // onMounted
 onMounted(async () => {
   await initializeCartPage()
-  await fetchuserName()
+  if (userId) {
+    await fetchuserName()
+  }
   // 連接 WebSocket
   webSocketService.connect()
 

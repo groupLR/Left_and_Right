@@ -79,7 +79,7 @@ export const useCartStore = defineStore("cart", () => {
   const cartItems = ref([])
 
   // 新增商品到購物車
-  const addProduct = async (productId, quantity = 1) => {
+  const addProduct = async (productId, quantity = 1, name, image, salePrice, originalPrice) => {
     const userId = localStorage.getItem("UID")
 
     if (userId) {
@@ -106,7 +106,7 @@ export const useCartStore = defineStore("cart", () => {
           existingItem.quantity += quantity
         } else {
           // 如果商品不存在，新增到購物車
-          storedCart.push({ product_id: productId, quantity })
+          storedCart.push({ product_id: productId, quantity, product_name: name, image_path: image, sale_price: salePrice, original_price: originalPrice })
         }
 
         // 更新到 localStorage
