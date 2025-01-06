@@ -98,6 +98,16 @@ const addDanmu = (message) => {
 const fetchCartItems = async () => {
   if (userId) {
     try {
+      // 先把 localStorage 的商品加入購物車
+      const localCart = JSON.parse(localStorage.getItem("cart")) || []
+      if (localCart.length > 0) {
+        // 使用 Promise.all 等待所有商品加入完成
+        await Promise.all(localCart.map((products) => cartStore.addProduct(products.product_id, products.quantity, products.product_name)))
+        // 清空 localStorage
+        localStorage.removeItem("cart")
+      }
+
+      // 取得購物車
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart/cartQuery`, {
         headers: {
           userId,
@@ -105,11 +115,16 @@ const fetchCartItems = async () => {
       })
       products.value = response.data // 將 API 返回的資料存入 products
     } catch (error) {
-      console.error("獲取資料失敗:", error)
+      ElMessage({
+        type: "error",
+        message: "獲取購物車資料失敗",
+        duration: 3000,
+      })
     }
   } else {
-    const storedCart = JSON.parse(localStorage.getItem("cart"))
-    products.value = storedCart // 將 Json檔的資料存入 products
+    // 未登入時直接讀取 localStorage
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || []
+    products.value = storedCart
   }
 }
 
