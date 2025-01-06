@@ -538,10 +538,10 @@ onUnmounted(() => {
 							<h2 class="text-xl font-bold">已享用之優惠</h2>
 							<!-- 錯誤提示 -->
 							<div v-if="error" class="text-red-500 text-center">{{ error }}</div>
+
 							<!-- 無可用優惠券 -->
-							<div v-if="validCoupon" class="flex items-start flex-col"></div>
-							<!-- 之後串 API 了用這個 div 跑 v-for -->
-							<div class="flex items-start flex-col">
+
+							<div v-if="validCoupon" class="flex items-start flex-col">
 								<p class="my-4 px-5 bg-green-100 text-center text-sm md:text-base">優惠促銷</p>
 								<p class="text-sm md:text-base">{{ validCoupon.name }} - 滿 {{ validCoupon.min_spend }} 元可用</p>
 								<div class="w-full flex justify-end">
@@ -559,7 +559,7 @@ onUnmounted(() => {
 									<p>小計</p>
 									<p>NT${{ itemPrice.toLocaleString() }}</p>
 								</div>
-								<div class="flex justify-between">
+								<div v-if="validCoupon" class="flex justify-between">
 									<p>折扣</p>
 									<p>-NT$ {{ validCoupon.discount_amount }}</p>
 								</div>
