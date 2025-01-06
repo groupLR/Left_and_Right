@@ -8,7 +8,7 @@ import "swiper/css"
 import "swiper/css/pagination"
 import "swiper/css/navigation"
 import { onMounted, ref, watch, computed, onUnmounted } from "vue"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { ElMessage } from "element-plus"
 import { Pagination, Navigation, Scrollbar } from "swiper/modules"
 import { storeToRefs } from "pinia"
@@ -25,6 +25,7 @@ Swiper.use([Pagination, Navigation, Scrollbar])
 
 const swiperInstance = ref(null)
 const route = useRoute()
+const router = useRouter()
 const userId = localStorage.getItem("UID")
 const API_URL = import.meta.env.VITE_API_URL
 const userName = ref("")
@@ -218,13 +219,20 @@ const sharedCartNames = ref([])
 
 // 顯示共享購物車列表
 const showDialog = async () => {
-  dialogToggle.value = true
-  await SharedCartStore.fetchSharedCartList(userId)
-  sharedCartNames.value = sharedCartList.value.map((cart) => ({
-    id: cart.id,
-    name: cart.name || `您與 ${cart.member[0]} 與其他 ${cart.member.length - 1} 人共享的購物車`,
-  }))
-  selectedCarts.value = []
+  if (userId) {
+    dialogToggle.value = true
+    await SharedCartStore.fetchSharedCartList(userId)
+    sharedCartNames.value = sharedCartList.value.map((cart) => ({
+      id: cart.id,
+      name: cart.name || `您與 ${cart.member[0]} 與其他 ${cart.member.length - 1} 人共享的購物車`,
+    }))
+    selectedCarts.value = []
+  } else {
+    ElMessage.error("請先登入，即將跳轉...")
+    setTimeout(() => {
+      router.push("/users/sign-in")
+    }, 1000)
+  }
 }
 
 // 處理確認加入共享購物車按鈕點擊
