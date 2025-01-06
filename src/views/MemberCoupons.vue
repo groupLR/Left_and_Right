@@ -40,9 +40,8 @@
 import MemberNavbar from "../components/MemberNavbar.vue"
 import LogOut from "@/components/Logout.vue"
 const userId = localStorage.getItem("UID")
-import { onMounted } from "vue"
+import { onMounted, ref } from "vue"
 import { ElMessage } from "element-plus"
-import { ref } from "vue"
 
 const coupons = ref([]) // 初始化優惠券列表為空
 
