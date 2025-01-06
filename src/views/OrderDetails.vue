@@ -25,13 +25,13 @@ const getImageUrl = (imagePath) => {
 	const cleanedPath = imagePath.startsWith("./") ? imagePath.slice(1) : imagePath
 	return `${API_URL}/${cleanedPath}`
 }
-//總價
+// 總價
 const totalPrice = computed(() => {
 	return productInfo.value.reduce((sum, product) => {
 		return sum + product.sale_price * product.quantity
 	}, 0)
 })
-//商品數
+// 商品數
 const productCount = computed(() => {
 	return productInfo.value.length
 })
@@ -43,8 +43,8 @@ onMounted(async () => {
 
 		// 直接將返回的資料綁定給 productInfo
 		productInfo.value = data.productInfo || []
-		orderInfo.value = data.orderInfo || {}
-		customerInfo.value = data.customerInfo || {}
+		orderInfo.value = data.orderInfo?.[0] || {}
+		customerInfo.value = data.customerInfo?.[0] || {}
 		deliveryInfo.value = data.deliveryInfo || {}
 		paymentInfo.value = data.paymentInfo || {}
 	} catch (error) {
@@ -74,32 +74,34 @@ onMounted(async () => {
 						</div>
 						<div v-for="product in productInfo" :key="product.product_id" class="itemsCard">
 							<div class="itemsName">
-								<img :src="getImageUrl(product.image_path.image_path)" alt="商品圖片" />
-								{{ product.product_name }}
-								<p>Silver / 銀色</p>
-								<p>內圍直徑 1.7cm (#12)</p>
+								<router-link :to="{ name: 'products-detail(連後端)', params: { productId: product.product_id } }">
+									<img :src="getImageUrl(product.image_path.image_path)" alt="商品圖片" />
+									{{ product.product_name }}
+									<p>Silver / 銀色</p>
+									<p>內圍直徑 1.7cm (#12)</p>
+								</router-link>
 							</div>
 							<div class="itemsCoupon"></div>
 							<div class="itemsPrice">NT${{ product.sale_price }}</div>
 							<div class="itemsQuantity"><span>數量:</span>{{ product.quantity }}</div>
 							<div class="itemsTotal">
-								{{ product.sale_price * product.quantity }}
+								NT${{ product.sale_price * product.quantity }}
 							</div>
 						</div>
-						<div class="couponUsed">
+						<!-- <div class="couponUsed">
 							<h5>已使用之優惠</h5>
 							<span class="coupon-type">優惠促銷</span>
 							<p>限時全館$350免運</p>
-						</div>
+						</div> -->
 					</div>
 					<div class="ordersTotal">
 						<div class="ordersTotalCard">
 							<div class="subtotal">
-								小計:<span>{{ totalPrice }}</span>
+								小計:<span>NT${{ totalPrice }}</span>
 							</div>
 							<div class="delivery">運費:<span>免運</span></div>
 							<div class="total">
-								合計:<span>{{ totalPrice }}</span>
+								合計:<span>NT${{ totalPrice }}</span>
 							</div>
 						</div>
 					</div>
@@ -113,9 +115,7 @@ onMounted(async () => {
 					<h4>訂單資訊</h4>
 					<ul>
 						<li>訂單號碼:{{ purchaseID }}</li>
-						<li>訂單電郵:</li>
-						<li>訂單日期:</li>
-						<li>訂單狀態:</li>
+						<li>訂單狀態: 已完成</li>
 					</ul>
 				</div>
 				<div class="customImformation">
@@ -123,20 +123,16 @@ onMounted(async () => {
 					<ul>
 						<li>名字: {{ customerInfo.cuName }}</li>
 						<li>電話: {{ customerInfo.cuPhone }}</li>
-						<li>性別: {{ customerInfo.gender || "未提供" }}</li>
-						<li>生日: 1990/01/01</li>
+						<li>性別: 	{{ customerInfo.gender === "o" ? "秘密" : customerInfo.gender === "f" ? "女" : customerInfo.gender === "m" ? "男" : "未知" }}</li>
 					</ul>
 				</div>
 				<div class="deliveryImformation">
 					<h4>送貨資訊</h4>
 					<ul>
-						<li>送貨方式</li>
-						<li>送貨狀態</li>
-						<li>7-11</li>
-						<li>7-11</li>
+						<li>送貨方式: {{ orderInfo.DeliveryWay }}</li>
+						<li>送貨狀態: 已完成</li>
 						<li>收件人名字: {{ deliveryInfo.acName }}</li>
 						<li>收件人電話: {{ deliveryInfo.acPhone }}</li>
-						<li>配送編號</li>
 						<li>配送地址: {{ deliveryInfo.addr }}</li>
 					</ul>
 				</div>
@@ -144,14 +140,9 @@ onMounted(async () => {
 				<div class="paymentImformation">
 					<h4>付款資訊</h4>
 					<ul>
-						<li>付款方式</li>
+						<li>付款方式: {{ orderInfo.payWay }}</li>
 						<li>卡片名稱: {{ paymentInfo?.cardName || "N/A" }}</li>
 						<li>有效日期: {{ paymentInfo?.efficentDate || "N/A" }}</li>
-						<li>付款狀態</li>
-						<li>付款指示</li>
-						<li>發票狀態</li>
-						<li>發票申請類型</li>
-						<li>發票載具類型</li>
 					</ul>
 				</div>
 			</div>
@@ -228,6 +219,7 @@ h4 {
 	padding: 15px 0;
 	border: 1px solid #ddd;
 	border-top: none;
+	justify-content: space-between
 }
 
 .ordersTitleName,
@@ -333,6 +325,7 @@ hr {
 }
 
 .addCartAgain {
+	display: flex;
 	padding: 10px;
 	border: 1px solid #ddd;
 	border-top: none;
@@ -341,18 +334,10 @@ hr {
 	margin-bottom: 30px;
 	text-align: center;
 	justify-content: center;
-
 	align-items: center;
 }
 
-.addCartUp {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	font-size: 14px;
-	align-self: center;
-}
+
 
 .addCartAgain .btn {
 	position: absolute;
@@ -480,6 +465,10 @@ hr {
 		display: flex;
 		flex-wrap: wrap;
 		width: 100%;
+	}
+	.itemsCard img {
+		width: 100%;
+		height: auto;
 	}
 	.itemsCoupon {
 		display: none;

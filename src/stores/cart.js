@@ -1,6 +1,7 @@
 import { defineStore } from "pinia"
 import axios from "axios"
-import { ref } from "vue" // 添加這行
+import { ref } from "vue"
+import { ElMessage } from "element-plus"
 
 export const useCartStore = defineStore("cart", () => {
   // 國家選單
@@ -75,18 +76,77 @@ export const useCartStore = defineStore("cart", () => {
   ])
 
   // 新增商品到購物車 API
-  const addProduct = async (productId, quantity = 1) => {
-    try {
-      const userId = localStorage.getItem("UID")
-      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, {
-        user_id: userId,
-        product_id: productId,
-        quantity,
-      })
-      return data
-    } catch (err) {
-      console.log(err)
-      return err
+  // 初始化購物車資料
+  const cartItems = ref([])
+
+  // 新增商品到購物車
+  const addProduct = async (productId, quantity = 1, name, image, salePrice, originalPrice) => {
+    const userId = localStorage.getItem("UID")
+
+    if (userId) {
+      // 已登入，將商品存入資料庫
+      try {
+        await axios.post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, {
+          user_id: userId,
+          product_id: productId,
+          quantity,
+        })
+        ElMessage({
+          type: "success",
+          message: `${name} 已成功加入購物車`,
+          duration: 2000,
+        })
+      } catch (err) {
+        ElMessage({
+          type: "error",
+          message: "加入購物車失敗，請稍後再試",
+          duration: 3000,
+        })
+      }
+    } else {
+      // 未登入，將商品存入 localStorage
+      try {
+        const storedCart = JSON.parse(localStorage.getItem("cart")) || []
+
+        // 檢查 localStorage 購物車中是否已有該商品
+        const existingItem = storedCart.find((item) => item.product_id === productId)
+        if (existingItem) {
+          // 如果商品已存在，增加數量
+          existingItem.quantity += quantity
+          ElMessage({
+            type: "info",
+            message: `${name} 數量已更新`,
+            duration: 2000,
+          })
+        } else {
+          // 如果商品不存在，新增到 localStorage 購物車
+          storedCart.push({
+            product_id: productId,
+            quantity,
+            product_name: name,
+            image_path: image,
+            sale_price: salePrice.toString(),
+            original_price: originalPrice.toString(),
+          })
+          ElMessage({
+            type: "success",
+            message: `${name} 已加入購物車`,
+            duration: 2000,
+          })
+        }
+
+        // 更新到 localStorage
+        localStorage.setItem("cart", JSON.stringify(storedCart))
+
+        // 同步更新 Pinia 狀態
+        cartItems.value = storedCart
+      } catch (err) {
+        ElMessage({
+          type: "error",
+          message: "加入購物車失敗，請稍後再試",
+          duration: 3000,
+        })
+      }
     }
   }
 

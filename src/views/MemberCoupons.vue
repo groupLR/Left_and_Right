@@ -1,5 +1,99 @@
 <script setup>
 import MemberNavbar from "../components/MemberNavbar.vue"
+const userId = localStorage.getItem("UID")
+import { onMounted, ref } from "vue"
+import { ElMessage } from "element-plus"
+
+const coupons = ref([]) // 初始化優惠券列表為空
+
+// 領取優惠券
+const submitCoupon = async () => {
+  try {
+    // 先通過優惠券代碼查詢對應的優惠券 ID
+    const fetchIdResponse = await axios.post(`${import.meta.env.VITE_API_URL}/coupon/code-to-id`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ code: couponCode.value }), // 使用 couponCode
+    })
+
+    if (!fetchIdResponse.ok) {
+      throw new Error("無法找到該優惠券")
+    }
+
+    const responseData = await fetchIdResponse.json()
+    const id = responseData.id // 確保從 API 響應中正確獲取 id
+
+    // 使用查詢到的 ID 發起領取請求
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/coupon/${id}/claim`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId }), // 使用者 ID
+    })
+
+    if (!response.ok) {
+      const errorMessage = await response.text()
+      throw new Error(errorMessage || "領取優惠券失敗")
+    }
+
+    const result = await response.json()
+    coupons.value.push(result) // 加入新優惠券
+    couponCode.value = "" // 清空輸入框
+    ElMessage.success("優惠券領取成功！")
+  } catch (error) {
+    console.error("領取優惠券失敗:", error.message)
+    ElMessage.error(error.message || "領取優惠券失敗")
+  }
+}
+
+// 取得優惠券列表
+const fetchCoupons = async () => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/coupon/user/${userId}`)
+    if (!response.ok) {
+      throw new Error("取得優惠券列表失敗")
+    }
+    // 獲取優惠券資料，只有當 response.ok 為 true 時才會執行
+    const data = await response.json()
+    coupons.value = data.map((coupon) => ({
+      ...coupon,
+      claimed: coupon.claimed || false, // 預設為未領取
+    }))
+  } catch (error) {
+    console.log("優惠券出錯", error)
+    ElMessage.error("無法獲取優惠券")
+  }
+}
+
+//領取優惠券
+const claimed = async (couponId) => {
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/coupon/${couponId}/claim`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: userId, couponId }),
+    })
+    if (!response.ok) {
+      const { message } = await response.json()
+      throw new Error(message || "領取優惠券失敗")
+    }
+    // 更新該優惠券的領取狀態
+    coupons.value = coupons.value.map((coupon) => (coupon.id === couponId ? { ...coupon, claimed: true } : coupon))
+    ElMessage.success("領取優惠券成功")
+  } catch (error) {
+    console.log("領取優惠券失敗", error)
+  }
+  console.log(JSON.stringify({ userId, couponId }))
+}
+
+onMounted(() => {
+  fetchCoupons()
+})
 </script>
 
 <template>
@@ -7,35 +101,14 @@ import MemberNavbar from "../components/MemberNavbar.vue"
   <div class="lg:px-10">
     <div class="memberCoupon">
       <div class="mx-[40px] mt-[20px]">
-        <div class="memberCouponList flex gap-10 max-w-[1100px] py-[30px] mx-auto">
-          <!-- 折扣券 -->
-          <div class="w-[340px] couponCards">
-            <div class="h-[150px] px-[16px] font-bold">
-              <h5>
-                贈品券<br />
-                LINE好友限定 - 耳環收納組 (收納夾鏈袋 / 耳扣一組)
-              </h5>
-              <div class="w-[38px] h-[22px] bg-gray-200 text-gray-800 text-[10px] font-medium px-[4px] py-1 rounded-md mt-[24px]">
-                <p class="note">限網店</p>
-              </div>
-            </div>
-            <div class="separator">
-              <span class="circle left"></span>
-              <div class="dashedLine"></div>
-              <span class="circle right"></span>
-            </div>
-            <div class="couponCode px-[16px] pt-[8px] pb-[16px] flex justify-between items-center">
-              <span class="font-bold text-[16px]">line88</span>
-              <button class="couponCodeBtn">複製折扣碼</button>
-            </div>
-          </div>
-          <!-- 折扣券 -->
+        <div v-for="coupon in coupons" :key="coupon.id" class="memberCouponList flex gap-10 max-w-[1100px] pb-[30px] mx-auto">
           <!-- 折扣券 -->
           <div class="w-[340px] couponCards">
             <div class="h-[150px] px-[16px] pt-[12px] pb-[8px] font-bold">
               <h5>
-                贈品券<br />
-                LINE好友限定 - 耳環收納組 (收納夾鏈袋 / 耳扣一組)
+                贈品券
+                <br />
+                {{ coupon.name }}
               </h5>
               <div class="w-[38px] h-[22px] bg-gray-200 text-gray-800 text-[10px] font-medium px-[4px] py-1 rounded-md mt-[24px]">
                 <p class="note">限網店</p>
@@ -46,36 +119,12 @@ import MemberNavbar from "../components/MemberNavbar.vue"
               <div class="dashedLine"></div>
               <span class="circle right"></span>
             </div>
-            <div class="couponCode px-[16px] pt-[8px] pb-[16px] flex justify-between items-center">
-              <span class="font-bold text-[16px]">line88</span>
-              <button class="couponCodeBtn">複製折扣碼</button>
+            <div class="px-[16px] pt-[8px] pb-[16px] flex justify-between items-center">
+              <span class="font-bold text-[16px]">L&R</span>
+              <button @click="claimed(coupon.id)" class="couponCodeBtn">{{ coupon.claimed ? "已領取" : "領取折扣碼" }}</button>
             </div>
           </div>
-          <!-- 折扣券 -->
-          <!-- 折扣券 -->
-          <div class="w-[340px] couponCards">
-            <div class="h-[150px] px-[16px] pt-[12px] pb-[8px] font-bold">
-              <h5>
-                贈品券<br />
-                LINE好友限定 - 耳環收納組 (收納夾鏈袋 / 耳扣一組)
-              </h5>
-              <div class="w-[38px] h-[22px] bg-gray-200 text-gray-800 text-[10px] font-medium px-[4px] py-1 rounded-md mt-[24px]">
-                <p class="note">限網店</p>
-              </div>
-            </div>
-            <div class="separator">
-              <span class="circle left"></span>
-              <div class="dashedLine"></div>
-              <span class="circle right"></span>
-            </div>
-            <div class="couponCode px-[16px] pt-[8px] pb-[16px] flex justify-between items-center">
-              <span class="font-bold text-[16px]">line88</span>
-              <button class="couponCodeBtn">複製折扣碼</button>
-            </div>
-          </div>
-          <!-- 折扣券 -->
         </div>
-        <!-- <p class="text-center pb-[20px]">沒有可使用的優惠券</p> -->
       </div>
     </div>
   </div>
