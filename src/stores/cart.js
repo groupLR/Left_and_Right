@@ -1,6 +1,7 @@
 import { defineStore } from "pinia"
 import axios from "axios"
 import { ref } from "vue"
+import { ElMessage } from "element-plus"
 
 export const useCartStore = defineStore("cart", () => {
   // 國家選單
@@ -85,14 +86,22 @@ export const useCartStore = defineStore("cart", () => {
     if (userId) {
       // 已登入，將商品存入資料庫
       try {
-        const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, {
+        await axios.post(`${import.meta.env.VITE_API_URL}/cart/cartInsert`, {
           user_id: userId,
           product_id: productId,
           quantity,
         })
-        console.log("商品已成功新增至資料庫:", data)
+        ElMessage({
+          type: "success",
+          message: `${name} 已成功加入購物車`,
+          duration: 2000,
+        })
       } catch (err) {
-        console.error("新增商品到資料庫失敗:", err)
+        ElMessage({
+          type: "error",
+          message: "加入購物車失敗，請稍後再試",
+          duration: 3000,
+        })
       }
     } else {
       // 未登入，將商品存入 localStorage
@@ -104,9 +113,26 @@ export const useCartStore = defineStore("cart", () => {
         if (existingItem) {
           // 如果商品已存在，增加數量
           existingItem.quantity += quantity
+          ElMessage({
+            type: "info",
+            message: `${name} 數量已更新`,
+            duration: 2000,
+          })
         } else {
           // 如果商品不存在，新增到購物車
-          storedCart.push({ product_id: productId, quantity, product_name: name, image_path: image, sale_price: salePrice, original_price: originalPrice })
+          storedCart.push({
+            product_id: productId,
+            quantity,
+            product_name: name,
+            image_path: image,
+            sale_price: salePrice,
+            original_price: originalPrice,
+          })
+          ElMessage({
+            type: "success",
+            message: `${name} 已加入購物車`,
+            duration: 2000,
+          })
         }
 
         // 更新到 localStorage
@@ -114,9 +140,12 @@ export const useCartStore = defineStore("cart", () => {
 
         // 同步更新 Pinia 狀態
         cartItems.value = storedCart
-        console.log("商品已成功新增至 localStorage:", storedCart)
       } catch (err) {
-        console.error("暫存商品到 localStorage 失敗:", err)
+        ElMessage({
+          type: "error",
+          message: "加入購物車失敗，請稍後再試",
+          duration: 3000,
+        })
       }
     }
   }
