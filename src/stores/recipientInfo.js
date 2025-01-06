@@ -33,7 +33,7 @@ export const useDeliverInfo = () => {
       }
       await axios.put(
         `${import.meta.env.VITE_API_URL}/updateDeliverInfo`,
-        bodyData, // 直接傳送 JSON 物件作為請求正文
+        bodyData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -59,5 +59,5 @@ export const validateRecipient = (event) => {
   if (event.recipient_phone && !/^\d{10}$/.test(event.recipient_phone)) {
     deliverErrors.recipient_phone = "手機號碼必須為 10 位數字"
   }
-  return deliverErrors // 回傳錯誤
+  return deliverErrors
 }

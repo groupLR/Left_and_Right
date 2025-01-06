@@ -3,9 +3,9 @@ import { ElMessage } from "element-plus"
 import { ref } from "vue"
 
 export const useUsersInformation = () => {
-  const UID = localStorage.getItem("UID") // 從 localStorage 獲取用戶 ID
-  const information = ref({}) // 用於儲存用戶資訊
-  const memberErrors = ref({}) // 用於儲存錯誤訊息
+  const UID = localStorage.getItem("UID")
+  const information = ref({})
+  const memberErrors = ref({})
   const deliverErrors = ref({})
 
   // 抓取用戶資訊
@@ -16,10 +16,8 @@ export const useUsersInformation = () => {
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/memberInformation?uid=${UID}`
       )
-      const data = res.data // Axios 的結果直接是資料
+      const data = res.data
       information.value = data
-
-      // 格式化日期和轉換數字為字符串
       if (data.birthday) {
         const date = new Date(data.birthday)
         data.birthday = date.toISOString().split("T")[0]
@@ -30,7 +28,6 @@ export const useUsersInformation = () => {
       console.error("請求失敗：", error)
     }
   }
-
   // 更新用戶資訊
   const updateInformation = async (information) => {
     if (!information.username || information.username.trim() === "") {
@@ -53,7 +50,7 @@ export const useUsersInformation = () => {
         bodyData // 將資料作為第二個參數傳遞
       )
       if (res.status !== 200) throw new Error("更新用戶資料失敗")
-      await fetchInformation() // 更新成功後重新抓取資料
+      await fetchInformation()
     } catch (error) {
       console.error("更新失敗：", error)
       ElMessage.error("更新用戶資料失敗")
@@ -61,9 +58,9 @@ export const useUsersInformation = () => {
   }
 
   return {
-    information, // 用戶資訊
-    fetchInformation, // 抓取資料的方法
-    updateInformation, // 更新資料的方法
+    information,
+    fetchInformation,
+    updateInformation,
   }
 }
 
@@ -111,7 +108,7 @@ export const validateInformation = (event) => {
       memberErrors.birthday = "請輸入有效的生日"
     }
   }
-  return memberErrors // 回傳錯誤
+  return memberErrors
 }
 
 export const onlyNum = () => {
