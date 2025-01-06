@@ -313,6 +313,55 @@ const initializeCartPage = async () => {
     await fetchCartItems()
   }
 }
+// 優惠券
+
+// 儲存優惠券
+const coupons = ref([])
+
+// 錯誤訊息
+const error = ref(null)
+// 運費
+const shippingFee = 60
+
+// 預設商品金額
+const available = "available"
+
+// 獲取有效優惠券
+const validCoupon = computed(() => {
+  const availableCoupons = coupons.value.filter((coupon) => coupon.status === available)
+  if (availableCoupons.length > 0) {
+    availableCoupons.sort((a, b) => b.available - a.available)
+    return availableCoupons[0] // 透過排序優惠較高的價格後，返回第一個有效優惠券
+  }
+  return null // 如果沒有有效優惠券，返回 null
+})
+
+// 計算合計金額
+const totalAmount = computed(() => {
+  if (error.value) return "發生錯誤，無法計算金額" // 發生錯誤
+
+  const discount = validCoupon.value ? validCoupon.value.discount_amount : 0
+  const totalPrice = Math.max(0, itemPrice.value - discount)
+  return totalPrice + shippingFee
+})
+
+// 獲取優惠券資料
+const uid = localStorage.getItem("UID")
+
+const fetchCoupons = async () => {
+  if (!uid) {
+    error.value = "UID 不存在於 localStorage"
+    return
+  }
+
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/coupon/user/${uid}`)
+    coupons.value = response.data
+  } catch (err) {
+    console.error("獲取優惠券失敗:", err.message)
+    error.value = err.message // 儲存錯誤訊息
+  }
+}
 
 // onMounted
 onMounted(async () => {
@@ -494,10 +543,16 @@ onUnmounted(() => {
             <div class="text-gray-500">
               <p>取貨通知：</p>
               <p>
-                - 訂單到達超商七日內，每日皆會傳送取貨簡訊，並於第五日時撥打語音電話通知取貨哦！<br />
-                - 現貨訂單狀態更改「已確認」後，2-3天寄出。 (不包含假日及國定假日)<br />
-                <br />- 本公司產品享7天鑑賞期，30天保固維修<br />
-                - 免付費電話：0800 000 004<br />- 預購與現貨一併出貨
+                - 訂單到達超商七日內，每日皆會傳送取貨簡訊，並於第五日時撥打語音電話通知取貨哦！
+                <br />
+                - 現貨訂單狀態更改「已確認」後，2-3天寄出。 (不包含假日及國定假日)
+                <br />
+                <br />
+                - 本公司產品享7天鑑賞期，30天保固維修
+                <br />
+                - 免付費電話：0800 000 004
+                <br />
+                - 預購與現貨一併出貨
               </p>
             </div>
           </section>
@@ -508,12 +563,16 @@ onUnmounted(() => {
           <div class="sticky top-[112px]">
             <div class="bg-white p-5 rounded-xl">
               <h2 class="text-xl font-bold">已享用之優惠</h2>
-              <!-- 之後串 API 了用這個 div 跑 v-for -->
-              <div class="flex items-start flex-col">
+              <!-- 錯誤提示 -->
+              <div v-if="error" class="text-red-500 text-center">{{ error }}</div>
+
+              <!-- 無可用優惠券 -->
+
+              <div v-if="validCoupon" class="flex items-start flex-col">
                 <p class="my-4 px-5 bg-green-100 text-center text-sm md:text-base">優惠促銷</p>
-                <p class="text-sm md:text-base">雙11優惠！全館 兩件85折/三件8折/四件75折！ - 全單 滿 2 件 即享 85 折 再買 1 件 省更多</p>
+                <p class="text-sm md:text-base">{{ validCoupon.name }} - 滿 {{ validCoupon.min_spend }} 元可用</p>
                 <div class="w-full flex justify-end">
-                  <p class="text-sm md:text-base text-green-600 font-bold">-NT$94</p>
+                  <p class="text-sm md:text-base text-green-600 font-bold">-NT$ {{ validCoupon.discount_amount }}</p>
                 </div>
               </div>
             </div>
@@ -527,18 +586,18 @@ onUnmounted(() => {
                   <p>小計</p>
                   <p>NT${{ itemPrice.toLocaleString() }}</p>
                 </div>
-                <div class="flex justify-between">
+                <div v-if="validCoupon" class="flex justify-between">
                   <p>折扣</p>
-                  <p>-NT$94</p>
+                  <p>-NT$ {{ validCoupon.discount_amount }}</p>
                 </div>
                 <div class="flex justify-between">
                   <p>運費</p>
-                  <p>NT$60</p>
+                  <p>NT${{ shippingFee }}</p>
                 </div>
                 <hr />
                 <div class="flex justify-between">
                   <p>合計</p>
-                  <p class="font-bold text-orange-500">NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
+                  <p class="font-bold text-orange-500">NT${{ totalAmount }}</p>
                 </div>
               </div>
             </div>
@@ -549,7 +608,7 @@ onUnmounted(() => {
     <!-- 前往結帳 -->
     <section class="fixed bottom-0 w-full bg-white shadow-2xl">
       <div class="flex gap-5 justify-end items-center m-5 max-w-[1365px]">
-        <p class="text-orange-500 font-bold">合計：NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
+        <p class="text-orange-500 font-bold">合計：NT${{ totalAmount }}</p>
         <button class="bg-black px-2 py-1 text-white rounded md:px-10" @click="goToNext" :disabled="products.length === 0">前往結帳</button>
       </div>
     </section>

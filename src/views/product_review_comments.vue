@@ -23,12 +23,15 @@ onMounted(async () => {
 		const response = await axios.get(`${API_URL}/comment/info/${purchaseID}`)
 
 		if (response.data.status === "Success") {
-			user_id.value = response.data.user_id
-			username.value = response.data.username
+			// 會員資料不會變動，所以只需要取一次
+			const { user_id, username } = response.data
+			user_id.value = user_id
+			username.value = username
+			// 下面這些是要給前端渲染的
 			products.value = response.data.data.map((product) => ({
 				...product,
 				commentText: "",
-				sku: 5,
+				sku: 5, // 預設評分5顆星
 			}))
 		} else {
 			console.error("無法獲取商品資訊:", response.data.message)
@@ -40,7 +43,7 @@ onMounted(async () => {
 
 // 提交評論
 const submitComment = async () => {
-	const checkComments = products.value.filter((product) => !product.commentText)
+	const checkComments = products.value.filter((product) => !product.commentText) // 判斷有沒有商品未被評價
 	if (checkComments.length > 0) {
 		ElMessage.warning("所有商品評論完才能送出喔")
 		return
@@ -63,11 +66,7 @@ const submitComment = async () => {
 		// 確認所有請求是否成功
 		const allSuccess = responses.every((response) => response.data.status === "Success")
 		if (allSuccess) {
-			console.log(products.value)
-
 			ElMessage.success("評論已成功發佈！")
-			// 清空所有商品的評論輸入框
-			products.value.forEach((product) => (product.commentText = ""))
 			router.push("/MemberOrder") // 跳轉到會員訂單頁
 		}
 	} catch (err) {
@@ -78,7 +77,7 @@ const submitComment = async () => {
 </script>
 <template>
 	<div class="reviewMain mx-auto">
-		<div class="givingComment w-full pb-[15px]">
+		<div class="givingComment w-full pb-[15px] mt-[30px]">
 			<div class="awaitingCommentTitle border py-[10px] pl-[15px] font-semibold text-[18px]">
 				<h4>給予評價</h4>
 			</div>
@@ -87,9 +86,11 @@ const submitComment = async () => {
 				<hr class="my-[20px]" />
 				<div class="mb-[20px] commodityImformation" v-for="product in products" :key="product.product_id">
 					<div class="w-1/5 commodityImg px-[15px]">
+						<router-link :to="{ name: 'products-detail(連後端)', params: { productId: product.product_id } }">
 						<img :src="getImageUrl(product.image_paths[0])" alt="商品圖片" />
+						</router-link>
 					</div>
-					<div class="w-4/5">
+					<div class="w-4/5 commodityContent">
 						<div>
 							<h5 class="font-semibold text-[14px]">
 								{{ product.product_name }}
@@ -143,7 +144,8 @@ const submitComment = async () => {
 	float: left;
 }
 .commodityImg img {
-	max-width: 195px;
+	max-width:auto;
+	min-height:195px;
 	aspect-ratio: 1 / 1;
 	object-fit: cover;
 }
@@ -178,6 +180,26 @@ textarea {
 		flex-direction: column-reverse;
 		padding: 10px 15px;
 	}
+	.commodityImformation{
+		display: flex;
+		flex-direction: column;
+	}
+	.commodityImg{
+		width: 100%;
+		padding: 0;
+	}
+	.commodityImg img{
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		padding: 0;
+		margin: 0;
+	}
+	.commodityContent{
+		width: 100%;
+		padding: 15px;
+		padding-top: 0;
+	}
 	.awaitingComment {
 		width: 100%;
 		padding: 15px;
@@ -188,6 +210,7 @@ textarea {
 		padding: 15px;
 		padding-top: 0;
 	}
+
 }
 @media (max-width: 320px) {
 	.commodityImformation {
