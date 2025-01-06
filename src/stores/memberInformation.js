@@ -14,7 +14,12 @@ export const useUsersInformation = () => {
     deliverErrors.value = {}
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/memberInformation?uid=${UID}`
+        `${import.meta.env.VITE_API_URL}/memberInformation`,
+        {
+          headers: {
+            uid: UID,
+          },
+        }
       )
       const data = res.data
       information.value = data
@@ -36,7 +41,6 @@ export const useUsersInformation = () => {
     }
     try {
       const bodyData = {
-        uid: UID,
         username: information.username,
         email: information.email,
         phone: information.phone,
@@ -47,7 +51,13 @@ export const useUsersInformation = () => {
       }
       const res = await axios.put(
         `${import.meta.env.VITE_API_URL}/updateInformation`,
-        bodyData // 將資料作為第二個參數傳遞
+        bodyData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            uid: UID,
+          },
+        }
       )
       if (res.status !== 200) throw new Error("更新用戶資料失敗")
       await fetchInformation()

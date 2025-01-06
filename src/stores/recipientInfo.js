@@ -11,7 +11,7 @@ export const useDeliverInfo = () => {
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/getDeliverInfo`,
         {
-          params: { uid: UID }, // 使用 params 傳遞查詢參數
+          headers: { uid: UID },
         }
       )
       deliverInfo.value = res.data[0]
@@ -24,7 +24,6 @@ export const useDeliverInfo = () => {
   const updateDeliverInfo = async (deliverInfo) => {
     try {
       const bodyData = {
-        uid: UID,
         recipient: deliverInfo.recipient,
         recipient_phone: deliverInfo.recipient_phone,
         country: deliverInfo.country,
@@ -37,6 +36,7 @@ export const useDeliverInfo = () => {
         {
           headers: {
             "Content-Type": "application/json",
+            uid: UID,
           },
         }
       )
