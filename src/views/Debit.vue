@@ -149,14 +149,16 @@ const submitOrder = async () => {
     )
 
     // 處理綠界支付表單
-    if (data) {
+    if (selectedPayment !== "貨到付款" && data) {
       document.open()
       document.write(data)
       document.close()
       document.forms[0].submit()
+    } else {
+      // 貨到付款直接跳轉到訂單頁面
+      ElMessage.success("建立訂單成功")
+      router.push("/MemberOrder")
     }
-
-    return data
   } catch (error) {
     console.error("建立訂單失敗:", error)
     ElMessage.error("建立訂單失敗")
