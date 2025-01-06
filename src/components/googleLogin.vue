@@ -1,19 +1,26 @@
 <script setup>
-import { onMounted, ref } from "vue"
 import axios from "axios"
+import { onMounted, ref } from "vue"
 import { useRouter, useRoute } from "vue-router"
+import { ElMessage } from "element-plus"
+
 const router = useRouter()
 const route = useRoute()
-const redirectUrl = ref("") // 用 ref 來存儲重定向 URL
 
 // CLIENT_ID
 const CLIENT_ID = "201131820318-om98jaudikrjuraavdmt8o0jlitaf7b1.apps.googleusercontent.com"
+
 // localSrotage 的 key
 const STORAGE_KEY = "UID"
 const STORAGE_JWT_KEY = "TwT"
+
 // data
 const userData = ref(null)
 const isLoggedIn = ref(false) // 登入狀態
+const redirectUrl = ref("") // 用 ref 來存儲重定向 URL
+const centerDialogVisible = ref(false) // 沒註冊過的帳號的註冊提醒
+const googleLoginData = ref(null) // 存儲 Google 登入返回的資料
+
 // methods
 function loginProcess(response) {
   userData.value = response.data.user
@@ -21,31 +28,27 @@ function loginProcess(response) {
   localStorage.setItem(STORAGE_KEY, userData.value.userId) // UID 放在 localStorage
   localStorage.setItem(STORAGE_JWT_KEY, response.data.token) // JWT 放在 localStorage
 
-  // 設置 axios 預設標頭
-  axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`
-
   // 處理重定向
   const redirectPath = route.query.redirect || "/"
   router.push(redirectPath)
 }
 
 // 處理 google 註冊新用戶
-const handleRegister = async (googleData) => {
-  try {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, googleData)
+const handleRegister = async () => {
+  if (!googleLoginData.value) {
+    ElMessage.error("登入資料無效，請重新登入")
+    centerDialogVisible.value = false
+    return
+  }
 
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, googleLoginData.value)
+    centerDialogVisible.value = false
     loginProcess(response)
+    ElMessage.success("註冊成功！")
   } catch (error) {
-    console.error("註冊失敗", error)
-    Swal.fire({
-      title: "註冊失敗",
-      text: error.message,
-      confirmButtonText: "確認",
-      confirmButtonColor: "#000000", // 註冊按鈕設為黑色背景
-      customClass: {
-        confirmButton: "swal2-confirm-custom", // 自定義class
-      },
-    })
+    console.error("註冊失敗:", error)
+    ElMessage.error("註冊失敗，請稍後再試")
   }
 }
 
@@ -65,35 +68,14 @@ const onLogin = (res) => {
         // 用戶存在（可能是一般註冊或 Google 註冊），直接登入
         loginProcess(res)
       } else {
-        // 用戶不存在，詢問是否要註冊，目前先用 sweetalert
-        Swal.fire({
-          title: "註冊確認",
-          text: `此 email 尚未註冊，是否要註冊新帳號？ \n ${res.data.googleData.email}`,
-          showCancelButton: true,
-          confirmButtonText: "註冊",
-          cancelButtonText: "取消",
-          confirmButtonColor: "#000000", // 註冊按鈕設為黑色背景
-          customClass: {
-            confirmButton: "swal2-confirm-custom", // 自定義class
-          },
-        }).then((result) => {
-          if (result.isConfirmed) {
-            handleRegister(res.data.googleData)
-          }
-        })
+        // 用戶不存在，存儲 Google 資料並顯示註冊確認框
+        googleLoginData.value = res.data.googleData
+        centerDialogVisible.value = true
       }
     })
     .catch((error) => {
       console.error("登入失敗", error)
-      Swal.fire({
-        title: "登入失敗",
-        text: "登入失敗，請稍後再試或連繫客服人員",
-        confirmButtonText: "確認",
-        confirmButtonColor: "#000000", // 註冊按鈕設為黑色背景
-        customClass: {
-          confirmButton: "swal2-confirm-custom", // 自定義class
-        },
-      })
+      ElMessage.error("登入失敗，請稍後再試")
     })
 }
 
@@ -135,13 +117,12 @@ const initializeGoogle = () => {
 }
 
 onMounted(() => {
+  // 如果有前一頁就把路徑存下來，不然就回首頁
   redirectUrl.value = route.query.redirect || "/"
 
   // 檢查登入狀態
   const isUserLoggedIn = localStorage.getItem(STORAGE_KEY)
   if (isUserLoggedIn) {
-    // 這邊可以呼叫 API 重新獲取用戶資料
-    // 或是導向登入頁面重新登入
     isLoggedIn.value = true
   }
   const token = localStorage.getItem(STORAGE_JWT_KEY)
@@ -167,22 +148,20 @@ window.addEventListener("resize", () => {
 </script>
 
 <template>
-  <div v-if="!isLoggedIn">
-    <div class="googleBtnWrapper">
-      <div id="googleButton"></div>
+  <div>
+    <el-dialog v-model="centerDialogVisible" title="建立新帳號" width="80%" center class="max-w-[500px]">
+      <span class="text-gray-700"> Google 帳號 {{ googleLoginData.email }} 還沒註冊過，要註冊一個新帳號嗎？</span>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="centerDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleRegister"> 建立帳號 </el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <div v-if="!isLoggedIn">
+      <div class="flex justify-center items-center w-full">
+        <div id="googleButton"></div>
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.googleBtnWrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-.swal2-confirm-custom {
-  color: #ffffff !important;
-}
-</style>
