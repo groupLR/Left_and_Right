@@ -281,27 +281,28 @@ const toggleReview = () => {
   isDescription.value = false
   isReview.value = true
 }
-//追蹤清單
+// 追蹤清單
 const wishlist = ref([])
-//檢查這個商品是不是已經在願望清單裡ㄌ
+// 檢查這個商品是不是已經在願望清單裡ㄌ
 const fetchWishlist = async () => {
   try {
     const response = await axios.get(`${API_URL}/wishlist/${userId}`)
-    wishlist.value = response.data.data // API 回傳的 `data` 陣列
+    wishlist.value = response.data.data // 回傳這個會員有哪些商品在願望清單裡
   } catch (error) {
     wishlist.value = []
   }
 }
+// 檢查願望清單的商品是不是當前瀏覽的商品
 const isInWishlist = computed(() => {
-  return wishlist.value.some((item) => item.wishlists_products_id === Number(productId.value))
+  return wishlist.value.some((item) => item.wishlists_products_id === Number(productId.value)) // 這會返回一個布林值
 })
-//加入刪除願望清單ㄉ方法
+// 加入刪除願望清單ㄉ方法
 const toggleWishlist = async () => {
   if (!userId) {
     ElMessage.warning("請先登入以使用願望清單功能")
     return
   }
-  
+// 如果現在看的商品有在願望清單裡的話就刪除
   if (isInWishlist.value) {
     try {
       const wishlistItem = wishlist.value.find((item) => item.wishlists_products_id === Number(productId.value))
@@ -314,6 +315,7 @@ const toggleWishlist = async () => {
       ElMessage.error("移除失敗")
     }
   } else {
+// 如果不在願望清單就post進去資料庫
     try {
       const response = await axios.post(`${API_URL}/wishlist`, {
         wishlists_members_id: userId,
@@ -327,7 +329,7 @@ const toggleWishlist = async () => {
     }
   }
 }
-//評論頁
+// 評論頁
 const props = defineProps({
   productId: {
     type: Number,
