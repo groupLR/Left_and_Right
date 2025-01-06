@@ -60,7 +60,9 @@ onMounted(async () => {
     // 設定 WebSocket
     webSocketService.connect()
     // 取得使用者名稱
-    await fetchuserName()
+    if (userId) {
+      await fetchuserName()
+    }
   }
   // 取得願望清單狀態
   fetchWishlist()
@@ -210,8 +212,7 @@ const fetchuserName = async () => {
 
 // 加入購物車
 const handleAddToCart = async () => {
-  await CartStore.addProduct(productId.value, counter.value)
-  ElMessage.success("新增成功")
+  await CartStore.addProduct(Number(productId.value), counter.value, title.value, mainImgs.value[0].imgPath, salePrice.value, originalPrice.value)
 }
 // 共享購物車相關
 const selectedCarts = ref([])
