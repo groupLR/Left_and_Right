@@ -51,7 +51,7 @@ onMounted(async () => {
 
 <template>
   <MemberNavbar />
-  <div class="lg:px-10">
+  <div class="lg:px-10 pb-10">
     <div class="memberOrder">
       <div v-if="hasOrders">
         <div class="orderContainer">
@@ -97,7 +97,7 @@ onMounted(async () => {
   max-width: 1358px;
   border: 1px solid #ddd;
   border-top: 1px solid #fff;
-  margin-bottom: 40px;
+  background-color: white;
 }
 .orderContainer {
   font-family: Arial, sans-serif;

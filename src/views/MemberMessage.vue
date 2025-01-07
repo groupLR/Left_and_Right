@@ -5,7 +5,7 @@ import MemberNavbar from "../components/MemberNavbar.vue"
 
 <template>
   <MemberNavbar />
-  <div class="lg:px-10">
-    <ChatBox />
+  <div class="lg:px-10 pb-10">
+    <ChatBox class="bg-white" />
   </div>
 </template>

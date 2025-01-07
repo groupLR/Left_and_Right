@@ -35,17 +35,17 @@ if (route.path === "/") {
 
 <template>
   <Logout />
-  <div class="my-0 xl:px-10">
+  <div class="my-0 lg:px-10">
     <div class="lg:max-w-[1358px] lg:mx-auto">
       <!-- nav bar -->
       <nav>
         <ul class="flex p-0 justify-between gap-2 md:gap-0">
           <li
             v-for="(option, index) in navbarOption"
-            class="memberOptions transition-all duration-200 text-sm border-[#eeeeee] border-solid border"
+            class="memberOptions transition-all duration-200 text-sm text-[#0f4662] border-[#ddd] border-solid border"
             :key="index"
             :class="{
-              'font-bold text-black bg-white border-b-0 text-[28px] shadow-inner': route.path === option.router,
+              'font-bold text-[#0f4662]  bg-white border-b-0 text-[28px] shadow-inner': route.path === option.router,
               'text-gray-500  bg-gray-200/20': route.path !== option.router,
             }"
           >
@@ -77,7 +77,6 @@ if (route.path === "/") {
   height: 50px;
   line-height: 50px;
   text-align: center;
-  color: black;
 }
 
 .memberOptions:hover {
