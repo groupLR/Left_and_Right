@@ -368,6 +368,7 @@ onMounted(async () => {
   await initializeCartPage()
   if (userId) {
     await fetchuserName()
+    await fetchCoupons()
   }
   // 連接 WebSocket
   webSocketService.connect()
