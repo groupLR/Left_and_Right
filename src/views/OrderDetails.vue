@@ -56,10 +56,9 @@ onMounted(async () => {
       (product) => product.user_id === UID
     );
     if (!checkUID) {
-			ElMessage.error("不是你的訂單")
+			ElMessage.error("訂單顯示錯誤")
 			router.push("/MemberOrder");
 		}
-		console.log(checkUID);
 })
 </script>
 

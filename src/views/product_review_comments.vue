@@ -41,7 +41,7 @@ onMounted(async () => {
 		console.error("API 請求錯誤:", error.message)
 	}
 	if (UID !== user_id.value) {
-        ElMessage.error("不是你的訂單");
+        ElMessage.error("訂單顯示錯誤");
         router.push("/MemberOrder"); 
         return;
       }
