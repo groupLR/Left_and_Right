@@ -175,6 +175,7 @@ const deleteProductFromCart = async (payload) => {
   } else {
     try {
       await deleteProduct(payload.id)
+      ElMessage.success(`刪除${payload.name}成功`)
     } catch (err) {
       ElMessage.error({
         message: "從購物車刪除商品失敗",
@@ -368,6 +369,7 @@ onMounted(async () => {
   await initializeCartPage()
   if (userId) {
     await fetchuserName()
+    await fetchCoupons()
   }
   // 連接 WebSocket
   webSocketService.connect()
