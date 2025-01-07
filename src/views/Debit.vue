@@ -24,6 +24,9 @@ const selectedDelivery = deliveryOptions.value.find((item) => item.value === loc
 const selectedPayment = paymentOptions.value.find((item) => item.value === localStorage.getItem("payment"))?.label
 const agreedToTerms = ref(false)
 const phoneError = ref(false)
+const isOverLength = ref(false)
+const addrIsOverLength = ref(false)
+const siteIsOverLength = ref(false)
 
 // 表單數據
 const formData = ref({
@@ -45,10 +48,6 @@ const formData = ref({
 })
 
 // computed
-const itemCount = computed(() => {
-  return products.value.filter((item) => item.quantity > 0).length
-})
-
 const itemPrice = computed(() => {
   return products.value.reduce((total, item) => total + item.original_price * item.quantity, 0)
 })
@@ -108,8 +107,11 @@ const copyCustomerInfo = () => {
 
 // 即時格式化：只移除非數字字符
 const formatNumberInput = () => {
-  formData.value.customer.phone = formData.value.customer.phone ? formData.value.customer.phone.replace(/[^0-9]/g, "") : ""
-  formData.value.delivery.recipientPhone = formData.value.delivery.recipientPhone ? formData.value.delivery.recipientPhone.replace(/[^0-9]/g, "") : ""
+  formData.value.customer.phone = formData.value.customer.phone ? formData.value.customer.phone.replace(/[^0-9]/g, "").slice(0, 10) : ""
+  formData.value.delivery.recipientPhone = formData.value.delivery.recipientPhone
+    ? formData.value.delivery.recipientPhone.replace(/[^0-9]/g, "").slice(0, 10)
+    : ""
+  formData.value.delivery.postalCode = formData.value.delivery.postalCode ? formData.value.delivery.postalCode.replace(/[^0-9]/g, "") : ""
 }
 
 // 檢查手機格式
@@ -117,6 +119,30 @@ const phoneCheck = () => {
   const phonePattern = /^09[0-9]{8}$/
   phoneError.value = !phonePattern.test(formData.value.customer.phone)
   phoneError.value = !phonePattern.test(formData.value.delivery.recipientPhone)
+}
+
+// 檢查地址長度
+const validateLength = () => {
+  if (formData.value.delivery.city.length > 10) {
+    formData.value.delivery.city = formData.value.delivery.city.slice(0, 10)
+    isOverLength.value = true
+  } else {
+    isOverLength.value = false
+  }
+
+  if (formData.value.delivery.address.length > 50) {
+    formData.value.delivery.address = formData.value.delivery.address.slice(0, 50)
+    addrIsOverLength.value = true
+  } else {
+    addrIsOverLength.value = false
+  }
+
+  if (formData.value.delivery.region.length > 50) {
+    formData.value.delivery.region = formData.value.delivery.region.slice(0, 50)
+    siteIsOverLength.value = true
+  } else {
+    siteIsOverLength.value = false
+  }
 }
 
 const submitOrder = async () => {
@@ -261,7 +287,14 @@ onMounted(async () => {
             </div>
             <div class="mb-4">
               <label class="block mb-2">電話號碼<span class="text-red-500 ml-1">*</span></label>
-              <input @blur="phoneCheck" @input="formatNumberInput" type="text" v-model="formData.customer.phone" class="w-full border rounded-md p-2" />
+              <input
+                @blur="phoneCheck"
+                @input="formatNumberInput"
+                type="text"
+                v-model="formData.customer.phone"
+                placeholder="0900000000"
+                class="w-full border rounded-md p-2"
+              />
               <span v-if="phoneError" class="text-red-500 text-sm">請輸入正確的十位手機號碼，09...</span>
             </div>
             <div class="mb-4">
@@ -307,6 +340,7 @@ onMounted(async () => {
                 @blur="phoneCheck"
                 @input="formatNumberInput"
                 v-model="formData.delivery.recipientPhone"
+                placeholder="0900000000"
                 class="w-full border rounded-md p-2"
               />
               <span v-if="phoneError" class="text-red-500 text-sm">請輸入正確的十位手機號碼，09...</span>
@@ -316,11 +350,39 @@ onMounted(async () => {
 
             <div class="mb-4">
               <p class="font-bold mb-2">送貨地點: {{ selectedCountry }}</p>
-              <input type="text" v-model="formData.delivery.address" placeholder="地址(必填)" class="w-full border rounded-md p-2 mb-2" />
-              <input type="text" v-model="formData.delivery.city" placeholder="城市/市鎮(必填)" class="w-full border rounded-md p-2 mb-2" />
+              <input
+                type="text"
+                @input="validateLength"
+                v-model="formData.delivery.address"
+                placeholder="地址(必填)"
+                class="w-full border rounded-md p-2 mb-2"
+              />
+              <span v-if="addrIsOverLength" class="text-red-500 text-sm"> 地址不能超過 50 個字 </span>
+
+              <input
+                type="text"
+                @input="validateLength"
+                v-model="formData.delivery.city"
+                placeholder="城市/市鎮(必填)"
+                class="w-full border rounded-md p-2 mb-2"
+              />
+              <span v-if="isOverLength" class="text-red-500 text-sm"> 城市/市鎮不能超過 10 個字 </span>
               <div class="flex gap-2">
-                <input type="text" v-model="formData.delivery.postalCode" placeholder="郵政區號(必填)" class="w-1/2 border rounded-md p-2" />
-                <input type="text" v-model="formData.delivery.region" placeholder="地區/洲/省份(必填) " class="w-1/2 border rounded-md p-2" />
+                <input
+                  type="text"
+                  @input="formatNumberInput"
+                  v-model="formData.delivery.postalCode"
+                  placeholder="郵政區號(必填，數字)"
+                  class="w-1/2 border rounded-md p-2"
+                />
+                <input
+                  type="text"
+                  @input="validateLength"
+                  v-model="formData.delivery.region"
+                  placeholder="地區/洲/省份(必填) "
+                  class="w-1/2 border rounded-md p-2"
+                />
+                <span v-if="siteIsOverLength" class="text-red-500 text-sm"> 地區不能超過 50 個字 </span>
               </div>
             </div>
           </form>
