@@ -44,9 +44,9 @@ const removeItem = async (id) => {
 }
 
 // 加入購物車
-const handleAddToCart = async (productId) => {
-  await CartStore.addProduct(productId, 1)
-  ElMessage.success("新增成功")
+const handleAddToCart = async (productId, productName) => {
+  productId = Number(productId)
+  await CartStore.addProduct(productId, 1, productName)
 }
 
 // 共享購物車相關
@@ -271,7 +271,9 @@ const refreshSharedCartList = async () => {
     display: block;
     position: absolute;
     top: 10px;
+    top: 10px;
     right: 10px;
+    cursor: pointer;
     cursor: pointer;
   }
 
