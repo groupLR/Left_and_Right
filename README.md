@@ -19,7 +19,7 @@
   - swiper：輪播功能
   - vue-awesome-paginate：分頁元件
   - vue3-danmaku：彈幕功能
-  - @fortawesome：圖標套件
+  - fontawesome：icon 套件
   - zod：資料驗證
 
 ## 主要功能
@@ -37,12 +37,11 @@
   - 一般購物車
   - 共享購物車（WebSocket 即時同步）
 - 結帳流程
-
   - 金流串接
   - 優惠券套用
   - 匯率轉換
 
-  ## 團隊成員
+## 團隊成員
 
 ### 方玟蓉
 
