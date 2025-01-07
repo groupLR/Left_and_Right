@@ -23,6 +23,7 @@ const selectedCountry = countryList.value.find((item) => item.value === localSto
 const selectedDelivery = deliveryOptions.value.find((item) => item.value === localStorage.getItem("delivery"))?.label
 const selectedPayment = paymentOptions.value.find((item) => item.value === localStorage.getItem("payment"))?.label
 const agreedToTerms = ref(false)
+const phoneError = ref(false)
 
 // 表單數據
 const formData = ref({
@@ -94,21 +95,7 @@ const fetchCartItems = async () => {
   }
 }
 
-const deleteProduct = async (id) => {
-  try {
-    await axios.delete(`${import.meta.env.VITE_API_URL}/cart/cartDelete/${id}`, {
-      headers: {
-        userId,
-      },
-    })
-    await initializeCartPage()
-    ElMessage.success("刪除商品成功")
-  } catch (error) {
-    console.error("刪除商品失敗:", error)
-    ElMessage.error("刪除商品失敗")
-  }
-}
-
+// 送貨資料同顧客資料
 const copyCustomerInfo = () => {
   if (formData.value.delivery.sameAsCustomer) {
     formData.value.delivery.recipientName = formData.value.customer.name
@@ -117,6 +104,19 @@ const copyCustomerInfo = () => {
     formData.value.delivery.recipientName = ""
     formData.value.delivery.recipientPhone = ""
   }
+}
+
+// 即時格式化：只移除非數字字符
+const formatNumberInput = () => {
+  formData.value.customer.phone = formData.value.customer.phone ? formData.value.customer.phone.replace(/[^0-9]/g, "") : ""
+  formData.value.delivery.recipientPhone = formData.value.delivery.recipientPhone ? formData.value.delivery.recipientPhone.replace(/[^0-9]/g, "") : ""
+}
+
+// 檢查手機格式
+const phoneCheck = () => {
+  const phonePattern = /^09[0-9]{8}$/
+  phoneError.value = !phonePattern.test(formData.value.customer.phone)
+  phoneError.value = !phonePattern.test(formData.value.delivery.recipientPhone)
 }
 
 const submitOrder = async () => {
@@ -261,7 +261,8 @@ onMounted(async () => {
             </div>
             <div class="mb-4">
               <label class="block mb-2">電話號碼<span class="text-red-500 ml-1">*</span></label>
-              <input type="text" v-model="formData.customer.phone" class="w-full border rounded-md p-2" />
+              <input @blur="phoneCheck" @input="formatNumberInput" type="text" v-model="formData.customer.phone" class="w-full border rounded-md p-2" />
+              <span v-if="phoneError" class="text-red-500 text-sm">請輸入正確的十位手機號碼，09...</span>
             </div>
             <div class="mb-4">
               <label class="block mb-2">性別<span class="text-red-500 ml-1">*</span></label>
@@ -301,7 +302,15 @@ onMounted(async () => {
 
             <div class="mb-4">
               <label class="block mb-2">收件人電話號碼<span class="text-red-500 ml-1">*</span></label>
-              <input type="text" v-model="formData.delivery.recipientPhone" class="w-full border rounded-md p-2" />
+              <input
+                type="text"
+                @blur="phoneCheck"
+                @input="formatNumberInput"
+                v-model="formData.delivery.recipientPhone"
+                class="w-full border rounded-md p-2"
+              />
+              <span v-if="phoneError" class="text-red-500 text-sm">請輸入正確的十位手機號碼，09...</span>
+
             </div>
 
             <hr class="my-4" />
