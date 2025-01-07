@@ -59,7 +59,7 @@ watch(
 <template>
   <section class="flex max-w-[1340px] justify-center mx-auto">
     <Sidebar />
-    <div v-if="noResult" class="w-[50%] h-full">
+    <div v-if="noResult" class="w-full h-full">
       <h1 class="px-6 pt-4 text-xl font-medium">搜尋頁面為：{{ keyword }}</h1>
       <el-empty description="查無結果" class="h-[500px] flex justify-center item-center" />
     </div>
