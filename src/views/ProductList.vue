@@ -10,6 +10,8 @@ const route = useRoute()
 const ProductStore = useProductStore()
 const { categoryTitle, productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, pageSize, totalProductCount } = storeToRefs(ProductStore)
 
+window.scrollTo(0, 0)
+
 // 監聽路由參數變化
 watch(
   () => route.params.category,
@@ -25,8 +27,8 @@ watch(
   <section class="px-4 flex max-w-[1340px] mx-auto justify-center">
     <Sidebar />
     <div class="flex-1">
-      <div class="headerContainer px-1 mb-2 md:flex items-center">
-        <h1 class="py-5 text-xl">{{ categoryTitle }}</h1>
+      <div class="headerContainer px-1 my-2 md:flex items-center">
+        <h1 class="py-5 text-2xl font-medium mt-2 ml-2">{{ categoryTitle }}</h1>
         <!-- 排序 -->
         <div class="selectContainer flex">
           <div class="pageSelectItem flex items-center relative mr-3 flex-1">
@@ -60,7 +62,7 @@ watch(
       </div>
 
       <!-- 產品列表 -->
-      <div class="flex flex-wrap">
+      <div class="grid gap-2 justify-between grid-cols-2 md:grid-cols-3">
         <ProductItem
           v-for="(item, index) in productList"
           :key="item.id"

@@ -4,8 +4,6 @@ import { ElMessage, ElMessageBox } from "element-plus"
 
 const STORAGE_KEY = "UID"
 const STORAGE_JWT_KEY = "TwT"
-const STORAGE_SELECTED_CURRENCY_KEY = "SCU"
-const STORAGE_RATES_TIME_KEY = "GRT"
 const router = useRouter()
 
 const handleLogOut = () => {
@@ -34,12 +32,14 @@ const handleLogOut = () => {
 }
 </script>
 <template>
-  <div class="flex my-5 px-5 justify-end mx-auto lg:px-0 lg:max-w-[1358px]">
-    <div
-      class="text-white underline p-2 text-xs hover:cursor-pointer border-0 border-solid border-red-400 rounded-md bg-red-700 hover:font-bold hover:bg-red-400 hover:border"
-      @click="handleLogOut"
-    >
-      <p><span>登出</span><font-awesome-icon :icon="['fas', 'right-from-bracket']" class="ml-2" /></p>
+  <div class="pt-6 pb-2 lg:py-5 lg:px-10">
+    <div class="flex justify-end lg:max-w-[1358px] lg:mx-auto">
+      <div
+        class="text-white underline p-2 text-xs hover:cursor-pointer border-0 border-solid border-red-400 rounded-md bg-red-700 hover:font-bold hover:bg-red-400 hover:border"
+        @click="handleLogOut"
+      >
+        <p><span>登出</span><font-awesome-icon :icon="['fas', 'right-from-bracket']" class="ml-2" /></p>
+      </div>
     </div>
   </div>
 </template>

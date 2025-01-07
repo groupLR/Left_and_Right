@@ -20,12 +20,12 @@ onMounted(async () => {
       <div class="p-4 w-full">
         <iframe
           class="w-full aspect-video"
-          src="https://www.youtube-nocookie.com/embed/APEujcFMCxs?loop=1&playlist=APEujcFMCxs&rel=1"
+          src="https://www.youtube.com/embed/2yCrBzhKUUc?si=5x8VaWyxh2DCgtgx&autoplay=1&mute=0"
           data-cookieconsent="marketing"
           data-cookie-category="marketing"
           title="YouTube video player"
           frameborder="0"
-          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allow="accelerometer; autoplay;clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerpolicy="strict-origin-when-cross-origin"
           allowfullscreen
         >
@@ -51,9 +51,9 @@ onMounted(async () => {
         />
       </div>
       <!-- 分頁 -->
-      <div class="flex justify-center pb-4 mb-7">
+      <div class="flex justify-center pb-4 my-8">
         <vue-awesome-paginate
-          class="text-gray-500 text-sm"
+          class="text-gray-500 text-base"
           :total-items="totalProductCount"
           :items-per-page="coBrandingPageSize"
           :max-pages-shown="3"
