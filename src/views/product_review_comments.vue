@@ -12,6 +12,8 @@ const products = ref([])
 const purchaseID = route.params.pu_id
 const user_id = ref("")
 const username = ref("")
+const UID = localStorage.getItem("UID");
+
 const getImageUrl = (imagePath) => {
 	if (!imagePath || typeof imagePath !== "string") return ""
 	const cleanedPath = imagePath.startsWith("./") ? imagePath.slice(1) : imagePath
@@ -38,6 +40,11 @@ onMounted(async () => {
 	} catch (error) {
 		console.error("API 請求錯誤:", error.message)
 	}
+	if (UID !== user_id.value) {
+        ElMessage.error("訂單顯示錯誤");
+        router.push("/MemberOrder"); 
+        return;
+      }
 })
 
 // 提交評論
