@@ -290,8 +290,8 @@ onMounted(async () => {
             <p class="mb-4">已選擇的送貨方式: {{ selectedDelivery }}</p>
 
             <div class="mb-4">
-              <input type="checkbox" v-model="formData.delivery.sameAsCustomer" class="mr-2" @change="copyCustomerInfo" />
-              <label>收件人資料與顧客資料相同</label>
+              <input type="checkbox" id="sameAsCustomer" v-model="formData.delivery.sameAsCustomer" class="mr-2" @change="copyCustomerInfo" />
+              <label for="sameAsCustomer">收件人資料與顧客資料相同</label>
             </div>
 
             <div class="mb-4">
@@ -310,7 +310,6 @@ onMounted(async () => {
                 class="w-full border rounded-md p-2"
               />
               <span v-if="phoneError" class="text-red-500 text-sm">請輸入正確的十位手機號碼，09...</span>
-
             </div>
 
             <hr class="my-4" />
@@ -371,11 +370,11 @@ onMounted(async () => {
       <div class="max-w-[1365px] mx-auto p-4">
         <div class="flex flex-col items-center gap-4 md:flex-row md:justify-end md:gap-8">
           <div class="flex items-center">
-            <input type="checkbox" v-model="agreedToTerms" class="mr-2" />
-            <span class="text-sm md:text-base">
+            <input type="checkbox" id="agreeTerms" v-model="agreedToTerms" class="mr-2" />
+            <label for="agreeTerms" class="text-sm md:text-base">
               我同意網站 <a href="#" class="text-blue-600">服務條款</a>及
               <a href="#" class="text-blue-600">隱私權政策</a>
-            </span>
+            </label>
           </div>
           <div class="flex w-full justify-between items-center md:w-auto md:gap-8">
             <p class="text-orange-500 font-bold text-sm md:text-base">合計：NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
