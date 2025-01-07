@@ -22,14 +22,14 @@ const emits = defineEmits(["createdSharedCart"])
 
 const createSharedCart = async () => {
   const JWT = localStorage.getItem("TwT")
-  const { userEmail, userId } = jwtDecode(JWT)
+  const { email, userId } = jwtDecode(JWT)
 
   if (form.email === "") {
     ElMessage.error("請正確輸入信箱")
     return
   }
 
-  if (userEmail === form.email) {
+  if (email === form.email) {
     ElMessage.error("請不要輸入自己的信箱")
     return
   }
