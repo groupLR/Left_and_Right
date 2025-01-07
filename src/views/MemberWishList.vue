@@ -45,9 +45,9 @@ const removeItem = async (id) => {
 }
 
 // 加入購物車
-const handleAddToCart = async (productId) => {
-  await CartStore.addProduct(productId, 1)
-  ElMessage.success("新增成功")
+const handleAddToCart = async (productId, productName) => {
+  productId = Number(productId)
+  await CartStore.addProduct(productId, 1, productName)
 }
 
 // 共享購物車相關
@@ -184,7 +184,9 @@ const refreshSharedCartList = async () => {
           <p class="salePrice">NT${{ item.products.sale_price }}</p>
         </div>
         <div class="commodityStatus col-span-2 px-[15px] text-[12px]">
-          <button class="btn" v-if="item.products.status == 1" @click="handleAddToCart(item.wishlists_products_id)">加入購物車</button>
+          <button class="btn" v-if="item.products.status == 1" @click="handleAddToCart(item.wishlists_products_id, item.products.product_name)">
+            加入購物車
+          </button>
           <button class="btn mt-[10px]" v-if="item.products.status == 1" @click="showDialog(item.wishlists_products_id)">加入共享購物車</button>
           <p v-else>無法購買</p>
         </div>
@@ -252,7 +254,7 @@ const refreshSharedCartList = async () => {
 .salePrice {
   font-size: 12px;
 }
-.deleteIcon{
+.deleteIcon {
   display: none;
 }
 @media (max-width: 1024px) and (min-width: 769px) {
@@ -261,17 +263,17 @@ const refreshSharedCartList = async () => {
   }
 }
 @media (max-width: 768px) {
-  .btn{
+  .btn {
     margin: 5px auto;
   }
-  .deleteIcon{
+  .deleteIcon {
     display: block;
     position: absolute;
-    top: 10px; 
+    top: 10px;
     right: 10px;
-    cursor: pointer; 
+    cursor: pointer;
   }
-  
+
   .wishlistMain {
     width: 100%;
   }
