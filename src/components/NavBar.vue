@@ -74,11 +74,11 @@ onMounted(() => {
   <div v-if="showSidebar" class="fixed inset-0 bg-black bg-opacity-50 z-20 xl:hidden" @click="toggleSidebar"></div>
 
   <!-- navbar -->
-  <div class="fixed top-0 w-screen bg-white z-10 shadow-md flex justify-between pb-1 xl:pb-5">
+  <div class="fixed top-0 w-screen bg-white z-10 shadow-md flex justify-between xl:pb-2">
     <!-- logo -->
-    <div class="w-36 h-12 mt-2 xl:w-48 xl:h-20">
+    <div class="w-16 h-12 mt-2 ml-2 xl:ml-5 xl:w-24 xl:h-20 rounded-full overflow-hidden hover:border-2 hover:border-solid hover:border-[#0f4662]">
       <a href="/">
-        <img src="/src/assets/LRlogo.jpg" alt="logo" class="object-contain w-full h-full pl-5" />
+        <img src="/src/assets/LRlogo.jpg" alt="logo" class="object-cover w-full h-full" />
       </a>
     </div>
     <!-- 文字區 -->
@@ -88,50 +88,50 @@ onMounted(() => {
         <ul class="flex items-center justify-end flex-1">
           <!-- 匯率 -->
           <li class="mx-3">
-            <select class="hidden text-black outline-none cursor-pointer xl:block hover:text-gray-500" v-model="selectedCurrency">
-              <option :value="rate.currency" v-for="rate in rates" :key="rate.currency">{{ rate.symbol }} {{ rate.currency }}</option>
+            <select class="hidden text-[#0f4662] rounded-lg outline-none cursor-pointer xl:block" v-model="selectedCurrency">
+              <option :value="rate.currency" v-for="rate in rates" :key="rate.currency" class="">{{ rate.symbol }} {{ rate.currency }}</option>
             </select>
           </li>
           <!-- 搜尋框 -->
           <li class="mx-3 xl:hidden" @click="inputShow">
-            <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="text-[#0f4662]" />
           </li>
           <!-- 搜尋框 -->
-          <li class="relative hidden mx-3 text-black xl:block group hover:text-gray-500">
+          <li class="relative hidden px-2 text-[#0f4662] xl:block group hover:text-[#7994a0]">
             <input
               type="search"
               v-model="searchKeyword"
               @keyup.enter="goToSearch"
               maxlength="100"
               placeholder="ivy郁欣聯名"
-              class="w-0 overflow-hidden transition-all duration-500 ease-in-out border-b border-black outline-none group-hover:w-56 focus:w-56 focus-visible:outline-none"
+              class="w-0 overflow-hidden transition-all duration-500 ease-in-out border-b border-black outline-none group-hover:w-56 group-hover:p-1 focus:w-56 focus:p-1 focus-visible:outline-none"
             />
-            <button type="submit" @click="goToSearch">
+            <button type="submit" @click="goToSearch" class="pt-1">
               <!-- 放大鏡 -->
-              <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+              <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="ml-1 p-2 rounded-full text-[#0f4662] hover:text-[#7994a0] hover:bg-white" />
             </button>
           </li>
 
           <!-- 使用者 -->
           <RouterLink :to="isLoggedIn ? '/users/edit' : '/users/sign-in'">
-            <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
+            <li class="mx-1 px-2 text-[#0f4662] cursor-pointer rounded-full hover:bg-[#0f4662] hover:text-white">
               <font-awesome-icon :icon="['fas', 'user']" />
             </li>
           </RouterLink>
           <!-- 購物車 -->
           <RouterLink to="/Cart">
-            <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
+            <li class="mx-1 px-2 text-[#0f4662] cursor-pointer rounded-full hover:bg-[#0f4662] hover:text-white">
               <font-awesome-icon :icon="['fas', 'bag-shopping']" />
             </li>
           </RouterLink>
           <!-- 共享購物車 -->
           <RouterLink to="/sharedcartlist">
-            <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
+            <li class="mx-1 px-2 text-[#0f4662] cursor-pointer rounded-full hover:bg-[#0f4662] hover:text-white">
               <i class="fa-brands fa-shopify text-lg"></i>
             </li>
           </RouterLink>
           <!-- 漢堡選單 -->
-          <li class="relative w-16 h-16 list-none">
+          <li class="relative w-16 h-16 list-none text-[#0f4662]">
             <div @click="toggleSidebar">
               <label for="bars"
                 ><font-awesome-icon :icon="['fas', 'bars']" class="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer top-1/2 left-1/2 xl:hidden"
@@ -141,30 +141,46 @@ onMounted(() => {
         </ul>
       </div>
       <!-- 商品類別 -->
-      <div class="hidden w-full gap-8 max-w-[1160px] justify-center xl:flex">
-        <RouterLink to="/categories/28" class="text-sm font-semibold hover:text-gray-500">1223 新品 / NEW</RouterLink>
-        <RouterLink to="/categories/26" class="text-sm font-semibold animate-pulse text-red-600 hover:text-red-300">Kurt Wu 插畫家聯名</RouterLink>
-        <RouterLink to="/categories/31" class="text-sm font-semibold hover:text-gray-500">耳環 / Earrings</RouterLink>
-        <RouterLink to="/categories/33" class="text-sm font-semibold hover:text-gray-500">戒指 / Rings</RouterLink>
-        <RouterLink to="/categories/34" class="text-sm font-semibold hover:text-gray-500">手鍊 / Bracelets</RouterLink>
-        <RouterLink to="/categories/35" class="text-sm font-semibold hover:text-gray-500">項鍊 / Necklaces</RouterLink>
-        <RouterLink to="/categories/26" class="text-sm tracking-widest font-semibold hover:text-gray-500">聯名系列</RouterLink>
-        <RouterLink to="/store-info" class="text-sm tracking-widest font-semibold hover:text-gray-500">門市資訊</RouterLink>
+      <div class="hidden w-full gap-8 max-w-[1160px] justify-center xl:flex xl:ml-8">
+        <RouterLink to="/categories/28" class="text-sm p-1 rounded-lg font-semibold text-[#0f4662] hover:bg-[#0f4662] hover:text-white"
+          >1223 新品 / NEW</RouterLink
+        >
+        <RouterLink to="/categories/26" class="text-sm p-1 rounded-lg font-semibold text-red-600 hover:bg-red-400 hover:text-white"
+          ><p class="animate-pulse hover:animate-none">Kurt Wu 插畫家聯名</p>
+        </RouterLink>
+        <RouterLink to="/categories/31" class="text-sm p-1 rounded-lg font-semibold text-[#0f4662] hover:bg-[#0f4662] hover:text-white"
+          >耳環 / Earrings</RouterLink
+        >
+        <RouterLink to="/categories/33" class="text-sm p-1 rounded-lg font-semibold text-[#0f4662] hover:bg-[#0f4662] hover:text-white"
+          >戒指 / Rings</RouterLink
+        >
+        <RouterLink to="/categories/34" class="text-sm p-1 rounded-lg font-semibold text-[#0f4662] hover:bg-[#0f4662] hover:text-white"
+          >手鍊 / Bracelets</RouterLink
+        >
+        <RouterLink to="/categories/35" class="text-sm p-1 rounded-lg font-semibold text-[#0f4662] hover:bg-[#0f4662] hover:text-white"
+          >項鍊 / Necklaces</RouterLink
+        >
+        <RouterLink to="/categories/26" class="text-sm p-1 rounded-lg tracking-widest font-semibold text-[#0f4662] hover:bg-[#0f4662] hover:text-white"
+          >聯名系列</RouterLink
+        >
+        <RouterLink to="/store-info" class="text-sm p-1 rounded-lg tracking-widest font-semibold text-[#0f4662] hover:bg-[#0f4662] hover:text-white"
+          >門市資訊</RouterLink
+        >
       </div>
     </div>
   </div>
 
   <!-- 手機版搜尋輸入框 -->
-  <div v-show="isVisible" class="moveDown w-full mt-24 flex justify-center mx-auto z-100 animate-pulse duration-700 xl:hidden">
+  <div v-show="isVisible" class="moveDown w-full mt-20 mb-3 flex justify-center mx-auto z-100 animate-pulse duration-700 xl:hidden">
     <input
       type="search"
       v-model="searchKeyword"
       @keyup.enter="goToSearch"
       maxlength="100"
       placeholder="ivy郁欣聯名"
-      class="w-4/5 border-b border-black focus-visible:outline-none"
+      class="w-4/5 border-b border-[#0f4662] text-[#0f4662] focus-visible:outline-none"
     />
-    <button type="submit" @click="goToSearch" class="py-px px-1.5 ml-1">
+    <button type="submit" @click="goToSearch" class="py-px px-1.5 ml-1 text-[#0f4662]">
       <i class="fa fa-search ::before"></i>
     </button>
   </div>
@@ -267,7 +283,7 @@ onMounted(() => {
   </transition>
 
   <!-- 預留空間 -->
-  <div class="w-full h-[72px] xl:h-28" v-show="isVisible === false"></div>
+  <div class="w-full h-12 xl:h-24" v-show="isVisible === false"></div>
 </template>
 
 <style scoped>
