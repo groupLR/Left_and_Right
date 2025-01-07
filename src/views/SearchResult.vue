@@ -1,4 +1,5 @@
 <script setup>
+import axios from "axios"
 import { ref, onMounted, watch, computed } from "vue"
 import { useRoute } from "vue-router"
 import { debounce } from "lodash"
@@ -10,7 +11,7 @@ const route = useRoute()
 
 // 定義產品列表的響應式變量
 const products = ref([])
-
+const noResult = ref(false)
 // 定義計算屬性來獲取當前的關鍵字
 const keyword = computed(() => {
   const q = route.query.q || ""
@@ -22,12 +23,18 @@ const fetchProducts = debounce(async () => {
   if (keyword.value) {
     try {
       // 發送請求到後端 API 獲取產品資料
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/search?q=${encodeURIComponent(keyword.value)}`) // 確保能正常地傳遞參數
-      if (!response.ok) {
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/search?q=${encodeURIComponent(keyword.value)}`) // 確保能正常地傳遞參數
+      if (!data) {
         throw new Error("API 請求失敗")
       }
+
+      noResult.value = false
+      products.value = []
       // 返回的 JSON 資料賦值給 products
-      products.value = await response.json()
+      if (data.message === "查無資料") {
+        noResult.value = true
+      }
+      products.value = data
     } catch (error) {
       console.error("獲取產品資料失敗:", error)
     }
@@ -36,6 +43,7 @@ const fetchProducts = debounce(async () => {
 
 // 當元件掛載時自動加載資料
 onMounted(() => {
+  noResult.value = false
   fetchProducts()
 })
 
@@ -51,22 +59,27 @@ watch(
 <template>
   <section class="flex max-w-[1340px] justify-center mx-auto">
     <Sidebar />
-
-    <div class="px-1 mb-2">
+    <div v-if="noResult" class="w-full h-full">
       <h1 class="px-6 pt-4 text-xl font-medium">搜尋頁面為：{{ keyword }}</h1>
-      <div class="container mx-auto px-4 py-5">
-        <div class="product-list grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <ProductItem
-            v-for="product in products"
-            :key="product.product_id"
-            :id="product.product_id"
-            :title="product.product_name"
-            :price="product.sale_price"
-            :originalPrice="product.original_price"
-            :frontImg="product.front_image_path"
-            :backImg="product.back_image_path"
-            class="h-full"
-          />
+      <el-empty description="查無結果" class="h-[500px] flex justify-center item-center" />
+    </div>
+    <div v-else>
+      <div class="px-1 mb-2">
+        <h1 class="px-6 pt-4 text-xl font-medium">搜尋頁面為：{{ keyword }}</h1>
+        <div class="container mx-auto px-4 py-5">
+          <div class="product-list grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <ProductItem
+              v-for="product in products"
+              :key="product.product_id"
+              :id="product.product_id"
+              :title="product.product_name"
+              :price="product.sale_price"
+              :originalPrice="product.original_price"
+              :frontImg="product.front_image_path"
+              :backImg="product.back_image_path"
+              class="h-full"
+            />
+          </div>
         </div>
       </div>
     </div>
