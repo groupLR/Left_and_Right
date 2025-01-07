@@ -2,12 +2,14 @@
 import { ref, onMounted, computed } from "vue"
 import axios from "axios"
 import ChatBox from "../components/chatbox.vue"
-import { useRoute } from "vue-router"
-
+import { useRoute , useRouter  } from "vue-router"
+import { ElMessage } from "element-plus"
 const API_URL = import.meta.env.VITE_API_URL
 const currentPage = ref(true)
 const route = useRoute()
+const router = useRouter();
 const purchaseID = route.params.pu_id
+const UID = localStorage.getItem("UID");
 
 const pagetoggle = () => {
 	currentPage.value = !currentPage.value
@@ -50,6 +52,14 @@ onMounted(async () => {
 	} catch (error) {
 		console.error("API 請求失敗：", error)
 	}
+	const checkUID = productInfo.value.every(
+      (product) => product.user_id === UID
+    );
+    if (!checkUID) {
+			ElMessage.error("不是你的訂單")
+			router.push("/MemberOrder");
+		}
+		console.log(checkUID);
 })
 </script>
 
