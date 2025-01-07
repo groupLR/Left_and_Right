@@ -105,6 +105,9 @@ const refreshSharedCartList = async () => {
 </script>
 
 <template>
+  <LogOut />
+  <MemberNavbar />
+
   <!-- 共享購物車選擇對話框 -->
   <div v-if="sharedCartList.length === 0">
     <el-dialog v-model="dialogToggle" title="您還沒有共享購物車" width="30%">
@@ -133,67 +136,70 @@ const refreshSharedCartList = async () => {
       </template>
     </el-dialog>
   </div>
-  <LogOut />
-  <MemberNavbar />
-  <div class="wishlistMain mx-auto p-10">
+
+  <!-- 主要內容區 -->
+  <div class="max-w-[1358px] mx-auto p-10 border border-[#ddd] border-t-white">
     <MemberEmpty v-if="wishlists.length === 0" />
+
     <div v-else>
-      <div class="wishlistTitle grid grid-cols-12 items-center border-b pb-2 text-[12px] font-semibold">
-        <div class="col-span-2 px-[15px]">
-          <p>商品圖</p>
-        </div>
-        <div class="col-span-4 px-[15px]">
-          <p>商品資訊</p>
-        </div>
-        <div class="col-span-3 px-[15px]">
-          <p>價格</p>
-        </div>
-        <div class="col-span-2 px-[15px]">
-          <p>狀態</p>
-        </div>
-        <div class="col-span-1 px-[15px]">
-          <p>刪除</p>
-        </div>
-      </div>
+      <h1 class="text-xl font-bold mb-4">追蹤清單</h1>
+      <!-- 商品列表 -->
       <div
         v-for="item in wishlists"
         :key="item.id"
-        class="commodityList grid grid-cols-12 items-center border-b py-[15px] mx-[-10px] bg-white hover:bg-[#F5F5F5]"
+        class="grid grid-cols-12 items-center border-b border-[#ddd] py-4 hover:bg-[#F5F5F5] transition-colors relative"
       >
-        <div class="deleteIcon" @click="removeItem(item.id)">
-          <font-awesome-icon :icon="['fas', 'times']" />
-        </div>
-        <div class="commodityImg col-span-2 px-[15px]">
+        <!-- 手機版刪除按鈕 -->
+        <button class="md:hidden absolute top-2 right-2 cursor-pointer" @click="removeItem(item.id)">
+          <font-awesome-icon :icon="['fas', 'times']" class="text-gray-400 hover:text-gray-600" />
+        </button>
+
+        <!-- 商品圖片 -->
+        <div class="col-span-12 md:col-span-2 px-4">
           <router-link :to="{ name: 'products-detail(連後端)', params: { productId: item.products.product_id } }">
             <img
               v-if="item.products.product_images.length > 0"
               :src="getImageUrl(item.products.product_images[0].image_path)"
               :alt="item.products.product_images[0].alt_text || '商品圖片'"
-              class="aspect-square object-cover"
+              class="aspect-square object-cover w-full"
             />
           </router-link>
         </div>
-        <div class="commodityName col-span-4 px-[15px]">
-          <p>{{ item.products.product_name }}</p>
-          <p class="shape">
-            {{ item.products.product_specs[0].spec_value }}
-          </p>
+
+        <!-- 商品資訊 -->
+        <div class="col-span-12 md:col-span-4 px-4 mt-4 md:mt-0">
+          <p class="text-[#333333] font-medium text-xs md:text-base">{{ item.products.product_name }}</p>
+          <p class="text-[#80808099] text-xs">{{ item.products.product_specs[0].spec_value }}</p>
         </div>
-        <div class="commodityPrice col-span-3 px-[15px] text-[12px]">
-          <p class="originalPrice">NT${{ item.products.original_price }}</p>
-          <p class="salePrice">NT${{ item.products.sale_price }}</p>
+
+        <!-- 價格 -->
+        <div class="col-span-12 md:col-span-3 px-4 mt-2 md:mt-0">
+          <p class="text-[#ddd] text-xs line-through md:text-base">NT${{ item.products.original_price }}</p>
+          <p class="text-[#333333] text-xs md:text-base">NT${{ item.products.sale_price }}</p>
         </div>
-        <div class="commodityStatus col-span-2 px-[15px] text-[12px]">
-          <button class="btn" v-if="item.products.status == 1" @click="handleAddToCart(item.wishlists_products_id, item.products.product_name)">
+
+        <!-- 操作按鈕 -->
+        <div class="col-span-12 md:col-span-2 px-4 mt-2 md:mt-0">
+          <button
+            v-if="item.products.status == 1"
+            class="w-[90%] flex items-center justify-center px-3 py-2 bg-[#0f4662] text-white rounded-xl text-xs font-bold border border-white hover:bg-[#7994a0] hover:border-black transition-colors whitespace-nowrap overflow-hidden md:text-base"
+            @click="handleAddToCart(item.wishlists_products_id, item.products.product_name)"
+          >
             加入購物車
           </button>
-          <button class="btn mt-[10px]" v-if="item.products.status == 1" @click="showDialog(item.wishlists_products_id)">加入共享購物車</button>
-          <p v-else>無法購買</p>
+          <button
+            v-if="item.products.status == 1"
+            class="w-[90%] flex items-center justify-center px-3 py-2 bg-[#fff] text-[#0f4662] rounded-xl text-xs font-bold border border-[#0f4662] hover:bg-[#7994a0] hover:border-black transition-colors whitespace-nowrap overflow-hidden mt-[10px] md:text-base"
+            @click="showDialog(item.wishlists_products_id)"
+          >
+            加入共享購物車
+          </button>
+          <p v-else class="text-xs">無法購買</p>
         </div>
-        <div class="commodityDelete col-span-1 px-[15px]">
-          <p>
-            <font-awesome-icon :icon="['fas', 'trash']" class="cursor-pointer" @click="removeItem(item.id)" />
-          </p>
+
+        <!-- 桌面版刪除按鈕 -->
+        <div class="hidden md:block col-span-1 px-4 text-center">
+          <font-awesome-icon :icon="['fas', 'trash']" class="cursor-pointer text-gray-400 hover:text-gray-600" @click="removeItem(item.id)" />
         </div>
       </div>
     </div>
@@ -201,132 +207,17 @@ const refreshSharedCartList = async () => {
 </template>
 
 <style scoped>
-* {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  color: #333333;
-}
-.wishlistMain {
-  border: 1px solid #ddd;
-  max-width: 1358px;
-  border-top: 1px solid #fff;
-}
-.wishlistTitle {
-  border-bottom: 1px solid #ddd;
-}
-.commodityList {
-  border-bottom: 1px solid rgba(221, 221, 221, 0.5);
-}
-.btn {
-  width: 90%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 12px;
-  background-color: #0f4662;
-  color: #fff;
-  border: 1px solid #fff;
-  border-radius: 20px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.btn:hover {
-  background-color: #7994a0;
-  border: #000 1px solid;
+:deep(.el-dialog) {
+  @apply rounded-lg;
 }
 
-.shape {
-  color: #80808099;
-  font-size: 12px;
+:deep(.el-checkbox__label) {
+  @apply text-gray-700;
 }
-.fa-cart-shopping {
-  display: none !important;
-}
-.originalPrice {
-  font-size: 12px;
-  color: #ddd;
-  text-decoration: line-through;
-}
-.salePrice {
-  font-size: 12px;
-}
-.deleteIcon {
-  display: none;
-}
-@media (max-width: 1024px) and (min-width: 769px) {
-  .fa-cart-shopping {
-    display: block !important;
-  }
-}
+
 @media (max-width: 768px) {
-  .btn {
-    margin: 5px auto;
-  }
-  .deleteIcon {
-    display: block;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-  }
-
-  .wishlistMain {
-    width: 100%;
-  }
-  .wishlistTitle {
-    display: none;
-  }
   .commodityList {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    margin: auto;
-    padding: 0;
-    border: 1px solid #ddd;
-    padding-top: 15px;
-    position: relative;
-  }
-  .commodityList:nth-of-type(n + 2) {
-    margin-top: 20px;
-  }
-  .commodityImg {
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-bottom: 25px;
-    width: 80%;
-  }
-  .commodityImg img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    padding: 0;
-    margin: 0;
-  }
-  .commodityName {
-    width: 100%;
-    font-size: 14px;
-    color: #797979;
-    text-align: left;
-  }
-  .commodityPrice {
-    padding-top: 7px;
-    padding-bottom: 7px;
-    text-align: left;
-    width: 100%;
-  }
-  .commodityStatus {
-    width: 100%;
-    background-color: #efefef;
-    padding: 15px;
-    text-align: center;
-    line-height: 12px;
-  }
-  .commodityDelete {
-    display: none;
+    @apply flex flex-col w-4/5 mx-auto py-4 border border-[#ddd] relative;
   }
 }
 </style>
