@@ -222,7 +222,7 @@ const updateQuantity = async ({ id, quantity }) => {
       // 如果商品已存在，增加數量
       existingItem.quantity += quantity
     }
-    localStorage.setItem("cart", JSON.stringfy(storedCart))
+    localStorage.setItem("cart", JSON.stringify(storedCart))
     initializeCartPage()
   }
 }
