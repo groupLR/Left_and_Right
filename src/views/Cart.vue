@@ -284,7 +284,6 @@ const goToNext = async () => {
 const deleteSharedCart = async () => {
   try {
     await SharedCartStore.deleteSharedCart(route.params.groupId)
-    await SharedCartStore.fetchSharedCartList()
     const message = sharedCartName.value ? `刪除 ${sharedCartName.value} 成功` : "刪除共享購物車成功"
     ElMessage.success(message)
     // 導航到共享購物車列表
@@ -311,7 +310,13 @@ const initializeCartPage = async () => {
       sharedCartName.value = data.info.cartName || ""
       sharedCartMembers.value = data.info.memberName || []
     } catch (error) {
-      console.error("初始化共享購物車時出錯:", error)
+      console.log(error.status)
+      if (error.status === 403) {
+        router.push("/empty")
+        ElMessage.error("無訪問權限")
+        return
+      }
+      ElMessage.error("發生錯誤")
     }
   } else {
     isSharedCart.value = false
