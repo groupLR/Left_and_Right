@@ -22,6 +22,7 @@ onMounted(async () => {
 		if (response.data.status === "Success") {
 			// 再根據訂單號碼抓訂單詳細資訊
 			const orderPromises = response.data.data.map(async (order) => {
+				try{
 				const details = await axios.get(`${API_URL}/order/details/${order.pu_id}`)
 				const { productInfo } = details.data
 				// 計算總數和總價
@@ -38,9 +39,12 @@ onMounted(async () => {
 					totalPrice,
 					isReviewed,
 				}
-			})
+			} catch(error) {
+				return null
+			}
+		})
 
-			orders.value = await Promise.all(orderPromises)
+		orders.value = (await Promise.all(orderPromises)).filter((order) => order !== null);
 		}
 		if (orders.value.length === 0) {
 			hasOrders.value = false // 如果沒訂單會顯示MemberEmpty頁面
