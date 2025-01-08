@@ -8,8 +8,6 @@ export const COUPONS = [
 ]
 
 export const addWelcomeCoupons = async (userId) => {
-  console.log(userId)
-
   try {
     const addCouponPromises = COUPONS.map((coupon) =>
       axios.post(`${import.meta.env.VITE_API_URL}/coupon/${userId}`, {
