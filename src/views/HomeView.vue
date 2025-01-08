@@ -33,11 +33,11 @@ onMounted(async () => {
       </div>
     </section>
     <!-- 聯名產品 -->
-    <section class="px-4 mx-auto md:w-[750px] lg:w-[970px] xl:w-[1170px]">
-      <div class="p-4">
+    <section class="p-2 mx-auto md:w-[750px] lg:w-[970px] xl:w-[1170px]">
+      <div class="">
         <h2 class="coBrandingTitle mb-7 pt-3 pb-6 text-2xl text-center tracking-wide relative">{{ coBrandingTitle }}</h2>
       </div>
-      <div class="flex flex-wrap">
+      <div class="w-full grid md:grid-cols-2 lg:grid-cols-4 gap-2 justify-between">
         <ProductItem
           v-for="(item, index) in productList"
           :key="item.id"
@@ -47,13 +47,12 @@ onMounted(async () => {
           :originalPrice="item.originalPrice"
           :frontImg="item.frontImg"
           :backImg="item.backImg"
-          class="md:col-6 lg:col-3"
         />
       </div>
       <!-- 分頁 -->
       <div class="flex justify-center pb-4 my-8">
         <vue-awesome-paginate
-          class="text-gray-500 text-base"
+          class="text-white text-base bg-[#C9D9F0] rounded-md p-1 hover:bg-[#6A88BE]"
           :total-items="totalProductCount"
           :items-per-page="coBrandingPageSize"
           :max-pages-shown="3"
