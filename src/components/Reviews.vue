@@ -135,7 +135,7 @@ watch(
 				<p class="text-sm text-gray-500">
 					{{ formatTimestamp(review.comment_time) }}
 				</p>
-				<p><el-rate :model-value="review.sku" :max="5" :void-color="'#c6d1de'" disabled></el-rate></p>
+				<p><el-rate :model-value="review.sku" :max="5" disabled></el-rate></p>
 				<p class="text-gray-700 mt-2">
 					{{ review.comment }}
 				</p>
@@ -143,3 +143,9 @@ watch(
 		</div>
 	</div>
 </template>
+
+<style scoped>
+:deep(.el-icon) {
+	color	: #ffffff;
+}
+</style>

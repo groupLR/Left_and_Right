@@ -473,7 +473,7 @@ const props = defineProps({
           </div>
           <div class="mx-auto my-5 flex justify-center text-sm hover:cursor-pointer">
             <p :class="{ active: isSubscribe }" @click="toggleWishlist">
-              <i :class="isInWishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>加入追蹤清單
+              <i class="p-1" :class="isInWishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>加入追蹤清單
             </p>         
           </div>
           <div class="promotionalContainer relative mx-5 mt-5">
