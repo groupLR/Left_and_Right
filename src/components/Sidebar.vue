@@ -27,7 +27,7 @@ fetchCategories()
     <ul class="relative">
       <li v-for="(category, index) in categories" :key="category.category_id" class="relative list-none">
         <!-- 大項目 -->
-        <div class="flex items-center text-[#0f4662] justify-between hover:cursor-pointer shadow-sm hover:font-bold">
+        <div class="flex items-center text-[#314e86] justify-between hover:cursor-pointer shadow-sm hover:font-bold">
           <!-- 類別名稱 -->
           <RouterLink :to="`/categories/${category.category_id}`" class="p-4" :class="{ ' font-bold': category.showChildren }">{{
             category.category_name
@@ -35,7 +35,7 @@ fetchCategories()
           <!-- 收合箭頭 -->
           <i
             v-if="category.children.length > 0"
-            class="fas fa-chevron-down w-3 h-3 text-[#0f4662] mr-4 transition-transform duration-300"
+            class="fas fa-chevron-down w-3 h-3 text-[#314e86] mr-4 transition-transform duration-300"
             :class="{ 'rotate-180': category.showChildren }"
             @click="toggleChildren(index)"
           ></i>
@@ -47,7 +47,7 @@ fetchCategories()
             <li
               v-for="child in category.children"
               :key="child.categories_id"
-              class="p-4 hover:font-bold text-[#6b808b] hover:text-[#0f4662] hover:cursor-pointer"
+              class="p-4 hover:font-semibold text-gray-400 hover:text-[#314e86] hover:cursor-pointer"
             >
               <RouterLink :to="`/categories/${child.categories_id}`">{{ child.category_name }}</RouterLink>
             </li>
