@@ -333,10 +333,9 @@ const available = "available"
 
 // 獲取有效優惠券
 const validCoupon = computed(() => {
-  const availableCoupons = coupons.value.filter((coupon) => coupon.status === available)
-  if (availableCoupons.length > 0) {
-    availableCoupons.sort((a, b) => b.available - a.available)
-    return availableCoupons[0] // 透過排序優惠較高的價格後，返回第一個有效優惠券
+  if (coupons.value.length > 0) {
+    const bestCoupn = coupons.value.sort((a, b) => b.discount_amount - a.discount_amount)
+    return bestCoupn[0] // 透過排序優惠較高的價格後，返回第一個有效優惠券
   }
   return null // 如果沒有有效優惠券，返回 null
 })
@@ -572,7 +571,7 @@ onUnmounted(() => {
         <!-- 優惠和小計區塊 -->
         <aside class="md:w-1/3 flex flex-col gap-5 mt-5 md:mt-0">
           <!-- 優惠區塊 -->
-          <div class="sticky top-[112px]">
+          <div class="sticky top-[70px] xl:top-[112px]">
             <div class="bg-white p-5 rounded-xl" v-if="products.length !== 0">
               <h2 class="text-xl font-bold">已享用之優惠</h2>
               <!-- 錯誤提示 -->
