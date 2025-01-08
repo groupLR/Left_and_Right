@@ -20,25 +20,29 @@ onMounted(async () => {
     if (response.data.status === "Success") {
       // 再根據訂單號碼抓訂單詳細資訊
       const orderPromises = response.data.data.map(async (order) => {
-        const details = await axios.get(`${API_URL}/order/details/${order.pu_id}`)
-        const { productInfo } = details.data
-        // 計算總數和總價
-        const totalQuantity = productInfo.reduce((sum, product) => sum + product.quantity, 0)
-        const totalPrice = productInfo.reduce((sum, product) => sum + product.sale_price * product.quantity, 0)
-        // 判斷這筆訂單是不是已經有評論了
-        const reviewStatusResponse = await axios.get(`${API_URL}/order/isReviewed/${order.pu_id}`)
-        const isReviewed = reviewStatusResponse.data.isReviewed // 從 API 返回的值會是布林值
+        try {
+          const details = await axios.get(`${API_URL}/order/details/${order.pu_id}`)
+          const { productInfo } = details.data
+          // 計算總數和總價
+          const totalQuantity = productInfo.reduce((sum, product) => sum + product.quantity, 0)
+          const totalPrice = productInfo.reduce((sum, product) => sum + product.sale_price * product.quantity, 0)
+          // 判斷這筆訂單是不是已經有評論了
+          const reviewStatusResponse = await axios.get(`${API_URL}/order/isReviewed/${order.pu_id}`)
+          const isReviewed = reviewStatusResponse.data.isReviewed // 從 API 返回的值會是布林值
 
-        return {
-          ...order,
-          productName: productInfo[0]?.product_name || "無商品名稱",
-          totalQuantity,
-          totalPrice,
-          isReviewed,
+          return {
+            ...order,
+            productName: productInfo[0]?.product_name || "無商品名稱",
+            totalQuantity,
+            totalPrice,
+            isReviewed,
+          }
+        } catch (error) {
+          return null
         }
       })
 
-      orders.value = await Promise.all(orderPromises)
+      orders.value = (await Promise.all(orderPromises)).filter((order) => order !== null)
     }
     if (orders.value.length === 0) {
       hasOrders.value = false // 如果沒訂單會顯示MemberEmpty頁面
