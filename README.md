@@ -132,7 +132,7 @@ npm install
 ```
 
 3. 環境設定
-   複製 .env.example 檔案為 .env，以便為專案設定環境變數：
+   複製 .env.example 檔案為 .env，以便為專案設定環境變數
 
 4. 啟動開發伺服器
 
