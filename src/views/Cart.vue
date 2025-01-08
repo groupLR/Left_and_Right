@@ -634,10 +634,6 @@ button:disabled {
   @apply text-orange-500 font-bold;
 }
 
-:deep(.el-step__description.is-finish) {
-  @apply text-orange-500;
-}
-
 :deep(.el-step__head.is-finish) {
   @apply text-orange-500 border-orange-500;
 }
