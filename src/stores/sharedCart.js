@@ -40,7 +40,7 @@ export const useSharedCartStore = defineStore("sharedCart", () => {
       })
       return data
     } catch (err) {
-      console.log("err", err)
+      throw err
     }
   }
 
