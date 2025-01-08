@@ -90,6 +90,34 @@ const onLogin = (res) => {
     })
 }
 
+// 渲染 Google 按鈕
+const renderGoogleButton = () => {
+  const container = document.getElementById("googleButton")
+  if (!container) return
+
+  // 根據容器寬度設置按鈕寬度
+  const viewport = window.innerWidth
+  let buttonWidth
+
+  // 根據螢幕寬度設置不同的按鈕寬度
+  if (viewport < 768) {
+    // 手機版
+    buttonWidth = Math.min(viewport - 80, 300) // 預留左右各40px邊距，最大寬度300px
+  } else {
+    // 電腦版
+    buttonWidth = 500 // 固定寬度
+  }
+
+  window.google.accounts.id.renderButton(container, {
+    theme: "outline",
+    size: "large",
+    shape: "pill",
+    text: "signin_with",
+    logo_alignment: "center",
+    width: buttonWidth,
+  })
+}
+
 // 初始化 Google 登入
 const initializeGoogle = () => {
   if (!window.google) {
@@ -109,22 +137,7 @@ const initializeGoogle = () => {
     context: "signin",
   })
 
-  // 獲取容器寬度
-  const container = document.querySelector(".googleBtnWrapper")
-  const containerWidth = container?.offsetWidth || 800
-
-  // 設定按鈕寬度（確保不小於最小值）
-  const buttonWidth = containerWidth - 40
-
-  // 渲染 Google 登入按鈕
-  window.google.accounts.id.renderButton(document.getElementById("googleButton"), {
-    theme: "outline", // outline 或 filled_blue
-    size: "large", // large 或 medium
-    shape: "pill", // rectangular 或 pill
-    text: "signin_with", // signin_with 或 continue_with
-    logo_alignment: "center",
-    width: buttonWidth,
-  })
+  renderGoogleButton()
 }
 
 onMounted(() => {
@@ -149,11 +162,13 @@ onMounted(() => {
   }
 })
 
-// 添加 resize 事件監聽
+// resize 事件監聽
+let resizeTimeout
 window.addEventListener("resize", () => {
-  // 使用 debounce 避免過於頻繁的重新渲染
-  setTimeout(() => {
-    initializeGoogle()
+  // 使用防抖動
+  clearTimeout(resizeTimeout)
+  resizeTimeout = setTimeout(() => {
+    renderGoogleButton()
   }, 250)
 })
 </script>
@@ -161,11 +176,11 @@ window.addEventListener("resize", () => {
 <template>
   <div>
     <el-dialog v-model="centerDialogVisible" title="建立新帳號" width="80%" center class="max-w-[500px]">
-      <span class="text-gray-700"> Google 帳號 {{ googleLoginData.email }} 還沒註冊過，要註冊一個新帳號嗎？</span>
+      <span class="text-gray-700"> Google 帳號 {{ googleLoginData?.email }} 還沒註冊過，要註冊一個新帳號嗎？</span>
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="centerDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="handleRegister"> 建立帳號 </el-button>
+          <el-button type="primary" @click="handleRegister">建立帳號</el-button>
         </div>
       </template>
     </el-dialog>
