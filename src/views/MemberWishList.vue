@@ -104,101 +104,101 @@ const refreshSharedCartList = async () => {
 </script>
 
 <template>
-  <LogOut />
   <MemberNavbar />
-
-  <!-- 共享購物車選擇對話框 -->
-  <div v-if="sharedCartList.length === 0">
-    <el-dialog v-model="dialogToggle" title="您還沒有共享購物車" width="30%">
-      <AddSharedCart @createdSharedCart="refreshSharedCartList" />
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogToggle = false">取消</el-button>
-        </span>
-      </template>
-    </el-dialog>
-  </div>
-  <div v-else>
-    <el-dialog v-model="dialogToggle" title="選擇共享購物車">
-      <el-checkbox-group v-model="selectedCarts">
-        <div v-for="cart in sharedCartNames" :key="cart.id">
-          <el-checkbox :value="cart.id" :label="cart.name">
-            {{ cart.name }}
-          </el-checkbox>
-        </div>
-      </el-checkbox-group>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogToggle = false">取消</el-button>
-          <el-button type="primary" @click="handleConfirm">確認</el-button>
-        </span>
-      </template>
-    </el-dialog>
-  </div>
-
-  <!-- 主要內容區 -->
-  <div class="max-w-[1358px] mx-auto mb-10 border border-[#ddd] border-t-white">
-    <MemberEmpty v-if="wishlists.length === 0" />
-
+  <div class="lg:px-10 pb-10">
+    <!-- 共享購物車選擇對話框 -->
+    <div v-if="sharedCartList.length === 0">
+      <el-dialog v-model="dialogToggle" title="您還沒有共享購物車" width="30%">
+        <AddSharedCart @createdSharedCart="refreshSharedCartList" />
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogToggle = false">取消</el-button>
+          </span>
+        </template>
+      </el-dialog>
+    </div>
     <div v-else>
-      <h1 class="text-xl font-bold mb-4">追蹤清單</h1>
-      <!-- 商品列表 -->
-      <div
-        v-for="item in wishlists"
-        :key="item.id"
-        class="grid grid-cols-12 items-center border-b border-[#ddd] py-4 hover:bg-[#F5F5F5] transition-colors relative"
-      >
-        <!-- 手機版刪除按鈕 -->
-        <button class="md:hidden absolute top-2 right-2 cursor-pointer" @click="removeItem(item.id)">
-          <font-awesome-icon :icon="['fas', 'times']" class="text-gray-400 hover:text-gray-600" />
-        </button>
+      <el-dialog v-model="dialogToggle" title="選擇共享購物車">
+        <el-checkbox-group v-model="selectedCarts">
+          <div v-for="cart in sharedCartNames" :key="cart.id">
+            <el-checkbox :value="cart.id" :label="cart.name">
+              {{ cart.name }}
+            </el-checkbox>
+          </div>
+        </el-checkbox-group>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogToggle = false">取消</el-button>
+            <el-button type="primary" @click="handleConfirm">確認</el-button>
+          </span>
+        </template>
+      </el-dialog>
+    </div>
 
-        <!-- 商品圖片 -->
-        <div class="col-span-12 md:col-span-2 px-4">
-          <router-link :to="{ name: 'products-detail(連後端)', params: { productId: item.products.product_id } }">
-            <img
-              v-if="item.products.product_images.length > 0"
-              :src="getImageUrl(item.products.product_images[0].image_path)"
-              :alt="item.products.product_images[0].alt_text || '商品圖片'"
-              class="aspect-square object-cover w-full"
-            />
-          </router-link>
-        </div>
+    <!-- 主要內容區 -->
+    <div class="max-w-[1358px] mx-auto mb-10 bg-white border border-[#ddd] border-t-white">
+      <MemberEmpty v-if="wishlists.length === 0" />
 
-        <!-- 商品資訊 -->
-        <div class="col-span-12 md:col-span-4 px-4 mt-4 md:mt-0">
-          <p class="text-[#333333] font-medium text-xs md:text-base">{{ item.products.product_name }}</p>
-          <p class="text-[#80808099] text-xs">{{ item.products.product_specs[0].spec_value }}</p>
-        </div>
-
-        <!-- 價格 -->
-        <div class="col-span-12 md:col-span-3 px-4 mt-2 md:mt-0">
-          <p class="text-[#ddd] text-xs line-through md:text-base">NT${{ item.products.original_price }}</p>
-          <p class="text-[#333333] text-xs md:text-base">NT${{ item.products.sale_price }}</p>
-        </div>
-
-        <!-- 操作按鈕 -->
-        <div class="col-span-12 md:col-span-2 px-4 mt-2 md:mt-0">
-          <button
-            v-if="item.products.status == 1"
-            class="w-[90%] flex items-center justify-center px-3 py-2 bg-[#0f4662] text-white rounded-xl text-xs font-bold border border-white hover:bg-[#7994a0] hover:border-black transition-colors whitespace-nowrap overflow-hidden md:text-base"
-            @click="handleAddToCart(item.wishlists_products_id, item.products.product_name)"
-          >
-            加入購物車
+      <div v-else>
+        <h1 class="text-xl font-bold mb-4">追蹤清單</h1>
+        <!-- 商品列表 -->
+        <div
+          v-for="item in wishlists"
+          :key="item.id"
+          class="grid grid-cols-12 items-center border-b border-[#ddd] py-4 hover:bg-[#F5F5F5] transition-colors relative"
+        >
+          <!-- 手機版刪除按鈕 -->
+          <button class="md:hidden absolute top-2 right-2 cursor-pointer" @click="removeItem(item.id)">
+            <font-awesome-icon :icon="['fas', 'times']" class="text-gray-400 hover:text-gray-600" />
           </button>
-          <button
-            v-if="item.products.status == 1"
-            class="w-[90%] flex items-center justify-center px-3 py-2 bg-[#fff] text-[#0f4662] rounded-xl text-xs font-bold border border-[#0f4662] hover:bg-[#7994a0] hover:border-black transition-colors whitespace-nowrap overflow-hidden mt-[10px] md:text-base"
-            @click="showDialog(item.wishlists_products_id)"
-          >
-            加入共享購物車
-          </button>
-          <p v-else class="text-xs">無法購買</p>
-        </div>
 
-        <!-- 桌面版刪除按鈕 -->
-        <div class="hidden md:block col-span-1 px-4 text-center">
-          <font-awesome-icon :icon="['fas', 'trash']" class="cursor-pointer text-gray-400 hover:text-gray-600" @click="removeItem(item.id)" />
+          <!-- 商品圖片 -->
+          <div class="col-span-12 md:col-span-2 px-4">
+            <router-link :to="{ name: 'products-detail(連後端)', params: { productId: item.products.product_id } }">
+              <img
+                v-if="item.products.product_images.length > 0"
+                :src="getImageUrl(item.products.product_images[0].image_path)"
+                :alt="item.products.product_images[0].alt_text || '商品圖片'"
+                class="aspect-square object-cover w-full"
+              />
+            </router-link>
+          </div>
+
+          <!-- 商品資訊 -->
+          <div class="col-span-12 md:col-span-4 px-4 mt-4 md:mt-0">
+            <p class="text-[#333333] font-medium text-xs md:text-base">{{ item.products.product_name }}</p>
+            <p class="text-[#80808099] text-xs">{{ item.products.product_specs[0].spec_value }}</p>
+          </div>
+
+          <!-- 價格 -->
+          <div class="col-span-12 md:col-span-3 px-4 mt-2 md:mt-0">
+            <p class="text-[#ddd] text-xs line-through md:text-base">NT${{ item.products.original_price }}</p>
+            <p class="text-[#333333] text-xs md:text-base">NT${{ item.products.sale_price }}</p>
+          </div>
+
+          <!-- 操作按鈕 -->
+          <div class="col-span-12 md:col-span-2 px-4 mt-2 md:mt-0">
+            <button
+              v-if="item.products.status == 1"
+              class="w-[90%] flex items-center justify-center px-3 py-2 bg-[#0f4662] text-white rounded-xl text-xs font-bold border border-white hover:bg-[#7994a0] hover:border-black transition-colors whitespace-nowrap overflow-hidden md:text-base"
+              @click="handleAddToCart(item.wishlists_products_id, item.products.product_name)"
+            >
+              加入購物車
+            </button>
+            <button
+              v-if="item.products.status == 1"
+              class="w-[90%] flex items-center justify-center px-3 py-2 bg-[#fff] text-[#0f4662] rounded-xl text-xs font-bold border border-[#0f4662] hover:bg-[#7994a0] hover:border-black transition-colors whitespace-nowrap overflow-hidden mt-[10px] md:text-base"
+              @click="showDialog(item.wishlists_products_id)"
+            >
+              加入共享購物車
+            </button>
+            <p v-else class="text-xs">無法購買</p>
+          </div>
+
+          <!-- 桌面版刪除按鈕 -->
+          <div class="hidden md:block col-span-1 px-4 text-center">
+            <font-awesome-icon :icon="['fas', 'trash']" class="cursor-pointer text-gray-400 hover:text-gray-600" @click="removeItem(item.id)" />
+          </div>
         </div>
       </div>
     </div>
