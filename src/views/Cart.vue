@@ -189,7 +189,7 @@ const deleteProductFromCart = async (payload) => {
 // 更新購物車商品數量的函式
 const updateQuantity = async ({ id, quantity }) => {
   if (quantity < 1) {
-    alert("數量不能小於 1")
+    ElMessage.error("數量不能小於 1")
     return
   }
   if (userId) {
@@ -205,25 +205,29 @@ const updateQuantity = async ({ id, quantity }) => {
         }
       )
       if (response.data.success) {
-        console.log("數量更新成功")
         await initializeCartPage() // 重新獲取購物車列表
       } else {
-        alert("更新失敗：" + response.data.message)
+        ElMessage.error("更新數量時出錯，請稍後再試")
       }
     } catch (error) {
       console.error("更新數量時出錯", error)
-      alert("更新數量時出錯，請稍後再試")
+      ElMessage.error("更新數量時出錯，請稍後再試")
     }
   } else {
-    const storedCart = JSON.parse(localStorage.getItem("Cart"))
-    //尋找欲修改商品
-    const existingItem = storedCart.find((item) => item.product_id === productId)
-    if (existingItem) {
-      // 如果商品已存在，增加數量
-      existingItem.quantity += quantity
+    try {
+      const storedCart = JSON.parse(localStorage.getItem("cart") || "[]")
+      //尋找欲修改商品
+      const existingItem = storedCart.find((item) => item.product_id === id)
+      if (existingItem) {
+        // 直接設定新的數量
+        existingItem.quantity = quantity
+      }
+      localStorage.setItem("cart", JSON.stringify(storedCart))
+      await initializeCartPage()
+    } catch (error) {
+      console.error("本地存儲更新失敗", error)
+      ElMessage.error("更新購物車失敗，請稍後再試")
     }
-    localStorage.setItem("cart", JSON.stringify(storedCart))
-    initializeCartPage()
   }
 }
 
@@ -364,6 +368,11 @@ const fetchCoupons = async () => {
   }
 }
 
+// 前往購物
+const goShop = () => {
+  router.push("/categories/28")
+}
+
 // onMounted
 onMounted(async () => {
   await initializeCartPage()
@@ -398,7 +407,7 @@ onMounted(async () => {
         addDanmu(`${data.userName} 新增了 ${data.itemName} 進入共享購物車`)
       } catch (error) {}
     } else {
-      console.log("groupId 不符合")
+      console.error("groupId 不符合")
     }
   })
 })
@@ -484,8 +493,9 @@ onUnmounted(() => {
       <section class="flex flex-col mt-10 md:flex-row md:gap-5">
         <section class="md:w-2/3">
           <!-- 商品列表 -->
-          <section class="bg-white rounded-xl" v-if="products.length == 0">
+          <section class="bg-white rounded-xl flex flex-col items-center" v-if="products.length == 0">
             <el-empty description="購物車還是空的" />
+            <button class="bg-[#0f4662] px-4 text-white py-2 rounded hover:bg-[#1a6085] mb-4" @click="goShop">前往購物</button>
           </section>
           <section class="bg-white rounded-xl" v-else>
             <CartProduct
@@ -502,7 +512,7 @@ onUnmounted(() => {
             />
           </section>
           <!-- 送貨及付款方式 -->
-          <section class="bg-white rounded-xl px-5 py-5 mt-5">
+          <section class="bg-white rounded-xl px-5 py-5 mt-5" v-if="products.length !== 0">
             <div class="flex justify-between items-center my-4">
               <label class="shrink-0 mr-2">送貨地點</label>
               <el-select
@@ -563,13 +573,10 @@ onUnmounted(() => {
         <aside class="md:w-1/3 flex flex-col gap-5 mt-5 md:mt-0">
           <!-- 優惠區塊 -->
           <div class="sticky top-[112px]">
-            <div class="bg-white p-5 rounded-xl">
+            <div class="bg-white p-5 rounded-xl" v-if="products.length !== 0">
               <h2 class="text-xl font-bold">已享用之優惠</h2>
               <!-- 錯誤提示 -->
               <div v-if="error" class="text-red-500 text-center">{{ error }}</div>
-
-              <!-- 無可用優惠券 -->
-
               <div v-if="validCoupon" class="flex items-start flex-col">
                 <p class="my-4 px-5 bg-green-100 text-center text-sm md:text-base">優惠促銷</p>
                 <p class="text-sm md:text-base">{{ validCoupon.name }} - 滿 {{ validCoupon.min_spend }} 元可用</p>
@@ -594,12 +601,13 @@ onUnmounted(() => {
                 </div>
                 <div class="flex justify-between">
                   <p>運費</p>
-                  <p>NT${{ shippingFee }}</p>
+                  <p v-if="products.length !== 0">NT${{ shippingFee }}</p>
+                  <p v-if="products.length == 0">NT$0</p>
                 </div>
                 <hr />
                 <div class="flex justify-between">
                   <p>合計</p>
-                  <p class="font-bold text-orange-500">NT${{ totalAmount }}</p>
+                  <p class="font-bold text-orange-500">NT${{ (totalAmount - shippingFee).toLocaleString() }}</p>
                 </div>
               </div>
             </div>
@@ -608,9 +616,9 @@ onUnmounted(() => {
       </section>
     </section>
     <!-- 前往結帳 -->
-    <section class="fixed bottom-0 w-full bg-white shadow-2xl">
+    <section class="fixed bottom-0 w-full bg-white shadow-2xl" v-if="products.length !== 0">
       <div class="flex gap-5 justify-end items-center m-5 max-w-[1365px]">
-        <p class="text-orange-500 font-bold">合計：NT${{ totalAmount }}</p>
+        <p class="text-orange-500 font-bold">合計：NT${{ (totalAmount - shippingFee).toLocaleString() }}</p>
         <button class="bg-black px-2 py-1 text-white rounded md:px-10" @click="goToNext" :disabled="products.length === 0">前往結帳</button>
       </div>
     </section>
