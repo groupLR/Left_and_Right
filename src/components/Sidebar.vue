@@ -23,7 +23,7 @@ const toggleChildren = (index) => {
 fetchCategories()
 </script>
 <template>
-  <aside class="hidden w-56 mt-5 mr-5 h-screen bg-white overflow-y-auto scrollbar-hide xl:block">
+  <aside class="shadow-md hidden w-56 mt-5 mr-5 h-screen bg-white overflow-y-auto scrollbar-hide xl:block">
     <ul class="relative">
       <li v-for="(category, index) in categories" :key="category.category_id" class="relative list-none">
         <!-- 大項目 -->
@@ -42,7 +42,7 @@ fetchCategories()
         </div>
 
         <!-- 小項目 -->
-        <div class="overflow-hidden transition-all duration-500" :class="{ 'h-0': !category.showChildren, 'h-auto': category.showChildren }">
+        <div class="overflow-hidden duration-700 ease-in-out" :class="{ 'h-0': !category.showChildren, 'h-auto': category.showChildren }">
           <ul class="pl-1.5">
             <li
               v-for="child in category.children"

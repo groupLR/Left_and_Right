@@ -34,10 +34,7 @@ const handleLogOut = () => {
 <template>
   <div class="pt-6 pb-2 lg:py-5 lg:px-10">
     <div class="flex justify-end lg:max-w-[1358px] lg:mx-auto">
-      <div
-        class="text-white underline p-2 text-xs hover:cursor-pointer border-0 border-solid border-red-400 rounded-md bg-red-700 hover:font-bold hover:bg-red-400 hover:border"
-        @click="handleLogOut"
-      >
+      <div class="text-white underline p-2 text-xs hover:cursor-pointer rounded-md bg-red-700 hover:font-bold hover:bg-red-400" @click="handleLogOut">
         <p><span>登出</span><font-awesome-icon :icon="['fas', 'right-from-bracket']" class="ml-2" /></p>
       </div>
     </div>

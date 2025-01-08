@@ -1,11 +1,12 @@
 <script setup>
 import axios from "axios"
 import debounce from "lodash/debounce"
-import { ref, onMounted } from "vue"
+import { ref, onMounted, watch } from "vue"
 import { useExchangeRateStore } from "@/stores/exchangeRates"
 import { RouterLink } from "vue-router"
 import { useRouter } from "vue-router"
 import { storeToRefs } from "pinia"
+import { ElMessage } from "element-plus"
 
 const router = useRouter()
 const exchangeRateStore = useExchangeRateStore()
@@ -18,7 +19,7 @@ const categories = ref([])
 const showSidebar = ref(false)
 const month = ref(String(new Date().getMonth() + 1).padStart(2, "0"))
 const day = ref(String(new Date().getDay()).padStart(2, "0"))
-
+const isInitialized = ref(false)
 // 搜尋
 const fetchSearchResults = async () => {
   if (searchKeyword.value.trim() !== "") {
@@ -45,6 +46,7 @@ const setCurrency = (currency) => {
   selectedCurrency.value = currency
   moneyOpen.value = !moneyOpen.value
   showSidebar.value = !showSidebar.value
+  window.scrollTo(0, 0)
 }
 // 請求大類別
 const fetchCategories = async () => {
@@ -76,6 +78,14 @@ onMounted(() => {
   // 匯率設置
   exchangeRateStore.initCurrency()
   exchangeRateStore.getAllCurrency()
+})
+
+watch(selectedCurrency, () => {
+  if (isInitialized.value) {
+    ElMessage.success("幣種成功切換")
+  } else {
+    isInitialized.value = true
+  }
 })
 </script>
 
@@ -248,24 +258,22 @@ onMounted(() => {
         <hr />
         <ul>
           <h2 class="p-4 text-xl text-gray-300">其他</h2>
-          <li class="p-4 hover:cursor-pointer text-[#314e86] hover:font-bold" @click="toggleSidebar">BLOG</li>
+          <li class="p-4 hover:cursor-pointer text-[#314e86] hover:font-bold" @click="openMoney">
+            <p>{{ selectedCurrency }}</p>
+            <font-awesome-icon :icon="['fas', 'dollar-sign']" class="absolute right-1 top-5" />
+          </li>
           <li class="p-4 hover:cursor-pointer text-[#314e86] hover:font-bold" @click="toggleSidebar">
             <RouterLink to="/store-info">尋找門市</RouterLink>
           </li>
           <li class="p-4 hover:cursor-pointer text-[#314e86] hover:font-bold" @click="toggleSidebar">
-            <a href="#">聯絡我們</a>
+            <a href="#">關於我們</a>
             <font-awesome-icon :icon="['fas', 'comment']" class="absolute right-1 top-5" />
-          </li>
-
-          <li class="p-4 hover:cursor-pointer text-[#314e86] hover:font-bold" @click="openMoney">
-            <p>{{ selectedCurrency }}</p>
-            <font-awesome-icon :icon="['fas', 'dollar-sign']" class="absolute right-1 top-5" />
           </li>
         </ul>
       </div>
 
       <div
-        class="fixed top-0 z-30 w-[200px] h-screen pl-4 overflow-auto transition-all duration-500 -translate-x-full bg-white"
+        class="fixed top-0 z-30 w-[210px] h-screen pl-4 overflow-auto transition-all duration-500 ease-in-out -translate-x-full bg-white"
         :class="moneyOpen ? 'translate-x-0' : '-translate-x-full'"
       >
         <ul>
