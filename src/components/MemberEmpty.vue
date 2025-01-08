@@ -12,12 +12,6 @@
 </template>
 
 <style scoped>
-* {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  color: #333333;
-}
-
 .memberPointsMain {
   margin: auto;
   max-width: 1358px;

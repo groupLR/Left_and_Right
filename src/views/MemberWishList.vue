@@ -201,11 +201,6 @@ const refreshSharedCartList = async () => {
 </template>
 
 <style scoped>
-* {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  color: #333333;
-}
 .wishlistMain {
   border: 1px solid #ddd;
   max-width: 1358px;

@@ -42,11 +42,11 @@ if (route.path === "/") {
         <ul class="flex p-0 justify-between gap-2 md:gap-0">
           <li
             v-for="(option, index) in navbarOption"
-            class="memberOptions transition-all duration-200 text-sm text-[#0f4662] border-[#ddd] border-solid border"
+            class="memberOptions transition-all duration-200 text-base text-[#314e86] border-[#ddd] border-solid border"
             :key="index"
             :class="{
-              'font-bold text-[#0f4662]  bg-white border-b-0 text-[28px] shadow-inner': route.path === option.router,
-              'text-gray-500  bg-gray-200/20': route.path !== option.router,
+              'font-bold text-[#314e86]  bg-white border-b-0 text-[28px] shadow-inner': route.path === option.router,
+              'text-[#314e86]  bg-gray-100/20': route.path !== option.router,
             }"
           >
             <RouterLink :to="option.router" class="block w-full h-full">

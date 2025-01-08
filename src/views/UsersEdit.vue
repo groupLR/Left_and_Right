@@ -221,7 +221,7 @@ const cancelChanges = () => {
               </div>
               <div class="btnArea">
                 <button @click="cancelChanges">取消</button>
-                <button @click="saveChanges">儲存變更</button>
+                <button @click="saveChanges" class="bg-[#314e86]">儲存變更</button>
               </div>
             </div>
           </form>
@@ -381,15 +381,14 @@ select {
   .introducer,
   .password,
   .thirdPartyRegistration {
-    grid-template-columns: 100%;
+    @apply grid grid-cols-1;
   }
   .gender select,
   .store select {
-    height: 44px;
+    @apply h-[44px];
   }
   .cellphone {
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    @apply grid grid-cols-4 grid-rows-2;
   }
   .cellphone label {
     grid-column-start: 1;
@@ -406,17 +405,9 @@ select {
     grid-column-end: 7;
   }
   .btnArea {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    @apply grid grid-cols-2;
   }
-  .subscribeArea {
-    margin-top: 20px;
-  }
-  .publicity {
-    border-right: 0;
-    border-bottom: 1px solid #eeeeee;
-    padding-right: 0;
-  }
+
   .address {
     grid-template-columns: 1fr;
     padding-bottom: 0;
