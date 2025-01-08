@@ -175,6 +175,7 @@ const deleteProductFromCart = async (payload) => {
   } else {
     try {
       await deleteProduct(payload.id)
+      ElMessage.success(`刪除${payload.name}成功`)
     } catch (err) {
       ElMessage.error({
         message: "從購物車刪除商品失敗",
@@ -221,7 +222,7 @@ const updateQuantity = async ({ id, quantity }) => {
       // 如果商品已存在，增加數量
       existingItem.quantity += quantity
     }
-    localStorage.setItem("cart", JSON.stringfy(storedCart))
+    localStorage.setItem("cart", JSON.stringify(storedCart))
     initializeCartPage()
   }
 }
