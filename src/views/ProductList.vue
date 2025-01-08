@@ -1,23 +1,28 @@
 <script setup>
 import ProductItem from "@/components/ProductItem.vue"
 import Sidebar from "@/components/Sidebar.vue"
-import { watch } from "vue"
+import { ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import { storeToRefs } from "pinia"
 import { useProductStore } from "@/stores/products"
+import { ElSkeleton, ElSkeletonItem } from "element-plus"
 
 const route = useRoute()
 const ProductStore = useProductStore()
 const { categoryTitle, productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, pageSize, totalProductCount } = storeToRefs(ProductStore)
 
-window.scrollTo(0, 0)
-
 // 監聽路由參數變化
 watch(
   () => route.params.category,
   async (newCategory) => {
-    // 如果沒有 category 參數，使用空字串呼叫 API
-    await ProductStore.fetchProductList(newCategory || "")
+    isLoading.value = true
+    try {
+      await ProductStore.fetchProductList(newCategory || "")
+    } finally {
+      setTimeout(() => {
+        isLoading.value = false
+      }, 500) // 添加一個小延遲確保數據都準備好了
+    }
   },
   { immediate: true }
 )
@@ -27,8 +32,8 @@ watch(
   <section class="px-4 flex max-w-[1340px] mx-auto justify-center">
     <Sidebar />
     <div class="flex-1">
-      <div class="headerContainer px-1 my-2 md:flex items-center">
-        <h1 class="py-5 text-2xl font-medium mt-2 ml-2">{{ categoryTitle }}</h1>
+      <div class="headerContainer px-1 mb-2 md:flex items-center">
+        <h1 class="py-5 text-xl">{{ categoryTitle }}</h1>
         <!-- 排序 -->
         <div class="selectContainer flex">
           <div class="pageSelectItem flex items-center relative mr-3 flex-1">
@@ -62,7 +67,7 @@ watch(
       </div>
 
       <!-- 產品列表 -->
-      <div class="grid gap-2 justify-between grid-cols-2 md:grid-cols-3">
+      <div class="flex flex-wrap">
         <ProductItem
           v-for="(item, index) in productList"
           :key="item.id"
@@ -76,7 +81,7 @@ watch(
       </div>
 
       <!-- 分頁 -->
-      <div class="flex justify-center md:relative md:my-12">
+      <div class="flex justify-center md:relative md:mb-12">
         <vue-awesome-paginate
           class="md:absolute md:right-0 text-gray-500 text-sm"
           :total-items="totalProductCount"
@@ -91,7 +96,6 @@ watch(
   </section>
 </template>
 
-<!-- 分頁的 style  -->
 <style>
 .pagination-container {
   display: flex;
@@ -108,9 +112,33 @@ watch(
   font-weight: 700;
   border-bottom: 2px solid black;
 }
+
+/* Skeleton 動畫效果 */
+@keyframes skeleton-loading {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+:deep(.el-skeleton) {
+  width: 100%;
+}
+
+:deep(.el-skeleton__item) {
+  background: #f2f2f2;
+}
+
+:deep(.el-skeleton.is-animated .el-skeleton__item) {
+  animation: skeleton-loading 1.4s ease infinite;
+}
 </style>
 
-<!-- select 的 style -->
 <style scoped>
 .headerContainer {
   justify-content: space-between;
@@ -124,7 +152,6 @@ watch(
   color: #000;
 }
 
-/* 去除邊框 */
 :deep(.el-select__wrapper),
 :deep(.el-select__wrapper.is-hovering) {
   box-shadow: 0 0 0 0px #fff inset;
@@ -134,7 +161,6 @@ watch(
   color: #000;
 }
 
-/* 去除 focused 時的邊框 */
 :deep(.el-select__wrapper.is-focused) {
   box-shadow: 0 0 0 0px #fff inset;
 }
@@ -143,7 +169,6 @@ watch(
   box-shadow: 0 0 0 0px #fff inset;
 }
 
-/* option 的 hover 樣式 */
 .el-select-dropdown__item.is-selected {
   background-color: #f5f5f5;
   color: #000;
@@ -155,7 +180,21 @@ watch(
   color: #fff;
 }
 
-@media screen and (768px <=width) {
+/* Skeleton 相關樣式 */
+:deep(.el-skeleton__paragraph) {
+  padding: 0;
+}
+
+:deep(.el-skeleton__text) {
+  background-color: #f3f4f6;
+  height: 100%;
+}
+
+:deep(.el-skeleton__image) {
+  background-color: #f3f4f6;
+}
+
+@media screen and (768px <= width) {
   .pageSelectItem {
     width: 200px;
     height: 50px;

@@ -3,6 +3,7 @@ import axios from "axios"
 import { onMounted, ref } from "vue"
 import { useRouter, useRoute } from "vue-router"
 import { ElMessage } from "element-plus"
+import { addWelcomeCoupons } from "@/stores/coupon"
 
 const router = useRouter()
 const route = useRoute()
@@ -22,7 +23,7 @@ const centerDialogVisible = ref(false) // 沒註冊過的帳號的註冊提醒
 const googleLoginData = ref(null) // 存儲 Google 登入返回的資料
 
 // methods
-function loginProcess(response) {
+async function loginProcess(response) {
   userData.value = response.data.user
   isLoggedIn.value = true // 註冊後直接登入
   localStorage.setItem(STORAGE_KEY, userData.value.userId) // UID 放在 localStorage
@@ -31,6 +32,12 @@ function loginProcess(response) {
   // 處理重定向
   const redirectPath = route.query.redirect || "/"
   router.push(redirectPath)
+
+  // 檢查有沒有優惠券，沒有就重發
+  const resp = await axios.get(`${import.meta.env.VITE_API_URL}/coupon/user/${userData.value.userId}`)
+  if (resp.data.length === 0) {
+    await addWelcomeCoupons(userData.value.userId)
+  }
 }
 
 // 處理 google 註冊新用戶
@@ -44,6 +51,10 @@ const handleRegister = async () => {
   try {
     const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, googleLoginData.value)
     centerDialogVisible.value = false
+
+    // 給優惠券
+    await addWelcomeCoupons(response.data.user.userId)
+
     loginProcess(response)
     ElMessage.success("註冊成功！")
   } catch (error) {
@@ -79,6 +90,34 @@ const onLogin = (res) => {
     })
 }
 
+// 渲染 Google 按鈕
+const renderGoogleButton = () => {
+  const container = document.getElementById("googleButton")
+  if (!container) return
+
+  // 根據容器寬度設置按鈕寬度
+  const viewport = window.innerWidth
+  let buttonWidth
+
+  // 根據螢幕寬度設置不同的按鈕寬度
+  if (viewport < 768) {
+    // 手機版
+    buttonWidth = Math.min(viewport - 80, 300) // 預留左右各40px邊距，最大寬度300px
+  } else {
+    // 電腦版
+    buttonWidth = 500 // 固定寬度
+  }
+
+  window.google.accounts.id.renderButton(container, {
+    theme: "outline",
+    size: "large",
+    shape: "pill",
+    text: "signin_with",
+    logo_alignment: "center",
+    width: buttonWidth,
+  })
+}
+
 // 初始化 Google 登入
 const initializeGoogle = () => {
   if (!window.google) {
@@ -98,22 +137,7 @@ const initializeGoogle = () => {
     context: "signin",
   })
 
-  // 獲取容器寬度
-  const container = document.querySelector(".googleBtnWrapper")
-  const containerWidth = container?.offsetWidth || 800
-
-  // 設定按鈕寬度（確保不小於最小值）
-  const buttonWidth = containerWidth - 40
-
-  // 渲染 Google 登入按鈕
-  window.google.accounts.id.renderButton(document.getElementById("googleButton"), {
-    theme: "outline", // outline 或 filled_blue
-    size: "large", // large 或 medium
-    shape: "pill", // rectangular 或 pill
-    text: "signin_with", // signin_with 或 continue_with
-    logo_alignment: "center",
-    width: buttonWidth,
-  })
+  renderGoogleButton()
 }
 
 onMounted(() => {
@@ -138,11 +162,13 @@ onMounted(() => {
   }
 })
 
-// 添加 resize 事件監聽
+// resize 事件監聽
+let resizeTimeout
 window.addEventListener("resize", () => {
-  // 使用 debounce 避免過於頻繁的重新渲染
-  setTimeout(() => {
-    initializeGoogle()
+  // 使用防抖動
+  clearTimeout(resizeTimeout)
+  resizeTimeout = setTimeout(() => {
+    renderGoogleButton()
   }, 250)
 })
 </script>
@@ -150,11 +176,11 @@ window.addEventListener("resize", () => {
 <template>
   <div>
     <el-dialog v-model="centerDialogVisible" title="建立新帳號" width="80%" center class="max-w-[500px]">
-      <span class="text-gray-700"> Google 帳號 {{ googleLoginData.email }} 還沒註冊過，要註冊一個新帳號嗎？</span>
+      <span class="text-gray-700"> Google 帳號 {{ googleLoginData?.email }} 還沒註冊過，要註冊一個新帳號嗎？</span>
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="centerDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="handleRegister"> 建立帳號 </el-button>
+          <el-button type="primary" @click="handleRegister">建立帳號</el-button>
         </div>
       </template>
     </el-dialog>

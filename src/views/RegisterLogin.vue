@@ -5,6 +5,8 @@ import { z } from "zod"
 import { useRouter } from "vue-router"
 import GoogleLoginButton from "@/components/googleLogin.vue"
 import { ElMessage } from "element-plus"
+import { addWelcomeCoupons } from "@/stores/coupon"
+
 const router = useRouter()
 
 //控制註冊登入頁面切換
@@ -95,6 +97,9 @@ const handleRegister = async () => {
       localStorage.setItem(STORAGE_KEY, userId.value)
       localStorage.setItem(STORAGE_JWT_KEY, userToken.value)
 
+      // 給優惠券
+      await addWelcomeCoupons(userId.value)
+
       isLoggedIn.value = true // 註冊後直接登入
 
       //導向首頁
@@ -135,6 +140,12 @@ const handleLogin = async () => {
     //儲存Token在localstorage
     localStorage.setItem(STORAGE_KEY, userId.value)
     localStorage.setItem(STORAGE_JWT_KEY, userToken.value)
+
+    // 檢查有沒有優惠券，沒有就重發
+    const resp = await axios.get(`${import.meta.env.VITE_API_URL}/coupon/user/${userId.value}`)
+    if (resp.data.length === 0) {
+      await addWelcomeCoupons(userId.value)
+    }
 
     //登入成功
     isLoggedIn.value = true

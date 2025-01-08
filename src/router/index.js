@@ -192,6 +192,11 @@ const router = createRouter({
       component: () => import("../views/product_review_comments.vue"),
       props: true,
     },
+    {
+      path: "/empty",
+      name: "empty",
+      component: () => import("../views/empty.vue"),
+    },
   ],
 })
 

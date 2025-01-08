@@ -24,6 +24,7 @@ const selectedDelivery = deliveryOptions.value.find((item) => item.value === loc
 const selectedPayment = paymentOptions.value.find((item) => item.value === localStorage.getItem("payment"))?.label
 const agreedToTerms = ref(false)
 const phoneError = ref(false)
+const recipientPhoneError = ref(false)
 const isOverLength = ref(false)
 const addrIsOverLength = ref(false)
 const siteIsOverLength = ref(false)
@@ -115,10 +116,16 @@ const formatNumberInput = () => {
 }
 
 // 檢查手機格式
-const phoneCheck = () => {
+const phoneCheck = (type) => {
   const phonePattern = /^09[0-9]{8}$/
-  phoneError.value = !phonePattern.test(formData.value.customer.phone)
-  phoneError.value = !phonePattern.test(formData.value.delivery.recipientPhone)
+  // 1 代表顧客資料的手機
+  if (type == 1) {
+    return (phoneError.value = !phonePattern.test(formData.value.customer.phone))
+  }
+  // 2 代表送貨資料的手機
+  if (type == 2) {
+    return (recipientPhoneError.value = !phonePattern.test(formData.value.delivery.recipientPhone))
+  }
 }
 
 // 檢查地址長度
@@ -288,7 +295,7 @@ onMounted(async () => {
             <div class="mb-4">
               <label class="block mb-2">電話號碼<span class="text-red-500 ml-1">*</span></label>
               <input
-                @blur="phoneCheck"
+                @blur="phoneCheck(1)"
                 @input="formatNumberInput"
                 type="text"
                 v-model="formData.customer.phone"
@@ -337,13 +344,13 @@ onMounted(async () => {
               <label class="block mb-2">收件人電話號碼<span class="text-red-500 ml-1">*</span></label>
               <input
                 type="text"
-                @blur="phoneCheck"
+                @blur="phoneCheck(2)"
                 @input="formatNumberInput"
                 v-model="formData.delivery.recipientPhone"
                 placeholder="0900000000"
                 class="w-full border rounded-md p-2"
               />
-              <span v-if="phoneError" class="text-red-500 text-sm">請輸入正確的十位手機號碼，09...</span>
+              <span v-if="recipientPhoneError" class="text-red-500 text-sm">請輸入正確的十位手機號碼，09...</span>
             </div>
 
             <hr class="my-4" />
