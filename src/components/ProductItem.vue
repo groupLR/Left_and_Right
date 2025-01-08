@@ -43,14 +43,14 @@ const handleAddToCart = async () => {
 </script>
 
 <template>
-  <div class="productContainer rounded-lg text-[#0f4662] hover:text-white hover:bg-[#0f4662] relative px-4 pt-4 lg:static">
+  <div class="productContainer rounded-lg text-yellow-950 bg-[#C9D9F0] hover:text-white hover:bg-[#6A88BE] relative px-4 pt-4 lg:static">
     <RouterLink :to="URL">
       <div class="w-full bg-center bg-cover rounded-lg overflow-hidden" :style="{ backgroundImage: `url(${props.backImg})` }">
         <img class="frontImg w-full object-cover align-bottom aspect-square" :src="props.frontImg" alt="戒指" />
       </div>
       <div class="px-2.5 pt-2.5 pb-7 mb-6 text-center lg:relative lg:mb-0">
         <p class="text-sm my-2 lg:text-base font-semibold">{{ props.title }}</p>
-        <p class="mt-4 text-sm lg:text-[18px] font-semibold text-amber-400">
+        <p class="mt-4 text-sm lg:text-[18px] font-semibold text-amber-300">
           {{ getCurrencySymbol }} {{ ExchangeRateStore.calConvertedPrice(Number(props.price)).toLocaleString() }}
         </p>
         <p class="mt-2 text-xs lg:text-base text-slate-400 line-through decoration-slate-400">

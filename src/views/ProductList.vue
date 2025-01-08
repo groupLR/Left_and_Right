@@ -76,7 +76,7 @@ watch(
       </div>
 
       <!-- 分頁 -->
-      <div class="flex justify-center md:relative md:mb-12">
+      <div class="flex justify-center md:relative md:my-12">
         <vue-awesome-paginate
           class="md:absolute md:right-0 text-gray-500 text-sm"
           :total-items="totalProductCount"
