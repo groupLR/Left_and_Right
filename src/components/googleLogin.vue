@@ -3,6 +3,7 @@ import axios from "axios"
 import { onMounted, ref } from "vue"
 import { useRouter, useRoute } from "vue-router"
 import { ElMessage } from "element-plus"
+import { addWelcomeCoupons } from "@/stores/coupon"
 
 const router = useRouter()
 const route = useRoute()
@@ -22,7 +23,7 @@ const centerDialogVisible = ref(false) // 沒註冊過的帳號的註冊提醒
 const googleLoginData = ref(null) // 存儲 Google 登入返回的資料
 
 // methods
-function loginProcess(response) {
+async function loginProcess(response) {
   userData.value = response.data.user
   isLoggedIn.value = true // 註冊後直接登入
   localStorage.setItem(STORAGE_KEY, userData.value.userId) // UID 放在 localStorage
@@ -31,6 +32,12 @@ function loginProcess(response) {
   // 處理重定向
   const redirectPath = route.query.redirect || "/"
   router.push(redirectPath)
+
+  // 檢查有沒有優惠券，沒有就重發
+  const resp = await axios.get(`${import.meta.env.VITE_API_URL}/coupon/user/${userData.value.userId}`)
+  if (resp.data.length === 0) {
+    await addWelcomeCoupons(userData.value.userId)
+  }
 }
 
 // 處理 google 註冊新用戶
@@ -44,6 +51,10 @@ const handleRegister = async () => {
   try {
     const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, googleLoginData.value)
     centerDialogVisible.value = false
+
+    // 給優惠券
+    await addWelcomeCoupons(response.data.user.userId)
+
     loginProcess(response)
     ElMessage.success("註冊成功！")
   } catch (error) {

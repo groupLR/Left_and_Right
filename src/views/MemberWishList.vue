@@ -138,7 +138,7 @@ const refreshSharedCartList = async () => {
   </div>
 
   <!-- 主要內容區 -->
-  <div class="max-w-[1358px] mx-auto p-10 border border-[#ddd] border-t-white">
+  <div class="max-w-[1358px] mx-auto mb-10 border border-[#ddd] border-t-white">
     <MemberEmpty v-if="wishlists.length === 0" />
 
     <div v-else>
