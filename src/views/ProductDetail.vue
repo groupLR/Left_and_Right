@@ -9,7 +9,7 @@ import "swiper/css/pagination"
 import "swiper/css/navigation"
 import { onMounted, ref, watch, computed, onUnmounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { ElMessage } from "element-plus"
+import { ElMessage, ElSkeleton, ElSkeletonItem } from "element-plus"
 import { Pagination, Navigation, Scrollbar } from "swiper/modules"
 import { storeToRefs } from "pinia"
 import { useCartStore } from "@/stores/cart"
@@ -31,6 +31,7 @@ const API_URL = import.meta.env.VITE_API_URL
 const userName = ref("")
 const isDescription = ref(true)
 const isReview = ref(false)
+const isLoading = ref(true)
 
 window.scrollTo(0, 0)
 
@@ -84,8 +85,6 @@ const getImageUrl = (imagePath) => {
   const cleanedPath = imagePath.startsWith("./") ? imagePath.slice(1) : imagePath
   return `${API_URL}/${cleanedPath}`
 }
-
-const isLoading = ref(true)
 
 const fetchProductDetail = async (product_id) => {
   isLoading.value = true
@@ -311,7 +310,7 @@ const toggleWishlist = async () => {
     ElMessage.warning("請先登入以使用願望清單功能")
     return
   }
-// 如果現在看的商品有在願望清單裡的話就刪除
+  // 如果現在看的商品有在願望清單裡的話就刪除
   if (isInWishlist.value) {
     try {
       const wishlistItem = wishlist.value.find((item) => item.wishlists_products_id === Number(productId.value))
@@ -324,7 +323,7 @@ const toggleWishlist = async () => {
       ElMessage.error("移除失敗")
     }
   } else {
-// 如果不在願望清單就post進去資料庫
+    // 如果不在願望清單就post進去資料庫
     try {
       const response = await axios.post(`${API_URL}/wishlist`, {
         wishlists_members_id: userId,
@@ -349,6 +348,91 @@ const props = defineProps({
 
 <template>
   <section>
+    <!-- Skeleton Loading -->
+    <div v-if="isLoading" class="max-w-full my-4">
+      <div class="profile lg:flex lg:max-w-[985px] lg:justify-center lg:mx-auto lg:my-0">
+        <!-- 商品圖片區 Skeleton -->
+        <div class="lg:max-w-[550px] lg:w-full">
+          <el-skeleton animated>
+            <template #template>
+              <!-- 手機版輪播圖 Skeleton -->
+              <div class="md:hidden">
+                <el-skeleton-item variant="image" style="width: 100%; height: 500px" />
+              </div>
+              <!-- 電腦版圖片區 Skeleton -->
+              <div class="hidden lg:flex">
+                <div class="min-w-[120px] h-[400px] mr-5 pl-5">
+                  <div v-for="n in 4" :key="n" class="mb-[10px]">
+                    <el-skeleton-item variant="image" style="width: 72px; height: 72px" />
+                  </div>
+                </div>
+                <el-skeleton-item variant="image" style="width: 415px; height: 415px" />
+              </div>
+            </template>
+          </el-skeleton>
+        </div>
+
+        <!-- 商品資訊區 Skeleton -->
+        <div class="m-4 mt-5 lg:max-w-[435px] lg:w-full">
+          <el-skeleton animated :rows="3">
+            <template #template>
+              <!-- 標題 -->
+              <el-skeleton-item variant="text" style="width: 100%; height: 32px; margin-bottom: 20px" />
+
+              <!-- 價格區 -->
+              <div class="flex gap-4 mb-4">
+                <el-skeleton-item variant="text" style="width: 120px; height: 24px" />
+                <el-skeleton-item variant="text" style="width: 120px; height: 24px" />
+              </div>
+
+              <!-- 優惠資訊 -->
+              <div class="mb-4">
+                <el-skeleton-item v-for="n in 3" :key="n" variant="text" style="width: 90%; height: 16px; margin-bottom: 8px" />
+              </div>
+
+              <!-- 顏色選擇區 -->
+              <div class="my-4">
+                <el-skeleton-item variant="text" style="width: 60px; margin-bottom: 8px" />
+                <div class="flex gap-2">
+                  <el-skeleton-item v-for="n in 4" :key="n" variant="text" style="width: 48px; height: 48px" />
+                </div>
+              </div>
+
+              <!-- 數量選擇區 -->
+              <div class="my-4">
+                <el-skeleton-item variant="text" style="width: 200px; height: 40px" />
+              </div>
+
+              <!-- 按鈕區 -->
+              <div class="grid grid-cols-2 gap-5 my-5">
+                <el-skeleton-item variant="button" style="width: 100%; height: 40px" />
+                <el-skeleton-item variant="button" style="width: 100%; height: 40px" />
+              </div>
+            </template>
+          </el-skeleton>
+        </div>
+      </div>
+
+      <!-- 商品描述區 Skeleton -->
+      <div class="descriptionProfile mt-8">
+        <el-skeleton animated :rows="5">
+          <template #template>
+            <!-- 選項欄 -->
+            <div class="flex justify-center gap-8 mb-6">
+              <el-skeleton-item variant="text" style="width: 100px" />
+              <el-skeleton-item variant="text" style="width: 100px" />
+            </div>
+
+            <!-- 描述內容 -->
+            <div class="px-4">
+              <el-skeleton-item variant="h3" style="width: 200px; margin: 0 auto 20px" />
+              <el-skeleton-item v-for="n in 4" :key="n" variant="text" style="margin-bottom: 12px" />
+              <el-skeleton-item variant="image" style="width: 100%; height: 300px; margin: 20px 0" />
+            </div>
+          </template>
+        </el-skeleton>
+      </div>
+    </div>
     <!-- 共享購物車選擇對話框 -->
     <div v-if="sharedCartList.length === 0">
       <el-dialog v-model="dialogToggle" title="您還沒有共享購物車" width="30%">
@@ -474,7 +558,7 @@ const props = defineProps({
           <div class="mx-auto my-5 flex justify-center text-sm hover:cursor-pointer">
             <p :class="{ active: isSubscribe }" @click="toggleWishlist">
               <i class="p-1" :class="isInWishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>加入追蹤清單
-            </p>         
+            </p>
           </div>
           <div class="promotionalContainer relative mx-5 mt-5">
             <p class="mx-[7px] text-sm pl-[10px]">
