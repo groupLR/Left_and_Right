@@ -84,8 +84,7 @@ const sendMessage = () => {
   margin: 0 auto;
   width: 1358px;
   max-width: 100%;
-  border: 1px solid #ddd;
-  border-top: 1px solid #fff;
+  padding: 16px 0;
 }
 
 .messageNav {

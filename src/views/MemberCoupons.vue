@@ -108,7 +108,7 @@ window.scrollTo(0, 0)
 <template>
   <MemberNavbar />
   <div class="lg:px-10 pb-10">
-    <div class="max-w-[1358px] mx-auto border border-solid border-[#ddd] border-t-0">
+    <div class="max-w-[1358px] mx-auto">
       <div v-if="coupons.length === 0" class="py-10 lg:px-10 flex justify-center mx-auto bg-white">
         <div>
           <img src="../assets/member_center_list_empty.png" alt="" class="w-[121px] h-[129px]" />
