@@ -2,8 +2,14 @@
 import MemberNavbar from "../components/MemberNavbar.vue"
 import MemberEmpty from "../components/MemberEmpty.vue"
 import { RouterLink } from "vue-router"
+import { storeToRefs } from "pinia"
 import axios from "axios"
 import { ref, onMounted } from "vue"
+import { useExchangeRateStore } from "@/stores/exchangeRates"
+
+const ExchangeRateStore = useExchangeRateStore()
+const { currentRate } = storeToRefs(ExchangeRateStore)
+
 const API_URL = import.meta.env.VITE_API_URL
 const orders = ref([])
 const hasOrders = ref(true)
@@ -75,7 +81,9 @@ onMounted(async () => {
               <tr v-for="order in orders" :key="order.purchaseID">
                 <td class="w-1/5 text-white md:text-black bg-[#314e86] md:bg-white"><span class="lg:hidden">訂單編號 : </span>{{ order.pu_id }}</td>
                 <td class="w-2/5">{{ order.productName }}...</td>
-                <td class="w-1/5"><span>訂單金額 : </span>NT${{ order.totalPrice }}</td>
+                <td class="w-1/5">
+                  <span>訂單金額 : </span> {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(order.totalPrice)).toLocaleString() }}
+                </td>
                 <td class="w-1/5">已完成</td>
                 <td class="w-1/5 last">
                   <RouterLink :to="`/OrderDetails/${order.pu_id}`"> <button class="btn bg-[#314e86] text-white">查閱</button> </RouterLink>
