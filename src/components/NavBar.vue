@@ -164,7 +164,7 @@ watch(selectedCurrency, () => {
         </ul>
       </div>
       <!-- 商品類別 -->
-      <div class="hidden w-full max-w-[960px] justify-between xl:flex xl:flex-1 xl:ml-20">
+      <div class="hidden w-full max-w-[1060px] justify-between xl:flex xl:flex-1 xl:ml-10">
         <RouterLink to="/categories/28" class="text-base p-1 rounded-lg font-semibold text-[#314e86] hover:bg-[#314e86] hover:text-white"
           >{{ month }}{{ day }} 新品 / NEW</RouterLink
         >
@@ -183,9 +183,9 @@ watch(selectedCurrency, () => {
         <RouterLink to="/categories/35" class="text-base p-1 rounded-lg font-semibold text-[#314e86] hover:bg-[#314e86] hover:text-white"
           >項鍊 / Necklaces</RouterLink
         >
-        <!-- <RouterLink to="/categories/26" class="text-base p-1 rounded-lg tracking-widest font-semibold text-[#314e86] hover:bg-[#314e86] hover:text-white"
-          >聯名系列</RouterLink
-        >-->
+        <RouterLink to="/about" class="text-base p-1 rounded-lg tracking-widest font-semibold text-[#314e86] hover:bg-[#314e86] hover:text-white"
+          >關於我們</RouterLink
+        >
         <RouterLink to="/store-info" class="text-base p-1 rounded-lg tracking-widest font-semibold text-[#314e86] hover:bg-[#314e86] hover:text-white"
           >門市資訊</RouterLink
         >
@@ -266,7 +266,7 @@ watch(selectedCurrency, () => {
             <RouterLink to="/store-info">尋找門市</RouterLink>
           </li>
           <li class="p-4 hover:cursor-pointer text-[#314e86] hover:font-bold" @click="toggleSidebar">
-            <a href="#">關於我們</a>
+            <RouterLink to="/about">關於我們</RouterLink>
             <font-awesome-icon :icon="['fas', 'comment']" class="absolute right-1 top-5" />
           </li>
         </ul>

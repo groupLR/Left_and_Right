@@ -475,10 +475,14 @@ onUnmounted(() => {
             <Warning content="您確定要刪除共享購物車嗎？" @confirm="deleteSharedCart" />
           </div>
         </div>
-        <div class="my-5 bg-yellow-50 p-5 rounded-xl">
-          <h2 class="text-xl font-bold mb-2 text-amber-500">{{ sharedCartName }}</h2>
-          <p class="font-bold">購朋友：</p>
-          <p>{{ sharedCartMembers.join("、") }}</p>
+        <div class="my-5 bg-[#C9D9F0] p-5 rounded-xl grid grid-rows-2 gap-1 justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-[#314e86]">{{ sharedCartName }}</h2>
+          </div>
+          <div>
+            <p class="font-bold">購朋友：</p>
+            <p>{{ sharedCartMembers.join("、") }}</p>
+          </div>
         </div>
       </section>
       <section v-else>

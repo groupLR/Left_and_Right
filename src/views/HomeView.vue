@@ -52,7 +52,7 @@ onMounted(async () => {
       <!-- 分頁 -->
       <div class="flex justify-center pb-4 my-8">
         <vue-awesome-paginate
-          class="text-white text-base bg-[#C9D9F0] rounded-md p-1 hover:bg-[#6A88BE]"
+          class="text-black text-base rounded-md p-1"
           :total-items="totalProductCount"
           :items-per-page="coBrandingPageSize"
           :max-pages-shown="3"
