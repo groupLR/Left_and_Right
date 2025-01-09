@@ -1,6 +1,8 @@
 <script setup>
 import ChatBox from "../components/chatbox.vue"
 import MemberNavbar from "../components/MemberNavbar.vue"
+
+window.scrollTo(0, 0)
 </script>
 
 <template>

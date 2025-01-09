@@ -34,40 +34,37 @@ if (route.path === "/") {
 </script>
 
 <template>
-  <Logout />
-  <div class="my-0 lg:px-10">
-    <div class="lg:max-w-[1358px] lg:mx-auto">
-      <!-- nav bar -->
-      <nav>
-        <ul class="flex p-0 justify-between gap-2 md:gap-0">
-          <li
-            v-for="(option, index) in navbarOption"
-            class="memberOptions transition-all duration-200 text-base text-[#314e86] border-[#ddd] border-solid border"
-            :key="index"
-            :class="{
-              'font-bold text-[#314e86]  bg-white border-b-0 text-[28px] shadow-inner': route.path === option.router,
-              'text-[#314e86]  bg-gray-100/20': route.path !== option.router,
-            }"
-          >
-            <RouterLink :to="option.router" class="block w-full h-full">
-              <div>
-                {{ option.text }}
-              </div>
-            </RouterLink>
-          </li>
-        </ul>
-      </nav>
-      <!-- nav bar -->
+  <div class="mx-3 lg:mx-0">
+    <Logout />
+    <div class="my-0 lg:px-10">
+      <div class="md:max-w-[1358px] md:mx-auto">
+        <!-- nav bar -->
+        <nav>
+          <ul class="flex p-0 justify-between gap-2 md:gap-0">
+            <li
+              v-for="(option, index) in navbarOption"
+              class="memberOptions transition-all duration-200 text-base text-[#314e86] border-[#ddd] border-solid border rounded-t-lg"
+              :key="index"
+              :class="{
+                'font-bold text-white  bg-[#314e86] border-b-0 text-[28px] shadow-inner': route.path === option.router,
+                'text-[#314e86]  bg-gray-100': route.path !== option.router,
+              }"
+            >
+              <RouterLink :to="option.router" class="block w-full h-full">
+                <div>
+                  {{ option.text }}
+                </div>
+              </RouterLink>
+            </li>
+          </ul>
+        </nav>
+        <!-- nav bar -->
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-/* * {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #333333;
-} */
-
 /* nav bar */
 
 .memberOptions {
@@ -94,21 +91,13 @@ if (route.path === "/") {
     overflow-x: auto; /* 開啟水平捲動 */
   }
   .memberOptions {
-    min-width: 50px;
+    min-width: 62px;
     list-style-type: none;
-    height: 50px;
-    line-height: 50px;
+    height: 45px;
+    line-height: 45px;
     text-align: center;
-    color: #33333399;
-    /* border-left: none; */
-    /* border-bottom: solid 1px #ddd; */
-    /* border-top: none; */
     white-space: nowrap;
-    /* background-color: #fff; */
+    font-size: 14px;
   }
-  .memberOptions:first-of-type {
-    border-left: none;
-  }
-  /* nav bar */
 }
 </style>
