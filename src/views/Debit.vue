@@ -4,12 +4,15 @@ import { ref, computed, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { ElMessage, ElSteps, ElStep } from "element-plus"
 import { useSharedCartStore } from "@/stores/sharedCart"
+import { useExchangeRateStore } from "@/stores/exchangeRates"
 import { storeToRefs } from "pinia"
 import { useCartStore } from "@/stores/cart"
 
 const cartStore = useCartStore()
 const { countryList, paymentOptions, deliveryOptions } = storeToRefs(cartStore)
 const SharedCartStore = useSharedCartStore()
+const ExchangeRateStore = useExchangeRateStore()
+const { currentRate } = storeToRefs(ExchangeRateStore)
 const route = useRoute()
 const router = useRouter()
 
@@ -280,7 +283,9 @@ onMounted(async () => {
               <div class="flex flex-col gap-2 ml-2">
                 <h4 class="font-medium">{{ item.product_name }}</h4>
                 <p class="text-gray-600">數量：{{ item.quantity }}</p>
-                <p class="text-amber-500 font-extrabold">NT${{ (item.sale_price * item.quantity).toLocaleString() }}</p>
+                <p class="text-amber-500 font-extrabold">
+                  {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(item.sale_price * item.quantity)).toLocaleString() }}
+                </p>
               </div>
             </div>
           </div>
@@ -411,21 +416,23 @@ onMounted(async () => {
                 <!-- 商品金額資訊 -->
                 <div class="flex justify-between">
                   <p>小計</p>
-                  <p>NT${{ itemPrice.toLocaleString() }}</p>
+                  <p>{{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(itemPrice)).toLocaleString() }}</p>
                 </div>
                 <div class="flex justify-between">
                   <p>折扣</p>
-                  <p>-NT$94</p>
+                  <p>-{{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(200)).toLocaleString() }}</p>
                 </div>
                 <div class="flex justify-between">
                   <p>運費</p>
-                  <p>NT$60</p>
+                  <p>{{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(60)).toLocaleString() }}</p>
                 </div>
                 <hr />
                 <!-- 最終金額 -->
                 <div class="flex justify-between">
                   <p>合計</p>
-                  <p class="font-bold text-amber-500">NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
+                  <p class="font-bold text-amber-500">
+                    {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(itemPrice - 200 + 60)).toLocaleString() }}元
+                  </p>
                 </div>
               </div>
             </div>
@@ -446,7 +453,9 @@ onMounted(async () => {
             </label>
           </div>
           <div class="flex w-full justify-between items-center md:w-auto md:gap-8">
-            <p class="text-amber-500 font-extrabold md:text-base xl:text-lg">合計：NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
+            <p class="text-amber-500 font-extrabold md:text-base xl:text-lg">
+              合計：{{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(itemPrice - 200 + 60)).toLocaleString() }}
+            </p>
             <button
               class="bg-[#314e86] hover:bg-[#6A88BE] px-4 py-2 text-white rounded text-sm md:px-10 md:text-base"
               @click="submitOrder"

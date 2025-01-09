@@ -349,8 +349,8 @@ const props = defineProps({
 <template>
   <section>
     <!-- Skeleton Loading -->
-    <div v-if="isLoading" class="max-w-full my-4">
-      <div class="profile lg:flex lg:max-w-[985px] lg:justify-center lg:mx-auto lg:my-0">
+    <div v-if="isLoading" class="max-w-full bg-slate-50">
+      <div class="profile lg:flex pt-10 lg:max-w-[985px] lg:justify-center lg:mx-auto lg:my-0">
         <!-- 商品圖片區 Skeleton -->
         <div class="lg:max-w-[550px] lg:w-full">
           <el-skeleton animated>
@@ -462,163 +462,159 @@ const props = defineProps({
       </el-dialog>
     </div>
 
-    <div class="loading bg-lightBlue-300 my-4 max-w-full">
-      <div class="profile">
-        <!-- 輪播圖 -->
-        <div class="swiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="(image, index) in mainImgs" :key="index">
-              <img :src="image.imgPath" :alt="image.imgText" />
+    <div class="lg:px-20 pb-10">
+      <div class="loading bg-lightBlue-300 my-3 lg:pt-10 max-w-full bg-slate-50">
+        <div class="profile">
+          <!-- 輪播圖 -->
+          <div class="swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide" v-for="(image, index) in mainImgs" :key="index">
+                <img :src="image.imgPath" :alt="image.imgText" />
+              </div>
+            </div>
+            <div class="swiper-pagination"></div>
+          </div>
+          <div class="carousel">
+            <div class="min-w-[120px] h-[400px] mr-5 pl-5">
+              <div
+                class="mb-[10px] cursor-pointer max-w-[72px] max-h-[72px]"
+                v-for="(image, index) in mainImgs"
+                :key="index"
+                @click="selectImage(index)"
+                :class="{ 'outline outline-2 outline-black': selectedIndex === index }"
+              >
+                <img :src="image.imgPath" :alt="image.imgText" class="w-[72px] h-[72px] object-cover" />
+              </div>
+            </div>
+            <div class="w-[415px] h-[415px] block">
+              <img :src="selectedImage.imgPath" :alt="selectedImage.title" class="w-[415px] h-[415px] object-cover" />
             </div>
           </div>
-          <div class="swiper-pagination"></div>
-        </div>
-        <div class="carousel">
-          <div class="min-w-[120px] h-[400px] mr-5 pl-5">
-            <div
-              class="mb-[10px] cursor-pointer max-w-[72px] max-h-[72px]"
-              v-for="(image, index) in mainImgs"
-              :key="index"
-              @click="selectImage(index)"
-              :class="{ 'outline outline-2 outline-black': selectedIndex === index }"
-            >
-              <img :src="image.imgPath" :alt="image.imgText" class="w-[72px] h-[72px] object-cover" />
-            </div>
-          </div>
-          <div class="w-[415px] h-[415px] block">
-            <img :src="selectedImage.imgPath" :alt="selectedImage.title" class="w-[415px] h-[415px] object-cover" />
-          </div>
-        </div>
-        <!-- 商品概訊 -->
-        <div class="m-4 mt-5">
-          <h1 class="text-[28px]">{{ title }}</h1>
-          <div class="flex">
-            <h2 class="my-5 text-[20px] font-extrabold">
-              {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice)).toLocaleString() }}
-            </h2>
-            <h2 class="ml-5 mt-6 text-s font-bold text-gray-400 line-through">
-              {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(originalPrice)).toLocaleString() }}
-            </h2>
-          </div>
-          <div class="font-extralight text-[16px]">
-            <p>
-              全館任選兩件88折，優惠後特價 {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.88).toLocaleString() }}
-            </p>
-            <p>
-              全館任選三件85折，優惠後特價 {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.85).toLocaleString() }}
-            </p>
-            <p>
-              全館任選四件82折，優惠後特價 {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.82).toLocaleString() }}
-            </p>
-          </div>
-          <!-- <div class="my-[5px] mb-5 flex text-center">
-            <p class="text-[14px] text-[#FFC500] pt-[1px]">
-              <font-awesome-icon :icon="['fas', 'star']" class="mr-1" /><font-awesome-icon :icon="['fas', 'star']" class="mr-1" /><font-awesome-icon
-                :icon="['fas', 'star']"
-                class="mr-1"
-              /><font-awesome-icon :icon="['fas', 'star']" class="mr-1" /><font-awesome-icon :icon="['fas', 'star']" class="mr-1" />
-            </p>
-            <p class="ml-5 text-gray-500">5 分</p>
-            <p class="mx-2 text-[14px] pt-[0.8px]">|</p>
-            <p class="rates">460個評價</p>
-          </div> -->
-          <div class="mt-5">
-            <p class="text-[14px] font-extralight" v-if="filterColor.length > 0">顏色 :{{ selectedImage.colorText }}</p>
+          <!-- 商品概訊 -->
+          <div class="m-4 mt-5">
+            <h1 class="text-[28px]">{{ title }}</h1>
             <div class="flex">
-              <div v-for="(color, index) in filterColor" :key="color.title">
-                <input type="radio" name="my-10" class="colorCheckbox hidden" :id="`color-${index}`" :checked="index === 0" />
-                <div
-                  class="colorBox m-[20px] ml-0 border border-[#eaeaea] bg-[#fcfcfc] w-[48px] h-[48px] flex cursor-pointer transition-all duration-100 ease-out"
-                  @click="selectColor(index)"
-                >
-                  <label
-                    :for="`color-${index}`"
-                    class="w-10 h-10 flex justify-center m-auto cursor-pointer"
-                    :style="{ backgroundColor: color.colorSquare }"
-                  ></label>
+              <h2 class="my-5 text-[20px] font-extrabold">
+                {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice)).toLocaleString() }}
+              </h2>
+              <h2 class="ml-5 mt-6 text-s font-bold text-gray-400 line-through">
+                {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(originalPrice)).toLocaleString() }}
+              </h2>
+            </div>
+            <div class="font-extralight text-[16px]">
+              <p>
+                全館任選兩件88折，優惠後特價 {{ currentRate.symbol || "NT"
+                }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.88).toLocaleString() }}
+              </p>
+              <p>
+                全館任選三件85折，優惠後特價 {{ currentRate.symbol || "NT"
+                }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.85).toLocaleString() }}
+              </p>
+              <p>
+                全館任選四件82折，優惠後特價 {{ currentRate.symbol || "NT"
+                }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.82).toLocaleString() }}
+              </p>
+            </div>
+
+            <div class="mt-5">
+              <p class="text-[14px] font-extralight" v-if="filterColor.length > 0">顏色 :{{ selectedImage.colorText }}</p>
+              <div class="flex">
+                <div v-for="(color, index) in filterColor" :key="color.title">
+                  <input type="radio" name="my-10" class="colorCheckbox hidden" :id="`color-${index}`" :checked="index === 0" />
+                  <div
+                    class="colorBox m-[20px] ml-0 border border-[#eaeaea] bg-[#fcfcfc] w-[48px] h-[48px] flex cursor-pointer transition-all duration-100 ease-out"
+                    @click="selectColor(index)"
+                  >
+                    <label
+                      :for="`color-${index}`"
+                      class="w-10 h-10 flex justify-center m-auto cursor-pointer"
+                      :style="{ backgroundColor: color.colorSquare }"
+                    ></label>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="mb-5">
-            <p class="text-[14px] font-extralight">數量</p>
-            <div class="max-w-full w-full flex h-[40px] my-2.5">
-              <button class="rounded-lg border border-gray-300 bg-gray-50 w-[45px] h-[40px] text-[20px]" @click="decrease">-</button>
-              <input type="number" min="1" value="1" class="border border-x-0 border-gray-300 w-full text-center" v-model="counter" />
-              <button class="rounded-lg border border-gray-300 bg-gray-50 w-[45px] h-[40px] text-[20px]" @click="increase">+</button>
+            <div class="mb-5">
+              <p class="text-[14px] font-extralight">數量</p>
+              <div class="max-w-full w-full flex h-[40px] my-2.5">
+                <button class="rounded-lg border border-gray-300 bg-gray-50 w-[45px] h-[40px] text-[20px]" @click="decrease">-</button>
+                <input type="number" min="1" value="1" class="border border-x-0 border-gray-300 w-full text-center" v-model="counter" />
+                <button class="rounded-lg border border-gray-300 bg-gray-50 w-[45px] h-[40px] text-[20px]" @click="increase">+</button>
+              </div>
             </div>
-          </div>
-          <div class="grid grid-cols-2 gap-5 my-5">
-            <button class="bg-black text-gray-50 border border-black rounded-lg text-lg p-1" @click="handleAddToCart">加入購物車</button>
-            <button class="bg-black text-gray-50 border border-black rounded-lg text-lg p-1" @click="showDialog">
-              <i class="fa-brands fa-shopify ml-4 text-xl"></i>
-              加入共享購物車
-            </button>
-          </div>
-          <div class="mx-auto my-5 flex justify-center text-sm hover:cursor-pointer">
-            <p :class="{ active: isSubscribe }" @click="toggleWishlist">
-              <i class="p-1" :class="isInWishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>加入追蹤清單
-            </p>
-          </div>
-          <div class="promotionalContainer relative mx-5 mt-5">
-            <p class="mx-[7px] text-sm pl-[10px]">
-              <span class="text-[#B69490]">期間限定</span>
-              <span>全館$350免運！</span>
-            </p>
-            <p class="mx-[7px] text-sm pl-[10px]">
-              <span class="text-[#B69490]">限時優惠</span>
-              <span>全館兩件88折,三件85折,四件82折(buy2 for 12% off,3 for 15% off,4 for 18% off)</span>
-            </p>
-            <p class="mx-[7px] text-sm pl-[10px]">
-              <span class="text-[#B69490]">KURT聯名</span>
-              <span>系列新品8折</span>
-            </p>
-            <p class="mx-[7px] text-sm pl-[10px]">
-              <span class="text-[#B69490]">KURT限量滿額贈</span>
-              <span>滿$990贈 花happen刺繡布貼；滿2000贈 黑心帆布袋</span>
-            </p>
-            <p class="mx-[7px] text-sm pl-[10px]">
-              <span class="text-[#B69490]">by.Lab支線</span>
-              <span>設計師大賽實體化 新品限時9折</span>
-            </p>
+            <div class="grid grid-cols-2 gap-5 my-5">
+              <button class="bg-[#314e86] text-gray-50 border border-[#314e86] rounded-lg text-lg p-1" @click="handleAddToCart">加入購物車</button>
+              <button class="bg-[#314e86] text-gray-50 border border-[#314e86] rounded-lg text-lg p-1" @click="showDialog">
+                <i class="fa-brands fa-shopify ml-4 text-xl"></i>
+                加入共享購物車
+              </button>
+            </div>
+            <div class="mx-auto my-5 flex justify-center text-sm hover:cursor-pointer">
+              <p :class="{ active: isSubscribe }" @click="toggleWishlist">
+                <i class="p-1" :class="isInWishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>加入追蹤清單
+              </p>
+            </div>
+            <div class="promotionalContainer relative mx-5 mt-5">
+              <p class="mx-[7px] text-sm pl-[10px]">
+                <span class="text-[#B69490]">期間限定</span>
+                <span>全館$350免運！</span>
+              </p>
+              <p class="mx-[7px] text-sm pl-[10px]">
+                <span class="text-[#B69490]">限時優惠</span>
+                <span>全館兩件88折,三件85折,四件82折(buy2 for 12% off,3 for 15% off,4 for 18% off)</span>
+              </p>
+              <p class="mx-[7px] text-sm pl-[10px]">
+                <span class="text-[#B69490]">KURT聯名</span>
+                <span>系列新品8折</span>
+              </p>
+              <p class="mx-[7px] text-sm pl-[10px]">
+                <span class="text-[#B69490]">KURT限量滿額贈</span>
+                <span>滿$990贈 花happen刺繡布貼；滿2000贈 黑心帆布袋</span>
+              </p>
+              <p class="mx-[7px] text-sm pl-[10px]">
+                <span class="text-[#B69490]">by.Lab支線</span>
+                <span>設計師大賽實體化 新品限時9折</span>
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- 商品描述 -->
-      <div class="descriptionProfile">
-        <div class="p-5">
-          <div class="navbar">
-            <div
-              id="navbarProductDescription"
-              @click="toggleDescription"
-              class="font-medium"
-              :class="{ 'text-black': isDescription, description: isDescription }"
-            >
-              商品描述
+        <!-- 商品描述 -->
+        <div class="descriptionProfile">
+          <div class="p-5">
+            <div class="navbar">
+              <div
+                id="navbarProductDescription"
+                @click="toggleDescription"
+                class="font-medium"
+                :class="{ 'text-[#314e86] font-extrabold': isDescription, description: isDescription }"
+              >
+                商品描述
+              </div>
+              <div id="navbarRate" @click="toggleReview" class="font-medium" :class="{ 'text-[#314e86] font-extrabold': isReview }">顧客評價</div>
             </div>
-            <div id="navbarRate" @click="toggleReview" class="font-medium" :class="{ 'text-black': isReview }">顧客評價</div>
-          </div>
-          <div>
-            <Reviews :product-id="productId" v-if="isReview" />
-          </div>
-          <div v-if="isDescription">
-            <div class="descriptionTitle mx-10 my-auto flex justify-center relative">
-              <h3 class="text-2xl tracking-widest mt-5">商品描述</h3>
+            <div class="mt-5">
+              <Reviews :product-id="productId" v-if="isReview" />
             </div>
-            <div class="flex m-auto justify-center my-10">
-              <p v-html="description" class="px-[5px] text-sm"></p>
-            </div>
-            <div class="descriptionTitle mx-10 my-auto flex justify-center relative">
-              <h3 class="text-2xl tracking-widest mt-5">了解更多</h3>
-            </div>
-            <div class="flex justify-center mx-auto my-0 max-w-[655px] w-full flex-wrap">
-              <img
-                v-for="(image, index) in desImgs"
-                :key="index"
-                :src="image.imgPath"
-                :alt="image.imgText"
-                class="object-contain w-full my-10 mx-0 lg:max-w-[655px] lg:w-full"
-              />
+            <div v-if="isDescription" class="mt-5">
+              <div class="descriptionTitle mx-10 my-auto flex justify-center relative">
+                <h3 class="text-2xl tracking-widest mt-5">商品描述</h3>
+              </div>
+              <div class="flex m-auto justify-center my-10">
+                <p v-html="description" class="px-[5px] text-sm"></p>
+              </div>
+
+              <div class="descriptionTitle mx-10 my-auto flex justify-center relative">
+                <h3 class="text-2xl tracking-widest mt-5">了解更多</h3>
+              </div>
+              <div class="flex justify-center mx-auto my-0 max-w-[655px] w-full flex-wrap">
+                <img
+                  v-for="(image, index) in desImgs"
+                  :key="index"
+                  :src="image.imgPath"
+                  :alt="image.imgText"
+                  class="object-contain w-full my-10 mx-0 lg:max-w-[655px] lg:w-full"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -678,13 +674,13 @@ input::-webkit-inner-spin-button {
 }
 
 .navbar {
-  @apply grid text-xl border-b-[3px] border-[#f3f3f3] grid-cols-2 max-w-[1310px] w-full py-5 font-light text-[#dadbdb] content-center mx-auto justify-center;
+  @apply grid text-xl border-b-[3px] border-[#ddd] grid-cols-2 max-w-[1310px] w-full py-5 font-light text-[#dadbdb] content-center mx-auto justify-center;
 }
 .navbar div {
   @apply flex justify-center mx-0 my-auto text-center max-w-[655px] w-full;
 }
 .navbar div:hover {
-  @apply cursor-pointer text-black;
+  @apply cursor-pointer text-[#314e86];
 }
 
 .promotionalContainer::before {

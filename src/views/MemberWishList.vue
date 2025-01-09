@@ -2,15 +2,17 @@
 import { ref, onMounted } from "vue"
 import axios from "axios"
 import MemberNavbar from "../components/MemberNavbar.vue"
-import MemberEmpty from "../components/MemberEmpty.vue"
 import AddSharedCart from "@/components/AddSharedCart.vue"
 import { ElMessage } from "element-plus"
 import { storeToRefs } from "pinia"
 import { useCartStore } from "@/stores/cart"
 import { useSharedCartStore } from "@/stores/sharedCart"
+import { useExchangeRateStore } from "@/stores/exchangeRates"
 const SharedCartStore = useSharedCartStore()
 const CartStore = useCartStore()
+const ExchangeRateStore = useExchangeRateStore()
 const { sharedCartList } = storeToRefs(SharedCartStore)
+const { currentRate } = storeToRefs(ExchangeRateStore)
 
 const API_URL = import.meta.env.VITE_API_URL
 const userId = localStorage.getItem("UID")
@@ -137,7 +139,7 @@ window.scrollTo(0, 0)
     </div>
 
     <!-- 主要內容區 -->
-    <div class="max-w-[1358px] mx-auto mb-10 px-10 py-8 bg-white border border-[#ddd] border-t-white">
+    <div class="max-w-[1358px] mx-auto px-10 py-8 bg-white border border-[#ddd] border-t-white">
       <div v-if="wishlists.length === 0" class="py-10 lg:px-10 flex justify-center mx-auto bg-white">
         <div class="flex flex-col justify-center mx-auto">
           <img src="../assets/member_center_list_empty.png" alt="" class="mx-auto w-[121px] h-[129px]" />
@@ -184,8 +186,12 @@ window.scrollTo(0, 0)
 
             <!-- 價格 -->
             <div class="col-span-12 md:col-span-2 px-4 mt-2 md:mt-0">
-              <p class="text-[#ddd] text-xs line-through md:text-base">NT${{ item.products.original_price }}</p>
-              <p class="text-black text-sm md:text-base">NT${{ item.products.sale_price }}</p>
+              <p class="text-[#ddd] text-xs line-through md:text-base">
+                {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(item.products.original_price)).toLocaleString() }}
+              </p>
+              <p class="text-black text-sm md:text-base">
+                {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(item.products.sale_price)).toLocaleString() }}
+              </p>
             </div>
 
             <!-- 操作按鈕 -->

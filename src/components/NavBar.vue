@@ -82,7 +82,7 @@ onMounted(() => {
 
 watch(selectedCurrency, () => {
   if (isInitialized.value) {
-    ElMessage.success("幣種成功切換")
+    ElMessage.success("幣種切換成功")
   } else {
     isInitialized.value = true
   }
@@ -96,7 +96,7 @@ watch(selectedCurrency, () => {
   <!-- navbar -->
   <div class="fixed top-0 w-screen bg-[#314e86] xl:bg-white z-10 shadow-md flex justify-between xl:pb-2">
     <!-- logo -->
-    <div class="w-16 h-12 mt-2 ml-2 xl:mx-10 xl:w-24 xl:h-20 rounded-full overflow-hidden hover:border-2 hover:border-solid hover:border-[#314e86]">
+    <div class="w-16 h-12 mt-2 ml-2 xl:mx-10 xl:w-24 xl:h-20 rounded-lg overflow-hidden">
       <a href="/">
         <img src="/src/assets/LRlogo.jpg" alt="logo" class="object-cover w-full h-full" />
       </a>

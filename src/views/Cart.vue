@@ -11,10 +11,13 @@ import CartProduct from "@/components/CartProduct.vue"
 import { webSocketService } from "@/websocket/websocket.js"
 import { storeToRefs } from "pinia"
 import { useCartStore } from "@/stores/cart"
+import { useExchangeRateStore } from "@/stores/exchangeRates"
 
 const cartStore = useCartStore()
 const { countryList, paymentOptions, deliveryOptions } = storeToRefs(cartStore)
 const SharedCartStore = useSharedCartStore()
+const ExchangeRateStore = useExchangeRateStore()
+const { currentRate } = storeToRefs(ExchangeRateStore)
 
 const route = useRoute()
 const router = useRouter()
@@ -586,9 +589,14 @@ onUnmounted(() => {
               <div v-if="error" class="text-red-500 text-center">{{ error }}</div>
               <div v-if="validCoupon" class="flex items-start flex-col">
                 <p class="my-4 px-5 bg-green-100 text-center text-sm md:text-base">優惠促銷</p>
-                <p class="text-sm md:text-base">{{ validCoupon.name }} - 滿 {{ validCoupon.min_spend }} 元可用</p>
+                <p class="text-sm md:text-base">
+                  {{ validCoupon.name }} - 滿 {{ currentRate.symbol || "NT"
+                  }}{{ ExchangeRateStore.calConvertedPrice(Number(validCoupon.min_spend)).toLocaleString() }} 元可用
+                </p>
                 <div class="w-full flex justify-end">
-                  <p class="text-sm md:text-base text-green-600 font-bold">-NT$ {{ validCoupon.discount_amount }}</p>
+                  <p class="text-sm md:text-base text-green-600 font-bold">
+                    - {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(validCoupon.discount_amount)).toLocaleString() }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -600,21 +608,25 @@ onUnmounted(() => {
               <div class="flex flex-col gap-3">
                 <div class="flex justify-between">
                   <p>小計</p>
-                  <p>NT${{ itemPrice.toLocaleString() }}</p>
+                  <p>{{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(itemPrice)).toLocaleString() }}</p>
                 </div>
                 <div v-if="validCoupon" class="flex justify-between">
                   <p>折扣</p>
-                  <p>-NT$ {{ validCoupon.discount_amount }}</p>
+                  <p>{{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(validCoupon.discount_amount)).toLocaleString() }}</p>
                 </div>
                 <div class="flex justify-between">
                   <p>運費</p>
-                  <p v-if="products.length !== 0">NT${{ shippingFee }}</p>
-                  <p v-if="products.length == 0">NT$0</p>
+                  <p v-if="products.length !== 0">
+                    {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(shippingFee)).toLocaleString() }}
+                  </p>
+                  <p v-if="products.length == 0">{{ currentRate.symbol || "NT" }} 0</p>
                 </div>
                 <hr />
                 <div class="flex justify-between">
                   <p>合計</p>
-                  <p class="font-bold text-amber-500">NT${{ (totalAmount - shippingFee).toLocaleString() }}</p>
+                  <p class="font-bold text-amber-500">
+                    {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(totalAmount)).toLocaleString() }}元
+                  </p>
                 </div>
               </div>
             </div>
@@ -625,7 +637,9 @@ onUnmounted(() => {
     <!-- 前往結帳 -->
     <section class="fixed bottom-0 w-full bg-white shadow-2xl" v-if="products.length !== 0">
       <div class="flex gap-5 justify-end items-center m-5 max-w-[1365px]">
-        <p class="text-amber-500 text-lg font-extrabold">合計：NT${{ (totalAmount - shippingFee).toLocaleString() }}</p>
+        <p class="text-amber-500 text-lg font-extrabold">
+          合計：{{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(totalAmount)).toLocaleString() }}
+        </p>
         <button class="bg-[#314e86] hover:bg-[#6A88BE] px-2 py-1 text-white rounded md:px-10" @click="goToNext" :disabled="products.length === 0">
           前往結帳
         </button>
