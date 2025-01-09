@@ -14,20 +14,22 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="bg-gray-100 m-5 mb-[-20px] p-2 flex items-center">
-    <i class="fa-brands fa-shopify ml-4 text-xl"></i>
-    <h1 class="text-lg font-bold ml-2">共享購物車</h1>
-  </div>
-  <div class="p-4 flex flex-col border-2 border-solid border-gray-100 rounded-b m-5 min-h-80">
-    <div v-if="sharedCartList.length == 0" class="m-auto">
-      <p class="text-gray-500">您還沒有共享購物車</p>
-      <AddSharedCart />
+  <div class="flex flex-col justify-center max-w-[1340px] mx-auto pt-5 pb-10 px-10">
+    <div class="bg-gray-100 my-5 flex font-bold">
+      <!-- <i class="fa-brands fa-shopify text-xl"></i> -->
+      <h1 class="text-2xl ml-2">共享購物車</h1>
     </div>
-    <div v-else>
-      <div class="flex justify-end mb-4">
-        <AddSharedCart />
+    <div class="w-full p-4 flex justify-center border border-solid rounded-xl border-gray-100 min-h-80 bg-white">
+      <div v-if="sharedCartList.length == 0" class="m-auto">
+        <p class="text-[#314e86] mb-3 font-medium">您還沒有共享購物車</p>
+        <div class="mx-auto flex justify-center"><AddSharedCart /></div>
       </div>
-      <SharedCartItem v-for="(item, index) in sharedCartList" :key="item.id" :id="item.id" :name="item.name" :member="item.member" />
+      <div v-else class="w-full">
+        <div class="mx-auto flex justify-end mb-4">
+          <AddSharedCart />
+        </div>
+        <SharedCartItem v-for="(item, _index) in sharedCartList" :key="item.id" :id="item.id" :name="item.name" :member="item.member" />
+      </div>
     </div>
   </div>
 </template>
