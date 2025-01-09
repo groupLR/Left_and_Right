@@ -250,9 +250,9 @@ onMounted(async () => {
             <h1 class="text-2xl font-bold">共享購物車結帳</h1>
           </div>
         </div>
-        <div class="my-5 bg-yellow-50 p-5 rounded-xl">
-          <h2 class="text-xl font-bold mb-2 text-amber-500">{{ sharedCartName }}</h2>
-          <p class="font-bold">購朋友：</p>
+        <div class="my-5 bg-[#C9D9F0] p-5 rounded-xl">
+          <h2 class="text-xl font-bold text-[#314e86]">{{ sharedCartName }}</h2>
+          <p class="font-bold mt-4">購朋友：</p>
           <p>{{ sharedCartMembers.join("、") }}</p>
         </div>
       </section>

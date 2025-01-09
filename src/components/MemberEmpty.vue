@@ -5,7 +5,7 @@
         <img src="../assets/member_center_list_empty.png" alt="" />
         <p>沒有任何訂單唷</p>
         <p>快去逛逛吧！</p>
-        <RouterLink to="/"><button class="goShopping">馬上逛逛</button></RouterLink>
+        <RouterLink to="/categories/31"><button class="goShopping">馬上逛逛</button></RouterLink>
       </div>
     </div>
   </section>
@@ -44,7 +44,7 @@
   margin: 20px auto;
   width: 220px;
   height: 32px;
-  background-color: #000;
+  background-color: #314e86;
   color: #fff;
   border: none;
   border-radius: 16px;
@@ -57,7 +57,7 @@
 }
 
 .goShopping:hover {
-  background-color: #333;
+  background-color: #6a88be;
 }
 @media (width<=768px) {
   .goShopping {

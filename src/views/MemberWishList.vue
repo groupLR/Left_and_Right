@@ -140,11 +140,13 @@ window.scrollTo(0, 0)
     <div class="max-w-[1358px] mx-auto mb-10 px-10 py-8 bg-white border border-[#ddd] border-t-white">
       <div v-if="wishlists.length === 0" class="py-10 lg:px-10 flex justify-center mx-auto bg-white">
         <div class="flex flex-col justify-center mx-auto">
-          <img src="../assets/member_center_list_empty.png" alt="" class="w-[121px] h-[129px]" />
+          <img src="../assets/member_center_list_empty.png" alt="" class="mx-auto w-[121px] h-[129px]" />
           <p class="pl-2 pt-5 mx-auto text-sm text-gray-500">沒有任何追蹤商品呦</p>
           <p class="pl-2 mx-auto text-sm text-gray-500">快去逛逛吧！</p>
           <div class="flex mx-auto justify-center">
-            <RouterLink to="/"><button class="bg-black text-white text-sm rounded-lg mt-4 px-2 py-1">馬上逛逛</button></RouterLink>
+            <RouterLink to="/categories/31"
+              ><button class="bg-[#314e86] hover:bg-[#6A88BE] w-[220px] h-8 text-white text-sm rounded-lg mt-4 px-2 py-1">馬上逛逛</button></RouterLink
+            >
           </div>
         </div>
       </div>
