@@ -11,6 +11,8 @@ const route = useRoute()
 const ProductStore = useProductStore()
 const { categoryTitle, productList, pageValue, sortValue, sortOptions, pageOptions, currentPage, pageSize, totalProductCount } = storeToRefs(ProductStore)
 
+const isLoading = ref(true)
+
 // 監聽路由參數變化
 watch(
   () => route.params.category,
@@ -29,69 +31,131 @@ watch(
 </script>
 
 <template>
-  <section class="px-4 flex max-w-[1340px] mx-auto justify-center">
+  <section class="p-4 flex max-w-[1340px] mx-auto justify-center">
     <Sidebar />
     <div class="flex-1">
-      <div class="headerContainer px-1 mb-2 md:flex items-center">
-        <h1 class="py-5 text-xl">{{ categoryTitle }}</h1>
-        <!-- 排序 -->
-        <div class="selectContainer flex">
-          <div class="pageSelectItem flex items-center relative mr-3 flex-1">
-            <i class="fa-solid fa-arrow-up-short-wide absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-            <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="sortValue" placeholder="商品排序" size="large" class="pl-10">
-              <el-option
-                v-for="item in sortOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-                @click="ProductStore.handleSortChange(route.params.category, item.value)"
-              />
-            </el-select>
+      <!-- Skeleton Loading -->
+      <template v-if="isLoading">
+        <div class="headerContainer px-1 mb-2 md:flex items-center">
+          <!-- 標題區塊 Skeleton -->
+          <div class="py-5">
+            <el-skeleton animated>
+              <template #template>
+                <el-skeleton-item variant="text" style="width: 200px; height: 32px" />
+              </template>
+            </el-skeleton>
           </div>
-          <!-- 每頁資料筆數 -->
 
-          <div class="pageSelectItem flex items-center relative flex-1">
-            <i class="fa-solid fa-bars fa-rotate-90 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-            <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="pageValue" placeholder="每頁顯示 12 個" size="large" class="pl-10">
-              <el-option
-                class="selectOption"
-                v-for="item in pageOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-                @click="ProductStore.handlePageSizeChange(route.params.category, item.value)"
-              />
-            </el-select>
+          <!-- 排序選擇器 Skeleton -->
+          <div class="selectContainer flex">
+            <el-skeleton animated>
+              <template #template>
+                <div class="flex gap-3">
+                  <el-skeleton-item variant="text" style="width: 200px; height: 50px" />
+                  <el-skeleton-item variant="text" style="width: 200px; height: 50px" />
+                </div>
+              </template>
+            </el-skeleton>
           </div>
         </div>
-      </div>
 
-      <!-- 產品列表 -->
-      <div class="flex flex-wrap">
-        <ProductItem
-          v-for="(item, index) in productList"
-          :key="item.id"
-          :id="item.id"
-          :title="item.title"
-          :price="item.price"
-          :originalPrice="item.originalPrice"
-          :frontImg="item.frontImg"
-          :backImg="item.backImg"
-        />
-      </div>
+        <!-- 商品列表 Skeleton -->
+        <div class="flex flex-wrap">
+          <div v-for="n in 12" :key="n" class="w-full md:w-1/2 lg:w-1/3 p-2">
+            <el-skeleton animated>
+              <template #template>
+                <div class="relative">
+                  <!-- 商品圖片 Skeleton -->
+                  <el-skeleton-item variant="image" style="width: 100%; height: 300px" />
+                  <!-- 商品標題 Skeleton -->
+                  <div class="mt-2">
+                    <el-skeleton-item variant="text" style="width: 80%; height: 20px" />
+                  </div>
+                  <!-- 商品價格 Skeleton -->
+                  <div class="mt-2 flex gap-2">
+                    <el-skeleton-item variant="text" style="width: 40%; height: 20px" />
+                    <el-skeleton-item variant="text" style="width: 40%; height: 20px" />
+                  </div>
+                </div>
+              </template>
+            </el-skeleton>
+          </div>
+        </div>
 
-      <!-- 分頁 -->
-      <div class="flex justify-center md:relative md:mb-12">
-        <vue-awesome-paginate
-          class="md:absolute md:right-0 text-gray-500 text-sm"
-          :total-items="totalProductCount"
-          :items-per-page="pageSize"
-          :max-pages-shown="5"
-          v-model="currentPage"
-          @click="ProductStore.paginationOnClickHandler(route.params.category, currentPage, 'list')"
-          :hide-prev-next-when-ends="true"
-        />
-      </div>
+        <!-- 分頁 Skeleton -->
+        <div class="flex justify-center md:relative md:my-12 mt-8">
+          <el-skeleton animated>
+            <template #template>
+              <div class="flex gap-2">
+                <el-skeleton-item v-for="n in 5" :key="n" variant="text" style="width: 40px; height: 32px" />
+              </div>
+            </template>
+          </el-skeleton>
+        </div>
+      </template>
+
+      <!-- 實際內容 -->
+      <template v-else>
+        <div class="headerContainer px-1 mb-2 md:flex items-center">
+          <h1 class="py-5 text-xl">{{ categoryTitle }}</h1>
+          <!-- 排序 -->
+          <div class="selectContainer flex">
+            <div class="pageSelectItem flex items-center relative mr-3 flex-1">
+              <i class="fa-solid fa-arrow-up-short-wide absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+              <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="sortValue" placeholder="商品排序" size="large" class="pl-10">
+                <el-option
+                  v-for="item in sortOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                  @click="ProductStore.handleSortChange(route.params.category, item.value)"
+                />
+              </el-select>
+            </div>
+
+            <div class="pageSelectItem flex items-center relative flex-1">
+              <i class="fa-solid fa-bars fa-rotate-90 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+              <el-select placement="bottom" :fallback-placements="['bottom-start']" v-model="pageValue" placeholder="每頁顯示 12 個" size="large" class="pl-10">
+                <el-option
+                  class="selectOption"
+                  v-for="item in pageOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                  @click="ProductStore.handlePageSizeChange(route.params.category, item.value)"
+                />
+              </el-select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 產品列表 -->
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+          <ProductItem
+            v-for="item in productList"
+            :key="item.id"
+            :id="item.id"
+            :title="item.title"
+            :price="item.price"
+            :originalPrice="item.originalPrice"
+            :frontImg="item.frontImg"
+            :backImg="item.backImg"
+          />
+        </div>
+
+        <!-- 分頁 -->
+        <div class="flex justify-center md:relative md:my-12">
+          <vue-awesome-paginate
+            class="md:absolute md:right-0 text-gray-500 text-sm"
+            :total-items="totalProductCount"
+            :items-per-page="pageSize"
+            :max-pages-shown="5"
+            v-model="currentPage"
+            @click="ProductStore.paginationOnClickHandler(route.params.category, currentPage, 'list')"
+            :hide-prev-next-when-ends="true"
+          />
+        </div>
+      </template>
     </div>
   </section>
 </template>

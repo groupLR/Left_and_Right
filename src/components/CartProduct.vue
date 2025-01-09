@@ -70,11 +70,11 @@ watch(
         <p class="text-sm md:text-lg">{{ props.name }}</p>
         <!-- 刪除按鈕 -->
         <button @click="handleDelete">
-          <i class="fa-solid fa-trash m-2 text-sm md:text-xl text-red-400"></i>
+          <i class="fa-solid fa-trash m-2 text-sm md:text-xl text-red-700 hover:text-red-500"></i>
         </button>
       </div>
       <div class="flex gap-2 items-center">
-        <span class="font-black text-orange-500 text-sm md:text-base"
+        <span class="font-black text-amber-500 text-base md:text-base"
           >{{ getCurrencySymbol }} {{ ExchangeRateStore.calConvertedPrice(Number(props.salePrice)).toLocaleString() }}</span
         >
         <span class="line-through text-gray-400 text-xs md:text-sm"

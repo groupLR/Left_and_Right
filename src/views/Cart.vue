@@ -476,13 +476,13 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="my-5 bg-yellow-50 p-5 rounded-xl">
-          <h2 class="text-xl font-bold mb-2 text-orange-500">{{ sharedCartName }}</h2>
+          <h2 class="text-xl font-bold mb-2 text-amber-500">{{ sharedCartName }}</h2>
           <p class="font-bold">購朋友：</p>
           <p>{{ sharedCartMembers.join("、") }}</p>
         </div>
       </section>
       <section v-else>
-        <h1 class="text-2xl font-bold my-5">購物車</h1>
+        <h1 class="text-2xl font-bold my-5 ml-2">購物車</h1>
       </section>
 
       <!-- 步驟 -->
@@ -499,7 +499,7 @@ onUnmounted(() => {
           <!-- 商品列表 -->
           <section class="bg-white rounded-xl flex flex-col items-center" v-if="products.length == 0">
             <el-empty description="購物車還是空的" />
-            <button class="bg-[#0f4662] px-4 text-white py-2 rounded hover:bg-[#1a6085] mb-4" @click="goShop">前往購物</button>
+            <button class="bg-[#314e86] px-4 text-white py-2 rounded hover:bg-[#6A88BE] mb-4" @click="goShop">前往購物</button>
           </section>
           <section class="bg-white rounded-xl" v-else>
             <CartProduct
@@ -611,7 +611,7 @@ onUnmounted(() => {
                 <hr />
                 <div class="flex justify-between">
                   <p>合計</p>
-                  <p class="font-bold text-orange-500">NT${{ (totalAmount - shippingFee).toLocaleString() }}</p>
+                  <p class="font-bold text-amber-500">NT${{ (totalAmount - shippingFee).toLocaleString() }}</p>
                 </div>
               </div>
             </div>
@@ -622,8 +622,10 @@ onUnmounted(() => {
     <!-- 前往結帳 -->
     <section class="fixed bottom-0 w-full bg-white shadow-2xl" v-if="products.length !== 0">
       <div class="flex gap-5 justify-end items-center m-5 max-w-[1365px]">
-        <p class="text-orange-500 font-bold">合計：NT${{ (totalAmount - shippingFee).toLocaleString() }}</p>
-        <button class="bg-black px-2 py-1 text-white rounded md:px-10" @click="goToNext" :disabled="products.length === 0">前往結帳</button>
+        <p class="text-amber-500 text-lg font-extrabold">合計：NT${{ (totalAmount - shippingFee).toLocaleString() }}</p>
+        <button class="bg-[#314e86] hover:bg-[#6A88BE] px-2 py-1 text-white rounded md:px-10" @click="goToNext" :disabled="products.length === 0">
+          前往結帳
+        </button>
       </div>
     </section>
   </section>
@@ -636,10 +638,10 @@ button:disabled {
 }
 
 :deep(.el-step__title.is-finish) {
-  @apply text-orange-500 font-bold;
+  @apply text-[#6A88BE] font-bold;
 }
 
 :deep(.el-step__head.is-finish) {
-  @apply text-orange-500 border-orange-500;
+  @apply text-[#6A88BE] border-[#6A88BE];
 }
 </style>
