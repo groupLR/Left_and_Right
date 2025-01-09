@@ -139,7 +139,7 @@ window.scrollTo(0, 0)
     </div>
 
     <!-- 主要內容區 -->
-    <div class="max-w-[1358px] mx-auto mb-10 px-10 py-8 bg-white border border-[#ddd] border-t-white">
+    <div class="max-w-[1358px] mx-auto px-10 py-8 bg-white border border-[#ddd] border-t-white">
       <div v-if="wishlists.length === 0" class="py-10 lg:px-10 flex justify-center mx-auto bg-white">
         <div class="flex flex-col justify-center mx-auto">
           <img src="../assets/member_center_list_empty.png" alt="" class="mx-auto w-[121px] h-[129px]" />

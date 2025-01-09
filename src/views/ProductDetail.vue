@@ -463,7 +463,7 @@ const props = defineProps({
     </div>
 
     <div class="lg:px-20 pb-10">
-      <div class="loading bg-lightBlue-300 my-3 pt-10 max-w-full bg-slate-50">
+      <div class="loading bg-lightBlue-300 my-3 lg:pt-10 max-w-full bg-slate-50">
         <div class="profile">
           <!-- 輪播圖 -->
           <div class="swiper">
@@ -543,8 +543,8 @@ const props = defineProps({
               </div>
             </div>
             <div class="grid grid-cols-2 gap-5 my-5">
-              <button class="bg-black text-gray-50 border border-black rounded-lg text-lg p-1" @click="handleAddToCart">加入購物車</button>
-              <button class="bg-black text-gray-50 border border-black rounded-lg text-lg p-1" @click="showDialog">
+              <button class="bg-[#314e86] text-gray-50 border border-[#314e86] rounded-lg text-lg p-1" @click="handleAddToCart">加入購物車</button>
+              <button class="bg-[#314e86] text-gray-50 border border-[#314e86] rounded-lg text-lg p-1" @click="showDialog">
                 <i class="fa-brands fa-shopify ml-4 text-xl"></i>
                 加入共享購物車
               </button>
@@ -680,7 +680,7 @@ input::-webkit-inner-spin-button {
   @apply flex justify-center mx-0 my-auto text-center max-w-[655px] w-full;
 }
 .navbar div:hover {
-  @apply cursor-pointer text-black;
+  @apply cursor-pointer text-[#314e86];
 }
 
 .promotionalContainer::before {
