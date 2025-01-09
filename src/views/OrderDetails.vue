@@ -4,6 +4,11 @@ import axios from "axios"
 import ChatBox from "../components/chatbox.vue"
 import { useRoute, useRouter } from "vue-router"
 import { ElMessage } from "element-plus"
+import { storeToRefs } from "pinia"
+
+import { useExchangeRateStore } from "@/stores/exchangeRates"
+const ExchangeRateStore = useExchangeRateStore()
+const { currentRate } = storeToRefs(ExchangeRateStore)
 const API_URL = import.meta.env.VITE_API_URL
 const currentPage = ref(true)
 const route = useRoute()
@@ -68,7 +73,7 @@ onMounted(async () => {
         <p>訂單編號 : {{ purchaseID }}</p>
         <p>訂單狀態 : 已完成</p>
         <p>顧客姓名 : {{ customerInfo.cuName }}</p>
-        <p>訂單金額 : {{ totalPrice }}</p>
+        <p>訂單金額 : {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(totalPrice)).toLocaleString() }}</p>
       </div>
       <!-- 訂單商品 -->
       <div class="bg-white rounded-lg p-4 mt-5 lg:hidden">
@@ -81,15 +86,17 @@ onMounted(async () => {
             <p class="ml-4 pt-5">{{ product.product_name }}</p>
             <div class="grid grid-cols-2 mt-3 leading-8">
               <p class="ml-5">數量 : {{ product.quantity }}</p>
-              <p class="mx-auto">價格 : {{ product.sale_price }}</p>
+              <p class="mx-auto">
+                價格 :{{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(product.sale_price)).toLocaleString() }}
+              </p>
             </div>
           </div>
         </div>
         <div class="grid grid-cols-1 justify-between gap-1 leading-7 px-4">
-          <p>小計 : {{ totalPrice.toLocaleString() }}</p>
-          <p>折扣 :</p>
-          <p>運費 :</p>
-          <p>合計 :</p>
+          <p>小計 : {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(totalPrice)).toLocaleString() }}</p>
+          <p>折扣 : - {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(200)).toLocaleString() }}</p>
+          <p>運費 : {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(60)).toLocaleString() }}</p>
+          <p>合計 : {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(totalPrice - 200 + 60)).toLocaleString() }}</p>
         </div>
       </div>
       <!-- 訂單詳細資訊 -->
@@ -116,9 +123,13 @@ onMounted(async () => {
                       {{ product.product_name }}
                     </router-link>
                   </div>
-                  <div class="itemsPrice">NT${{ product.sale_price }}</div>
+                  <div class="itemsPrice">
+                    {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(product.sale_price)).toLocaleString() }}
+                  </div>
                   <div class="itemsQuantity"><span>數量:</span>{{ product.quantity }}</div>
-                  <div class="itemsTotal">NT${{ product.sale_price * product.quantity }}</div>
+                  <div class="itemsTotal">
+                    {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(product.sale_price * product.quantity)).toLocaleString() }}
+                  </div>
                 </div>
                 <!-- <div class="couponUsed">
 							<h5>已使用之優惠</h5>
@@ -129,12 +140,17 @@ onMounted(async () => {
               <div class="ordersTotal mb-5">
                 <div class="ordersTotalCard">
                   <div class="subtotal">
-                    小計 : <span>NT${{ totalPrice }}</span>
+                    小計 : <span> {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(totalPrice)).toLocaleString() }}</span>
                   </div>
-                  <div class="coupon">折扣 :</div>
-                  <div class="delivery">運費 : <span>免運</span></div>
+                  <div class="coupon">
+                    折扣 : <span>{{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(200)).toLocaleString() }}</span>
+                  </div>
+                  <div class="delivery jus">
+                    運費 : <span>{{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(60)).toLocaleString() }}</span>
+                  </div>
                   <div class="total">
-                    合計 : <span>NT${{ totalPrice }}</span>
+                    合計 :
+                    <span>{{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(totalPrice - 200 + 60)).toLocaleString() }} </span>
                   </div>
                 </div>
               </div>
