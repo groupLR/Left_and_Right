@@ -96,10 +96,10 @@ const createSharedCart = async () => {
 }
 
 .el-button:hover {
-  border-color: #212121;
+  border-color: #314e86;
   color: #fff;
   outline: none;
-  background-color: #2f2f2f;
+  background-color: #314e86;
 }
 
 .el-button--primary {

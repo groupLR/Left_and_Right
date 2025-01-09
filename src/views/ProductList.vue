@@ -31,7 +31,7 @@ watch(
 </script>
 
 <template>
-  <section class="px-4 flex max-w-[1340px] mx-auto justify-center">
+  <section class="p-4 flex max-w-[1340px] mx-auto justify-center">
     <Sidebar />
     <div class="flex-1">
       <!-- Skeleton Loading -->
@@ -61,7 +61,7 @@ watch(
 
         <!-- 商品列表 Skeleton -->
         <div class="flex flex-wrap">
-          <div v-for="n in 12" :key="n" class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
+          <div v-for="n in 12" :key="n" class="w-full md:w-1/2 lg:w-1/3 p-2">
             <el-skeleton animated>
               <template #template>
                 <div class="relative">
@@ -83,7 +83,7 @@ watch(
         </div>
 
         <!-- 分頁 Skeleton -->
-        <div class="flex justify-center md:relative md:mb-12 mt-8">
+        <div class="flex justify-center md:relative md:my-12 mt-8">
           <el-skeleton animated>
             <template #template>
               <div class="flex gap-2">
@@ -130,7 +130,7 @@ watch(
         </div>
 
         <!-- 產品列表 -->
-        <div class="flex flex-wrap">
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
           <ProductItem
             v-for="item in productList"
             :key="item.id"
@@ -144,7 +144,7 @@ watch(
         </div>
 
         <!-- 分頁 -->
-        <div class="flex justify-center md:relative md:mb-12">
+        <div class="flex justify-center md:relative md:my-12">
           <vue-awesome-paginate
             class="md:absolute md:right-0 text-gray-500 text-sm"
             :total-items="totalProductCount"

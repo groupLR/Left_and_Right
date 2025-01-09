@@ -3,7 +3,11 @@ import axios from "axios"
 import MemberNavbar from "../components/MemberNavbar.vue"
 import { onMounted, ref } from "vue"
 import { ElMessage } from "element-plus"
+import { storeToRefs } from "pinia"
+import { useExchangeRateStore } from "@/stores/exchangeRates"
 
+const ExchangeRateStore = useExchangeRateStore()
+const { currentRate } = storeToRefs(ExchangeRateStore)
 const userId = localStorage.getItem("UID")
 const coupons = ref([]) // 初始化優惠券列表為空
 
@@ -102,34 +106,50 @@ const claimed = async (couponId) => {
 onMounted(() => {
   fetchCoupons()
 })
+window.scrollTo(0, 0)
 </script>
 
 <template>
   <MemberNavbar />
   <div class="lg:px-10 pb-10">
-    <div class="memberCoupon bg-white px-10 md:px-5">
-      <div class="w-full grid gap-5 justify-between my-10 mx-auto grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
-        <div v-for="coupon in coupons" :key="coupon.id" class="w-full max-w-[1100px] mx-auto bg-slate-100">
-          <!-- 折扣券 -->
-          <div class="w-full max-w-64 h-28 px-4 pt-3 pb-2 font-bold">
-            <p class="text-base">
-              <span>贈品券 </span>
-              <span>{{ coupon.name }}</span>
-            </p>
-            <div class="flex w-16 h-6 bg-gray-200 justify-center text-gray-800 text-[10px] font-medium px-1 py-1 rounded-md mt-[24px]">
-              <p class="text-sm">限網店</p>
+    <div class="max-w-[1358px] mx-auto">
+      <div v-if="coupons.length === 0" class="py-10 lg:px-10 flex justify-center mx-auto bg-white">
+        <div>
+          <img src="../assets/member_center_list_empty.png" alt="" class="w-[121px] h-[129px]" />
+          <p class="pl-2 pt-5 mx-auto text-sm text-gray-500">沒有任何優惠券唷</p>
+        </div>
+      </div>
+
+      <div v-else class="memberCoupon bg-white px-10 md:px-5">
+        <div class="w-full grid gap-5 justify-between my-10 mx-auto grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
+          <div v-for="coupon in coupons" :key="coupon.id" class="w-full max-w-[1100px] mx-auto bg-slate-100 hover:shadow-lg hover:cursor-pointer">
+            <!-- 折扣券 -->
+            <div class="w-full flex flex-1 justify-between max-w-64 h-20 pl-4 pt-5 pb-2 font-bold">
+              <p class="pl-1 text-xl">{{ coupon.name }}</p>
+              <div class="mt-1 flex w-16 h-6 bg-gray-200 justify-center text-gray-800 text-[10px] font-medium p-1 rounded-md">
+                <p class="text-sm">限網店</p>
+              </div>
             </div>
-          </div>
-          <div class="separator">
-            <span class="circle left"></span>
-            <div class="dashedLine"></div>
-            <span class="circle right"></span>
-          </div>
-          <div class="px-4 pb-4 flex justify-between items-center">
-            <span class="font-bold text-sm">L & R</span>
-            <button @click="claimed(coupon.id)" class="bg-white px-4 py-1 rounded-lg hover:font-bold hover:shadow-md">
-              {{ coupon.claimed ? "已領取" : "領取折扣碼" }}
-            </button>
+            <div class="h-10 lg:h-16 mx-auto flex justify-center">
+              <p class="text-lg pt-4">
+                消費滿<span class="text-amber-500 font-semibold">
+                  {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(coupon.min_spend)).toLocaleString() }} </span
+                >折抵<span class="text-green-600 font-semibold">
+                  {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(coupon.discount_amount)).toLocaleString() }} </span
+                >元
+              </p>
+            </div>
+            <div class="separator">
+              <span class="circle left"></span>
+              <div class="dashedLine"></div>
+              <span class="circle right"></span>
+            </div>
+            <div class="ml-2 px-4 pb-4 flex justify-between items-center">
+              <span class="font-bold text-sm">L & R</span>
+              <button @click="claimed(coupon.id)" class="bg-white px-4 py-1 rounded-lg hover:font-bold hover:shadow-md">
+                {{ coupon.claimed ? "已領取" : "領取折扣碼" }}
+              </button>
+            </div>
           </div>
         </div>
       </div>

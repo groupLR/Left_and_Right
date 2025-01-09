@@ -182,87 +182,108 @@ const days = Array.from({ length: 31 }, (_, i) => i + 1)
 </script>
 
 <template>
-  <div class="border m-5 md:w-full md:max-w-[600px] md:mx-auto md:justify-center md:flex md:flex-col">
-    <img src="../assets/register-pic.jpeg" alt="" />
+  <div class="py-10 px-5 bg-[#6A88BE]">
+    <div class="w-full max-w-[600px] mx-auto justify-center flex flex-col">
+      <div class="w-full grid text-center leading-[60px] grid-cols-2">
+        <div
+          class="hover:cursor-pointer rounded-t-md"
+          :class="{
+            'bg-white': isRegister,
+            ' bg-gray-100': !isRegister,
+          }"
+          @click="switchToRegister"
+        >
+          註冊會員
+        </div>
+        <div
+          class="hover:cursor-pointer rounded-t-md box-border"
+          :class="{
+            'bg-white': isLogin,
+            ' bg-gray-100': !isLogin,
+          }"
+          @click="switchToLogin"
+        >
+          會員登入
+        </div>
+      </div>
+      <!-- 註冊 -->
+      <div>
+        <div class="px-5 pt-5 bg-white">
+          <GoogleLoginButton class="w-full" />
+        </div>
+        <div class="py-5 px-2 lg:p-5 mx-auto w-full bg-white" v-if="isRegister">
+          <hr />
+          <p class="pt-4 text-center text-[#6D7175] text-sm">或使用電子信箱註冊</p>
+          <form class="informationInput" method="post" id="registerField" @submit.prevent="handleRegister">
+            <input type="text" placeholder="用戶名" id="username" class="input" v-model="registerForm.username" autocomplete="username'" required />
 
-    <div class="w-full grid text-center leading-[62px] grid-cols-2">
-      <div class="border hover:cursor-pointer" :class="{ 'bg-white': isRegister, 'bg-gray-100': !isRegister }" @click="switchToRegister">註冊會員</div>
-      <div class="border hover:cursor-pointer" :class="{ 'bg-white': isLogin, 'bg-gray-100': !isLogin }" @click="switchToLogin">會員登入</div>
-    </div>
-    <!-- 註冊 -->
-    <div class="px-5 pt-5">
-      <GoogleLoginButton class="w-full" />
-    </div>
-    <div class="p-5 mx-auto w-full" v-if="isRegister">
-      <hr />
-      <p class="pt-4 text-center text-[#6D7175] text-sm">或使用電子信箱註冊</p>
-      <form class="informationInput" method="post" id="registerField" @submit.prevent="handleRegister">
-        <input type="text" placeholder="用戶名" id="username" class="input" v-model="registerForm.username" autocomplete="username'" required />
+            <div v-if="selectedOption === 'email'" required>
+              <input type="text" placeholder="電子信箱" v-model="registerForm.email" id="email" autocomplete="email" />
+            </div>
+            <div class="mb-5 w-full grid grid-cols-[1fr_3fr]" v-if="selectedOption === 'phone'" required>
+              <select></select>
+              <input type="number" name="" id="" autocomplete="tel" placeholder="0912 345 678" />
+            </div>
+            <div class="password" required>
+              <input type="password" placeholder="密碼" v-model="registerForm.password" id="password" autocomplete="current-password" />
+            </div>
+            <div>
+              <select v-model="registerForm.gender" id="gender" required>
+                <option value="" disabled selected>性別</option>
+                <option value="m">男</option>
+                <option value="f">女</option>
+                <option value="o">不透漏</option>
+              </select>
+            </div>
 
-        <div v-if="selectedOption === 'email'" required>
-          <input type="text" placeholder="電子信箱" v-model="registerForm.email" id="email" autocomplete="email" />
-        </div>
-        <div class="mb-5 w-full grid grid-cols-[1fr_3fr]" v-if="selectedOption === 'phone'" required>
-          <select></select>
-          <input type="number" name="" id="" autocomplete="tel" placeholder="0912 345 678" />
-        </div>
-        <div class="password" required>
-          <input type="password" placeholder="密碼" v-model="registerForm.password" id="password" autocomplete="current-password" />
-        </div>
-        <div>
-          <select v-model="registerForm.gender" id="gender" required>
-            <option value="" disabled selected>性別</option>
-            <option value="m">男</option>
-            <option value="f">女</option>
-            <option value="o">不透漏</option>
-          </select>
-        </div>
-
-        <div class="grid grid-cols-3 gap-2.5">
-          <select name="" id="birthdayYear" v-model="birthdayYear">
-            <option value="" selected disabled>年</option>
-            <option :value="year" v-for="year in years">{{ year }}</option>
-          </select>
-          <select name="" id="birthdayMonth" v-model="birthdayMonth">
-            <option value="" selected disabled>月</option>
-            <option :value="month" v-for="month in months">{{ month }}</option>
-          </select>
-          <select name="" id="birthdayDay" v-model="birthdayDay">
-            <option value="" selected disabled>日</option>
-            <option :value="day" v-for="day in days">{{ day }}</option>
-          </select>
-        </div>
-        <div><input type="checkbox" name="" id="" checked />我願意接收 Bonny & Read 飾品 的最新消息、優惠及服務推廣相關資訊</div>
-        <div class="mt-2.5 no-underline borderTop">
-          <input type="checkbox" class="agreeCheck" id="policy" v-model="registerAgree" />
-          <label>
-            我同意網站<a href="https://www.bonnyread.com.tw/about/terms" class="text-blue-500">服務條款</a>及<a
-              href="https://www.bonnyread.com.tw/about/privacy-policy"
-              class="text-blue-500"
-              >隱私權政策</a
-            >
-          </label>
-          <button type="submit" class="join" :disabled="!registerAgree">立即加入</button>
-        </div>
-      </form>
-    </div>
-    <!-- 登入 -->
-    <div class="p-5 mx-auto w-full" v-if="isLogin">
-      <hr />
-      <p class="pt-4 text-center text-[#6D7175] text-sm">或使用電子信箱登入</p>
-      <form class="informationInput" @submit.prevent="handleLogin">
-        <div class="emailRegister">
-          <input type="text" placeholder="電子信箱" v-model="loginForm.email" required autocomplete="email" />
+            <div class="grid grid-cols-3 gap-2.5">
+              <select name="" id="birthdayYear" v-model="birthdayYear">
+                <option value="" selected disabled>年</option>
+                <option :value="year" v-for="year in years">{{ year }}</option>
+              </select>
+              <select name="" id="birthdayMonth" v-model="birthdayMonth">
+                <option value="" selected disabled>月</option>
+                <option :value="month" v-for="month in months">{{ month }}</option>
+              </select>
+              <select name="" id="birthdayDay" v-model="birthdayDay">
+                <option value="" selected disabled>日</option>
+                <option :value="day" v-for="day in days">{{ day }}</option>
+              </select>
+            </div>
+            <div><input type="checkbox" name="" id="" checked />我願意接收 Left & Right 飾品 的最新消息、優惠及服務推廣相關資訊</div>
+            <div class="mt-2.5 no-underline borderTop">
+              <input type="checkbox" class="agreeCheck" id="policy" v-model="registerAgree" />
+              <label>
+                我同意網站<a href="https://www.bonnyread.com.tw/about/terms" class="text-blue-500">服務條款</a>及<a
+                  href="https://www.bonnyread.com.tw/about/privacy-policy"
+                  class="text-blue-500"
+                  >隱私權政策</a
+                >
+              </label>
+              <button type="submit" class="join" :disabled="!registerAgree">立即加入</button>
+            </div>
+          </form>
         </div>
 
-        <div class="password">
-          <input type="password" placeholder="密碼" v-model="loginForm.password" required autocomplete="password" />
+        <!-- 登入 -->
+        <div class="py-5 px-2 lg:p-5 mx-auto w-full bg-white" v-if="isLogin">
+          <hr />
+          <p class="pt-4 text-center text-[#6D7175] text-sm">或使用電子信箱登入</p>
+          <form class="informationInput" @submit.prevent="handleLogin">
+            <div class="emailRegister">
+              <input type="text" placeholder="電子信箱" v-model="loginForm.email" required autocomplete="email" />
+            </div>
+
+            <div class="password">
+              <input type="password" placeholder="密碼" v-model="loginForm.password" required autocomplete="password" />
+            </div>
+            <div class="mt-5 grid grid-cols-1 justify-between gap-5 text-sm">
+              <button class="w-full p-2 bg-[#314e86] border-0 rounded-md text-white font-extrabold hover:bg-[#6A88BE] hover:cursor-pointer">開始購物</button>
+              <a class="mx-auto cursor-pointer text-[#6D7175] no-underline" href="https://www.bonnyread.com.tw/users/password/new">忘記密碼?</a>
+            </div>
+          </form>
         </div>
-        <div class="mt-5 grid grid-cols-1 justify-between gap-5 text-sm">
-          <button class="w-full p-2 bg-[#000000] border-0 rounded-md text-white font-extrabold hover:bg-[#323335] hover:cursor-pointer">開始購物</button>
-          <a class="mx-auto cursor-pointer text-[#6D7175] no-underline" href="https://www.bonnyread.com.tw/users/password/new">忘記密碼?</a>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </template>
@@ -274,14 +295,6 @@ input::-webkit-inner-spin-button {
   @apply m-0;
 }
 
-.border {
-  @apply border-t border-l border-r border-gray-200 border-solid border-b-0;
-}
-
-/* 非活躍狀態才加下邊框 */
-.inactive-tab {
-  @apply border-b border-solid  border-gray-200;
-}
 .borderTop {
   @apply border-t border-solid  border-gray-200 pt-5;
 }
@@ -312,6 +325,9 @@ input::-webkit-inner-spin-button {
 }
 
 .agreeCheck:checked ~ .join {
-  @apply bg-black cursor-pointer;
+  @apply bg-[#314e86];
+}
+.agreeCheck:checked ~ .join:hover {
+  @apply bg-[#6A88BE] cursor-pointer;
 }
 </style>

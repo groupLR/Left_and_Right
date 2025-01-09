@@ -511,17 +511,7 @@ const props = defineProps({
               全館任選四件82折，優惠後特價 {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(salePrice) * 0.82).toLocaleString() }}
             </p>
           </div>
-          <!-- <div class="my-[5px] mb-5 flex text-center">
-            <p class="text-[14px] text-[#FFC500] pt-[1px]">
-              <font-awesome-icon :icon="['fas', 'star']" class="mr-1" /><font-awesome-icon :icon="['fas', 'star']" class="mr-1" /><font-awesome-icon
-                :icon="['fas', 'star']"
-                class="mr-1"
-              /><font-awesome-icon :icon="['fas', 'star']" class="mr-1" /><font-awesome-icon :icon="['fas', 'star']" class="mr-1" />
-            </p>
-            <p class="ml-5 text-gray-500">5 分</p>
-            <p class="mx-2 text-[14px] pt-[0.8px]">|</p>
-            <p class="rates">460個評價</p>
-          </div> -->
+
           <div class="mt-5">
             <p class="text-[14px] font-extralight" v-if="filterColor.length > 0">顏色 :{{ selectedImage.colorText }}</p>
             <div class="flex">
