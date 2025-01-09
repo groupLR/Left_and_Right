@@ -3,7 +3,11 @@ import axios from "axios"
 import MemberNavbar from "../components/MemberNavbar.vue"
 import { onMounted, ref } from "vue"
 import { ElMessage } from "element-plus"
+import { storeToRefs } from "pinia"
+import { useExchangeRateStore } from "@/stores/exchangeRates"
 
+const ExchangeRateStore = useExchangeRateStore()
+const { currentRate } = storeToRefs(ExchangeRateStore)
 const userId = localStorage.getItem("UID")
 const coupons = ref([]) // 初始化優惠券列表為空
 
@@ -128,8 +132,10 @@ window.scrollTo(0, 0)
             </div>
             <div class="h-10 lg:h-16 mx-auto flex justify-center">
               <p class="text-lg pt-4">
-                消費滿<span class="text-amber-500 font-semibold"> {{ coupon.min_spend }} </span>折抵<span class="text-green-600 font-semibold">
-                  {{ coupon.discount_amount }} </span
+                消費滿<span class="text-amber-500 font-semibold">
+                  {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(coupon.min_spend)).toLocaleString() }} </span
+                >折抵<span class="text-green-600 font-semibold">
+                  {{ currentRate.symbol || "NT" }}{{ ExchangeRateStore.calConvertedPrice(Number(coupon.discount_amount)).toLocaleString() }} </span
                 >元
               </p>
             </div>
