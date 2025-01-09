@@ -82,7 +82,7 @@ onMounted(() => {
 
 watch(selectedCurrency, () => {
   if (isInitialized.value) {
-    ElMessage.success("幣種成功切換")
+    ElMessage.success("幣種切換成功")
   } else {
     isInitialized.value = true
   }
