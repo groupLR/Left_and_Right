@@ -13,7 +13,9 @@ const { fetchDeliverInfo, deliverInfo } = useDeliverInfo()
 const { validateNumber } = onlyNum()
 const { onChange } = selected()
 const { information, fetchInformation } = useUsersInformation()
+
 onMounted(() => {
+  window.scrollTo(0, 0)
   fetchInformation()
   fetchDeliverInfo()
 })
@@ -65,7 +67,7 @@ const cancelChanges = () => {
 
 <template>
   <MemberNavbar />
-  <div class="lg:px-10 pb-10">
+  <div class="lg:px-10 pb-10 bg-[#C9D9F0]">
     <div class="pt-0 mx-auto w-full justify-center border-x border-b border-solid border-[#ddd] flex-auto max-w-[1358px]">
       <div class="p-5 flex-auto my-0 mx-auto bg-white justify-center lg:p-10 flex-wrap lg:w-full">
         <div class="grid w-full grid-cols-1 gap-5 justify-between lg:grid-cols-2">

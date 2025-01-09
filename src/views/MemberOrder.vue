@@ -50,6 +50,7 @@ onMounted(async () => {
   } catch (error) {
     hasOrders.value = false
   }
+  window.scrollTo(0, 0)
 })
 </script>
 
@@ -59,31 +60,32 @@ onMounted(async () => {
     <div class="memberOrder">
       <div v-if="hasOrders">
         <div class="orderContainer">
-          <div class="orderDetails">
-            <table class="orderTable table-fixed">
-              <thead>
-                <tr>
-                  <td class="w-1/5">訂單號碼</td>
-                  <td class="w-2/5">訂單商品</td>
-                  <td class="w-1/5">合計</td>
-                  <td class="w-1/5">訂單狀態</td>
-                  <td class="w-1/5"></td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="order in orders" :key="order.purchaseID">
-                  <td class="w-1/5">{{ order.pu_id }}</td>
-                  <td class="w-2/5">{{ order.productName }}...</td>
-                  <td class="w-1/5">NT${{ order.totalPrice }}</td>
-                  <td class="w-1/5">已完成</td>
-                  <td class="w-1/5 last">
-                    <RouterLink :to="`/OrderDetails/${order.pu_id}`"> <button class="btn">查閱</button> </RouterLink>
-                    <RouterLink :to="`/product_review_comments/${order.pu_id}`"> <button :disabled="order.isReviewed" class="btn">評論</button></RouterLink>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <h2 class="font-semibold text-xl my-5 hidden lg:block">訂單紀錄</h2>
+          <table class="orderTable table-fixed rounded-md">
+            <thead>
+              <tr>
+                <td class="w-1/5">訂單號碼</td>
+                <td class="w-2/5">訂單商品</td>
+                <td class="w-1/5">合計</td>
+                <td class="w-1/5">訂單狀態</td>
+                <td class="w-1/5"></td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="order in orders" :key="order.purchaseID">
+                <td class="w-1/5 text-white md:text-black bg-[#314e86] md:bg-white"><span class="lg:hidden">訂單編號 : </span>{{ order.pu_id }}</td>
+                <td class="w-2/5">{{ order.productName }}...</td>
+                <td class="w-1/5"><span>訂單金額 : </span>NT${{ order.totalPrice }}</td>
+                <td class="w-1/5">已完成</td>
+                <td class="w-1/5 last">
+                  <RouterLink :to="`/OrderDetails/${order.pu_id}`"> <button class="btn bg-[#314e86] text-white">查閱</button> </RouterLink>
+                  <RouterLink :to="`/product_review_comments/${order.pu_id}`">
+                    <button :disabled="order.isReviewed" class="btn text-[#314e86]">評論</button></RouterLink
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
       <div v-else><MemberEmpty /></div>
@@ -99,7 +101,6 @@ onMounted(async () => {
   background-color: white;
 }
 .orderContainer {
-  font-family: Arial, sans-serif;
   margin: 20px auto;
   max-width: 1278px;
 }
@@ -137,19 +138,17 @@ onMounted(async () => {
 .btn {
   display: inline-block; /* 設為行內區塊 */
   margin: 0 10px;
-  background-color: #0f4662;
-  color: #fff;
   padding: 5px 10px;
-  border: 1px solid #0f4662;
+  border: 1px solid #314e86;
   border-radius: 5px;
   cursor: pointer;
   width: calc(50% - 20px);
   flex-grow: 0;
 }
 .btn:hover {
-  background-color: #7994a0;
+  background-color: #6a88be;
   color: #fff;
-  border: #000000 1px solid;
+  border: #6a88be 1px solid;
   width: calc(50% - 20px);
 }
 
