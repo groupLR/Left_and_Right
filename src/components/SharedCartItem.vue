@@ -42,7 +42,9 @@ const deleteSharedCart = async () => {
           <span>{{ props.name }}</span>
         </div>
         <div class="flex">
-          <button class="hidden md:block border px-4 py-1 rounded bg-black text-white hover:bg-emerald-300">查看</button>
+          <button class="hidden md:block border px-4 py-1 rounded border-solid border-[#6A88BE] bg-[#C9D9F0] text-black hover:bg-[#6A88BE] hover:text-white">
+            查看
+          </button>
 
           <!-- 刪除按鈕 -->
           <div class="hidden md:block" @click.prevent>

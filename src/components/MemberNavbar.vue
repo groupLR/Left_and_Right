@@ -1,105 +1,103 @@
-<template>
-	<div class="navbarMain">
-		<!-- nav bar -->
-		<nav>
-			<ul class="memberNavbar">
-				<li class="memberOptions" @click="navigateTo('/users/edit')">
-					<div>個人資訊</div>
-				</li>
-				<li class="memberOptions" @click="navigateTo('/MemberPoint')">
-					<div>會員點數</div>
-				</li>
-				<li class="memberOptions" @click="navigateTo('/MemberShoppingGold')">
-					<div>商店購物金</div>
-				</li>
-				<li class="memberOptions" @click="navigateTo('/MemberCoupons')">
-					<div>優惠券</div>
-				</li>
-				<li class="memberOptions" @click="navigateTo('/MemberMessage')">
-					<div>訊息</div>
-				</li>
-				<li class="memberOptions" @click="navigateTo('/MemberOrder')">
-					<div>訂單</div>
-				</li>
-				<li class="memberOptions" @click="navigateTo('/MemberWishList')">
-					<div>追蹤清單</div>
-				</li>
-			</ul>
-		</nav>
-		<!-- nav bar -->
-	</div>
-</template>
+<script setup>
+import { ref } from "vue"
+import { RouterLink, useRoute, useRouter } from "vue-router"
+import Logout from "./Logout.vue"
 
-<script>
-export default {
-	methods: {
-		navigateTo(route) {
-			this.$router.push(route)
-		},
-	},
+const route = useRoute()
+const router = useRouter()
+
+const navbarOption = ref([
+  {
+    text: "個人資訊",
+    router: "/users/edit",
+  },
+  {
+    text: "優惠券",
+    router: "/MemberCoupons",
+  },
+  {
+    text: "訊息",
+    router: "/MemberMessage",
+  },
+  {
+    text: "訂單",
+    router: "/MemberOrder",
+  },
+  {
+    text: "追蹤清單",
+    router: "/MemberWishList",
+  },
+])
+if (route.path === "/") {
+  router.push("/users/edit")
 }
 </script>
 
+<template>
+  <div class="mx-3 lg:mx-0">
+    <Logout />
+    <div class="my-0 lg:px-10">
+      <div class="md:max-w-[1358px] md:mx-auto">
+        <!-- nav bar -->
+        <nav>
+          <ul class="flex p-0 justify-between gap-2 md:gap-0">
+            <li
+              v-for="(option, index) in navbarOption"
+              class="memberOptions transition-all duration-200 text-base text-[#314e86] border-[#ddd] border-solid border rounded-t-lg"
+              :key="index"
+              :class="{
+                'font-bold text-white  bg-[#314e86] border-b-0 text-[28px] shadow-inner': route.path === option.router,
+                'text-[#314e86]  bg-gray-100': route.path !== option.router,
+              }"
+            >
+              <RouterLink :to="option.router" class="block w-full h-full">
+                <div>
+                  {{ option.text }}
+                </div>
+              </RouterLink>
+            </li>
+          </ul>
+        </nav>
+        <!-- nav bar -->
+      </div>
+    </div>
+  </div>
+</template>
+
 <style scoped>
-* {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 14px;
-	color: #333333;
-}
-.navbarMain {
-	border: 1px solid #ddd;
-	max-width: 1358px;
-	margin: auto;
-}
 /* nav bar */
-.memberNavbar {
-	display: flex;
-	background-color: rgba(204, 204, 204, 0.2);
-	padding: 0;
-}
+
 .memberOptions {
-	width: 100%;
-	max-width: 100%;
-	list-style-type: none;
-	height: 50px;
-	line-height: 50px;
-	text-align: center;
-	color: #33333399;
-	border-left: solid 1px #ddd;
+  width: 100%;
+  max-width: 100%;
+  list-style-type: none;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
 }
-.memberOptions:first-of-type {
-	border-left: none;
-}
-.memberOptions:hover{
-	cursor: pointer;
+
+.memberOptions:hover {
+  cursor: pointer;
+  font-weight: 700;
 }
 @media (max-width: 768px) {
-	/* nav bar */
-	.memberNavbar {
-		display: flex;
-		background-color: #fff;
-		padding: 0;
-		margin: auto;
-		max-width: 80%;
-		overflow-x: auto; /* 開啟水平捲動 */
-	}
-	.memberOptions {
-		min-width: 70px;
-		list-style-type: none;
-		height: 50px;
-		line-height: 50px;
-		text-align: center;
-		color: #33333399;
-		border-left: none;
-		border-bottom: solid 1px #ddd;
-		border-top: none;
-		white-space: nowrap;
-		background-color: #fff;
-		margin-top: 20px;
-	}
-	.memberOptions:first-of-type {
-		border-left: none;
-	}
-	/* nav bar */
+  /* nav bar */
+  .memberNavbar {
+    display: flex;
+    background-color: #fff;
+    padding: 0;
+    margin: auto;
+    max-width: 80%;
+    overflow-x: auto; /* 開啟水平捲動 */
+  }
+  .memberOptions {
+    min-width: 62px;
+    list-style-type: none;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 14px;
+  }
 }
 </style>

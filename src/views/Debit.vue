@@ -250,14 +250,14 @@ onMounted(async () => {
             <h1 class="text-2xl font-bold">共享購物車結帳</h1>
           </div>
         </div>
-        <div class="my-5 bg-yellow-50 p-5 rounded-xl">
-          <h2 class="text-xl font-bold mb-2 text-orange-500">{{ sharedCartName }}</h2>
-          <p class="font-bold">購朋友：</p>
+        <div class="my-5 bg-[#C9D9F0] p-5 rounded-xl">
+          <h2 class="text-xl font-bold text-[#314e86]">{{ sharedCartName }}</h2>
+          <p class="font-bold mt-4">購朋友：</p>
           <p>{{ sharedCartMembers.join("、") }}</p>
         </div>
       </section>
       <section v-else>
-        <h1 class="text-2xl font-bold my-5">結帳</h1>
+        <h1 class="text-2xl font-bold my-5 ml-2">結帳</h1>
       </section>
 
       <!-- 步驟 -->
@@ -277,10 +277,10 @@ onMounted(async () => {
             <h3 class="text-xl font-bold mb-4">確認商品</h3>
             <div v-for="item in products" :key="item.product_id" class="flex items-center gap-4 p-2 border-b last:border-0 text-sm md:text-base">
               <img :src="item.image_path" :alt="item.product_name" class="w-20 h-20 object-cover rounded" />
-              <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2 ml-2">
                 <h4 class="font-medium">{{ item.product_name }}</h4>
                 <p class="text-gray-600">數量：{{ item.quantity }}</p>
-                <p class="text-orange-500 font-bold">NT${{ (item.sale_price * item.quantity).toLocaleString() }}</p>
+                <p class="text-amber-500 font-extrabold">NT${{ (item.sale_price * item.quantity).toLocaleString() }}</p>
               </div>
             </div>
           </div>
@@ -398,7 +398,7 @@ onMounted(async () => {
         <!-- 右側訂單資訊 -->
         <!-- 修改右側訂單資訊部分 -->
         <aside class="md:w-1/3 mt-5 md:mt-0">
-          <div class="sticky top-[112px]">
+          <div class="sticky top-[70px] xl:top-[112px]">
             <div class="bg-white p-5 rounded-xl">
               <h2 class="text-xl font-bold">訂單資訊</h2>
               <!-- 付款方式 -->
@@ -425,7 +425,7 @@ onMounted(async () => {
                 <!-- 最終金額 -->
                 <div class="flex justify-between">
                   <p>合計</p>
-                  <p class="font-bold text-orange-500">NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
+                  <p class="font-bold text-amber-500">NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
                 </div>
               </div>
             </div>
@@ -438,7 +438,7 @@ onMounted(async () => {
     <section class="fixed bottom-0 w-full bg-white shadow-2xl">
       <div class="max-w-[1365px] mx-auto p-4">
         <div class="flex flex-col items-center gap-4 md:flex-row md:justify-end md:gap-8">
-          <div class="flex items-center">
+          <div class="flex pt-1 items-center">
             <input type="checkbox" id="agreeTerms" v-model="agreedToTerms" class="mr-2" />
             <label for="agreeTerms" class="text-sm md:text-base">
               我同意網站 <a href="#" class="text-blue-600">服務條款</a>及
@@ -446,9 +446,9 @@ onMounted(async () => {
             </label>
           </div>
           <div class="flex w-full justify-between items-center md:w-auto md:gap-8">
-            <p class="text-orange-500 font-bold text-sm md:text-base">合計：NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
+            <p class="text-amber-500 font-extrabold md:text-base xl:text-lg">合計：NT${{ (itemPrice - 94 + 60).toLocaleString() }}</p>
             <button
-              class="bg-black px-4 py-2 text-white rounded text-sm md:px-10 md:text-base"
+              class="bg-[#314e86] hover:bg-[#6A88BE] px-4 py-2 text-white rounded text-sm md:px-10 md:text-base"
               @click="submitOrder"
               :disabled="!isFormValid || products.length === 0"
             >
@@ -468,14 +468,10 @@ button:disabled {
 }
 
 :deep(.el-step__title.is-finish) {
-  @apply text-orange-500 font-bold;
-}
-
-:deep(.el-step__description.is-finish) {
-  @apply text-orange-500;
+  @apply text-[#6A88BE] font-bold;
 }
 
 :deep(.el-step__head.is-finish) {
-  @apply text-orange-500 border-orange-500;
+  @apply text-[#6A88BE] border-[#6A88BE];
 }
 </style>

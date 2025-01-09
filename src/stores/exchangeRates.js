@@ -1,6 +1,6 @@
+import axios from "axios"
 import { defineStore } from "pinia"
 import { ref, watch, computed } from "vue"
-import axios from "axios"
 
 export const useExchangeRateStore = defineStore("rate", () => {
   const rates = ref([])

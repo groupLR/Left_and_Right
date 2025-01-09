@@ -1,11 +1,12 @@
 <script setup>
 import axios from "axios"
 import debounce from "lodash/debounce"
-import { ref, onMounted } from "vue"
+import { ref, onMounted, watch } from "vue"
 import { useExchangeRateStore } from "@/stores/exchangeRates"
 import { RouterLink } from "vue-router"
 import { useRouter } from "vue-router"
 import { storeToRefs } from "pinia"
+import { ElMessage } from "element-plus"
 
 const router = useRouter()
 const exchangeRateStore = useExchangeRateStore()
@@ -16,7 +17,9 @@ const moneyOpen = ref(false)
 const isLoggedIn = ref(!!localStorage.getItem("UID"))
 const categories = ref([])
 const showSidebar = ref(false)
-
+const month = ref(String(new Date().getMonth() + 1).padStart(2, "0"))
+const day = ref(String(new Date().getDay()).padStart(2, "0"))
+const isInitialized = ref(false)
 // 搜尋
 const fetchSearchResults = async () => {
   if (searchKeyword.value.trim() !== "") {
@@ -31,12 +34,19 @@ const fetchSearchResults = async () => {
 // 將 fetchSearchResults 包裝成 debounce 函數
 const goToSearch = debounce(fetchSearchResults, 800)
 const inputShow = () => {
+  window.scrollTo(0, 0)
   isVisible.value = !isVisible.value
 }
 
 // 開啟sidebar幣種
 const openMoney = () => {
   moneyOpen.value = !moneyOpen.value
+}
+const setCurrency = (currency) => {
+  selectedCurrency.value = currency
+  moneyOpen.value = !moneyOpen.value
+  showSidebar.value = !showSidebar.value
+  window.scrollTo(0, 0)
 }
 // 請求大類別
 const fetchCategories = async () => {
@@ -53,8 +63,10 @@ const fetchCategories = async () => {
 
 const toggleSidebar = () => {
   showSidebar.value = !showSidebar.value
-  changeLanguageOpen.value = false
   moneyOpen.value = false
+  categories.value.forEach((category) => {
+    category.showChildren = false
+  })
 }
 const toggleChildren = (index) => {
   categories.value[index].showChildren = !categories.value[index].showChildren
@@ -67,6 +79,14 @@ onMounted(() => {
   exchangeRateStore.initCurrency()
   exchangeRateStore.getAllCurrency()
 })
+
+watch(selectedCurrency, () => {
+  if (isInitialized.value) {
+    ElMessage.success("幣種成功切換")
+  } else {
+    isInitialized.value = true
+  }
+})
 </script>
 
 <template>
@@ -74,11 +94,11 @@ onMounted(() => {
   <div v-if="showSidebar" class="fixed inset-0 bg-black bg-opacity-50 z-20 xl:hidden" @click="toggleSidebar"></div>
 
   <!-- navbar -->
-  <div class="fixed top-0 w-screen bg-white z-10 shadow-md flex justify-between pb-1 xl:pb-5">
+  <div class="fixed top-0 w-screen bg-[#314e86] xl:bg-white z-10 shadow-md flex justify-between xl:pb-2">
     <!-- logo -->
-    <div class="w-36 h-12 mt-2 xl:w-48 xl:h-20">
+    <div class="w-16 h-12 mt-2 ml-2 xl:mx-10 xl:w-24 xl:h-20 rounded-full overflow-hidden hover:border-2 hover:border-solid hover:border-[#314e86]">
       <a href="/">
-        <img src="/src/assets/LRlogo.jpg" alt="logo" class="object-contain w-full h-full pl-5" />
+        <img src="/src/assets/LRlogo.jpg" alt="logo" class="object-cover w-full h-full" />
       </a>
     </div>
     <!-- 文字區 -->
@@ -88,50 +108,53 @@ onMounted(() => {
         <ul class="flex items-center justify-end flex-1">
           <!-- 匯率 -->
           <li class="mx-3">
-            <select class="hidden text-black outline-none cursor-pointer xl:block hover:text-gray-500" v-model="selectedCurrency">
-              <option :value="rate.currency" v-for="rate in rates" :key="rate.currency">{{ rate.symbol }} {{ rate.currency }}</option>
+            <select
+              class="hidden border border-solid border-[#314e86] text-[#314e86] rounded-sm font-semibold outline-none cursor-pointer xl:block"
+              v-model="selectedCurrency"
+            >
+              <option :value="rate.currency" v-for="rate in rates" :key="rate.currency" class="font-medium">{{ rate.symbol }} {{ rate.currency }}</option>
             </select>
           </li>
           <!-- 搜尋框 -->
           <li class="mx-3 xl:hidden" @click="inputShow">
-            <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="text-white xl:text-[#314e86]" />
           </li>
           <!-- 搜尋框 -->
-          <li class="relative hidden mx-3 text-black xl:block group hover:text-gray-500">
+          <li class="relative hidden px-2 text-[#314e86] xl:block group hover:text-[#7994a0]">
             <input
               type="search"
               v-model="searchKeyword"
               @keyup.enter="goToSearch"
               maxlength="100"
               placeholder="ivy郁欣聯名"
-              class="w-0 overflow-hidden transition-all duration-500 ease-in-out border-b border-black outline-none group-hover:w-56 focus:w-56 focus-visible:outline-none"
+              class="w-0 overflow-hidden transition-all duration-500 ease-in-out border-b border-black outline-none group-hover:w-56 group-hover:p-1 focus:w-56 focus:p-1 focus-visible:outline-none"
             />
-            <button type="submit" @click="goToSearch">
+            <button type="submit" @click="goToSearch" class="pt-1">
               <!-- 放大鏡 -->
-              <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+              <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="ml-1 p-2 rounded-full text-[#314e86] hover:text-[#7994a0] hover:bg-white" />
             </button>
           </li>
 
           <!-- 使用者 -->
           <RouterLink :to="isLoggedIn ? '/users/edit' : '/users/sign-in'">
-            <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
+            <li class="mx-1 px-2 text-white xl:text-[#314e86] cursor-pointer rounded-full hover:bg-[#314e86] hover:text-white">
               <font-awesome-icon :icon="['fas', 'user']" />
             </li>
           </RouterLink>
           <!-- 購物車 -->
           <RouterLink to="/Cart">
-            <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
+            <li class="mx-1 px-2 text-white xl:text-[#314e86] cursor-pointer rounded-full hover:bg-[#314e86] hover:text-white">
               <font-awesome-icon :icon="['fas', 'bag-shopping']" />
             </li>
           </RouterLink>
           <!-- 共享購物車 -->
           <RouterLink to="/sharedcartlist">
-            <li class="mx-3 text-black cursor-pointer hover:text-gray-500">
+            <li class="mx-1 px-2 text-white xl:text-[#314e86] cursor-pointer rounded-full hover:bg-[#314e86] hover:text-white">
               <i class="fa-brands fa-shopify text-lg"></i>
             </li>
           </RouterLink>
           <!-- 漢堡選單 -->
-          <li class="relative w-16 h-16 list-none">
+          <li class="relative w-16 h-16 list-none text-white">
             <div @click="toggleSidebar">
               <label for="bars"
                 ><font-awesome-icon :icon="['fas', 'bars']" class="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer top-1/2 left-1/2 xl:hidden"
@@ -141,30 +164,46 @@ onMounted(() => {
         </ul>
       </div>
       <!-- 商品類別 -->
-      <div class="hidden w-full gap-8 max-w-[1160px] justify-center xl:flex">
-        <RouterLink to="/categories/28" class="text-sm font-semibold hover:text-gray-500">1223 新品 / NEW</RouterLink>
-        <RouterLink to="/categories/26" class="text-sm font-semibold animate-pulse text-red-600 hover:text-red-300">Kurt Wu 插畫家聯名</RouterLink>
-        <RouterLink to="/categories/31" class="text-sm font-semibold hover:text-gray-500">耳環 / Earrings</RouterLink>
-        <RouterLink to="/categories/33" class="text-sm font-semibold hover:text-gray-500">戒指 / Rings</RouterLink>
-        <RouterLink to="/categories/34" class="text-sm font-semibold hover:text-gray-500">手鍊 / Bracelets</RouterLink>
-        <RouterLink to="/categories/35" class="text-sm font-semibold hover:text-gray-500">項鍊 / Necklaces</RouterLink>
-        <RouterLink to="/categories/26" class="text-sm tracking-widest font-semibold hover:text-gray-500">聯名系列</RouterLink>
-        <RouterLink to="/store-info" class="text-sm tracking-widest font-semibold hover:text-gray-500">門市資訊</RouterLink>
+      <div class="hidden w-full max-w-[1060px] justify-between xl:flex xl:flex-1 xl:ml-10">
+        <RouterLink to="/categories/28" class="text-base p-1 rounded-lg font-semibold text-[#314e86] hover:bg-[#314e86] hover:text-white"
+          >{{ month }}{{ day }} 新品 / NEW</RouterLink
+        >
+        <RouterLink to="/categories/26" class="text-base p-1 rounded-lg font-semibold text-red-600 hover:bg-red-400 hover:text-white"
+          ><p class="animate-pulse hover:animate-none">Kurt Wu 插畫家聯名</p>
+        </RouterLink>
+        <RouterLink to="/categories/31" class="text-base p-1 rounded-lg font-semibold text-[#314e86] hover:bg-[#314e86] hover:text-white"
+          >耳環 / Earrings</RouterLink
+        >
+        <RouterLink to="/categories/33" class="text-base p-1 rounded-lg font-semibold text-[#314e86] hover:bg-[#314e86] hover:text-white"
+          >戒指 / Rings</RouterLink
+        >
+        <RouterLink to="/categories/34" class="text-base p-1 rounded-lg font-semibold text-[#314e86] hover:bg-[#314e86] hover:text-white"
+          >手鍊 / Bracelets</RouterLink
+        >
+        <RouterLink to="/categories/35" class="text-base p-1 rounded-lg font-semibold text-[#314e86] hover:bg-[#314e86] hover:text-white"
+          >項鍊 / Necklaces</RouterLink
+        >
+        <RouterLink to="/about" class="text-base p-1 rounded-lg tracking-widest font-semibold text-[#314e86] hover:bg-[#314e86] hover:text-white"
+          >關於我們</RouterLink
+        >
+        <RouterLink to="/store-info" class="text-base p-1 rounded-lg tracking-widest font-semibold text-[#314e86] hover:bg-[#314e86] hover:text-white"
+          >門市資訊</RouterLink
+        >
       </div>
     </div>
   </div>
 
   <!-- 手機版搜尋輸入框 -->
-  <div v-show="isVisible" class="moveDown w-full mt-24 flex justify-center mx-auto z-100 animate-pulse duration-700 xl:hidden">
+  <div v-show="isVisible" class="moveDown w-full mt-20 mb-3 flex justify-center mx-auto z-100 animate-pulse duration-700 xl:hidden">
     <input
       type="search"
       v-model="searchKeyword"
       @keyup.enter="goToSearch"
       maxlength="100"
       placeholder="ivy郁欣聯名"
-      class="w-4/5 border-b border-black focus-visible:outline-none"
+      class="w-4/5 border-b border-[#314e86] text-[#314e86] focus-visible:outline-none"
     />
-    <button type="submit" @click="goToSearch" class="py-px px-1.5 ml-1">
+    <button type="submit" @click="goToSearch" class="py-px px-1.5 ml-1 text-[#314e86]">
       <i class="fa fa-search ::before"></i>
     </button>
   </div>
@@ -174,11 +213,11 @@ onMounted(() => {
     <aside class="w-[210px] h-screen fixed bg-white z-20 top-0 overflow-auto xl:hidden" v-if="showSidebar">
       <div>
         <ul class="relative">
-          <li class="sticky top-0 p-4 list-none bg-cyan-700 text-white opacity-100 z-30 h-[68px] text-lg">
-            <p class="leading-10">類別選擇</p>
+          <li class="sticky top-0 p-4 list-none bg-[#314e86] text-white opacity-100 z-30 h-16 text-lg">
+            <p class="leading-8">類別選擇</p>
           </li>
 
-          <li v-for="(category, index) in categories" :key="category.category_id" class="relative list-none">
+          <li v-for="(category, index) in categories" :key="category.category_id" class="relative list-none text-[#314e86]">
             <!-- 大項目 -->
             <div class="flex items-center justify-between hover:cursor-pointer shadow-sm hover:font-bold">
               <!-- 類別名稱 -->
@@ -188,7 +227,7 @@ onMounted(() => {
               <!-- 收合箭頭 -->
               <i
                 v-if="category.children.length > 0"
-                class="fas fa-chevron-down w-3 h-3 text-black mr-4 transition-transform duration-300"
+                class="fas fa-chevron-down w-3 h-3 text-[#314e86] mr-4 transition-transform duration-300"
                 :class="{ 'rotate-180': category.showChildren }"
                 @click="toggleChildren(index)"
               ></i>
@@ -198,7 +237,7 @@ onMounted(() => {
             <div class="overflow-hidden transition-all duration-500 z-20" :class="{ 'h-0': !category.showChildren, 'h-auto': category.showChildren }">
               <ul class="pl-1.5">
                 <li v-for="child in category.children" :key="child.categories_id" class="p-4">
-                  <RouterLink :to="`/categories/${child.categories_id}`" class="text-gray-400 hover:text-black hover:cursor-pointer hover:font-bold">
+                  <RouterLink :to="`/categories/${child.categories_id}`" class="text-gray-400 hover:text-[#314e86] hover:cursor-pointer hover:font-semibold">
                     <div @click="toggleSidebar">{{ child.category_name }}</div>
                   </RouterLink>
                 </li>
@@ -209,56 +248,46 @@ onMounted(() => {
         <!-- 帳戶這邊登入會員時會消失 -->
         <ul v-if="isLoggedIn === false">
           <h2 class="p-4 text-xl text-gray-300">帳戶</h2>
-          <li class="p-4">
+          <li class="p-4 text-[#314e86] hover:cursor-pointer hover:font-bold" @click="toggleSidebar">
             <router-link to="/users/edit">會員登入</router-link>
           </li>
-          <li class="p-4"><a href="#">新用戶註冊</a></li>
+          <li class="p-4 text-[#314e86] hover:cursor-pointer hover:font-bold" @click="toggleSidebar">
+            <router-link to="/users/edit">新用戶註冊</router-link>
+          </li>
         </ul>
         <hr />
         <ul>
           <h2 class="p-4 text-xl text-gray-300">其他</h2>
-          <li class="p-4"><a href="#">BLOG</a></li>
-          <li class="p-4">
-            <RouterLink to="/store-info">尋找門市</RouterLink>
-          </li>
-          <li class="p-4">
-            <a href="#">聯絡我們</a>
-            <font-awesome-icon :icon="['fas', 'comment']" class="absolute right-1 top-5" />
-          </li>
-
-          <li class="p-4 relative cursor-pointer" @click="openChangeLanguage">
-            <p>{{ selectedLanguage }}</p>
-            <font-awesome-icon class="absolute right-1 top-5" :icon="['fas', 'globe']" />
-          </li>
-          <li class="p-4 cursor-pointer" @click="openMoney">
+          <li class="p-4 hover:cursor-pointer text-[#314e86] hover:font-bold" @click="openMoney">
             <p>{{ selectedCurrency }}</p>
             <font-awesome-icon :icon="['fas', 'dollar-sign']" class="absolute right-1 top-5" />
           </li>
-        </ul>
-      </div>
-      <div
-        class="fixed w-[200px] top-0 z-30 h-screen px-4 overflow-auto transition-all duration-500 -translate-x-full bg-white"
-        :class="changeLanguageOpen ? 'translate-x-0' : '-translate-x-full'"
-      >
-        <ul>
-          <li @click="openChangeLanguage" class="py-3">
-            <font-awesome-icon :icon="['fas', 'chevron-left']" />
-            <span class="ml-2">語言</span>
+          <li class="p-4 hover:cursor-pointer text-[#314e86] hover:font-bold" @click="toggleSidebar">
+            <RouterLink to="/store-info">尋找門市</RouterLink>
           </li>
-          <li v-for="language in languages" :key="language" :value="language" @click="selectedLanguage == language" class="py-3">{{ language }}</li>
+          <li class="p-4 hover:cursor-pointer text-[#314e86] hover:font-bold" @click="toggleSidebar">
+            <RouterLink to="/about">關於我們</RouterLink>
+            <font-awesome-icon :icon="['fas', 'comment']" class="absolute right-1 top-5" />
+          </li>
         </ul>
       </div>
 
       <div
-        class="fixed top-0 z-30 w-[200px] h-screen px-4 overflow-auto transition-all duration-500 -translate-x-full bg-white"
+        class="fixed top-0 z-30 w-[210px] h-screen pl-4 overflow-auto transition-all duration-500 ease-in-out -translate-x-full bg-white"
         :class="moneyOpen ? 'translate-x-0' : '-translate-x-full'"
       >
         <ul>
-          <li @click="openMoney" class="py-3">
+          <li @click="openMoney" class="py-3 text-[#314e86] hover:cursor-pointer">
             <font-awesome-icon :icon="['fas', 'chevron-left']" />
             <span class="ml-2">貨幣</span>
           </li>
-          <li v-for="rate in rates" :value="rate.currency" :key="rate.currency" @click="selectedCurrency = rate.currency" class="py-3">
+          <li
+            v-for="rate in rates"
+            :value="rate.currency"
+            :key="rate.currency"
+            @click="setCurrency(rate.currency)"
+            class="py-3 hover:cursor-pointer text-[#314e86] hover:font-bold"
+          >
             {{ rate.symbol }} {{ rate.currency }}
           </li>
         </ul>
@@ -267,7 +296,7 @@ onMounted(() => {
   </transition>
 
   <!-- 預留空間 -->
-  <div class="w-full h-[72px] xl:h-28" v-show="isVisible === false"></div>
+  <div class="w-full h-12 xl:h-24" v-show="isVisible === false"></div>
 </template>
 
 <style scoped>

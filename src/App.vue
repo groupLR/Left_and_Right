@@ -14,8 +14,11 @@ const shouldShowFooter = computed(() => {
   <header>
     <NavBar />
   </header>
-  <RouterView />
-  <el-backtop :right="50" :bottom="100" />
+  <div class="bg-slate-100">
+    <RouterView />
+  </div>
+
+  <el-backtop :right="50" :bottom="50" />
   <Footer v-if="shouldShowFooter" />
 </template>
 
