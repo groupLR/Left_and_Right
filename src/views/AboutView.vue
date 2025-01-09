@@ -19,7 +19,7 @@ const teamMembers = [
     github: "Cloverche",
     email: "Sunny40224@gmail.com",
     image: "/sunny.png",
-    tasks: ["會員系統開發", "商品詳情功能", "匯率轉換功能", "導覽列功能", "使用者資料庫設計"],
+    tasks: ["會員系統開發", "商品詳情功能", "匯率轉換功能", "導覽列功能", "使用者資料庫設計", " UI 介面整合"],
   },
   {
     name: "楊頌偉",
